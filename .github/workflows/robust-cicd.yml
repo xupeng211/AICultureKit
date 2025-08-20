@@ -347,7 +347,7 @@ jobs:
       run: "echo \"\U0001F9EA \u6267\u884C\u5355\u5143\u6D4B\u8BD5...\"\npytest --cov=aiculture\
         \ --cov-report=xml --cov-report=term-missing -v\n"
     - name: "\U0001F4CA \u4E0A\u4F20\u8986\u76D6\u7387\u62A5\u544A"
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
         fail_ci_if_error: false
         file: ./coverage.xml

@@ -16,7 +16,7 @@ jobs:
     - name: "\u8FD0\u884C\u6D4B\u8BD5"
       run: python -m pytest --cov=aiculture --cov-report=xml
     - name: "\u4E0A\u4F20\u8986\u76D6\u7387\u62A5\u544A"
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
         file: ./coverage.xml
 name: "\u6587\u5316\u68C0\u67E5"
