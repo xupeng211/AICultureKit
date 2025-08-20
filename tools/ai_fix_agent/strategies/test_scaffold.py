@@ -15,7 +15,12 @@ class TestScaffoldStrategy:
 
     def can_fix(self, problem: Dict[str, Any]) -> bool:
         """判断是否可以生成测试脚手架"""
-        return problem.get('type') in ['test_coverage', 'file_coverage']
+        return problem.get('type') in [
+            'test_coverage',
+            'file_coverage',
+            'diff_coverage',
+            'new_file_coverage',
+        ]
 
     def generate_fix(self, problems: List[Dict[str, Any]]) -> Tuple[str, str, float]:
         """
