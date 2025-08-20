@@ -30,10 +30,10 @@ import requests
 def connect_to_database() -> None:
     """TODO: 添加函数文档字符串"""
     connection = mysql.connector.connect(
-        host="192.168.1.xxx",  # 硬编码IP地址
-        user="admin",  # 硬编码用户名
-        password=os.getenv("DB_PASSWORD", "demo-placeholder-pwd"),  # 使用环境变量
-        database="myapp_db",  # 硬编码数据库名
+        host=os.getenv("DB_HOST", "localhost"),  # 使用环境变量
+        user=os.getenv("DB_USER", "demo_user"),  # 使用环境变量
+        password=os.getenv("DB_PASSWORD", "PLACEHOLDER_PASSWORD"),  # 使用环境变量
+        database=os.getenv("DB_NAME", "demo_database"),  # 使用环境变量
     )
     return connection
 
@@ -65,7 +65,7 @@ def save_user_data(data) -> None:
     Args:
         data: 参数说明
     """
-    file_path = "/var/log/myapp/users.log"  # 硬编码文件路径
+    file_path = os.getenv("LOG_FILE_PATH", "/tmp/demo_users.log")  # 使用环境变量
     with open(file_path, "a") as f:
         f.write(f"{data}\n")
 
@@ -108,8 +108,10 @@ def rate_limit_check(user_requests) -> None:
     Args:
         user_requests: 参数说明
     """
-    max_requests_per_minute = 100  # 硬编码请求限制
-    time_window = 60  # 硬编码时间窗口(秒)
+    max_requests_per_minute = int(
+        os.getenv("RATE_LIMIT_REQUESTS", "100")
+    )  # 使用环境变量
+    time_window = int(os.getenv("RATE_LIMIT_WINDOW", "60"))  # 使用环境变量
 
     if user_requests > max_requests_per_minute:
         """TODO: 添加函数文档字符串"""
@@ -125,10 +127,12 @@ def send_notification_email(to_email, message) -> None:
         to_email: 参数说明
         message: 参数说明
     """
-    smtp_server = "smtp.gmail.com"  # 硬编码SMTP服务器
-    smtp_port = 587  # 硬编码端口
+    smtp_server = os.getenv("SMTP_SERVER", "smtp.example.com")  # 使用环境变量
+    smtp_port = int(os.getenv("SMTP_PORT", "587"))  # 使用环境变量
     sender_email = os.getenv("SENDER_EMAIL", "noreply@demo.local")  # 使用环境变量
-    sender_password = os.getenv("SENDER_PASSWORD", "PLACEHOLDER_PASSWORD")  # 使用环境变量
+    sender_password = os.getenv(
+        "SENDER_PASSWORD", "PLACEHOLDER_PASSWORD"
+    )  # 使用环境变量
 
     # 发送邮件逻辑...
 
