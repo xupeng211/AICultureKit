@@ -96,7 +96,7 @@ jobs:
 
           '
     - name: "\U0001F433 \u767B\u5F55Docker Hub\uFF08\u5E26\u91CD\u8BD5\uFF09"
-      uses: nick-fields/retry@v2
+      uses: nick-fields/retry@v3
       with:
         command: 'echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME
           }} --password-stdin
@@ -133,7 +133,7 @@ jobs:
         \u53D6\"\n"
     - name: "\U0001F528 \u6784\u5EFA\u5E76\u63A8\u9001\u955C\u50CF\uFF08\u5E26\u91CD\
         \u8BD5\uFF09"
-      uses: nick-fields/retry@v2
+      uses: nick-fields/retry@v3
       with:
         command: "docker buildx build \\\n  --platform ${{ matrix.platform }} \\\n\
           \  --tag ${{ steps.meta.outputs.tags }} \\\n  --label ${{ steps.meta.outputs.labels\
@@ -317,7 +317,7 @@ jobs:
         cache: pip
         python-version: ${{ matrix.python-version }}
     - name: "\U0001F4E6 \u5B89\u88C5\u4F9D\u8D56\uFF08\u5E26\u91CD\u8BD5\uFF09"
-      uses: nick-fields/retry@v2
+      uses: nick-fields/retry@v3
       with:
         command: 'python -m pip install --upgrade pip
 
