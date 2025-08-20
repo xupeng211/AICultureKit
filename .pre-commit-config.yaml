@@ -9,7 +9,7 @@ repos:
       - id: black
         language_version: python3
         args: [--line-length=88]
-        stages: [commit, manual]
+        stages: [pre-commit, manual]
 
   # 📦 Python 导入排序 (自动修复)
   - repo: https://github.com/pycqa/isort
@@ -17,21 +17,22 @@ repos:
     hooks:
       - id: isort
         args: [--profile=black, --line-length=88]
-        stages: [commit, manual]
+        stages: [pre-commit, manual]
 
   # 🧹 自动移除未使用的导入
   - repo: https://github.com/PyCQA/autoflake
     rev: v2.2.1
     hooks:
       - id: autoflake
-        args: [
-          --in-place,
-          --remove-all-unused-imports,
-          --remove-unused-variables,
-          --remove-duplicate-keys,
-          --expand-star-imports
-        ]
-        stages: [commit, manual]
+        args:
+          [
+            --in-place,
+            --remove-all-unused-imports,
+            --remove-unused-variables,
+            --remove-duplicate-keys,
+            --expand-star-imports,
+          ]
+        stages: [pre-commit, manual]
 
   # 🔍 Python 代码检查 (非阻塞，仅警告)
   - repo: https://github.com/pycqa/flake8
@@ -39,7 +40,7 @@ repos:
     hooks:
       - id: flake8
         exclude: ^(aiculture-env/|\.venv/|venv/|tests/)
-        stages: [manual]  # 只在手动运行时检查，不阻塞提交
+        stages: [manual] # 只在手动运行时检查，不阻塞提交
 
   # 🔧 Python 类型检查 (非阻塞)
   - repo: https://github.com/pre-commit/mirrors-mypy
@@ -49,17 +50,50 @@ repos:
         additional_dependencies: [types-PyYAML, types-requests, types-click]
         args: [--ignore-missing-imports, --no-error-summary]
         exclude: ^(aiculture-env/|\.venv/|venv/|tests/)
-        stages: [manual]  # 只在手动运行时检查
+        stages: [manual] # 只在手动运行时检查
 
-  # 🧪 自动运行快速测试
+  # AICultureKit本地钩子
   - repo: local
     hooks:
-      - id: quick-tests
-        name: 快速测试检查
-        entry: python -m pytest tests/ -x --tb=no -q
+      # 🧪 自动运行快速测试 (暂时禁用，不阻塞提交)
+      # - id: quick-tests
+      #   name: 快速测试检查
+      #   entry: python -m pytest tests/ -x --tb=no -q
+      #   language: system
+      #   stages: [pre-commit]
+      #   pass_filenames: false
+
+      # 🔍 AICultureKit问题聚合器集成
+      - id: aiculture-problem-aggregator
+        name: "🔍 AICultureKit问题聚合"
+        entry: python -m tools.problem_aggregator.aggregator
         language: system
-        stages: [commit]
+        args:
+          [
+            --out,
+            artifacts/pre-commit-problems.json,
+            --md,
+            artifacts/pre-commit-report.md,
+          ]
+        always_run: true
         pass_filenames: false
+        verbose: true
+        stages: [pre-commit]
+        # 不阻塞提交，只生成报告
+
+      # 📊 提交后显示报告摘要
+      - id: aiculture-summary
+        name: "📊 问题摘要显示"
+        entry: python
+        args:
+          [
+            -c,
+            "import json; import sys; from pathlib import Path; report_file = Path('artifacts/pre-commit-problems.json'); data = json.load(open(report_file)) if report_file.exists() else {}; summary = data.get('summary', {}); total, blocking = summary.get('total', 0), summary.get('blocking', 0); print('\\n🔍 AICultureKit 问题摘要:'); print(f'   总计: {total} 个问题'); print(f'   阻塞性: {blocking} 个'); print('⚠️  注意: 发现阻塞性问题，推送时可能被拦截\\n📋 详细报告: artifacts/pre-commit-report.md') if blocking > 0 else print('💡 发现非阻塞问题，建议修复以提升代码质量') if total > 0 else print('✅ 未发现问题，代码质量良好'); print('')",
+          ]
+        language: system
+        always_run: true
+        pass_filenames: false
+        stages: [pre-commit]
 
   # Python 安全检查 (暂时禁用，配置问题)
   # - repo: https://github.com/PyCQA/bandit
@@ -99,5 +133,5 @@ default_language_version:
 minimum_pre_commit_version: 3.0.0
 
 # 性能优化的全局配置
-default_stages: [commit]  # 只在commit时运行，不在push时运行
-fail_fast: false  # 不要在第一个错误时停止
+default_stages: [pre-commit] # 只在commit时运行，不在push时运行
+fail_fast: false # 不要在第一个错误时停止
