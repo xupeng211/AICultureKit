@@ -399,7 +399,7 @@ jobs:
         severity: CRITICAL,HIGH
     - if: always()
       name: "\U0001F4CA \u4E0A\u4F20\u5B89\u5168\u626B\u63CF\u7ED3\u679C"
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: trivy-results.sarif
     timeout-minutes: 15
