@@ -142,7 +142,7 @@ class AIBehaviorEnforcer:
         return violations
 
     def check_culture_compliance(self) -> Dict[str, Any]:
-        """检查文化合规性并提供详细问题信息"""
+        """检查文化合规性并提供详细问题信息 - 收集所有问题"""
         try:
             enforcer = CultureEnforcer(str(self.project_path))
             result = enforcer.enforce_all()
@@ -152,42 +152,49 @@ class AIBehaviorEnforcer:
             errors = [v for v in violations if v.severity == 'error']
             warnings = [v for v in violations if v.severity == 'warning']
 
-            # 如果有错误，提供详细信息
-            if result.get('errors', 0) > 0:
-                self.logger.warning(f"发现 {result['errors']} 个文化检查错误未解决")
-
-                # 构建详细的错误信息
-                detailed_errors = []
-                for i, error in enumerate(errors[:5], 1):  # 最多显示5个错误
-                    error_info = {
-                        'index': i,
-                        'description': error.description,
-                        'severity': error.severity,
-                        'principle': getattr(error, 'principle', 'unknown'),
-                        'file_path': getattr(error, 'file_path', None),
-                        'line_number': getattr(error, 'line_number', None),
-                        'suggestion': getattr(error, 'suggestion', None),
-                    }
-                    detailed_errors.append(error_info)
-
-                return {
-                    'compliant': False,
-                    'errors': result.get('errors', 0),
-                    'warnings': result.get('warnings', 0),
-                    'score': result.get('score', 0),
-                    'detailed_errors': detailed_errors,
-                    'detailed_warnings': (
-                        warnings[:3] if warnings else []
-                    ),  # 最多显示3个警告
+            # 构建详细的错误信息 - 显示所有错误，不限制数量
+            detailed_errors = []
+            for i, error in enumerate(errors, 1):
+                error_info = {
+                    'index': i,
+                    'description': error.description,
+                    'severity': error.severity,
+                    'principle': getattr(error, 'principle', 'unknown'),
+                    'file_path': getattr(error, 'file_path', None),
+                    'line_number': getattr(error, 'line_number', None),
+                    'suggestion': getattr(error, 'suggestion', None),
                 }
+                detailed_errors.append(error_info)
+
+            # 构建详细的警告信息 - 显示所有警告
+            detailed_warnings = []
+            for i, warning in enumerate(warnings, 1):
+                warning_info = {
+                    'index': i,
+                    'description': warning.description,
+                    'severity': warning.severity,
+                    'principle': getattr(warning, 'principle', 'unknown'),
+                    'file_path': getattr(warning, 'file_path', None),
+                    'line_number': getattr(warning, 'line_number', None),
+                    'suggestion': getattr(warning, 'suggestion', None),
+                }
+                detailed_warnings.append(warning_info)
+
+            # 记录发现的问题数量
+            total_issues = len(detailed_errors) + len(detailed_warnings)
+            if total_issues > 0:
+                self.logger.warning(
+                    f"发现 {len(detailed_errors)} 个错误和 {len(detailed_warnings)} 个警告，共 {total_issues} 个问题"
+                )
 
             return {
-                'compliant': True,
-                'errors': 0,
+                'compliant': result.get('errors', 0) == 0,  # 只有没有错误才算合规
+                'errors': result.get('errors', 0),
                 'warnings': result.get('warnings', 0),
                 'score': result.get('score', 100),
-                'detailed_errors': [],
-                'detailed_warnings': warnings[:3] if warnings else [],
+                'detailed_errors': detailed_errors,
+                'detailed_warnings': detailed_warnings,
+                'total_issues': total_issues,
             }
 
         except Exception as e:
@@ -286,17 +293,21 @@ class AIBehaviorEnforcer:
                 self._provide_guidance(violation)
                 enforcement_actions.append(f"warned_{violation.value}")
 
-        # 如果文化检查有错误，显示详细信息
-        if not culture_status.get('compliant', True):
-            print(f"\n🔍 详细问题分析:")
+        # 如果文化检查有问题，显示完整的问题分析
+        if (
+            not culture_status.get('compliant', True)
+            or culture_status.get('total_issues', 0) > 0
+        ):
+            print(f"\n🔍 完整问题分析报告:")
             print(f"📊 文化质量评分: {culture_status.get('score', 0)}/100")
             print(f"❌ 错误: {culture_status.get('errors', 0)} 个")
             print(f"⚠️  警告: {culture_status.get('warnings', 0)} 个")
+            print(f"📋 总问题数: {culture_status.get('total_issues', 0)} 个")
 
-            # 显示具体错误详情
+            # 显示所有错误详情
             detailed_errors = culture_status.get('detailed_errors', [])
             if detailed_errors:
-                print(f"\n🚨 具体错误详情:")
+                print(f"\n🚨 所有错误详情 ({len(detailed_errors)} 个):")
                 for error in detailed_errors:
                     print(f"  {error['index']}. {error['description']}")
                     if error.get('file_path'):
@@ -306,6 +317,30 @@ class AIBehaviorEnforcer:
                     if error.get('suggestion'):
                         print(f"     💡 建议: {error['suggestion']}")
                     print()
+
+            # 显示所有警告详情
+            detailed_warnings = culture_status.get('detailed_warnings', [])
+            if detailed_warnings:
+                print(f"⚠️  所有警告详情 ({len(detailed_warnings)} 个):")
+                for warning in detailed_warnings:
+                    print(f"  {warning['index']}. {warning['description']}")
+                    if warning.get('file_path'):
+                        print(f"     📁 文件: {warning['file_path']}")
+                    if warning.get('line_number'):
+                        print(f"     📍 行号: {warning['line_number']}")
+                    if warning.get('suggestion'):
+                        print(f"     💡 建议: {warning['suggestion']}")
+                    print()
+
+            # 提供综合修复指导
+            print(f"🎯 综合修复指导:")
+            print(
+                f"   1. 上面列出了所有 {culture_status.get('total_issues', 0)} 个问题的详细信息"
+            )
+            print(f"   2. 请逐一修复每个问题，特别是 {len(detailed_errors)} 个错误")
+            print(f"   3. 根据每个问题的建议进行修复")
+            print(f"   4. 修复完成后重新提交，系统会重新检查所有问题")
+            print(f"   5. 只有所有错误都解决后才能成功推送")
 
         report['enforcement_actions'] = enforcement_actions
         return report
