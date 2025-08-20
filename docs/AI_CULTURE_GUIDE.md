@@ -9,21 +9,25 @@
 ## 📋 核心功能
 
 ### 🛡️ 智能质量门禁
+
 - **Pre-commit hooks**: 代码提交前自动检查
 - **实时质量评分**: 0-100分质量评估体系
 - **多层检测**: 代码风格、类型安全、安全漏洞
 
 ### 🔍 AI开发文化监护
+
 - **SOLID原则检测**: 自动识别单一职责、开闭原则违反
 - **DRY原则监控**: 重复代码自动检测和建议
 - **KISS原则评估**: 代码复杂度分析和简化建议
 
 ### 🚀 CI/CD智能监护
+
 - **构建失败预防**: 29种风险因子智能检测
 - **依赖安全扫描**: 自动识别安全漏洞
 - **镜像优化建议**: Docker多阶段构建优化
 
 ### ⚡ 自动修复能力
+
 - **依赖版本锁定**: 自动生成requirements.lock
 - **代码格式化**: Black + isort自动整理
 - **配置文件优化**: .dockerignore等自动生成
@@ -33,6 +37,7 @@
 ## 🛠️ 安装和配置
 
 ### 📦 系统要求
+
 ```bash
 # Python环境
 Python >= 3.8
@@ -44,6 +49,7 @@ docker >= 20.10 (可选)
 ```
 
 ### 🚀 快速安装
+
 ```bash
 # 1. 克隆项目
 git clone https://github.com/your-org/AICultureKit.git
@@ -57,6 +63,7 @@ python -m aiculture.cli --help
 ```
 
 ### ⚙️ 项目初始化
+
 ```bash
 # 为新项目设置AI开发文化
 python -m aiculture.cli setup --path /path/to/your/project
@@ -72,6 +79,7 @@ python -m aiculture.cli enable-culture --path /path/to/existing/project
 ### 🔍 质量检测命令
 
 #### `validate` - 文化原则验证
+
 ```bash
 # 基础用法
 python -m aiculture.cli validate --path .
@@ -84,6 +92,7 @@ python -m aiculture.cli validate --path . --check-types code,security,architectu
 ```
 
 **输出示例:**
+
 ```
 📊 质量评分: 75/100
 🔴 错误: 0
@@ -96,6 +105,7 @@ python -m aiculture.cli validate --path . --check-types code,security,architectu
 ```
 
 #### `enforce` - 强制执行原则
+
 ```bash
 # 检查并生成修复建议
 python -m aiculture.cli enforce --path .
@@ -107,6 +117,7 @@ python -m aiculture.cli enforce --path . --auto-fix
 ### 🏥 CI/CD监护命令
 
 #### `cicd-check` - CI/CD健康检查
+
 ```bash
 # 完整健康检查
 python -m aiculture.cli cicd-check --path .
@@ -116,6 +127,7 @@ python -m aiculture.cli cicd-check --path . --categories dependencies,security
 ```
 
 **输出示例:**
+
 ```
 📊 CI/CD健康评分: 65/100 ⚠️ 中风险
 🔍 风险统计: 严重 0, 高 1, 中 3, 低 2
@@ -127,6 +139,7 @@ python -m aiculture.cli cicd-check --path . --categories dependencies,security
 ```
 
 #### `cicd-fix` - 自动修复CI/CD问题
+
 ```bash
 # 自动修复并提交
 python -m aiculture.cli cicd-fix --path . --auto-commit
@@ -138,11 +151,13 @@ python -m aiculture.cli cicd-fix --path . --dry-run
 ### 📈 状态监控命令
 
 #### `culture-status` - 文化状态报告
+
 ```bash
 python -m aiculture.cli culture-status --path .
 ```
 
 **输出示例:**
+
 ```
 📊 AI开发文化状态报告
 
@@ -191,6 +206,7 @@ your-project/
 ### 📝 代码质量标准
 
 #### 🏛️ SOLID原则实践
+
 ```python
 # ✅ 单一职责原则 (SRP)
 class UserValidator:
@@ -213,6 +229,7 @@ class OrderService:
 ```
 
 #### 🧹 DRY原则实践
+
 ```python
 # ❌ 违反DRY原则
 def validate_user_email(email):
@@ -246,10 +263,11 @@ def validate_admin_email(email):
 ### 🔒 安全开发规范
 
 #### 🛡️ 敏感信息处理
+
 ```python
 # ❌ 硬编码敏感信息
 API_KEY = "sk-1234567890abcdef"
-DATABASE_PASSWORD = "mypassword123"
+DATABASE_PASSWORD = "DEMO_PASSWORD"  # 已脱敏
 
 # ✅ 环境变量配置
 import os
@@ -266,6 +284,7 @@ class Config:
 ```
 
 #### 🔐 安全的文件操作
+
 ```python
 # ❌ 不安全的文件操作
 import subprocess
@@ -298,6 +317,7 @@ def safe_save_file(content: str, filename: str) -> bool:
 ## 🔧 配置文件详解
 
 ### 📄 `aiculture.yaml` 配置
+
 ```yaml
 # AI开发文化主配置文件
 project:
@@ -347,6 +367,7 @@ principles:
 ```
 
 ### 📄 `AI_ASSISTANT_GUIDELINES.md` 指南
+
 这个文件为AI助手提供明确的开发指导：
 
 ```markdown
@@ -384,6 +405,7 @@ principles:
 | 0-59 | 💥 很差 | 代码质量很差，禁止合并 |
 
 ### 📈 评分算法
+
 ```python
 # 质量评分计算公式
 quality_score = (
@@ -400,6 +422,7 @@ quality_score = (
 ## 🚀 CI/CD集成
 
 ### 📋 GitHub Actions配置
+
 ```yaml
 # .github/workflows/ai-culture-check.yml
 name: AI开发文化检查
@@ -431,6 +454,7 @@ jobs:
 ```
 
 ### 🔧 Pre-commit hooks集成
+
 ```yaml
 # .pre-commit-config.yaml
 repos:
@@ -449,6 +473,7 @@ repos:
 ## 🎓 团队培训建议
 
 ### 📚 学习路径
+
 1. **基础概念** (第1-2周)
    - SOLID原则理解
    - DRY和KISS原则
@@ -465,6 +490,7 @@ repos:
    - 持续改进流程
 
 ### 🏆 团队激励机制
+
 - **质量明星**: 月度代码质量最高奖励
 - **改进达人**: 质量提升最大奖励  
 - **文化传播者**: 帮助他人提升质量奖励
@@ -476,6 +502,7 @@ repos:
 ### ❓ 常见问题
 
 #### Q: 质量评分突然下降怎么办？
+
 ```bash
 # 1. 检查具体问题
 python -m aiculture.cli validate --path . --verbose
@@ -488,6 +515,7 @@ python -m aiculture.cli enforce --path . --auto-fix
 ```
 
 #### Q: CI/CD构建失败如何处理？
+
 ```bash
 # 1. 运行健康检查
 python -m aiculture.cli cicd-check --path .
@@ -500,6 +528,7 @@ python -m aiculture.cli cicd-check --path .
 ```
 
 #### Q: Pre-commit hooks执行太慢？
+
 ```yaml
 # 优化.pre-commit-config.yaml
 repos:
@@ -534,4 +563,4 @@ AI开发文化工具包为你提供了：
 pip install aiculture-kit
 python -m aiculture.cli setup --path .
 python -m aiculture.cli validate --path .
-``` 
+```
