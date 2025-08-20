@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  aiculture-kit:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: aiculture-kit
+    volumes:
+      - .:/app
+      - /var/run/docker.sock:/var/run/docker.sock  # 用于Docker-in-Docker
+    environment:
+      - APP_ENV=development
+      - DEBUG=true
+    ports:
+      - "8000:8000"
+    networks:
+      - aiculture-network
+
+  # 开发环境服务
+  dev:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: aiculture-dev
+    volumes:
+      - .:/app
+    environment:
+      - APP_ENV=development
+      - DEBUG=true
+    command: tail -f /dev/null  # 保持容器运行
+    networks:
+      - aiculture-network
+
+  # 测试环境服务
+  test:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: aiculture-test
+    volumes:
+      - .:/app
+    environment:
+      - APP_ENV=test
+    command: pytest --cov=aiculture --cov-report=html
+    networks:
+      - aiculture-network
+
+  # 文档服务（如果需要的话）
+  docs:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: aiculture-docs
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    command: python -m http.server 8080 --directory docs/
+    networks:
+      - aiculture-network
+
+networks:
+  aiculture-network:
+    driver: bridge
+
+volumes:
+  aiculture-data:
+    driver: local 
