@@ -30,24 +30,24 @@ log_error() {
 # 检查Python环境
 check_python_env() {
     log_info "检查Python环境..."
-    
+
     if ! command -v python3 &> /dev/null; then
         log_error "Python3未安装"
         exit 1
     fi
-    
+
     if ! pip list | grep -q "black\|flake8\|mypy\|pytest"; then
         log_warning "缺少开发依赖，尝试安装..."
         pip install -r requirements-dev.txt
     fi
-    
+
     log_success "Python环境检查通过"
 }
 
 # 代码格式化检查
 check_formatting() {
     log_info "检查代码格式化..."
-    
+
     # Black 格式化检查
     if command -v black &> /dev/null; then
         if black --check .; then
@@ -59,7 +59,7 @@ check_formatting() {
     else
         log_warning "Black未安装，跳过格式化检查"
     fi
-    
+
     # isort 导入排序检查
     if command -v isort &> /dev/null; then
         if isort --check-only .; then
@@ -76,7 +76,7 @@ check_formatting() {
 # 静态代码检查
 check_linting() {
     log_info "运行静态代码检查..."
-    
+
     # Flake8检查
     if command -v flake8 &> /dev/null; then
         if flake8 .; then
@@ -88,7 +88,7 @@ check_linting() {
     else
         log_warning "Flake8未安装，跳过静态检查"
     fi
-    
+
     # MyPy类型检查
     if command -v mypy &> /dev/null; then
         if mypy .; then
@@ -105,7 +105,7 @@ check_linting() {
 # 安全检查
 check_security() {
     log_info "运行安全检查..."
-    
+
     # Bandit安全检查
     if command -v bandit &> /dev/null; then
         if bandit -r . -f json -o bandit-report.json; then
@@ -116,7 +116,7 @@ check_security() {
     else
         log_warning "Bandit未安装，跳过安全检查"
     fi
-    
+
     # 检查是否有密钥泄漏
     if command -v detect-secrets &> /dev/null; then
         if detect-secrets scan --baseline .secrets.baseline; then
@@ -133,7 +133,7 @@ check_security() {
 # 运行测试
 run_tests() {
     log_info "运行测试用例..."
-    
+
     if command -v pytest &> /dev/null; then
         if pytest --cov=aiculture --cov-report=term-missing --cov-report=html; then
             log_success "测试用例全部通过"
@@ -149,11 +149,11 @@ run_tests() {
 # 构建检查
 check_build() {
     log_info "检查包构建..."
-    
+
     if command -v python3 &> /dev/null; then
         # 清理之前的构建
         rm -rf build/ dist/ *.egg-info/
-        
+
         # 构建包
         if python -m build; then
             log_success "包构建成功"
@@ -161,7 +161,7 @@ check_build() {
             log_error "包构建失败"
             return 1
         fi
-        
+
         # 检查包
         if command -v twine &> /dev/null; then
             if twine check dist/*; then
@@ -178,7 +178,7 @@ check_build() {
 check_docker() {
     if [ -f "Dockerfile" ] && command -v docker &> /dev/null; then
         log_info "检查Docker构建..."
-        
+
         if docker build -t aiculture-kit:local .; then
             log_success "Docker构建成功"
         else
@@ -194,9 +194,9 @@ check_docker() {
 main() {
     echo "🚀 开始本地CI检查..."
     echo "========================================"
-    
+
     local exit_code=0
-    
+
     # 执行所有检查
     check_python_env || exit_code=1
     check_formatting || exit_code=1
@@ -205,9 +205,9 @@ main() {
     run_tests || exit_code=1
     check_build || exit_code=1
     check_docker || exit_code=1
-    
+
     echo "========================================"
-    
+
     if [ $exit_code -eq 0 ]; then
         log_success "🎉 所有检查通过！代码准备就绪"
         echo
@@ -223,7 +223,7 @@ main() {
         echo "  isort .          # 自动排序导入"
         echo "  pip install -r requirements-dev.txt  # 安装缺失依赖"
     fi
-    
+
     exit $exit_code
 }
 
@@ -280,4 +280,4 @@ while [[ $# -gt 0 ]]; do
 done
 
 # 执行主函数
-main 
+main

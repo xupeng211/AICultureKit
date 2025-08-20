@@ -1,5 +1,16 @@
+# AICultureKit 生产依赖
+#
+# 注意：主要依赖定义在 pyproject.toml 中
+# 这个文件用于向后兼容和CI/CD环境
+#
+# 要安装生产依赖，推荐使用：
+# pip install -e .
+#
+# 或者使用这个文件：
+# pip install -r requirements.txt
+
 click>=8.0.0
 jinja2>=3.0.0
 pyyaml>=6.0.0
 gitpython>=3.1.0
-cookiecutter>=2.1.0 
+cookiecutter>=2.1.0

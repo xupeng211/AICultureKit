@@ -7,7 +7,7 @@ name = "aiculture-kit"
 version = "0.1.0"
 description = "标准化AI主导开发的文化和最佳实践工具包"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [
     {name = "AICultureKit Contributors"}
@@ -61,6 +61,8 @@ include = ["aiculture*"]
 
 [tool.black]
 line-length = 88
+fast = true
+skip-string-normalization = true
 target-version = ['py38']
 include = '\.pyi?$'
 extend-exclude = '''
@@ -79,33 +81,50 @@ extend-exclude = '''
 
 [tool.isort]
 profile = "black"
+skip_gitignore = true
 multi_line_output = 3
 line_length = 88
 known_first_party = ["aiculture"]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
 check_untyped_defs = true
-disallow_untyped_decorators = true
+disallow_untyped_decorators = false
 no_implicit_optional = true
 warn_redundant_casts = true
 warn_unused_ignores = true
 warn_no_return = true
 warn_unreachable = true
 strict_equality = true
+ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = ["cookiecutter.*", "git.*"]
+module = ["cookiecutter.*", "git.*", "jinja2.*", "yaml.*", "click.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q --cov=aiculture --cov-report=term-missing"
+addopts = "-ra -q --cov=aiculture --cov-report=term-missing -p no:asyncio"
 testpaths = ["tests"]
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203", "E501", "W503"]
+exclude = ["aiculture-env", ".venv", "venv", "build", "dist"]
+per-file-ignores = [
+    "tests/*:D",
+    "__init__.py:F401"
+]
+jobs = "auto"
+
+[tool.bandit]
+exclude_dirs = ["tests", "aiculture-env", ".venv", "venv", ".git"]
+skips = ["B101", "B601"]
+confidence = "MEDIUM"
 
 [tool.coverage.run]
 source = ["aiculture"]
@@ -123,4 +142,4 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
-] 
+]

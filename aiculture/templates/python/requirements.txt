@@ -1,0 +1,41 @@
+# 生产环境依赖
+# 核心依赖
+click>=8.1.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+
+# HTTP客户端 (如需要)
+httpx>=0.24.0
+
+# 数据处理 (如需要)
+# pandas>=2.0.0
+# numpy>=1.24.0
+
+# 数据库 (如需要)
+# sqlalchemy>=2.0.0
+# psycopg2-binary>=2.9.0  # PostgreSQL
+# pymysql>=1.0.0          # MySQL
+
+# 缓存 (如需要)
+# redis>=4.5.0
+
+# 任务队列 (如需要)
+# celery>=5.2.0
+
+# 配置管理
+pyyaml>=6.0
+
+# 日志
+structlog>=23.1.0
+
+# 时间处理
+python-dateutil>=2.8.0
+
+# JSON处理
+orjson>=3.9.0
+
+# 密码学 (如需要)
+# cryptography>=41.0.0
+
+# 工具类
+rich>=13.0.0  # 美化终端输出 

@@ -225,24 +225,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Configure cloud credentials
       uses: aliyun/configure-kubectl-action@v1
       with:
         access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
         access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
         cluster-id: ${{ secrets.K8S_CLUSTER_ID }}
-    
+
     - name: Build and push image
       run: |
         docker build -t ${{ secrets.REGISTRY_URL }}/aiculture-kit:${{ github.ref_name }} .
         docker push ${{ secrets.REGISTRY_URL }}/aiculture-kit:${{ github.ref_name }}
-    
+
     - name: Deploy to Kubernetes
       run: |
         sed -i 's|IMAGE_TAG|${{ github.ref_name }}|g' deploy/k8s/deployment.yaml
         kubectl apply -f deploy/k8s/
-    
+
     - name: Verify deployment
       run: |
         kubectl rollout status deployment/aiculture-kit
@@ -333,11 +333,11 @@ curl -f http://service-endpoint/health
 
 AICultureKit的云部署架构具备以下优势：
 
-✅ **自动化程度高**: GitOps + CI/CD全自动部署  
-✅ **可靠性强**: 健康检查 + 自动恢复机制  
-✅ **可扩展性好**: 水平/垂直自动扩缩容  
-✅ **安全性高**: 网络隔离 + 密钥管理  
-✅ **可观测性**: 全链路监控 + 日志收集  
-✅ **成本可控**: 资源优化 + 预留实例  
+✅ **自动化程度高**: GitOps + CI/CD全自动部署
+✅ **可靠性强**: 健康检查 + 自动恢复机制
+✅ **可扩展性好**: 水平/垂直自动扩缩容
+✅ **安全性高**: 网络隔离 + 密钥管理
+✅ **可观测性**: 全链路监控 + 日志收集
+✅ **成本可控**: 资源优化 + 预留实例
 
-这套架构可以支撑从小型应用到大规模分布式系统的各种场景需求。 
+这套架构可以支撑从小型应用到大规模分布式系统的各种场景需求。

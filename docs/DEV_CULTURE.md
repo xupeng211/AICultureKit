@@ -26,7 +26,7 @@ class ConfigManager:
         self.db_configs = {}
         self.remote_configs = {}  # 当前不需要
         self.cache_configs = {}   # 当前不需要
-    
+
 # ✅ YAGNI原则
 class ConfigManager:
     def __init__(self):
@@ -48,8 +48,8 @@ class ConfigManager:
 ```python
 # ❌ 过度复杂
 def process_users(users):
-    return list(map(lambda u: {**u, 'processed': True} 
-                   if u.get('active') else u, 
+    return list(map(lambda u: {**u, 'processed': True}
+                   if u.get('active') else u,
                    filter(lambda x: x is not None, users)))
 
 # ✅ KISS原则
@@ -74,7 +74,7 @@ def process_users(users):
 class UserService:
     def create_user(self, data):
         # 验证数据
-        # 保存到数据库  
+        # 保存到数据库
         # 发送邮件
         # 记录日志
         pass
@@ -86,7 +86,7 @@ class UserService:
         self.repository = repository
         self.email_service = email_service
         self.logger = logger
-    
+
     def create_user(self, data):
         self.validator.validate(data)
         user = self.repository.save(data)
@@ -146,13 +146,13 @@ line_length = 88
 from typing import List, Optional, Dict, Any
 
 def process_data(
-    data: List[Dict[str, Any]], 
+    data: List[Dict[str, Any]],
     filters: Optional[List[str]] = None
 ) -> Dict[str, int]:
     """处理数据并返回统计信息."""
     if filters is None:
         filters = []
-    
+
     # 实现逻辑
     return {"processed": len(data), "filtered": len(filters)}
 ```
@@ -163,25 +163,25 @@ def process_data(
 
 ```python
 def calculate_score(
-    base_score: int, 
-    multiplier: float, 
+    base_score: int,
+    multiplier: float,
     bonus: Optional[int] = None
 ) -> float:
     """计算最终得分.
-    
+
     根据基础分数、倍数和奖励分计算最终得分。
-    
+
     Args:
         base_score: 基础分数
-        multiplier: 倍数系数  
+        multiplier: 倍数系数
         bonus: 可选的奖励分数
-        
+
     Returns:
         计算后的最终得分
-        
+
     Raises:
         ValueError: 当base_score为负数时
-        
+
     Examples:
         >>> calculate_score(100, 1.5)
         150.0
@@ -190,7 +190,7 @@ def calculate_score(
     """
     if base_score < 0:
         raise ValueError("base_score不能为负数")
-    
+
     result = base_score * multiplier
     if bonus:
         result += bonus
@@ -235,7 +235,7 @@ def test_calculate_score_negative_base():
 ```
 tests/
 ├── unit/           # 单元测试
-├── integration/    # 集成测试  
+├── integration/    # 集成测试
 ├── fixtures/       # 测试固件
 └── conftest.py     # pytest配置
 ```
@@ -257,12 +257,12 @@ def sanitize_input(user_input: Any) -> str:
     """清理用户输入."""
     if not isinstance(user_input, str):
         return str(user_input)
-    
+
     # 移除潜在的危险字符
     dangerous_chars = ['<', '>', '"', "'", '&']
     for char in dangerous_chars:
         user_input = user_input.replace(char, '')
-    
+
     return user_input.strip()
 ```
 
@@ -306,16 +306,16 @@ def safe_operation(data: dict) -> Optional[dict]:
         # 验证输入
         if not data or 'id' not in data:
             raise ValidationError("缺少必需的id字段")
-        
+
         # 执行操作
         result = process_data(data)
         logger.info(f"操作成功完成, ID: {data['id']}")
         return result
-        
+
     except ValidationError as e:
         logger.warning(f"验证失败: {e}")
         raise  # 重新抛出验证异常
-        
+
     except Exception as e:
         logger.error(f"操作失败: {e}")
         return None  # 返回None表示操作失败
@@ -362,17 +362,17 @@ repos:
     rev: 22.12.0
     hooks:
       - id: black
-  
+
   - repo: https://github.com/pycqa/isort
     rev: 5.12.0
     hooks:
       - id: isort
-  
+
   - repo: https://github.com/pycqa/flake8
     rev: 6.0.0
     hooks:
       - id: flake8
-  
+
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v0.991
     hooks:
@@ -460,4 +460,4 @@ Closes #123
 
 ---
 
-这套开发文化是一个活文档，会随着项目的发展而不断演进。我们鼓励所有开发者（包括AI）积极参与文化建设，提出改进建议。 
+这套开发文化是一个活文档，会随着项目的发展而不断演进。我们鼓励所有开发者（包括AI）积极参与文化建设，提出改进建议。

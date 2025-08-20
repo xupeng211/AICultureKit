@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   aiculture-kit:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: aiculture-kit
@@ -19,7 +19,7 @@ services:
 
   # 开发环境服务
   dev:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: aiculture-dev
@@ -34,7 +34,7 @@ services:
 
   # 测试环境服务
   test:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: aiculture-test
@@ -48,7 +48,7 @@ services:
 
   # 文档服务（如果需要的话）
   docs:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: aiculture-docs
@@ -66,4 +66,4 @@ networks:
 
 volumes:
   aiculture-data:
-    driver: local 
+    driver: local

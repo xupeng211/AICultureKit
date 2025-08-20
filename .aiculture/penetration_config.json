@@ -1,0 +1,63 @@
+{
+  "real_time_monitoring": {
+    "enabled": true,
+    "interval": 5,
+    "monitored_extensions": [
+      ".py",
+      ".js",
+      ".ts",
+      ".jsx",
+      ".tsx",
+      ".html",
+      ".css"
+    ],
+    "excluded_paths": [
+      "venv",
+      "__pycache__",
+      "node_modules",
+      ".git"
+    ]
+  },
+  "quality_gates": {
+    "commit_gate": {
+      "enabled": true,
+      "blocking_rules": [
+        "security",
+        "syntax_error"
+      ],
+      "critical_threshold": 0,
+      "warning_threshold": 5
+    },
+    "merge_gate": {
+      "enabled": true,
+      "blocking_rules": [
+        "security",
+        "testing",
+        "documentation"
+      ],
+      "critical_threshold": 0,
+      "warning_threshold": 3
+    },
+    "release_gate": {
+      "enabled": true,
+      "blocking_rules": [
+        "security",
+        "testing",
+        "documentation",
+        "performance"
+      ],
+      "critical_threshold": 0,
+      "warning_threshold": 0
+    }
+  },
+  "auto_fix": {
+    "enabled": true,
+    "safe_fixes_only": true,
+    "backup_before_fix": true
+  },
+  "notifications": {
+    "console": true,
+    "file": true,
+    "webhook": false
+  }
+}

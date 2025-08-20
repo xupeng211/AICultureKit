@@ -1,6 +1,5 @@
-# AI开发文化 - 依赖版本锁定文件
-# 确保构建的可重现性和稳定性
-
+# Editable Git install with no remote (aiculture-kit==0.1.0)
+-e /home/user/projects/AICultureKit
 aiohappyeyeballs==2.6.1
 aiohttp==3.12.15
 aiosignal==1.4.0

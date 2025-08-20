@@ -1,8 +1,27 @@
+# AICultureKit 开发依赖
+#
+# 注意：主要依赖定义在 pyproject.toml 中
+# 这个文件用于向后兼容和CI/CD环境
+#
+# 要安装开发依赖，推荐使用：
+# pip install -e ".[dev]"
+#
+# 或者使用这个文件：
+# pip install -r requirements-dev.txt
+
+# 包含生产依赖
 -r requirements.txt
+
+# 开发工具
 black>=22.0.0
 isort>=5.0.0
 flake8>=4.0.0
 mypy>=0.991
 pytest>=7.0.0
 pytest-cov>=4.0.0
-pre-commit>=2.20.0 
+pre-commit>=2.20.0
+
+# 额外的开发工具（不在pyproject.toml中）
+bandit>=1.7.0
+safety>=2.3.0
+pip-audit>=2.6.0

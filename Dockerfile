@@ -43,4 +43,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD python -c "import aiculture; print('OK')" || exit 1
 
 # 默认命令
-CMD ["aiculture", "--help"] 
+CMD ["aiculture", "--help"]

@@ -27,7 +27,7 @@ true:
 env:
   IMAGE_NAME: aiculture-kit
   NODE_VERSION: '18'
-  PYTHON_VERSION: '3.10'
+  PYTHON_VERSION: '3.11'
   REGISTRY: docker.io
 jobs:
   auto-fix:

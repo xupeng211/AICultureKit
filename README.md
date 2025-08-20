@@ -116,7 +116,7 @@ my-project/
 - **S**ingle Responsibility - 单一职责
 - **O**pen/Closed - 开放/封闭
 - **L**iskov Substitution - 里氏替换
-- **I**nterface Segregation - 接口隔离  
+- **I**nterface Segregation - 接口隔离
 - **D**ependency Inversion - 依赖倒置
 
 ### AI协作友好
@@ -251,8 +251,11 @@ pytest --cov
 git clone https://github.com/your-username/AICultureKit.git
 cd AICultureKit
 
-# 安装开发依赖
-pip install -r requirements-dev.txt
+# 安装开发依赖（推荐方式）
+pip install -e ".[dev]"
+
+# 或使用传统方式
+# pip install -r requirements-dev.txt
 
 # 安装pre-commit钩子
 pre-commit install
@@ -260,8 +263,8 @@ pre-commit install
 # 运行测试
 pytest
 
-# 安装可编辑版本
-pip install -e .
+# 验证安装
+aiculture --version
 ```
 
 ### 提交规范
@@ -299,4 +302,4 @@ docs: 更新README文档
 ```bash
 pip install aiculture-kit
 aiculture create my-next-project
-``` 
+```

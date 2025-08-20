@@ -101,4 +101,4 @@
 ### 反馈和建议
 - 🐛 [报告Bug](https://github.com/your-username/AICultureKit/issues)
 - 💡 [功能建议](https://github.com/your-username/AICultureKit/discussions)
-- 📧 [联系我们](mailto:contact@aiculture.dev) 
+- 📧 [联系我们](mailto:contact@aiculture.dev)

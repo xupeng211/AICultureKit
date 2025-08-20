@@ -1,0 +1,33 @@
+# {{project_name}} - 生产依赖
+# 由 AICultureKit 自动生成
+
+# 核心依赖
+click>=8.0.0
+pyyaml>=6.0
+requests>=2.28.0
+
+# 数据处理 (根据需要取消注释)
+# pandas>=1.5.0
+# numpy>=1.24.0
+
+# Web框架 (根据需要取消注释)
+# fastapi>=0.100.0
+# uvicorn>=0.23.0
+# flask>=2.3.0
+
+# 数据库 (根据需要取消注释)
+# sqlalchemy>=2.0.0
+# psycopg2-binary>=2.9.0
+# pymongo>=4.0.0
+
+# 缓存 (根据需要取消注释)
+# redis>=4.5.0
+
+# 日志和监控 (根据需要取消注释)
+# structlog>=23.0.0
+# sentry-sdk>=1.30.0
+
+# 配置管理 (根据需要取消注释)
+# python-dotenv>=1.0.0
+# pydantic>=2.0.0
+# pydantic-settings>=2.0.0

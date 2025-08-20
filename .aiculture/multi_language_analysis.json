@@ -1,0 +1,117 @@
+{
+  "javascript": {
+    "language": "JavaScript/TypeScript",
+    "file_count": 2,
+    "total_lines": 371,
+    "avg_function_size": 12.75,
+    "avg_complexity": 1.5,
+    "naming_consistency": 0.9333333333333333,
+    "style_consistency": 1.0,
+    "patterns": [
+      {
+        "language": "JavaScript/TypeScript",
+        "pattern_type": "naming",
+        "pattern_name": "function_naming_style",
+        "pattern_value": "camelCase",
+        "confidence": 1.0,
+        "examples": [
+          "validateEmail",
+          "getUserById",
+          "createUser"
+        ]
+      },
+      {
+        "language": "JavaScript/TypeScript",
+        "pattern_type": "naming",
+        "pattern_name": "variable_naming_style",
+        "pattern_value": "camelCase",
+        "confidence": 1.0,
+        "examples": [
+          "config",
+          "emailRegex",
+          "response"
+        ]
+      },
+      {
+        "language": "JavaScript/TypeScript",
+        "pattern_type": "style",
+        "pattern_name": "quote_preference",
+        "pattern_value": "single",
+        "confidence": 1.0,
+        "examples": []
+      },
+      {
+        "language": "JavaScript/TypeScript",
+        "pattern_type": "feature",
+        "pattern_name": "arrow_functions_usage",
+        "pattern_value": 1.0,
+        "confidence": 1.0,
+        "examples": []
+      },
+      {
+        "language": "JavaScript/TypeScript",
+        "pattern_type": "feature",
+        "pattern_name": "async_await_usage",
+        "pattern_value": 1.0,
+        "confidence": 1.0,
+        "examples": []
+      },
+      {
+        "language": "JavaScript/TypeScript",
+        "pattern_type": "feature",
+        "pattern_name": "template_literals_usage",
+        "pattern_value": 1.0,
+        "confidence": 1.0,
+        "examples": []
+      },
+      {
+        "language": "JavaScript/TypeScript",
+        "pattern_type": "feature",
+        "pattern_name": "classes_usage",
+        "pattern_value": 1.0,
+        "confidence": 1.0,
+        "examples": []
+      },
+      {
+        "language": "JavaScript/TypeScript",
+        "pattern_type": "feature",
+        "pattern_name": "modules_usage",
+        "pattern_value": 1.0,
+        "confidence": 1.0,
+        "examples": []
+      },
+      {
+        "language": "JavaScript/TypeScript",
+        "pattern_type": "feature",
+        "pattern_name": "type_annotations_usage",
+        "pattern_value": 1.0,
+        "confidence": 1.0,
+        "examples": []
+      },
+      {
+        "language": "JavaScript/TypeScript",
+        "pattern_type": "feature",
+        "pattern_name": "interfaces_usage",
+        "pattern_value": 1.0,
+        "confidence": 1.0,
+        "examples": []
+      },
+      {
+        "language": "JavaScript/TypeScript",
+        "pattern_type": "feature",
+        "pattern_name": "generics_usage",
+        "pattern_value": 1.0,
+        "confidence": 1.0,
+        "examples": []
+      },
+      {
+        "language": "JavaScript/TypeScript",
+        "pattern_type": "feature",
+        "pattern_name": "enums_usage",
+        "pattern_value": 1.0,
+        "confidence": 1.0,
+        "examples": []
+      }
+    ]
+  }
+}

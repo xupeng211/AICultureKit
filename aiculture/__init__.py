@@ -10,14 +10,14 @@ AICultureKit - 标准化AI主导开发的文化和最佳实践工具包
 
 __version__ = "0.1.0"
 __author__ = "AICultureKit Contributors"
-__email__ = "contact@aiculture.dev"
+__email__ = "demo@placeholder.local"
 
-from .core import ProjectTemplate, QualityTools, CultureConfig
 from .cli import main
+from .core import CultureConfig, ProjectTemplate, QualityTools
 
 __all__ = [
     "ProjectTemplate",
-    "QualityTools", 
+    "QualityTools",
     "CultureConfig",
     "main",
-] 
+]
