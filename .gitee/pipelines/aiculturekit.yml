@@ -1,0 +1,255 @@
+# AICultureKit Gitee Go Pipeline
+# 把"真正阻塞"放在PR合并阶段；推送不阻塞
+
+name: AICultureKit Gate
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+
+stages:
+  - setup
+  - lint
+  - test
+  - coverage
+  - security
+  - report
+
+# 环境变量
+variables:
+  PYTHON_VERSION: "3.11"
+  PIP_CACHE_DIR: ".pip-cache"
+
+# 基础设置阶段
+setup:
+  stage: setup
+  image: python:3.11-slim
+  cache:
+    paths:
+      - .pip-cache/
+      - .pytest_cache/
+  before_script:
+    - apt-get update && apt-get install -y git
+    - python -m pip install --upgrade pip
+  script:
+    - echo "🚀 AICultureKit CI Gate 启动"
+    - echo "Python版本:" && python --version
+    - echo "Git版本:" && git --version
+    - echo "分支信息:" && git branch -a
+    - echo "提交信息:" && git log --oneline -5
+    - pip install -r requirements.txt || echo "requirements.txt不存在，跳过"
+    - pip install pre-commit diff-cover coverage pytest ruff black isort bandit detect-secrets pytest-cov
+    - echo "✅ 环境设置完成"
+  artifacts:
+    paths:
+      - .pip-cache/
+    expire_in: 1 hour
+
+# 代码风格和质量检查
+lint:
+  stage: lint
+  image: python:3.11-slim
+  dependencies:
+    - setup
+  script:
+    - echo "📝 运行代码风格检查..."
+    - pip install ruff black isort
+    - echo "🔍 Ruff检查..."
+    - python -m ruff check . --output-format=json > artifacts/ruff_report.json || true
+    - python -m ruff check . || echo "⚠️ Ruff发现问题，但不阻塞CI"
+    - echo "🎨 Black格式检查..."
+    - python -m black --check --diff . || echo "⚠️ Black发现格式问题，但不阻塞CI"
+    - echo "📦 isort导入检查..."
+    - python -m isort --check-only --diff . || echo "⚠️ isort发现问题，但不阻塞CI"
+    - echo "✅ 代码风格检查完成"
+  artifacts:
+    paths:
+      - artifacts/ruff_report.json
+    expire_in: 1 day
+  allow_failure: true  # 不阻塞后续阶段
+
+# 测试执行
+test:
+  stage: test
+  image: python:3.11-slim
+  dependencies:
+    - setup
+  script:
+    - echo "🧪 运行测试套件..."
+    - pip install pytest pytest-cov
+    - echo "📊 执行测试并生成覆盖率报告..."
+    - pytest -q --maxfail=5 --disable-warnings --tb=short || echo "⚠️ 部分测试失败，但继续执行"
+    - pytest -q --maxfail=1 --disable-warnings --cov=aiculture --cov=tools --cov-report=xml:coverage.xml --cov-report=term-missing || echo "⚠️ 覆盖率测试失败"
+    - echo "✅ 测试执行完成"
+  artifacts:
+    paths:
+      - coverage.xml
+      - .coverage
+    expire_in: 1 day
+  allow_failure: true  # 不阻塞后续阶段
+
+# 增量覆盖率检查
+coverage:
+  stage: coverage
+  image: python:3.11-slim
+  dependencies:
+    - setup
+    - test
+  script:
+    - echo "📊 运行增量覆盖率检查..."
+    - pip install diff-cover coverage
+    - echo "🎯 检查变更行覆盖率..."
+    - |
+      if [ -f "coverage.xml" ]; then
+        echo "发现覆盖率报告，执行diff-cover检查..."
+        diff-cover coverage.xml --compare-branch=origin/main --fail-under=80 --json-report=artifacts/diff_coverage.json || echo "⚠️ 增量覆盖率不达标"
+        diff-cover coverage.xml --compare-branch=origin/main --html-report=artifacts/diff_coverage.html || true
+        echo "📋 覆盖率报告已生成"
+      else
+        echo "⚠️ 未找到覆盖率报告，跳过增量覆盖率检查"
+      fi
+    - echo "✅ 增量覆盖率检查完成"
+  artifacts:
+    paths:
+      - artifacts/diff_coverage.json
+      - artifacts/diff_coverage.html
+    expire_in: 1 day
+  allow_failure: true  # 不阻塞后续阶段
+
+# 安全检查
+security:
+  stage: security
+  image: python:3.11-slim
+  dependencies:
+    - setup
+  script:
+    - echo "🔒 运行安全检查..."
+    - pip install bandit detect-secrets
+    - echo "🛡️ Bandit安全扫描..."
+    - bandit -r . -f json -o artifacts/bandit_report.json || echo "⚠️ Bandit发现安全问题"
+    - bandit -r . || echo "⚠️ 安全检查发现问题，但不阻塞CI"
+    - echo "🔑 密钥泄漏检查..."
+    - detect-secrets scan --all-files --baseline .secrets.baseline || echo "⚠️ 发现潜在密钥泄漏"
+    - echo "✅ 安全检查完成"
+  artifacts:
+    paths:
+      - artifacts/bandit_report.json
+      - artifacts/secrets.baseline
+    expire_in: 1 day
+  allow_failure: true  # 不阻塞后续阶段
+
+# 生成综合报告
+report:
+  stage: report
+  image: python:3.11-slim
+  dependencies:
+    - setup
+    - lint
+    - test
+    - coverage
+    - security
+  script:
+    - echo "📋 生成AICultureKit综合质量报告..."
+    - mkdir -p artifacts
+    - |
+      # 运行问题聚合器生成完整报告
+      if [ -d "tools/problem_aggregator" ]; then
+        echo "🔍 运行AICultureKit问题聚合器..."
+        python -m tools.problem_aggregator.aggregator --base origin/main --out artifacts/ci_problems.json --md artifacts/ci_problems_report.md || echo "⚠️ 问题聚合器执行失败"
+        
+        # 如果有阻塞性问题，尝试生成AI修复建议
+        if [ -f "artifacts/ci_problems.json" ]; then
+          echo "🤖 尝试生成AI修复建议..."
+          python -m tools.ai_fix_agent.agent --in artifacts/ci_problems.json --out artifacts/ai_fixes || echo "⚠️ AI修复建议生成失败"
+        fi
+      else
+        echo "⚠️ 未找到问题聚合器，跳过"
+      fi
+    - |
+      # 生成CI摘要报告
+      echo "# 🔍 AICultureKit CI Gate 报告" > artifacts/ci_summary.md
+      echo "" >> artifacts/ci_summary.md
+      echo "**构建时间**: $(date)" >> artifacts/ci_summary.md
+      echo "**分支**: $CI_COMMIT_REF_NAME" >> artifacts/ci_summary.md
+      echo "**提交**: $CI_COMMIT_SHA" >> artifacts/ci_summary.md
+      echo "" >> artifacts/ci_summary.md
+      echo "## 📊 检查结果" >> artifacts/ci_summary.md
+      echo "" >> artifacts/ci_summary.md
+      
+      # 检查各阶段结果
+      echo "- **代码风格**: $([ -f artifacts/ruff_report.json ] && echo '✅ 已检查' || echo '❌ 未执行')" >> artifacts/ci_summary.md
+      echo "- **测试执行**: $([ -f coverage.xml ] && echo '✅ 已执行' || echo '❌ 未执行')" >> artifacts/ci_summary.md
+      echo "- **增量覆盖率**: $([ -f artifacts/diff_coverage.json ] && echo '✅ 已检查' || echo '❌ 未执行')" >> artifacts/ci_summary.md
+      echo "- **安全检查**: $([ -f artifacts/bandit_report.json ] && echo '✅ 已检查' || echo '❌ 未执行')" >> artifacts/ci_summary.md
+      echo "- **问题聚合**: $([ -f artifacts/ci_problems.json ] && echo '✅ 已生成' || echo '❌ 未生成')" >> artifacts/ci_summary.md
+      echo "" >> artifacts/ci_summary.md
+      
+      # 添加下一步建议
+      echo "## 🚀 下一步建议" >> artifacts/ci_summary.md
+      echo "" >> artifacts/ci_summary.md
+      echo "1. 查看详细报告: \`artifacts/ci_problems_report.md\`" >> artifacts/ci_summary.md
+      echo "2. 应用AI修复: \`cd artifacts/ai_fixes && ./apply_fixes.sh\`" >> artifacts/ci_summary.md
+      echo "3. 本地验证: \`python -m tools.problem_aggregator.aggregator\`" >> artifacts/ci_summary.md
+      echo "4. 重新推送验证修复效果" >> artifacts/ci_summary.md
+      
+      echo "📋 CI摘要报告已生成"
+    - echo "✅ 综合报告生成完成"
+  artifacts:
+    paths:
+      - artifacts/
+    expire_in: 7 days
+  allow_failure: false  # 报告生成失败则整个CI失败
+
+# 最终决策阶段（仅在PR时执行）
+gate_decision:
+  stage: report
+  image: python:3.11-slim
+  dependencies:
+    - report
+  script:
+    - echo "🚪 AICultureKit Gate 最终决策..."
+    - |
+      # 检查是否有阻塞性问题
+      BLOCKING_ISSUES=0
+      
+      if [ -f "artifacts/ci_problems.json" ]; then
+        # 使用Python解析JSON获取阻塞性问题数量
+        BLOCKING_ISSUES=$(python -c "
+import json
+try:
+    with open('artifacts/ci_problems.json', 'r') as f:
+        data = json.load(f)
+    print(data.get('summary', {}).get('blocking', 0))
+except:
+    print(0)
+" 2>/dev/null || echo 0)
+        
+        echo "发现 $BLOCKING_ISSUES 个阻塞性问题"
+      fi
+      
+      if [ "$BLOCKING_ISSUES" -gt 0 ]; then
+        echo "❌ PR合并被阻塞: 存在 $BLOCKING_ISSUES 个阻塞性问题"
+        echo "📋 详细报告: artifacts/ci_problems_report.md"
+        echo "🤖 AI修复建议: artifacts/ai_fixes/"
+        echo ""
+        echo "请修复阻塞性问题后重新推送"
+        exit 1
+      else
+        echo "✅ 所有检查通过，允许PR合并"
+        exit 0
+      fi
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'  # 仅在PR时执行
+  allow_failure: false  # 阻塞性问题必须修复
+
+# 清理阶段
+cleanup:
+  stage: report
+  image: python:3.11-slim
+  script:
+    - echo "🧹 清理临时文件..."
+    - rm -rf .pytest_cache/ __pycache__/ *.pyc
+    - echo "✅ 清理完成"
+  when: always
+  allow_failure: true

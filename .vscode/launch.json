@@ -1,0 +1,149 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "🐍 Python: 当前文件",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "🧪 Python: 调试测试",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "${workspaceFolder}/tests",
+                "-v",
+                "--tb=short"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "🧪 Python: 调试当前测试文件",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "${file}",
+                "-v",
+                "--tb=short"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "🚀 AICultureKit: CLI",
+            "type": "python",
+            "request": "launch",
+            "module": "aiculture.cli",
+            "args": [
+                "--help"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "🔧 AICultureKit: 文化检查",
+            "type": "python",
+            "request": "launch",
+            "module": "aiculture.culture_enforcer",
+            "args": [
+                "."
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "📊 质量监控器",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/quality_monitor.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "🤖 智能修复器",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/smart_fixer.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "🔍 AICultureKit: Aggregate Problems",
+            "type": "python",
+            "request": "launch",
+            "module": "tools.problem_aggregator.aggregator",
+            "args": [
+                "--base",
+                "origin/main",
+                "--out",
+                "artifacts/problems.json",
+                "--md",
+                "artifacts/problems_report.md"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "🤖 AICultureKit: AI Generate Patches",
+            "type": "python",
+            "request": "launch",
+            "module": "tools.ai_fix_agent.agent",
+            "args": [
+                "--in",
+                "artifacts/problems.json",
+                "--out",
+                "artifacts/ai_fixes"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "⚡ AICultureKit: Quick Check",
+            "type": "python",
+            "request": "launch",
+            "module": "tools.problem_aggregator.aggregator",
+            "args": [
+                "--out",
+                "artifacts/quick-problems.json"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        }
+    ]
+}
