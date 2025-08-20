@@ -5,12 +5,13 @@
 
 import tempfile
 from pathlib import Path
+
 import pytest
 
-from aiculture.i18n import _, set_locale, get_current_locale
 from aiculture.data_catalog import DataCatalog
-from aiculture.monitoring_config import MonitoringConfigManager
 from aiculture.data_governance_culture import DataGovernanceManager
+from aiculture.i18n import _, get_current_locale, set_locale
+from aiculture.monitoring_config import MonitoringConfigManager
 
 
 class TestInternationalization:
@@ -140,7 +141,9 @@ class TestDataGovernance:
 
     def test_manager_initialization(self):
         """测试管理器初始化"""
-        assert self.manager.config_dir == self.temp_dir / ".aiculture" / "data_governance"
+        assert (
+            self.manager.config_dir == self.temp_dir / ".aiculture" / "data_governance"
+        )
         assert hasattr(self.manager, 'data_inventory')
 
     def test_privacy_scanning(self):

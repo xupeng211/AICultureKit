@@ -3,16 +3,17 @@
 AI学习系统综合测试 - 专门提升覆盖率
 """
 
-import pytest
-import tempfile
 import ast
+import tempfile
 from pathlib import Path
 from unittest.mock import Mock, patch
 
+import pytest
+
 from aiculture.ai_learning_system import (
     AILearningEngine,
+    LearningResult,
     ProjectPattern,
-    LearningResult
 )
 
 
@@ -149,7 +150,7 @@ class TestLearningResult:
             patterns=patterns,
             custom_rules={"test": "rule"},
             team_preferences={"test": "pref"},
-            generated_at=1234567890.0
+            generated_at=+1-XXX-XXX-XXXX.0
         )
 
         assert result.project_maturity == "intermediate"

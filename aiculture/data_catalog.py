@@ -5,10 +5,10 @@
 
 import json
 import time
-from dataclasses import dataclass, asdict
-from pathlib import Path
-from typing import Dict, List, Optional, Any
+from dataclasses import asdict, dataclass
 from enum import Enum
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 from .i18n import _
 
@@ -214,17 +214,22 @@ class DataCatalog:
             results = [
                 asset
                 for asset in results
-                if query_lower in asset.name.lower() or query_lower in asset.description.lower()
+                if query_lower in asset.name.lower()
+                or query_lower in asset.description.lower()
             ]
 
         if asset_type:
             results = [asset for asset in results if asset.asset_type == asset_type]
 
         if classification:
-            results = [asset for asset in results if asset.classification == classification]
+            results = [
+                asset for asset in results if asset.classification == classification
+            ]
 
         if tags:
-            results = [asset for asset in results if any(tag in asset.tags for tag in tags)]
+            results = [
+                asset for asset in results if any(tag in asset.tags for tag in tags)
+            ]
 
         return results
 
@@ -270,7 +275,9 @@ class DataCatalog:
 
         return lineages
 
-    def update_quality_metrics(self, asset_id: str, metrics: DataQualityMetrics) -> bool:
+    def update_quality_metrics(
+        self, asset_id: str, metrics: DataQualityMetrics
+    ) -> bool:
         """更新数据质量指标"""
         if asset_id not in self.assets:
             return False
@@ -320,7 +327,11 @@ class DataCatalog:
         avg_validity = total_validity / assets_with_metrics
 
         average_quality = (
-            avg_completeness + avg_accuracy + avg_consistency + avg_timeliness + avg_validity
+            avg_completeness
+            + avg_accuracy
+            + avg_consistency
+            + avg_timeliness
+            + avg_validity
         ) / 5
 
         return {
@@ -349,7 +360,9 @@ class DataCatalog:
         classification_counts = {}
         for asset in self.assets.values():
             classification = asset.classification.value
-            classification_counts[classification] = classification_counts.get(classification, 0) + 1
+            classification_counts[classification] = (
+                classification_counts.get(classification, 0) + 1
+            )
 
         # 按所有者统计
         owner_counts = {}
@@ -375,7 +388,9 @@ class DataCatalog:
         try:
             # 保存资产
             catalog_data = {
-                "assets": [self._asset_to_dict(asset) for asset in self.assets.values()],
+                "assets": [
+                    self._asset_to_dict(asset) for asset in self.assets.values()
+                ],
                 "updated_at": time.time(),
             }
 

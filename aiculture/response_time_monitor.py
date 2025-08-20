@@ -86,8 +86,12 @@ class ResponseTimeMonitor:
         """设置默认阈值"""
         defaults = {
             'api_default': ResponseTimeThreshold('api_default', 200, 500, 5000),
-            'function_default': ResponseTimeThreshold('function_default', 10, 100, 1000),
-            'database_default': ResponseTimeThreshold('database_default', 50, 200, 2000),
+            'function_default': ResponseTimeThreshold(
+                'function_default', 10, 100, 1000
+            ),
+            'database_default': ResponseTimeThreshold(
+                'database_default', 50, 200, 2000
+            ),
             'file_io_default': ResponseTimeThreshold('file_io_default', 100, 500, 3000),
         }
 
@@ -145,7 +149,9 @@ class ResponseTimeMonitor:
     def _start_background_processor(self) -> None:
         """启动后台处理线程"""
         self.monitoring = True
-        self.monitor_thread = threading.Thread(target=self._process_records, daemon=True)
+        self.monitor_thread = threading.Thread(
+            target=self._process_records, daemon=True
+        )
         self.monitor_thread.start()
 
     def _process_records(self) -> None:
@@ -228,7 +234,9 @@ class ResponseTimeMonitor:
 
             self.record_queue.put(record)
 
-    def monitor_api_call(self, url: str, method: str = "GET", **kwargs) -> requests.Response:
+    def monitor_api_call(
+        self, url: str, method: str = "GET", **kwargs
+    ) -> requests.Response:
         """监控API调用"""
         start_time = time.perf_counter()
 
@@ -254,7 +262,9 @@ class ResponseTimeMonitor:
                 details={
                     'method': method,
                     'url': url,
-                    'status_code': (response.status_code if 'response' in locals() else None),
+                    'status_code': (
+                        response.status_code if 'response' in locals() else None
+                    ),
                 },
             )
 
@@ -262,7 +272,9 @@ class ResponseTimeMonitor:
 
         return response
 
-    def set_threshold(self, name: str, warning: float, error: float, timeout: float) -> None:
+    def set_threshold(
+        self, name: str, warning: float, error: float, timeout: float
+    ) -> None:
         """设置阈值"""
         self.thresholds[name] = ResponseTimeThreshold(
             name=name,
@@ -272,7 +284,9 @@ class ResponseTimeMonitor:
         )
         self._save_config()
 
-    def get_statistics(self, name: Optional[str] = None, hours: int = 24) -> Dict[str, Any]:
+    def get_statistics(
+        self, name: Optional[str] = None, hours: int = 24
+    ) -> Dict[str, Any]:
         """获取统计信息"""
         cutoff_time = time.time() - (hours * SECONDS_PER_HOUR)
 
@@ -310,7 +324,9 @@ class ResponseTimeMonitor:
         index = int(len(sorted_data) * percentile / 100)
         return sorted_data[min(index, len(sorted_data) - 1)]
 
-    def get_trend_analysis(self, name: Optional[str] = None, hours: int = 24) -> Dict[str, Any]:
+    def get_trend_analysis(
+        self, name: Optional[str] = None, hours: int = 24
+    ) -> Dict[str, Any]:
         """获取趋势分析"""
         cutoff_time = time.time() - (hours * SECONDS_PER_HOUR)
 
@@ -332,7 +348,9 @@ class ResponseTimeMonitor:
             hourly_data[hour].append(record.response_time)
 
         # 计算每小时的平均响应时间
-        hourly_averages = {hour: statistics.mean(times) for hour, times in hourly_data.items()}
+        hourly_averages = {
+            hour: statistics.mean(times) for hour, times in hourly_data.items()
+        }
 
         # 计算趋势
         hours = sorted(hourly_averages.keys())
@@ -351,8 +369,12 @@ class ResponseTimeMonitor:
         return {
             'trend': trend,
             'hourly_averages': hourly_averages,
-            'current_avg': (statistics.mean(averages[-3:]) if len(averages) >= 3 else None),
-            'baseline_avg': (statistics.mean(averages[:3]) if len(averages) >= 3 else None),
+            'current_avg': (
+                statistics.mean(averages[-3:]) if len(averages) >= 3 else None
+            ),
+            'baseline_avg': (
+                statistics.mean(averages[:3]) if len(averages) >= 3 else None
+            ),
         }
 
     def stop_monitoring(self) -> None:

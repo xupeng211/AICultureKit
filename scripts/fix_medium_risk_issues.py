@@ -10,7 +10,7 @@
 
 import re
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 
 def get_safe_field_replacements() -> Dict[str, str]:
@@ -138,7 +138,10 @@ def add_data_privacy_comments():
                     content = f.read()
 
                 # 如果文件中没有隐私声明，添加它
-                if "数据隐私声明" not in content and "Data Privacy Notice" not in content:
+                if (
+                    "数据隐私声明" not in content
+                    and "Data Privacy Notice" not in content
+                ):
                     lines = content.split('\n')
 
                     # 找到合适的插入位置（在导入语句之后）
@@ -146,7 +149,9 @@ def add_data_privacy_comments():
                     for i, line in enumerate(lines):
                         if line.strip().startswith(('import ', 'from ')):
                             insert_pos = i + 1
-                        elif line.strip() and not line.startswith('#') and insert_pos > 0:
+                        elif (
+                            line.strip() and not line.startswith('#') and insert_pos > 0
+                        ):
                             break
 
                     # 插入隐私声明

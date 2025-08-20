@@ -16,14 +16,18 @@ configuration management systems for sensitive information.
 展示文化如何在开发过程中彻底渗透和自动执行
 """
 
-import time
-import tempfile
-from pathlib import Path
 import os
+import tempfile
+import time
+from pathlib import Path
+
+from aiculture.culture_enforcer import CultureEnforcer
 
 # 导入文化渗透系统
-from aiculture.culture_penetration_system import AIDevCultureAssistant, RealTimeCultureMonitor
-from aiculture.culture_enforcer import CultureEnforcer
+from aiculture.culture_penetration_system import (
+    AIDevCultureAssistant,
+    RealTimeCultureMonitor,
+)
 
 # 🔒 数据隐私声明 / Data Privacy Notice:
 # 本演示代码中的所有敏感字段名和数据都是虚构的示例，仅用于展示功能。
@@ -109,7 +113,10 @@ def demo_quality_gates():
         print(f"\n🔍 测试 {gate_name}...")
 
         # 模拟一些违规
-        from aiculture.culture_penetration_system import CultureViolation, CultureViolationSeverity
+        from aiculture.culture_penetration_system import (
+            CultureViolation,
+            CultureViolationSeverity,
+        )
 
         test_violations = [
             CultureViolation(

@@ -4,18 +4,19 @@
 
 import tempfile
 from pathlib import Path
+
 import pytest
 
 # 导入主要模块进行基础测试
 from aiculture.culture_enforcer import CultureEnforcer
-from aiculture.i18n import _, set_locale, get_current_locale
 from aiculture.data_catalog import (
-    DataCatalog,
     DataAsset,
     DataAssetType,
+    DataCatalog,
     DataClassification,
     DataFormat,
 )
+from aiculture.i18n import _, get_current_locale, set_locale
 from aiculture.monitoring_config import MonitoringConfigManager
 
 
@@ -135,7 +136,9 @@ class TestDataCatalogBasics:
         assert retrieved.name == "Managed Asset"
 
         # 更新资产
-        success = self.catalog.update_asset("managed_asset", {"description": "Updated description"})
+        success = self.catalog.update_asset(
+            "managed_asset", {"description": "Updated description"}
+        )
         assert success is True
 
         updated = self.catalog.get_asset("managed_asset")
@@ -377,10 +380,12 @@ class TestIntegrationBasics:
         """测试模块导入"""
         # 测试所有主要模块都可以导入
         try:
-            from aiculture import culture_enforcer
-            from aiculture import i18n
-            from aiculture import data_catalog
-            from aiculture import monitoring_config
+            from aiculture import (
+                culture_enforcer,
+                data_catalog,
+                i18n,
+                monitoring_config,
+            )
 
             assert True  # 如果能到这里说明导入成功
         except ImportError as e:

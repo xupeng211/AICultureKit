@@ -2,16 +2,17 @@
 性能文化模块测试
 """
 
-import time
 import tempfile
+import time
 from pathlib import Path
+
 import pytest
 
 from aiculture.performance_culture import (
-    PerformanceBenchmarkManager,
     MemoryLeakDetector,
-    PerformanceProfiler,
     PerformanceBenchmark,
+    PerformanceBenchmarkManager,
+    PerformanceProfiler,
     PerformanceResult,
 )
 
@@ -85,7 +86,9 @@ class TestPerformanceBenchmarkManager:
             """sample_function函数"""
             return sum(range(100))
 
-        benchmark = self.manager.create_benchmark("sample_function", "function", sample_function)
+        benchmark = self.manager.create_benchmark(
+            "sample_function", "function", sample_function
+        )
 
         assert isinstance(benchmark, PerformanceBenchmark)
         assert benchmark.name == "sample_function"
@@ -217,7 +220,10 @@ class TestPerformanceBenchmark:
     def test_benchmark_creation(self):
         """测试基准创建"""
         benchmark = PerformanceBenchmark(
-            name="test_benchmark", category="function", baseline_time=0.1, baseline_memory=1024
+            name="test_benchmark",
+            category="function",
+            baseline_time=0.1,
+            baseline_memory=1024,
         )
 
         assert benchmark.name == "test_benchmark"
@@ -276,7 +282,9 @@ class TestPerformanceCultureIntegration:
                 return len(data)
 
             # 创建基准
-            cpu_benchmark = manager.create_benchmark("cpu_task", "function", cpu_intensive_task)
+            cpu_benchmark = manager.create_benchmark(
+                "cpu_task", "function", cpu_intensive_task
+            )
             memory_benchmark = manager.create_benchmark(
                 "memory_task", "function", memory_intensive_task
             )

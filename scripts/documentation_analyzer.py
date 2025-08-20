@@ -5,10 +5,10 @@
 
 import ast
 import re
-from pathlib import Path
-from typing import Dict, List, Any
-from dataclasses import dataclass
 from collections import defaultdict
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List
 
 
 @dataclass
@@ -297,7 +297,14 @@ class DocumentationAnalyzer:
             return False
 
         # 简单检查是否包含参数相关的关键词
-        param_keywords = ['param', 'parameter', 'arg', 'argument', 'Args:', 'Parameters:']
+        param_keywords = [
+            'param',
+            'parameter',
+            'arg',
+            'argument',
+            'Args:',
+            'Parameters:',
+        ]
         return any(keyword in docstring for keyword in param_keywords)
 
     def _should_skip_file(self, file_path: Path) -> bool:

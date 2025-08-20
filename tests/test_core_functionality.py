@@ -5,17 +5,18 @@
 
 import tempfile
 from pathlib import Path
+
 import pytest
 
 from aiculture.core import CultureConfig, ProjectTemplate, QualityTools
-from aiculture.i18n import _, set_locale
 from aiculture.data_catalog import (
-    DataCatalog,
     DataAsset,
     DataAssetType,
+    DataCatalog,
     DataClassification,
     DataFormat,
 )
+from aiculture.i18n import _, set_locale
 from aiculture.monitoring_config import MonitoringConfigManager
 
 
@@ -225,7 +226,11 @@ class TestUtilityFunctions:
     def test_configuration_validation(self):
         """测试配置验证"""
         # 测试有效配置
-        valid_config = {'name': 'test_project', 'version': '1.0.0', 'language': 'python'}
+        valid_config = {
+            'name': 'test_project',
+            'version': '1.0.0',
+            'language': 'python',
+        }
 
         assert 'name' in valid_config
         assert 'version' in valid_config
@@ -282,10 +287,16 @@ class TestIntegrationScenarios:
         messages = {}
 
         set_locale('en')
-        messages['en'] = {'welcome': _('welcome'), 'quality_score': _('quality_score', score=90)}
+        messages['en'] = {
+            'welcome': _('welcome'),
+            'quality_score': _('quality_score', score=90),
+        }
 
         set_locale('zh')
-        messages['zh'] = {'welcome': _('welcome'), 'quality_score': _('quality_score', score=90)}
+        messages['zh'] = {
+            'welcome': _('welcome'),
+            'quality_score': _('quality_score', score=90),
+        }
 
         # 验证不同语言的消息不同
         assert messages['en']['welcome'] != messages['zh']['welcome']

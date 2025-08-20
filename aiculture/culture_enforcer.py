@@ -7,6 +7,7 @@ from typing import Any
 """
 
 import ast
+import json
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -15,10 +16,9 @@ from typing import Any, Dict, List
 from .accessibility_culture import AccessibilityCultureManager
 from .ai_culture_principles import AICulturePrinciples, PrincipleCategory
 from .data_governance_culture import DataGovernanceManager
+from .i18n import _
 from .observability_culture import ObservabilityManager
 from .performance_culture import MemoryLeakDetector, PerformanceBenchmarkManager
-from .i18n import _
-import json
 
 
 @dataclass

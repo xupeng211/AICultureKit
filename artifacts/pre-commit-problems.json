@@ -1,0 +1,1157 @@
+{
+  "problems": [
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/agent.py",
+      "line": 45,
+      "column": 15,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/agent.py",
+      "line": 389,
+      "column": 15,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/agent.py",
+      "line": 396,
+      "column": 19,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/agent.py",
+      "line": 398,
+      "column": 19,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_fix.py",
+      "line": 163,
+      "column": 46,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_fix.py",
+      "line": 173,
+      "column": 42,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_fix.py",
+      "line": 180,
+      "column": 42,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_fix.py",
+      "line": 192,
+      "column": 42,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_fix.py",
+      "line": 202,
+      "column": 42,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_fix.py",
+      "line": 215,
+      "column": 42,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/test_scaffold.py",
+      "line": 88,
+      "column": 24,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/test_scaffold.py",
+      "line": 306,
+      "column": 17,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/test_scaffold.py",
+      "line": 358,
+      "column": 26,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/test_scaffold.py",
+      "line": 359,
+      "column": 26,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/test_scaffold.py",
+      "line": 360,
+      "column": 26,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "error",
+      "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/test_scaffold.py",
+      "line": 361,
+      "column": 26,
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+      "blocking": false
+    },
+    {
+      "tool": "pytest",
+      "type": "test_collection",
+      "severity": "error",
+      "message": "测试收集失败: ",
+      "fix_suggestion": "检查测试文件语法和导入",
+      "blocking": true
+    },
+    {
+      "tool": "coverage",
+      "type": "test_coverage",
+      "severity": "warning",
+      "message": "无法获取覆盖率信息",
+      "fix_suggestion": "确保安装了pytest-cov插件",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 45,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 46,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 47,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 54,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 59,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 62,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 79,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 83,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 112,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 122,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 124,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 146,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 147,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 159,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 389,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 390,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 391,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 392,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 393,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 396,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 397,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 398,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/agent.py",
+      "line": 402,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/strategies/lint_fix.py",
+      "line": 317,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/strategies/lint_fix.py",
+      "line": 318,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/strategies/lint_fix.py",
+      "line": 319,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/strategies/security_fix.py",
+      "line": 378,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/strategies/security_fix.py",
+      "line": 379,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/strategies/security_fix.py",
+      "line": 380,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/strategies/security_fix.py",
+      "line": 384,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/strategies/test_scaffold.py",
+      "line": 396,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/strategies/test_scaffold.py",
+      "line": 397,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/strategies/test_scaffold.py",
+      "line": 398,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    },
+    {
+      "tool": "culture",
+      "type": "debug_code",
+      "severity": "warning",
+      "file": "tools/ai_fix_agent/strategies/test_scaffold.py",
+      "line": 402,
+      "message": "发现调试print语句",
+      "fix_suggestion": "移除print语句或使用logging",
+      "blocking": false
+    }
+  ],
+  "categories": {
+    "security": [],
+    "behavior_violations": [
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 45,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 46,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 47,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 54,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 59,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 62,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 79,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 83,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 112,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 122,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 124,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 146,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 147,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 159,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 389,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 390,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 391,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 392,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 393,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 396,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 397,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 398,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/agent.py",
+        "line": 402,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/strategies/lint_fix.py",
+        "line": 317,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/strategies/lint_fix.py",
+        "line": 318,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/strategies/lint_fix.py",
+        "line": 319,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/strategies/security_fix.py",
+        "line": 378,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/strategies/security_fix.py",
+        "line": 379,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/strategies/security_fix.py",
+        "line": 380,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/strategies/security_fix.py",
+        "line": 384,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/strategies/test_scaffold.py",
+        "line": 396,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/strategies/test_scaffold.py",
+        "line": 397,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/strategies/test_scaffold.py",
+        "line": 398,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      },
+      {
+        "tool": "culture",
+        "type": "debug_code",
+        "severity": "warning",
+        "file": "tools/ai_fix_agent/strategies/test_scaffold.py",
+        "line": 402,
+        "message": "发现调试print语句",
+        "fix_suggestion": "移除print语句或使用logging",
+        "blocking": false
+      }
+    ],
+    "build_blocking": [
+      {
+        "tool": "pytest",
+        "type": "test_collection",
+        "severity": "error",
+        "message": "测试收集失败: ",
+        "fix_suggestion": "检查测试文件语法和导入",
+        "blocking": true
+      }
+    ],
+    "quality": [
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/agent.py",
+        "line": 45,
+        "column": 15,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/agent.py",
+        "line": 389,
+        "column": 15,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/agent.py",
+        "line": 396,
+        "column": 19,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/agent.py",
+        "line": 398,
+        "column": 19,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_fix.py",
+        "line": 163,
+        "column": 46,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_fix.py",
+        "line": 173,
+        "column": 42,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_fix.py",
+        "line": 180,
+        "column": 42,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_fix.py",
+        "line": 192,
+        "column": 42,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_fix.py",
+        "line": 202,
+        "column": 42,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_fix.py",
+        "line": 215,
+        "column": 42,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/test_scaffold.py",
+        "line": 88,
+        "column": 24,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/test_scaffold.py",
+        "line": 306,
+        "column": 17,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/test_scaffold.py",
+        "line": 358,
+        "column": 26,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/test_scaffold.py",
+        "line": 359,
+        "column": 26,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/test_scaffold.py",
+        "line": 360,
+        "column": 26,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      },
+      {
+        "tool": "ruff",
+        "type": "lint",
+        "severity": "error",
+        "file": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/test_scaffold.py",
+        "line": 361,
+        "column": 26,
+        "code": "F541",
+        "message": "f-string without any placeholders",
+        "fix_suggestion": "参考ruff文档修复: f-string without any placeholders",
+        "blocking": false
+      }
+    ],
+    "style": [],
+    "system": [
+      {
+        "tool": "coverage",
+        "type": "test_coverage",
+        "severity": "warning",
+        "message": "无法获取覆盖率信息",
+        "fix_suggestion": "确保安装了pytest-cov插件",
+        "blocking": false
+      }
+    ]
+  },
+  "summary": {
+    "total": 52,
+    "blocking": 1,
+    "by_severity": {
+      "error": 17,
+      "warning": 35,
+      "info": 0
+    }
+  },
+  "metadata": {
+    "base": "HEAD",
+    "files_checked": 7,
+    "strict_mode": false,
+    "config": {
+      "culture": {
+        "forbid_skipping_tests": true,
+        "forbid_disabling_hooks": true,
+        "commit_message_convention": "type(scope): subject",
+        "require_test_for_new_public_funcs": true,
+        "forbid_debug_prints": true,
+        "forbid_todo_fixme": false,
+        "min_test_coverage": 80.0,
+        "forbidden_patterns": [
+          "*.pyc",
+          "__pycache__/",
+          ".DS_Store",
+          "*.log"
+        ],
+        "required_file_headers": {
+          "python": "\"\"\"\nModule docstring required\n\"\"\"\n"
+        }
+      },
+      "quality": {
+        "max_complexity": 10,
+        "max_function_length": 50,
+        "max_file_length": 500,
+        "disabled_rules": []
+      },
+      "security": {
+        "forbid_hardcoded_passwords": true,
+        "forbid_hardcoded_api_keys": true,
+        "forbid_weak_random": true
+      }
+    }
+  }
+}

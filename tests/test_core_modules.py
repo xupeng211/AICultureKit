@@ -3,14 +3,15 @@
 核心模块测试
 """
 
-import pytest
 import tempfile
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-from aiculture.core import CultureConfig, ProjectTemplate, QualityTools
-from aiculture.i18n import _, set_locale, get_current_locale
+import pytest
+
 from aiculture.accessibility_culture import AccessibilityCultureManager
+from aiculture.core import CultureConfig, ProjectTemplate, QualityTools
+from aiculture.i18n import _, get_current_locale, set_locale
 
 
 class TestCultureConfig:
@@ -18,7 +19,9 @@ class TestCultureConfig:
 
     def setup_method(self):
         """设置测试"""
-        self.temp_file = tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False)
+        self.temp_file = tempfile.NamedTemporaryFile(
+            mode='w', suffix='.yaml', delete=False
+        )
         self.temp_file.write("culture:\n  test: true\n")
         self.temp_file.close()
         self.config = CultureConfig(self.temp_file.name)
@@ -69,29 +72,29 @@ class TestQualityTools:
 
 class TestI18nFunctionality:
     """测试国际化功能"""
-    
+
     def test_locale_switching(self):
         """测试语言切换"""
         # 测试中文
         set_locale('zh')
         assert get_current_locale() == 'zh'
-        
+
         # 测试英文
         set_locale('en')
         assert get_current_locale() == 'en'
-    
+
     def test_translation_function(self):
         """测试翻译函数"""
         set_locale('en')
         welcome_msg = _('welcome')
         assert isinstance(welcome_msg, str)
         assert len(welcome_msg) > 0
-        
+
         # 测试带参数的翻译
         score_msg = _('quality_score', score=85)
         assert isinstance(score_msg, str)
         assert '85' in score_msg
-    
+
     def test_fallback_behavior(self):
         """测试回退行为"""
         set_locale('nonexistent')

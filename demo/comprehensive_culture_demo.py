@@ -4,18 +4,22 @@ AICultureKit 综合文化演示
 展示所有新增的文化模块功能
 """
 
-import time
 import json
+import time
 from pathlib import Path
+
+from aiculture.accessibility_culture import AccessibilityCultureManager
+from aiculture.alerting_rules import AlertingRulesManager
 
 # 导入所有文化模块
 from aiculture.culture_enforcer import CultureEnforcer
-from aiculture.performance_culture import PerformanceBenchmarkManager, MemoryLeakDetector
-from aiculture.observability_culture import ObservabilityManager
 from aiculture.data_governance_culture import DataGovernanceManager
-from aiculture.accessibility_culture import AccessibilityCultureManager
+from aiculture.observability_culture import ObservabilityManager
+from aiculture.performance_culture import (
+    MemoryLeakDetector,
+    PerformanceBenchmarkManager,
+)
 from aiculture.response_time_monitor import ResponseTimeMonitor
-from aiculture.alerting_rules import AlertingRulesManager
 
 # 🔒 数据隐私声明 / Data Privacy Notice:
 # 本演示代码中的所有敏感字段名和数据都是虚构的示例，仅用于展示功能。
@@ -74,7 +78,9 @@ def demo_observability_culture():
 
     # 演示结构化日志
     print("📝 结构化日志演示...")
-    with obs.observe_operation("demo_operation", user_id="123", request_id="req-456") as ctx:
+    with obs.observe_operation(
+        "demo_operation", user_id="123", request_id="req-456"
+    ) as ctx:
         logger = ctx['logger']
         metrics = ctx['metrics']
 

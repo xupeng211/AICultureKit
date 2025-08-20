@@ -257,7 +257,11 @@ class CICDGuardian:
             with open('/proc/meminfo', 'r') as f:
                 meminfo = f.read()
             mem_available = (
-                int([line for line in meminfo.split('\n') if 'MemAvailable' in line][0].split()[1])
+                int(
+                    [line for line in meminfo.split('\n') if 'MemAvailable' in line][
+                        0
+                    ].split()[1]
+                )
                 // 1024
             )
 
@@ -548,7 +552,10 @@ dist/
         # 生成锁定版本
         try:
             result = subprocess.run(
-                ["pip", "freeze"], capture_output=True, text=True, timeout=MINUTES_PER_HOUR
+                ["pip", "freeze"],
+                capture_output=True,
+                text=True,
+                timeout=MINUTES_PER_HOUR,
             )
             if result.returncode == 0:
                 lock_file = self.project_path / "requirements.lock"

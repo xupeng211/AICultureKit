@@ -4,10 +4,10 @@
 自动配置文化渗透系统，确保开发文化在项目中彻底执行
 """
 
-import os
 import json
-from pathlib import Path
+import os
 import subprocess
+from pathlib import Path
 
 
 def setup_git_hooks(project_path: Path) -> None:
@@ -227,7 +227,15 @@ def setup_culture_config(project_path: Path) -> None:
         "real_time_monitoring": {
             "enabled": True,
             "interval": 5,
-            "monitored_extensions": [".py", ".js", ".ts", ".jsx", ".tsx", ".html", ".css"],
+            "monitored_extensions": [
+                ".py",
+                ".js",
+                ".ts",
+                ".jsx",
+                ".tsx",
+                ".html",
+                ".css",
+            ],
             "excluded_paths": ["venv", "__pycache__", "node_modules", ".git"],
         },
         "quality_gates": {
@@ -245,12 +253,21 @@ def setup_culture_config(project_path: Path) -> None:
             },
             "release_gate": {
                 "enabled": True,
-                "blocking_rules": ["security", "testing", "documentation", "performance"],
+                "blocking_rules": [
+                    "security",
+                    "testing",
+                    "documentation",
+                    "performance",
+                ],
                 "critical_threshold": 0,
                 "warning_threshold": 0,
             },
         },
-        "auto_fix": {"enabled": True, "safe_fixes_only": True, "backup_before_fix": True},
+        "auto_fix": {
+            "enabled": True,
+            "safe_fixes_only": True,
+            "backup_before_fix": True,
+        },
         "notifications": {"console": True, "file": True, "webhook": False},
     }
 

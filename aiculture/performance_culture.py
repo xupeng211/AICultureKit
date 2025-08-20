@@ -105,7 +105,9 @@ class PerformanceBenchmarkManager:
     def __init__(self, project_path: Path):
         """__init__函数"""
         self.project_path = project_path
-        self.benchmarks_file = project_path / ".aiculture" / "performance_benchmarks.json"
+        self.benchmarks_file = (
+            project_path / ".aiculture" / "performance_benchmarks.json"
+        )
         self.results_file = project_path / ".aiculture" / "performance_results.json"
         self.benchmarks: Dict[str, PerformanceBenchmark] = {}
         self.profiler = PerformanceProfiler()
@@ -173,7 +175,9 @@ class PerformanceBenchmarkManager:
         print(f"✅ 基准创建完成: {baseline_time:.4f}s, {baseline_memory}bytes")
         return benchmark
 
-    def run_benchmark(self, name: str, func: Callable, *args, **kwargs) -> PerformanceResult:
+    def run_benchmark(
+        self, name: str, func: Callable, *args, **kwargs
+    ) -> PerformanceResult:
         """运行性能基准测试"""
         if name not in self.benchmarks:
             raise ValueError(f"Benchmark {name} not found")

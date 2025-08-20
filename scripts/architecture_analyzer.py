@@ -5,10 +5,10 @@
 
 import ast
 import re
-from pathlib import Path
-from typing import Dict, List, Set, Any, Tuple
+from collections import Counter, defaultdict
 from dataclasses import dataclass
-from collections import defaultdict, Counter
+from pathlib import Path
+from typing import Any, Dict, List, Set, Tuple
 
 
 @dataclass
@@ -94,7 +94,10 @@ class ArchitectureAnalyzer:
         # 简单的循环依赖检查
         for module_a in self.dependencies:
             for module_b in self.dependencies[module_a]:
-                if module_b in self.dependencies and module_a in self.dependencies[module_b]:
+                if (
+                    module_b in self.dependencies
+                    and module_a in self.dependencies[module_b]
+                ):
                     # 发现双向依赖
                     self.issues.append(
                         ArchitectureIssue(
@@ -120,7 +123,9 @@ class ArchitectureAnalyzer:
             )
 
             # 计算传出耦合（依赖多少模块）
-            fan_out = len([imp for imp in info['imports'] if imp.startswith('aiculture')])
+            fan_out = len(
+                [imp for imp in info['imports'] if imp.startswith('aiculture')]
+            )
 
             # 高耦合警告
             if fan_out > 10:
@@ -200,9 +205,13 @@ class ArchitectureAnalyzer:
 
             for class_info in classes:
                 # 检查是否有抽象基类
-                if class_info['name'].endswith('Base') or class_info['name'].startswith('Abstract'):
+                if class_info['name'].endswith('Base') or class_info['name'].startswith(
+                    'Abstract'
+                ):
                     # 检查是否有抽象方法
-                    abstract_methods = [m for m in class_info['methods'] if m.startswith('_')]
+                    abstract_methods = [
+                        m for m in class_info['methods'] if m.startswith('_')
+                    ]
                     if len(abstract_methods) == 0:
                         self.issues.append(
                             ArchitectureIssue(
@@ -216,7 +225,9 @@ class ArchitectureAnalyzer:
                         )
 
                 # 检查公共接口的一致性
-                public_methods = [m for m in class_info['methods'] if not m.startswith('_')]
+                public_methods = [
+                    m for m in class_info['methods'] if not m.startswith('_')
+                ]
                 if len(public_methods) > 15:
                     self.issues.append(
                         ArchitectureIssue(
@@ -242,8 +253,16 @@ class ArchitectureAnalyzer:
             for imp in imports:
                 if imp.startswith('aiculture'):
                     # 简单启发式：如果导入的模块名包含具体实现的词汇
-                    concrete_indicators = ['manager', 'handler', 'processor', 'executor', 'worker']
-                    if any(indicator in imp.lower() for indicator in concrete_indicators):
+                    concrete_indicators = [
+                        'manager',
+                        'handler',
+                        'processor',
+                        'executor',
+                        'worker',
+                    ]
+                    if any(
+                        indicator in imp.lower() for indicator in concrete_indicators
+                    ):
                         concrete_dependencies.append(imp)
 
             if len(concrete_dependencies) > 5:
@@ -266,7 +285,9 @@ class ArchitectureAnalyzer:
     def _get_module_name(self, file_path: Path) -> str:
         """获取模块名"""
         relative_path = file_path.relative_to(self.project_path)
-        return str(relative_path).replace('/', '.').replace('\\', '.').replace('.py', '')
+        return (
+            str(relative_path).replace('/', '.').replace('\\', '.').replace('.py', '')
+        )
 
     def _extract_imports(self, tree: ast.AST) -> List[str]:
         """提取导入信息"""

@@ -1,0 +1,91 @@
+{
+  "problems": [
+    {
+      "tool": "pytest",
+      "type": "test_collection",
+      "severity": "error",
+      "message": "测试收集失败: ",
+      "fix_suggestion": "检查测试文件语法和导入",
+      "blocking": true
+    },
+    {
+      "tool": "coverage",
+      "type": "test_coverage",
+      "severity": "warning",
+      "message": "无法获取覆盖率信息",
+      "fix_suggestion": "确保安装了pytest-cov插件",
+      "blocking": false
+    }
+  ],
+  "categories": {
+    "security": [],
+    "behavior_violations": [],
+    "build_blocking": [
+      {
+        "tool": "pytest",
+        "type": "test_collection",
+        "severity": "error",
+        "message": "测试收集失败: ",
+        "fix_suggestion": "检查测试文件语法和导入",
+        "blocking": true
+      }
+    ],
+    "quality": [],
+    "style": [],
+    "system": [
+      {
+        "tool": "coverage",
+        "type": "test_coverage",
+        "severity": "warning",
+        "message": "无法获取覆盖率信息",
+        "fix_suggestion": "确保安装了pytest-cov插件",
+        "blocking": false
+      }
+    ]
+  },
+  "summary": {
+    "total": 2,
+    "blocking": 1,
+    "by_severity": {
+      "error": 1,
+      "warning": 1,
+      "info": 0
+    }
+  },
+  "metadata": {
+    "base": "HEAD",
+    "files_checked": 1,
+    "strict_mode": false,
+    "config": {
+      "culture": {
+        "forbid_skipping_tests": true,
+        "forbid_disabling_hooks": true,
+        "commit_message_convention": "type(scope): subject",
+        "require_test_for_new_public_funcs": true,
+        "forbid_debug_prints": true,
+        "forbid_todo_fixme": false,
+        "min_test_coverage": 80.0,
+        "forbidden_patterns": [
+          "*.pyc",
+          "__pycache__/",
+          ".DS_Store",
+          "*.log"
+        ],
+        "required_file_headers": {
+          "python": "\"\"\"\nModule docstring required\n\"\"\"\n"
+        }
+      },
+      "quality": {
+        "max_complexity": 10,
+        "max_function_length": 50,
+        "max_file_length": 500,
+        "disabled_rules": []
+      },
+      "security": {
+        "forbid_hardcoded_passwords": true,
+        "forbid_hardcoded_api_keys": true,
+        "forbid_weak_random": true
+      }
+    }
+  }
+}

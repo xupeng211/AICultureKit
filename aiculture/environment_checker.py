@@ -7,11 +7,11 @@
 
 import os
 import platform
+import re
 import subprocess
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
-import re
 
 
 class EnvironmentChecker:
@@ -156,7 +156,9 @@ class EnvironmentChecker:
                 text=True,
                 check=True,
             )
-            return len(result.stdout.strip().split('\n')) if result.stdout.strip() else 0
+            return (
+                len(result.stdout.strip().split('\n')) if result.stdout.strip() else 0
+            )
         except (subprocess.CalledProcessError, FileNotFoundError):
             return 0
 

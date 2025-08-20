@@ -5,7 +5,7 @@
 
 import re
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 
 def fix_empty_except_blocks(file_path: Path) -> bool:
@@ -65,7 +65,9 @@ def fix_magic_numbers(file_path: Path) -> bool:
         for pattern, constant in magic_number_replacements.items():
             # 只在明显的时间/大小计算中替换
             if re.search(
-                r'(time|timeout|sleep|size|limit|max|min).*' + pattern, content, re.IGNORECASE
+                r'(time|timeout|sleep|size|limit|max|min).*' + pattern,
+                content,
+                re.IGNORECASE,
             ):
                 # 添加常量定义到文件开头
                 if constant not in content:
@@ -75,7 +77,9 @@ def fix_magic_numbers(file_path: Path) -> bool:
                     for i, line in enumerate(lines):
                         if line.strip().startswith(('import ', 'from ')):
                             insert_pos = i + 1
-                        elif line.strip() and not line.startswith('#') and insert_pos > 0:
+                        elif (
+                            line.strip() and not line.startswith('#') and insert_pos > 0
+                        ):
                             break
 
                     # 插入常量定义
@@ -124,7 +128,9 @@ def fix_long_lines(file_path: Path) -> bool:
                                 if len(parts) == 2 and len(parts[0]) < 100:
                                     indent = len(line) - len(line.lstrip())
                                     lines[i] = parts[0] + break_char + '\n'
-                                    lines.insert(i + 1, ' ' * (indent + 4) + parts[1] + '\n')
+                                    lines.insert(
+                                        i + 1, ' ' * (indent + 4) + parts[1] + '\n'
+                                    )
                                     modified = True
                                     break
 

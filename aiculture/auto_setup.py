@@ -6,10 +6,10 @@ from typing import Any
 为项目自动配置所有必要的文化规范工具和配置文件。
 """
 
+import re
 from pathlib import Path
 
 from .ai_culture_principles import AICulturePrinciples
-import re
 
 
 class AutoCultureSetup:

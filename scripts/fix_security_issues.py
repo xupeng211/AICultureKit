@@ -15,7 +15,10 @@ def get_security_replacements() -> List[Tuple[str, str]]:
         (r'zhangsan@example\.com', 'user1@example.com'),
         (r'lisi@example\.com', 'user2@example.com'),
         (r'test@example\.com', 'demo@example.com'),
-        (r'noreply@example\.com', 'noreply@example.com'),  # 这个保持不变，因为是合理的示例
+        (
+            r'noreply@example\.com',
+            'noreply@example.com',
+        ),  # 这个保持不变，因为是合理的示例
         (r'user@example\.com', 'demo@example.com'),
         (r'admin@company\.com', 'admin@example.com'),
         (r'support@company\.org', 'support@example.com'),
@@ -110,9 +113,15 @@ configuration management systems for sensitive information.
 
                     # 跳过shebang和编码声明
                     for i, line in enumerate(lines):
-                        if line.startswith('#!') or 'coding:' in line or 'encoding:' in line:
+                        if (
+                            line.startswith('#!')
+                            or 'coding:' in line
+                            or 'encoding:' in line
+                        ):
                             continue
-                        if line.strip().startswith('"""') or line.strip().startswith("'''"):
+                        if line.strip().startswith('"""') or line.strip().startswith(
+                            "'''"
+                        ):
                             insert_pos = i
                             break
                         if line.strip() and not line.startswith('#'):
@@ -160,7 +169,13 @@ def main():
                     content = f.read()
                     if any(
                         pattern in content.lower()
-                        for pattern in ['example.com', '192.168', '555-', 'password123', 'secret']
+                        for pattern in [
+                            'example.com',
+                            '192.168',
+                            '555-',
+                            'password123',
+                            'secret',
+                        ]
                     ):
                         files_to_check.append(file_path)
             except:

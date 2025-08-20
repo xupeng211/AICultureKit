@@ -16,6 +16,7 @@ configuration management systems for sensitive information.
 """
 
 import os
+
 import mysql.connector
 import requests
 

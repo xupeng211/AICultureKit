@@ -8,12 +8,7 @@ AICultureKit CLI 命令行接口
 
 import click
 
-from .cli_commands import (
-    project_group,
-    quality_group,
-    culture_group,
-    template_group
-)
+from .cli_commands import culture_group, project_group, quality_group, template_group
 
 
 @click.group()

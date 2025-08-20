@@ -16,12 +16,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from .ai_learning import (
-    ProjectPattern,
-    LearningResult,
-    CodeAnalyzer,
-    LearningEngine
-)
+from .ai_learning import CodeAnalyzer, LearningEngine, LearningResult, ProjectPattern
 
 
 class ProjectAnalyzer:
@@ -48,7 +43,7 @@ class AILearningEngine:
         self.analyzer = ProjectAnalyzer(project_path)
         self.logger = logging.getLogger(__name__)
         self._engine = LearningEngine(project_path)
-        
+
         # 配置
         self.config = {
             'min_confidence': 0.7,
@@ -74,7 +69,9 @@ class AdaptiveStrictnessManager:
         """计算适应性严格度"""
         return learning_result.recommended_strictness
 
-    def adjust_strictness_based_on_feedback(self, current_strictness: float, feedback: Dict[str, Any]) -> float:
+    def adjust_strictness_based_on_feedback(
+        self, current_strictness: float, feedback: Dict[str, Any]
+    ) -> float:
         """根据反馈调整严格度"""
         # 简化实现
         if feedback.get('too_strict', False):

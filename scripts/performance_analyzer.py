@@ -6,7 +6,7 @@
 
 import ast
 from pathlib import Path
-from typing import List, Dict, Any, Tuple
+from typing import Any, Dict, List, Tuple
 
 
 class PerformanceAnalyzer:
@@ -47,7 +47,9 @@ class PerformanceAnalyzer:
                 }
             ]
 
-    def check_large_functions(self, tree: ast.AST, file_path: Path) -> List[Dict[str, Any]]:
+    def check_large_functions(
+        self, tree: ast.AST, file_path: Path
+    ) -> List[Dict[str, Any]]:
         """检查过大的函数"""
         issues = []
 
@@ -71,7 +73,9 @@ class PerformanceAnalyzer:
 
         return issues
 
-    def check_nested_loops(self, tree: ast.AST, file_path: Path) -> List[Dict[str, Any]]:
+    def check_nested_loops(
+        self, tree: ast.AST, file_path: Path
+    ) -> List[Dict[str, Any]]:
         """检查嵌套循环"""
         issues = []
 
@@ -109,8 +113,14 @@ class PerformanceAnalyzer:
                 if (
                     isinstance(node.left, ast.Str)
                     or isinstance(node.right, ast.Str)
-                    or (isinstance(node.left, ast.Constant) and isinstance(node.left.value, str))
-                    or (isinstance(node.right, ast.Constant) and isinstance(node.right.value, str))
+                    or (
+                        isinstance(node.left, ast.Constant)
+                        and isinstance(node.left.value, str)
+                    )
+                    or (
+                        isinstance(node.right, ast.Constant)
+                        and isinstance(node.right.value, str)
+                    )
                 ):
 
                     # 检查是否在循环中
@@ -173,7 +183,9 @@ class PerformanceAnalyzer:
 
         return issues
 
-    def check_file_size(self, file_path: Path, lines: List[str]) -> List[Dict[str, Any]]:
+    def check_file_size(
+        self, file_path: Path, lines: List[str]
+    ) -> List[Dict[str, Any]]:
         """检查文件大小"""
         issues = []
         line_count = len(lines)

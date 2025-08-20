@@ -5,15 +5,16 @@
 import json
 import tempfile
 from pathlib import Path
+
 import pytest
 
 from aiculture.observability_culture import (
-    ObservabilityManager,
-    StructuredLogger,
-    MetricsCollector,
     DistributedTracer,
     LogLevel,
+    MetricsCollector,
     MetricType,
+    ObservabilityManager,
+    StructuredLogger,
 )
 
 
@@ -154,7 +155,9 @@ class TestMetricsCollector:
         # 记录直方图指标
         response_times = [0.1, 0.2, 0.15, 0.3, 0.25, 0.18, 0.22]
         for time_val in response_times:
-            self.collector.record_metric("response_time", MetricType.HISTOGRAM, time_val)
+            self.collector.record_metric(
+                "response_time", MetricType.HISTOGRAM, time_val
+            )
 
         # 验证指标
         metric = self.collector.metrics["response_time"]
@@ -245,7 +248,9 @@ class TestDistributedTracer:
         parent_span_id = self.tracer.start_span("parent_operation")
 
         # 创建子Span
-        child_span_id = self.tracer.start_span("child_operation", parent_span_id=parent_span_id)
+        child_span_id = self.tracer.start_span(
+            "child_operation", parent_span_id=parent_span_id
+        )
 
         # 验证父子关系
         child_span = self.tracer.active_spans[child_span_id]
