@@ -10,7 +10,6 @@ from enum import Enum
 import yaml
 from pathlib import Path
 
-
 class PrincipleCategory(Enum):
     """原则分类"""
     CODE_QUALITY = "code_quality"
@@ -21,7 +20,6 @@ class PrincipleCategory(Enum):
     TESTING = "testing"
     CI_CD = "ci_cd"
     DOCUMENTATION = "documentation"
-
 
 @dataclass
 class DevelopmentPrinciple:
@@ -34,7 +32,6 @@ class DevelopmentPrinciple:
     enforcement_level: str = "strict"  # strict, warning, optional
     tools: List[str] = field(default_factory=list)
     examples: Dict[str, str] = field(default_factory=dict)
-
 
 class AICulturePrinciples:
     """AI开发文化原则管理器"""
@@ -392,6 +389,7 @@ python -m aiculture.cli infrastructure-check --path .
 ### 🔥 **P0 - 功能完整性原则 (绝对优先)**
 
 #### 1. **文件依赖完整性**
+
 ```python
 # ✅ 正确：确保引用的文件存在
 def load_template(template_name: str):
@@ -407,6 +405,7 @@ def load_template(template_name: str):
 ```
 
 #### 2. **CLI命令完整性**
+
 ```python
 # ✅ 正确：CLI命令有完整实现
 @click.command()
@@ -438,6 +437,7 @@ def create_project(name: str):
 ```
 
 #### 3. **配置系统一致性**
+
 ```python
 # ✅ 正确：配置定义与使用一致
 class CultureConfig:
@@ -463,6 +463,7 @@ class CultureConfig:
 ```
 
 #### 4. **模板系统完整性**
+
 ```python
 # ✅ 正确：模板系统完整可用
 def setup_project_template(project_type: str):
@@ -493,6 +494,7 @@ def setup_project_template(project_type: str):
 ### 🏗️ **P0 - 基础设施原则 (第二优先级)**
 
 #### 1. **环境隔离原则**
+
 ```python
 # ✅ 正确：检查虚拟环境
 import sys
@@ -504,6 +506,7 @@ if not hasattr(sys, 'real_prefix') and sys.prefix == sys.base_prefix:
 ```
 
 #### 2. **配置外部化原则**
+
 ```python
 # ✅ 正确：使用环境变量
 import os
@@ -514,10 +517,11 @@ if not API_KEY:
 
 # ❌ 错误：硬编码敏感信息
 DATABASE_URL = "postgresql://user:password@localhost/mydb"
-API_KEY = "sk-1234567890abcdef"  # 硬编码API密钥
+API_KEY = "sk-DEMO_API_KEY_PLACEHOLDER"  # 硬编码API密钥 (已脱敏)
 ```
 
 #### 3. **依赖精确管理**
+
 ```python
 # ✅ 正确：requirements.txt 精确版本
 click==8.1.3
@@ -531,6 +535,7 @@ pydantic>=1.0.0
 ```
 
 #### 4. **跨平台兼容性**
+
 ```python
 # ✅ 正确：跨平台路径处理
 from pathlib import Path
@@ -545,6 +550,7 @@ data_dir = "/home/user/data"  # Unix specific
 ### 🔐 **P1 - 安全原则 (严格执行)**
 
 #### 1. **输入验证**
+
 ```python
 # ✅ 正确：严格输入验证
 from pydantic import BaseModel, validator
@@ -565,6 +571,7 @@ def process_user(user_data):
 ```
 
 #### 2. **密钥管理**
+
 ```python
 # ✅ 正确：安全的密钥处理
 import hashlib
@@ -585,6 +592,7 @@ hash_value = hashlib.md5(password.encode()).hexdigest()  # 弱哈希
 ### 📐 **P2 - SOLID原则**
 
 #### 1. **单一职责原则 (SRP)**
+
 ```python
 # ✅ 正确：单一职责
 class UserValidator:
@@ -619,6 +627,7 @@ class UserManager:
 ```
 
 #### 2. **依赖倒置原则 (DIP)**
+
 ```python
 # ✅ 正确：依赖抽象
 from abc import ABC, abstractmethod
@@ -784,6 +793,7 @@ class Calculator:
 5. **📐 遵循架构一致性** - 保证设计与实现匹配
 
 **记住：功能完整性是底线，没有功能完整性就没有用户价值！** 🎯
+
 ```
 
 ## 3. 扩展核心功能，添加原则检查

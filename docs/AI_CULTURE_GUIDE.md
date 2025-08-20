@@ -266,7 +266,7 @@ def validate_admin_email(email):
 
 ```python
 # ❌ 硬编码敏感信息
-API_KEY = "sk-1234567890abcdef"
+API_KEY = "sk-DEMO_API_KEY_PLACEHOLDER"  # 已脱敏
 DATABASE_PASSWORD = "DEMO_PASSWORD"  # 已脱敏
 
 # ✅ 环境变量配置
