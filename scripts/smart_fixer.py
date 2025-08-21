@@ -82,42 +82,43 @@ class SmartCodeFixer:
         fixed_count = 0
         for py_file in self.project_path.rglob("*.py"):
             if any(
-                part.startswith('.') or part in ['venv', 'env', 'aiculture-env', '__pycache__']
+                part.startswith(".")
+                or part in ["venv", "env", "aiculture-env", "__pycache__"]
                 for part in py_file.parts
             ):
                 continue
             # 跳过虚拟环境和第三方库
-            if 'site-packages' in str(py_file) or 'lib/python' in str(py_file):
+            if "site-packages" in str(py_file) or "lib/python" in str(py_file):
                 continue
 
             try:
-                content = py_file.read_text(encoding='utf-8')
+                content = py_file.read_text(encoding="utf-8")
                 original_content = content
 
                 # 修复常见的安全问题
                 # 1. 替换 shell=True  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式 为更安全的方式（在注释中提醒）
                 if (
-                    'shell=True  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式'
+                    "shell=True  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式"
                     in content
                 ):
                     content = content.replace(
-                        'shell=True  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式',
-                        'shell=True  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式',
+                        "shell=True  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式",
+                        "shell=True  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式  # TODO:    考虑使用更安全的方式",
                     )
 
                 # 2. 添加输入验证提醒
                 if (
-                    'input(  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证'
+                    "input(  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证"
                     in content
                 ):
                     content = re.sub(
-                        r'input\(',
-                        'input(  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证',
+                        r"input\(",
+                        "input(  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证  # TODO:    添加输入验证",
                         content,
                     )
 
                 if content != original_content:
-                    py_file.write_text(content, encoding='utf-8')
+                    py_file.write_text(content, encoding="utf-8")
                     fixed_count += 1
 
             except Exception:
@@ -147,7 +148,7 @@ class SmartCodeFixer:
 
             if not test_file.exists():
                 # 生成测试文件模板
-                module_name = str(relative_path).replace('/', '.').replace('.py', '')
+                module_name = str(relative_path).replace("/", ".").replace(".py", "")
                 test_content = f'''"""
 测试模块: aiculture.{module_name}
 TODO: 添加具体的测试用例
@@ -172,7 +173,7 @@ class Test{py_file.stem.title().replace('_', '')}:
 '''
 
                 test_file.parent.mkdir(parents=True, exist_ok=True)
-                test_file.write_text(test_content, encoding='utf-8')
+                test_file.write_text(test_content, encoding="utf-8")
                 generated_count += 1
 
         if generated_count > 0:

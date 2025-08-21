@@ -1,0 +1,46 @@
+{
+    "recommendations": [
+        // Python 开发必备
+        "ms-python.python",
+        "ms-python.flake8",
+        "ms-python.mypy-type-checker",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        // 测试支持
+        "ms-python.pytest",
+        "hbenl.vscode-test-explorer",
+        "littlefoxteam.vscode-python-test-adapter",
+        // Git 和版本控制
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        "donjayamanne.githistory",
+        // 代码质量
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "ms-vscode.vscode-markdown",
+        "davidanson.vscode-markdownlint",
+        // 自动化和CI/CD
+        "github.vscode-github-actions",
+        "ms-vscode.github-issues-prs",
+        // AICultureKit特定扩展
+        "charliermarsh.ruff",
+        "ms-vscode.vscode-diff",
+        "ms-vscode.vscode-patch",
+        // 开发体验增强
+        "ms-vscode.vscode-todo-highlight",
+        "gruntfuggly.todo-tree",
+        "streetsidesoftware.code-spell-checker",
+        "ms-vscode.vscode-typescript-next",
+        // 文档和注释
+        "njpwerner.autodocstring",
+        "aaron-bond.better-comments",
+        // 主题和美化
+        "pkief.material-icon-theme",
+        "ms-vscode.vscode-color-theme-tomorrow-night-blue"
+    ],
+    "unwantedRecommendations": [
+        // 避免冲突的扩展
+        "ms-python.pylint",
+        "ms-python.autopep8"
+    ]
+}

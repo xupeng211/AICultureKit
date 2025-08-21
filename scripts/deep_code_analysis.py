@@ -5,10 +5,10 @@
 
 import ast
 import re
-from pathlib import Path
-from typing import Dict, List, Any, Tuple
-from dataclasses import dataclass
 from collections import defaultdict
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List
 
 
 @dataclass
@@ -47,13 +47,13 @@ class DeepCodeAnalyzer:
     def _should_analyze_file(self, file_path: Path) -> bool:
         """判断是否应该分析该文件"""
         # 跳过虚拟环境和缓存目录
-        skip_dirs = {'venv', '__pycache__', '.git', 'node_modules', '.pytest_cache'}
+        skip_dirs = {"venv", "__pycache__", ".git", "node_modules", ".pytest_cache"}
         return not any(part in skip_dirs for part in file_path.parts)
 
     def _analyze_file(self, file_path: Path):
         """分析单个文件"""
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
             # 解析AST
@@ -80,7 +80,7 @@ class DeepCodeAnalyzer:
 
     def _analyze_ast(self, file_path: Path, tree: ast.AST, content: str):
         """分析AST"""
-        lines = content.split('\n')
+        lines = content.split("\n")
 
         for node in ast.walk(tree):
             # 检查函数复杂度
@@ -101,7 +101,7 @@ class DeepCodeAnalyzer:
 
     def _analyze_text_content(self, file_path: Path, content: str):
         """分析文本内容"""
-        lines = content.split('\n')
+        lines = content.split("\n")
 
         for i, line in enumerate(lines, 1):
             # 检查行长度
@@ -118,7 +118,7 @@ class DeepCodeAnalyzer:
                 )
 
             # 检查TODO/FIXME注释
-            if re.search(r'#\s*(TODO|FIXME|HACK|XXX)', line, re.IGNORECASE):
+            if re.search(r"#\s*(TODO|FIXME|HACK|XXX)", line, re.IGNORECASE):
                 self.issues.append(
                     CodeIssue(
                         file_path=str(file_path),
@@ -132,7 +132,7 @@ class DeepCodeAnalyzer:
 
             # 检查硬编码字符串
             if re.search(r'["\'][^"\']{20,}["\']', line):
-                if not line.strip().startswith('#'):  # 不是注释
+                if not line.strip().startswith("#"):  # 不是注释
                     self.issues.append(
                         CodeIssue(
                             file_path=str(file_path),
@@ -144,7 +144,9 @@ class DeepCodeAnalyzer:
                         )
                     )
 
-    def _check_function_complexity(self, file_path: Path, node: ast.FunctionDef, lines: List[str]):
+    def _check_function_complexity(
+        self, file_path: Path, node: ast.FunctionDef, lines: List[str]
+    ):
         """检查函数复杂度"""
         # 计算圈复杂度
         complexity = self._calculate_cyclomatic_complexity(node)
@@ -162,7 +164,9 @@ class DeepCodeAnalyzer:
             )
 
         # 检查函数长度
-        func_lines = node.end_lineno - node.lineno + 1 if hasattr(node, 'end_lineno') else 0
+        func_lines = (
+            node.end_lineno - node.lineno + 1 if hasattr(node, "end_lineno") else 0
+        )
         if func_lines > 50:
             self.issues.append(
                 CodeIssue(
@@ -188,7 +192,9 @@ class DeepCodeAnalyzer:
                 )
             )
 
-    def _check_class_design(self, file_path: Path, node: ast.ClassDef, lines: List[str]):
+    def _check_class_design(
+        self, file_path: Path, node: ast.ClassDef, lines: List[str]
+    ):
         """检查类设计"""
         # 计算类的方法数量
         methods = [n for n in node.body if isinstance(n, ast.FunctionDef)]
@@ -218,7 +224,9 @@ class DeepCodeAnalyzer:
                 )
             )
 
-    def _check_exception_handling(self, file_path: Path, node: ast.ExceptHandler, lines: List[str]):
+    def _check_exception_handling(
+        self, file_path: Path, node: ast.ExceptHandler, lines: List[str]
+    ):
         """检查异常处理"""
         # 检查裸露的except
         if node.type is None:
@@ -251,7 +259,7 @@ class DeepCodeAnalyzer:
         # 跳过常见的数字
         common_numbers = {0, 1, 2, -1, 100, 1000}
 
-        if hasattr(node, 'n') and node.n not in common_numbers:
+        if hasattr(node, "n") and node.n not in common_numbers:
             if isinstance(node.n, (int, float)) and abs(node.n) > 1:
                 self.issues.append(
                     CodeIssue(
@@ -296,15 +304,15 @@ class DeepCodeAnalyzer:
             by_file[issue.file_path].append(issue)
 
         return {
-            'total_issues': len(self.issues),
-            'by_severity': dict(by_severity),
-            'by_type': dict(by_type),
-            'by_file': dict(by_file),
-            'summary': {
-                'high_severity': len(by_severity['high']),
-                'medium_severity': len(by_severity['medium']),
-                'low_severity': len(by_severity['low']),
-                'files_with_issues': len(by_file),
+            "total_issues": len(self.issues),
+            "by_severity": dict(by_severity),
+            "by_type": dict(by_type),
+            "by_file": dict(by_file),
+            "summary": {
+                "high_severity": len(by_severity["high"]),
+                "medium_severity": len(by_severity["medium"]),
+                "low_severity": len(by_severity["low"]),
+                "files_with_issues": len(by_file),
             },
         }
 
@@ -312,12 +320,12 @@ class DeepCodeAnalyzer:
 def main():
     """主函数"""
     analyzer = DeepCodeAnalyzer()
-    report = analyzer.analyze_project(Path('.'))
+    report = analyzer.analyze_project(Path("."))
 
     print("\n📊 深度代码质量分析报告")
     print("=" * 50)
 
-    summary = report['summary']
+    summary = report["summary"]
     print(f"总问题数: {report['total_issues']}")
     print(f"高严重性: {summary['high_severity']} 个")
     print(f"中等严重性: {summary['medium_severity']} 个")
@@ -325,11 +333,11 @@ def main():
     print(f"有问题的文件: {summary['files_with_issues']} 个")
 
     print("\n🔍 按问题类型分组:")
-    for issue_type, issues in report['by_type'].items():
+    for issue_type, issues in report["by_type"].items():
         print(f"  {issue_type}: {len(issues)} 个")
 
     print("\n🚨 高严重性问题详情:")
-    high_issues = report['by_severity'].get('high', [])
+    high_issues = report["by_severity"].get("high", [])
     for i, issue in enumerate(high_issues[:10], 1):
         print(f"  {i}. {issue.file_path}:{issue.line_number}")
         print(f"     {issue.description}")

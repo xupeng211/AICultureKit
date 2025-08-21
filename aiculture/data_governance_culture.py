@@ -13,14 +13,13 @@
 所有敏感字段都是示例用途，用于识别和保护真实敏感数据。
 """
 
-import ast
 import json
 import re
 import time
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional
 
 
 class DataSensitivityLevel(Enum):
@@ -101,69 +100,95 @@ class DataPrivacyScanner:
         """__init__函数"""
         # 个人信息模式
         self.pii_patterns = {
-            'email': r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',
-            'phone': r'(\+\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}',
-            'ssn': r'\b\d{3}-\d{2}-\d{4}\b',
-            'credit_card': r'\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b',
-            'ip_address': r'\b(?:\d{1,3}\.){3}\d{1,3}\b',
-            'passport': r'\b[A-Z]{1,2}\d{6,9}\b',
-            'driver_license': r'\b[A-Z]{1,2}\d{6,8}\b',
+            "email": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+            "phone": r"(\+\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}",
+            "ssn": r"\b\d{3}-\d{2}-\d{4}\b",
+            "credit_card": r"\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b",
+            "ip_address": r"\b(?:\d{1,3}\.){3}\d{1,3}\b",
+            "passport": r"\b[A-Z]{1,2}\d{6,9}\b",
+            "driver_license": r"\b[A-Z]{1,2}\d{6,8}\b",
         }
 
         # 敏感字段名模式
         self.sensitive_field_patterns = {
-            'password': r'(?i)(password|passwd|pwd|secret|token|key)',
-            'personal_name': r'(?i)(first_?name|last_?name|full_?name|surname|given_?name)',
-            'address': r'(?i)(address|street|city|state|zip|postal|country)',
-            'birth': r'(?i)(birth|dob|date_of_birth|birthday)',
-            'gender': r'(?i)(gender|sex)',
-            'race': r'(?i)(race|ethnicity|nationality)',
-            'religion': r'(?i)(religion|faith|belief)',
-            'health': r'(?i)(health|medical|diagnosis|treatment|medication)',
-            'financial': r'(?i)(salary|income|bank|account|credit|debit|payment)',
+            "password": r"(?i)(password|passwd|pwd|secret|token|key)",
+            "personal_name": r"(?i)(first_?name|last_?name|full_?name|surname|given_?name)",
+            "address": r"(?i)(address|street|city|state|zip|postal|country)",
+            "birth": r"(?i)(birth|dob|date_of_birth|birthday)",
+            "gender": r"(?i)(gender|sex)",
+            "race": r"(?i)(race|ethnicity|nationality)",
+            "religion": r"(?i)(religion|faith|belief)",
+            "health": r"(?i)(health|medical|diagnosis|treatment|medication)",
+            "financial": r"(?i)(salary|income|bank|account|credit|debit|payment)",
         }
 
     def _is_placeholder_data(self, pii_type: str, matched_text: str) -> bool:
         """判断是否为占位符数据"""
         text_lower = matched_text.lower()
 
+        # 排除正则表达式模式本身
+        regex_patterns = [
+            r"(\+\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}",
+            r"\b\d{3}-\d{2}-\d{4}\b",
+            r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+            r"\b(?:\d{1,3}\.){3}\d{1,3}\b",
+        ]
+
+        if any(pattern in matched_text for pattern in regex_patterns):
+            return True
+
         # 邮箱占位符
-        if pii_type == 'email':
+        if pii_type == "email":
             placeholder_domains = [
-                'placeholder.local',
-                'demo.local',
-                'example.com',
-                'test.com',
-                'demo.com',
+                "placeholder.local",
+                "demo.local",
+                "example.com",
+                "test.com",
+                "demo.com",
+                "demo-placeholder.dev",
+                "demo-company.com",
             ]
             placeholder_prefixes = [
-                'demo',
-                'test',
-                'example',
-                'placeholder',
-                'user1',
-                'user2',
-                'noreply',
+                "demo",
+                "test",
+                "example",
+                "placeholder",
+                "user1",
+                "user2",
+                "noreply",
+                "contact",
             ]
 
-            domain = matched_text.split('@')[1].lower() if '@' in matched_text else ''
-            prefix = matched_text.split('@')[0].lower() if '@' in matched_text else ''
+            domain = matched_text.split("@")[1].lower() if "@" in matched_text else ""
+            prefix = matched_text.split("@")[0].lower() if "@" in matched_text else ""
 
             if domain in placeholder_domains or prefix in placeholder_prefixes:
                 return True
 
         # IP地址占位符
-        elif pii_type == 'ip_address':
-            if 'xxx' in text_lower or '192.168.1.xxx' in text_lower:
+        elif pii_type == "ip_address":
+            if "xxx" in text_lower or "192.168.1.xxx" in text_lower:
                 return True
 
         # 电话号码占位符
-        elif pii_type == 'phone':
-            if 'xxx' in text_lower:
+        elif pii_type == "phone":
+            if "xxx" in text_lower:
+                return True
+
+        # SSN占位符
+        elif pii_type == "ssn":
+            if "xxx-xx-xxxx" in text_lower:
                 return True
 
         # 其他占位符标识
-        placeholder_indicators = ['xxx', 'placeholder', 'demo', 'test', 'example']
+        placeholder_indicators = [
+            "xxx",
+            "placeholder",
+            "demo",
+            "test",
+            "example",
+            "sample",
+        ]
         if any(indicator in text_lower for indicator in placeholder_indicators):
             return True
 
@@ -174,10 +199,10 @@ class DataPrivacyScanner:
         findings = []
 
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
-            lines = content.split('\n')
+            lines = content.split("\n")
 
             for line_num, line in enumerate(lines, 1):
                 # 检查PII模式
@@ -192,14 +217,14 @@ class DataPrivacyScanner:
 
                         findings.append(
                             {
-                                'type': 'pii_in_code',
-                                'pii_type': pii_type,
-                                'file': str(file_path),
-                                'line': line_num,
-                                'column': match.start(),
-                                'matched_text': matched_text,
-                                'severity': 'high',
-                                'recommendation': f'避免在代码中硬编码{pii_type}信息',
+                                "type": "pii_in_code",
+                                "pii_type": pii_type,
+                                "file": str(file_path),
+                                "line": line_num,
+                                "column": match.start(),
+                                "matched_text": matched_text,
+                                "severity": "high",
+                                "recommendation": f"避免在代码中硬编码{pii_type}信息",
                             }
                         )
 
@@ -209,24 +234,24 @@ class DataPrivacyScanner:
                     for match in matches:
                         findings.append(
                             {
-                                'type': 'sensitive_field',
-                                'field_type': field_type,
-                                'file': str(file_path),
-                                'line': line_num,
-                                'column': match.start(),
-                                'matched_text': match.group(),
-                                'severity': 'medium',
-                                'recommendation': f'确保{field_type}字段有适当的保护措施',
+                                "type": "sensitive_field",
+                                "field_type": field_type,
+                                "file": str(file_path),
+                                "line": line_num,
+                                "column": match.start(),
+                                "matched_text": match.group(),
+                                "severity": "medium",
+                                "recommendation": f"确保{field_type}字段有适当的保护措施",
                             }
                         )
 
         except Exception as e:
             findings.append(
                 {
-                    'type': 'scan_error',
-                    'file': str(file_path),
-                    'error': str(e),
-                    'severity': 'low',
+                    "type": "scan_error",
+                    "file": str(file_path),
+                    "error": str(e),
+                    "severity": "low",
                 }
             )
 
@@ -237,24 +262,24 @@ class DataPrivacyScanner:
         findings = []
 
         for table_name, table_info in schema_info.items():
-            columns = table_info.get('columns', [])
+            columns = table_info.get("columns", [])
 
             for column in columns:
-                column_name = column.get('name', '')
-                column_type = column.get('type', '')
+                column_name = column.get("name", "")
+                column_type = column.get("type", "")
 
                 # 检查敏感字段名
                 for field_type, pattern in self.sensitive_field_patterns.items():
                     if re.search(pattern, column_name):
                         findings.append(
                             {
-                                'type': 'sensitive_database_field',
-                                'field_type': field_type,
-                                'table': table_name,
-                                'column': column_name,
-                                'data_type': column_type,
-                                'severity': 'high',
-                                'recommendation': f'为{field_type}字段实施加密和访问控制',
+                                "type": "sensitive_database_field",
+                                "field_type": field_type,
+                                "table": table_name,
+                                "column": column_name,
+                                "data_type": column_type,
+                                "severity": "high",
+                                "recommendation": f"为{field_type}字段实施加密和访问控制",
                             }
                         )
 
@@ -275,11 +300,11 @@ class DataQualityValidator:
     def validate_data(self, data: List[Dict[str, Any]]) -> Dict[str, Any]:
         """验证数据质量"""
         results = {
-            'total_records': len(data),
-            'passed_records': 0,
-            'failed_records': 0,
-            'rule_results': {},
-            'issues': [],
+            "total_records": len(data),
+            "passed_records": 0,
+            "failed_records": 0,
+            "rule_results": {},
+            "issues": [],
         }
 
         if not data:
@@ -288,28 +313,30 @@ class DataQualityValidator:
         # 按规则验证
         for rule in self.rules:
             rule_results = self._validate_rule(rule, data)
-            results['rule_results'][rule.name] = rule_results
-            results['issues'].extend(rule_results['issues'])
+            results["rule_results"][rule.name] = rule_results
+            results["issues"].extend(rule_results["issues"])
 
         # 计算通过/失败记录数
         failed_record_ids = set()
-        for issue in results['issues']:
-            if issue.get('record_id') is not None:
-                failed_record_ids.add(issue['record_id'])
+        for issue in results["issues"]:
+            if issue.get("record_id") is not None:
+                failed_record_ids.add(issue["record_id"])
 
-        results['failed_records'] = len(failed_record_ids)
-        results['passed_records'] = results['total_records'] - results['failed_records']
+        results["failed_records"] = len(failed_record_ids)
+        results["passed_records"] = results["total_records"] - results["failed_records"]
 
         return results
 
-    def _validate_rule(self, rule: DataQualityRule, data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _validate_rule(
+        self, rule: DataQualityRule, data: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """验证单个规则"""
         rule_result = {
-            'rule_name': rule.name,
-            'rule_type': rule.rule_type,
-            'passed': 0,
-            'failed': 0,
-            'issues': [],
+            "rule_name": rule.name,
+            "rule_type": rule.rule_type,
+            "passed": 0,
+            "failed": 0,
+            "issues": [],
         }
 
         for record_id, record in enumerate(data):
@@ -329,40 +356,40 @@ class DataQualityValidator:
                 issue_message = f"字段 {rule.field_name} 值重复: {field_value}"
 
             elif rule.rule_type == "range":
-                min_val = rule.parameters.get('min')
-                max_val = rule.parameters.get('max')
+                min_val = rule.parameters.get("min")
+                max_val = rule.parameters.get("max")
                 if isinstance(field_value, (int, float)):
                     is_valid = (min_val is None or field_value >= min_val) and (
                         max_val is None or field_value <= max_val
                     )
-                    issue_message = (
-                        f"字段 {rule.field_name} 值 {field_value} 超出范围 [{min_val}, {max_val}]"
-                    )
+                    issue_message = f"字段 {rule.field_name} 值 {field_value} 超出范围 [{min_val}, {max_val}]"
                 else:
                     is_valid = False
                     issue_message = f"字段 {rule.field_name} 不是数值类型"
 
             elif rule.rule_type == "pattern":
-                pattern = rule.parameters.get('pattern')
+                pattern = rule.parameters.get("pattern")
                 if pattern and isinstance(field_value, str):
                     is_valid = bool(re.match(pattern, field_value))
-                    issue_message = f"字段 {rule.field_name} 值 {field_value} 不匹配模式 {pattern}"
+                    issue_message = (
+                        f"字段 {rule.field_name} 值 {field_value} 不匹配模式 {pattern}"
+                    )
                 else:
                     is_valid = False
                     issue_message = f"字段 {rule.field_name} 模式验证失败"
 
             if is_valid:
-                rule_result['passed'] += 1
+                rule_result["passed"] += 1
             else:
-                rule_result['failed'] += 1
-                rule_result['issues'].append(
+                rule_result["failed"] += 1
+                rule_result["issues"].append(
                     {
-                        'record_id': record_id,
-                        'field_name': rule.field_name,
-                        'field_value': field_value,
-                        'rule_name': rule.name,
-                        'severity': rule.severity,
-                        'message': issue_message,
+                        "record_id": record_id,
+                        "field_name": rule.field_name,
+                        "field_value": field_value,
+                        "rule_name": rule.name,
+                        "severity": rule.severity,
+                        "message": issue_message,
                     }
                 )
 
@@ -401,7 +428,7 @@ class DataLineageTracker:
     def get_upstream_lineage(self, node_id: str, max_depth: int = 10) -> Dict[str, Any]:
         """获取上游血缘"""
         visited = set()
-        lineage = {'nodes': {}, 'edges': []}
+        lineage = {"nodes": {}, "edges": []}
 
         def traverse_upstream(current_id: str, depth: int):
             """traverse_upstream函数"""
@@ -411,21 +438,23 @@ class DataLineageTracker:
             visited.add(current_id)
 
             if current_id in self.nodes:
-                lineage['nodes'][current_id] = self.nodes[current_id]
+                lineage["nodes"][current_id] = self.nodes[current_id]
 
             # 查找指向当前节点的边
             for edge in self.edges:
                 if edge.target_id == current_id:
-                    lineage['edges'].append(edge)
+                    lineage["edges"].append(edge)
                     traverse_upstream(edge.source_id, depth + 1)
 
         traverse_upstream(node_id, 0)
         return lineage
 
-    def get_downstream_lineage(self, node_id: str, max_depth: int = 10) -> Dict[str, Any]:
+    def get_downstream_lineage(
+        self, node_id: str, max_depth: int = 10
+    ) -> Dict[str, Any]:
         """获取下游血缘"""
         visited = set()
-        lineage = {'nodes': {}, 'edges': []}
+        lineage = {"nodes": {}, "edges": []}
 
         def traverse_downstream(current_id: str, depth: int):
             """traverse_downstream函数"""
@@ -435,12 +464,12 @@ class DataLineageTracker:
             visited.add(current_id)
 
             if current_id in self.nodes:
-                lineage['nodes'][current_id] = self.nodes[current_id]
+                lineage["nodes"][current_id] = self.nodes[current_id]
 
             # 查找从当前节点出发的边
             for edge in self.edges:
                 if edge.source_id == current_id:
-                    lineage['edges'].append(edge)
+                    lineage["edges"].append(edge)
                     traverse_downstream(edge.target_id, depth + 1)
 
         traverse_downstream(node_id, 0)
@@ -451,29 +480,31 @@ class DataLineageTracker:
         downstream = self.get_downstream_lineage(node_id)
 
         impact_summary = {
-            'affected_nodes': len(downstream['nodes']),
-            'affected_transformations': len(downstream['edges']),
-            'critical_paths': [],
-            'recommendations': [],
+            "affected_nodes": len(downstream["nodes"]),
+            "affected_transformations": len(downstream["edges"]),
+            "critical_paths": [],
+            "recommendations": [],
         }
 
         # 分析关键路径
-        for edge in downstream['edges']:
-            if 'critical' in edge.metadata:
-                impact_summary['critical_paths'].append(
+        for edge in downstream["edges"]:
+            if "critical" in edge.metadata:
+                impact_summary["critical_paths"].append(
                     {
-                        'source': edge.source_id,
-                        'target': edge.target_id,
-                        'transformation': edge.transformation,
+                        "source": edge.source_id,
+                        "target": edge.target_id,
+                        "transformation": edge.transformation,
                     }
                 )
 
         # 生成建议
-        if impact_summary['affected_nodes'] > 10:
-            impact_summary['recommendations'].append("影响范围较大，建议分阶段实施变更")
+        if impact_summary["affected_nodes"] > 10:
+            impact_summary["recommendations"].append("影响范围较大，建议分阶段实施变更")
 
-        if impact_summary['critical_paths']:
-            impact_summary['recommendations'].append("存在关键路径，需要额外的测试和验证")
+        if impact_summary["critical_paths"]:
+            impact_summary["recommendations"].append(
+                "存在关键路径，需要额外的测试和验证"
+            )
 
         return impact_summary
 
@@ -482,23 +513,23 @@ class DataLineageTracker:
         if format == "json":
             return json.dumps(
                 {
-                    'nodes': [
+                    "nodes": [
                         {
-                            'id': node.id,
-                            'name': node.name,
-                            'type': node.type,
-                            'location': node.location,
-                            'metadata': node.metadata,
+                            "id": node.id,
+                            "name": node.name,
+                            "type": node.type,
+                            "location": node.location,
+                            "metadata": node.metadata,
                         }
                         for node in self.nodes.values()
                     ],
-                    'edges': [
+                    "edges": [
                         {
-                            'source': edge.source_id,
-                            'target': edge.target_id,
-                            'transformation': edge.transformation,
-                            'timestamp': edge.timestamp,
-                            'metadata': edge.metadata,
+                            "source": edge.source_id,
+                            "target": edge.target_id,
+                            "transformation": edge.transformation,
+                            "timestamp": edge.timestamp,
+                            "metadata": edge.metadata,
                         }
                         for edge in self.edges
                     ],
@@ -533,100 +564,104 @@ class GDPRComplianceChecker:
     def __init__(self):
         """__init__函数"""
         self.gdpr_requirements = {
-            'data_minimization': '只收集必要的个人数据',
-            'purpose_limitation': '数据使用应限于收集目的',
-            'accuracy': '确保个人数据准确和最新',
-            'storage_limitation': '不应超过必要期限存储个人数据',
-            'security': '实施适当的技术和组织措施',
-            'accountability': '能够证明合规性',
-            'consent': '获得明确的数据处理同意',
-            'rights': '支持数据主体权利',
+            "data_minimization": "只收集必要的个人数据",
+            "purpose_limitation": "数据使用应限于收集目的",
+            "accuracy": "确保个人数据准确和最新",
+            "storage_limitation": "不应超过必要期限存储个人数据",
+            "security": "实施适当的技术和组织措施",
+            "accountability": "能够证明合规性",
+            "consent": "获得明确的数据处理同意",
+            "rights": "支持数据主体权利",
         }
 
     def check_compliance(self, data_inventory: List[DataField]) -> Dict[str, Any]:
         """检查GDPR合规性"""
         compliance_report = {
-            'overall_score': 0,
-            'requirements': {},
-            'violations': [],
-            'recommendations': [],
+            "overall_score": 0,
+            "requirements": {},
+            "violations": [],
+            "recommendations": [],
         }
 
         personal_data_fields = [
-            field for field in data_inventory if DataCategory.PERSONAL in field.categories
+            field
+            for field in data_inventory
+            if DataCategory.PERSONAL in field.categories
         ]
 
         # 检查数据最小化
-        compliance_report['requirements']['data_minimization'] = self._check_data_minimization(
-            personal_data_fields
+        compliance_report["requirements"]["data_minimization"] = (
+            self._check_data_minimization(personal_data_fields)
         )
 
         # 检查存储限制
-        compliance_report['requirements']['storage_limitation'] = self._check_storage_limitation(
-            personal_data_fields
+        compliance_report["requirements"]["storage_limitation"] = (
+            self._check_storage_limitation(personal_data_fields)
         )
 
         # 检查安全措施
-        compliance_report['requirements']['security'] = self._check_security_measures(
+        compliance_report["requirements"]["security"] = self._check_security_measures(
             personal_data_fields
         )
 
         # 检查数据准确性
-        compliance_report['requirements']['accuracy'] = self._check_data_accuracy(
+        compliance_report["requirements"]["accuracy"] = self._check_data_accuracy(
             personal_data_fields
         )
 
         # 计算总体评分
-        scores = [req['score'] for req in compliance_report['requirements'].values()]
-        compliance_report['overall_score'] = sum(scores) / len(scores) if scores else 0
+        scores = [req["score"] for req in compliance_report["requirements"].values()]
+        compliance_report["overall_score"] = sum(scores) / len(scores) if scores else 0
 
         # 收集违规和建议
-        for req_name, req_result in compliance_report['requirements'].items():
-            compliance_report['violations'].extend(req_result.get('violations', []))
-            compliance_report['recommendations'].extend(req_result.get('recommendations', []))
+        for req_name, req_result in compliance_report["requirements"].items():
+            compliance_report["violations"].extend(req_result.get("violations", []))
+            compliance_report["recommendations"].extend(
+                req_result.get("recommendations", [])
+            )
 
         return compliance_report
 
     def _check_data_minimization(self, fields: List[DataField]) -> Dict[str, Any]:
         """检查数据最小化原则"""
-        result = {'score': 100, 'violations': [], 'recommendations': []}
+        result = {"score": 100, "violations": [], "recommendations": []}
 
         for data_field in fields:
             if not data_field.description:
-                result['violations'].append(f"字段 {data_field.name} 缺少用途说明")
-                result['score'] -= 10
+                result["violations"].append(f"字段 {data_field.name} 缺少用途说明")
+                result["score"] -= 10
 
             if (
                 field.sensitivity_level == DataSensitivityLevel.RESTRICTED
                 and not field.encryption_required
             ):
-                result['violations'].append(f"高敏感字段 {field.name} 未要求加密")
-                result['score'] -= 15
+                result["violations"].append(f"高敏感字段 {field.name} 未要求加密")
+                result["score"] -= 15
 
-        if result['violations']:
-            result['recommendations'].append("为所有个人数据字段添加明确的用途说明")
-            result['recommendations'].append("对高敏感数据实施加密保护")
+        if result["violations"]:
+            result["recommendations"].append("为所有个人数据字段添加明确的用途说明")
+            result["recommendations"].append("对高敏感数据实施加密保护")
 
         return result
 
     def _check_storage_limitation(self, fields: List[DataField]) -> Dict[str, Any]:
         """检查存储限制原则"""
-        result = {'score': 100, 'violations': [], 'recommendations': []}
+        result = {"score": 100, "violations": [], "recommendations": []}
 
         for data_field in fields:
             if not data_field.retention_period:
-                result['violations'].append(f"字段 {data_field.name} 未定义保留期限")
-                result['score'] -= 20
+                result["violations"].append(f"字段 {data_field.name} 未定义保留期限")
+                result["score"] -= 20
 
-        if result['violations']:
-            result['recommendations'].append("为所有个人数据定义明确的保留期限")
-            result['recommendations'].append("实施自动数据删除机制")
+        if result["violations"]:
+            result["recommendations"].append("为所有个人数据定义明确的保留期限")
+            result["recommendations"].append("实施自动数据删除机制")
 
         return result
 
     def _check_security_measures(self, fields: List[DataField]) -> Dict[str, Any]:
         """检查安全措施"""
-        result = {'score': 100, 'violations': [], 'recommendations': []}
+        result = {"score": 100, "violations": [], "recommendations": []}
 
         sensitive_fields = [
             f
@@ -637,34 +672,36 @@ class GDPRComplianceChecker:
 
         for data_field in sensitive_fields:
             if not data_field.encryption_required:
-                result['violations'].append(f"敏感字段 {data_field.name} 未启用加密")
-                result['score'] -= 25
+                result["violations"].append(f"敏感字段 {data_field.name} 未启用加密")
+                result["score"] -= 25
 
             if not data_field.anonymization_method:
-                result['violations'].append(f"敏感字段 {data_field.name} 未定义匿名化方法")
-                result['score'] -= 15
+                result["violations"].append(
+                    f"敏感字段 {data_field.name} 未定义匿名化方法"
+                )
+                result["score"] -= 15
 
-        if result['violations']:
-            result['recommendations'].append("对所有敏感个人数据实施加密")
-            result['recommendations'].append("实施数据匿名化和假名化技术")
+        if result["violations"]:
+            result["recommendations"].append("对所有敏感个人数据实施加密")
+            result["recommendations"].append("实施数据匿名化和假名化技术")
 
         return result
 
     def _check_data_accuracy(self, fields: List[DataField]) -> Dict[str, Any]:
         """检查数据准确性"""
-        result = {'score': 100, 'violations': [], 'recommendations': []}
+        result = {"score": 100, "violations": [], "recommendations": []}
 
         # 这里可以集成数据质量检查结果
         # 简化实现，假设所有字段都需要验证机制
 
         for data_field in fields:
             if not data_field.transformations:
-                result['violations'].append(f"字段 {data_field.name} 缺少数据验证转换")
-                result['score'] -= 10
+                result["violations"].append(f"字段 {data_field.name} 缺少数据验证转换")
+                result["score"] -= 10
 
-        if result['violations']:
-            result['recommendations'].append("为个人数据字段实施数据验证和清洗机制")
-            result['recommendations'].append("建立数据质量监控和报告机制")
+        if result["violations"]:
+            result["recommendations"].append("为个人数据字段实施数据验证和清洗机制")
+            result["recommendations"].append("建立数据质量监控和报告机制")
 
         return result
 
@@ -691,20 +728,26 @@ class DataGovernanceManager:
         inventory_file = self.config_dir / "data_inventory.json"
         if inventory_file.exists():
             try:
-                with open(inventory_file, 'r', encoding='utf-8') as f:
+                with open(inventory_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     for field_data in data:
                         field = DataField(
-                            name=field_data['name'],
-                            data_type=field_data['data_type'],
-                            sensitivity_level=DataSensitivityLevel(field_data['sensitivity_level']),
-                            categories=[DataCategory(cat) for cat in field_data['categories']],
-                            description=field_data.get('description', ''),
-                            source=field_data.get('source', ''),
-                            transformations=field_data.get('transformations', []),
-                            retention_period=field_data.get('retention_period'),
-                            encryption_required=field_data.get('encryption_required', False),
-                            anonymization_method=field_data.get('anonymization_method'),
+                            name=field_data["name"],
+                            data_type=field_data["data_type"],
+                            sensitivity_level=DataSensitivityLevel(
+                                field_data["sensitivity_level"]
+                            ),
+                            categories=[
+                                DataCategory(cat) for cat in field_data["categories"]
+                            ],
+                            description=field_data.get("description", ""),
+                            source=field_data.get("source", ""),
+                            transformations=field_data.get("transformations", []),
+                            retention_period=field_data.get("retention_period"),
+                            encryption_required=field_data.get(
+                                "encryption_required", False
+                            ),
+                            anonymization_method=field_data.get("anonymization_method"),
                         )
                         self.data_inventory.append(field)
             except Exception as e:
@@ -717,20 +760,20 @@ class DataGovernanceManager:
         for data_field in self.data_inventory:
             data.append(
                 {
-                    'name': data_field.name,
-                    'data_type': data_field.data_type,
-                    'sensitivity_level': data_field.sensitivity_level.value,
-                    'categories': [cat.value for cat in data_field.categories],
-                    'description': data_field.description,
-                    'source': data_field.source,
-                    'transformations': data_field.transformations,
-                    'retention_period': data_field.retention_period,
-                    'encryption_required': data_field.encryption_required,
-                    'anonymization_method': data_field.anonymization_method,
+                    "name": data_field.name,
+                    "data_type": data_field.data_type,
+                    "sensitivity_level": data_field.sensitivity_level.value,
+                    "categories": [cat.value for cat in data_field.categories],
+                    "description": data_field.description,
+                    "source": data_field.source,
+                    "transformations": data_field.transformations,
+                    "retention_period": data_field.retention_period,
+                    "encryption_required": data_field.encryption_required,
+                    "anonymization_method": data_field.anonymization_method,
                 }
             )
 
-        with open(inventory_file, 'w', encoding='utf-8') as f:
+        with open(inventory_file, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
     def scan_project_for_privacy_issues(self) -> Dict[str, Any]:
@@ -740,7 +783,8 @@ class DataGovernanceManager:
         # 扫描Python文件
         for py_file in self.project_path.rglob("*.py"):
             if any(
-                part.startswith('.') or part in ['venv', '__pycache__'] for part in py_file.parts
+                part.startswith(".") or part in ["venv", "__pycache__"]
+                for part in py_file.parts
             ):
                 continue
 
@@ -748,20 +792,22 @@ class DataGovernanceManager:
             all_findings.extend(findings)
 
         # 按严重程度分组
-        by_severity = {'high': [], 'medium': [], 'low': []}
+        by_severity = {"high": [], "medium": [], "low": []}
         for finding in all_findings:
-            severity = finding.get('severity', 'low')
+            severity = finding.get("severity", "low")
             by_severity[severity].append(finding)
 
         return {
-            'total_findings': len(all_findings),
-            'by_severity': by_severity,
-            'summary': {
-                'high_risk_files': len(set(f['file'] for f in by_severity['high'])),
-                'pii_types_found': len(
-                    set(f.get('pii_type', '') for f in all_findings if f.get('pii_type'))
+            "total_findings": len(all_findings),
+            "by_severity": by_severity,
+            "summary": {
+                "high_risk_files": len(set(f["file"] for f in by_severity["high"])),
+                "pii_types_found": len(
+                    set(
+                        f.get("pii_type", "") for f in all_findings if f.get("pii_type")
+                    )
                 ),
-                'recommendations': [
+                "recommendations": [
                     "移除代码中的硬编码个人信息",
                     "使用环境变量或配置文件存储敏感信息",
                     "实施数据脱敏和匿名化",
@@ -776,15 +822,15 @@ class DataGovernanceManager:
         gdpr_compliance = self.gdpr_checker.check_compliance(self.data_inventory)
 
         return {
-            'timestamp': time.time(),
-            'privacy_scan': privacy_scan,
-            'gdpr_compliance': gdpr_compliance,
-            'data_inventory_size': len(self.data_inventory),
-            'overall_compliance_score': (
-                (100 - min(privacy_scan['total_findings'] * 5, 50)) * 0.4
-                + gdpr_compliance['overall_score'] * 0.6
+            "timestamp": time.time(),
+            "privacy_scan": privacy_scan,
+            "gdpr_compliance": gdpr_compliance,
+            "data_inventory_size": len(self.data_inventory),
+            "overall_compliance_score": (
+                (100 - min(privacy_scan["total_findings"] * 5, 50)) * 0.4
+                + gdpr_compliance["overall_score"] * 0.6
             ),
-            'action_items': [
+            "action_items": [
                 f"修复 {privacy_scan['total_findings']} 个隐私问题",
                 "提升GDPR合规评分至90%以上",
                 "完善数据清单和分类",

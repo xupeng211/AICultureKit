@@ -7,18 +7,17 @@ from typing import Any
 """
 
 import ast
+import json
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Dict, List
 
 from .accessibility_culture import AccessibilityCultureManager
-from .ai_culture_principles import AICulturePrinciples, PrincipleCategory
+from .ai_culture_principles import AICulturePrinciples
 from .data_governance_culture import DataGovernanceManager
 from .observability_culture import ObservabilityManager
 from .performance_culture import MemoryLeakDetector, PerformanceBenchmarkManager
-from .i18n import _
-import json
 
 
 @dataclass
@@ -126,7 +125,7 @@ class CultureEnforcer:
                 continue
 
             try:
-                with open(file_path, 'r', encoding='utf-8') as f:
+                with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
 
                 # 检查SOLID原则
@@ -167,12 +166,12 @@ class CultureEnforcer:
 
     def _check_dry_principle(self, file_path: Path, content: str) -> Any:
         """检查DRY原则"""
-        lines = content.split('\n')
+        lines = content.split("\n")
         line_counts = {}
 
         for i, line in enumerate(lines, 1):
             line = line.strip()
-            if line and not line.startswith('#') and len(line) > 20:
+            if line and not line.startswith("#") and len(line) > 20:
                 if line in line_counts:
                     line_counts[line].append(i)
                 else:
@@ -235,9 +234,10 @@ class CultureEnforcer:
         try:
             # 使用bandit进行安全检查
             result = subprocess.run(
-                ["bandit", "-r", str(self.project_path), "-", "json"],
+                ["bandit", "-r", str(self.project_path), "-f", "json"],
                 capture_output=True,
                 text=True,
+                timeout=30,  # 添加超时防止卡死
             )
 
             if result.returncode == 0:
@@ -245,20 +245,23 @@ class CultureEnforcer:
 
                 bandit_results = json.loads(result.stdout)
 
-                for issue in bandit_results.get('results', []):
+                for issue in bandit_results.get("results", []):
                     self.violations.append(
                         Violation(
                             principle="security",
-                            severity=issue['issue_severity'].lower(),
-                            file_path=issue['filename'],
-                            line_number=issue['line_number'],
-                            description=issue['issue_text'],
+                            severity=issue["issue_severity"].lower(),
+                            file_path=issue["filename"],
+                            line_number=issue["line_number"],
+                            description=issue["issue_text"],
                             suggestion=f"查看bandit文档: {issue['test_id']}",
                         )
                     )
 
         except FileNotFoundError:
             # bandit未安装
+            pass
+        except subprocess.TimeoutExpired:
+            # bandit执行超时
             pass
         except Exception:
             # 其他错误
@@ -277,11 +280,10 @@ class CultureEnforcer:
 
             coverage_file = self.project_path / "coverage.json"
             if coverage_file.exists():
-
                 with open(coverage_file) as f:
                     coverage_data = json.load(f)
 
-                total_coverage = coverage_data['totals']['percent_covered']
+                total_coverage = coverage_data["totals"]["percent_covered"]
                 if total_coverage < 80:
                     self.violations.append(
                         Violation(
@@ -302,7 +304,7 @@ class CultureEnforcer:
         readme_path = self.project_path / "README.md"
 
         if readme_path.exists():
-            with open(readme_path, 'r', encoding='utf-8') as f:
+            with open(readme_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
             required_sections = [
@@ -373,7 +375,9 @@ class CultureEnforcer:
         suggestions = []
 
         # 按严重程度排序
-        sorted_violations = sorted(self.violations, key=lambda x: 0 if x.severity == "error" else 1)
+        sorted_violations = sorted(
+            self.violations, key=lambda x: 0 if x.severity == "error" else 1
+        )
 
         for violation in sorted_violations:
             suggestions.append(
@@ -489,7 +493,9 @@ class CultureEnforcer:
         """检查性能文化"""
         try:
             # 检查是否有性能基准
-            benchmarks_file = self.project_path / ".aiculture" / "performance_benchmarks.json"
+            benchmarks_file = (
+                self.project_path / ".aiculture" / "performance_benchmarks.json"
+            )
             if not benchmarks_file.exists():
                 self._add_violation(
                     principle="performance_culture",
@@ -500,8 +506,8 @@ class CultureEnforcer:
 
             # 启动内存监控检查
             leak_result = self.memory_detector.detect_leaks()
-            if leak_result.get('status') == 'leak_detected':
-                for warning in leak_result.get('warnings', []):
+            if leak_result.get("status") == "leak_detected":
+                for warning in leak_result.get("warnings", []):
                     self._add_violation(
                         principle="performance_culture",
                         severity="error",
@@ -516,7 +522,10 @@ class CultureEnforcer:
         try:
             # 检查日志配置
             log_files = list(self.project_path.rglob("*.log"))
-            if not log_files and not (self.project_path / ".aiculture" / "observability").exists():
+            if (
+                not log_files
+                and not (self.project_path / ".aiculture" / "observability").exists()
+            ):
                 self._add_violation(
                     principle="observability",
                     severity="warning",
@@ -547,8 +556,8 @@ class CultureEnforcer:
             # 扫描隐私问题
             privacy_scan = self.data_governance.scan_project_for_privacy_issues()
 
-            if privacy_scan['total_findings'] > 0:
-                high_risk = len(privacy_scan['by_severity']['high'])
+            if privacy_scan["total_findings"] > 0:
+                high_risk = len(privacy_scan["by_severity"]["high"])
                 if high_risk > 0:
                     self._add_violation(
                         principle="data_governance",
@@ -557,7 +566,7 @@ class CultureEnforcer:
                         suggestion="移除代码中的硬编码个人信息",
                     )
 
-                medium_risk = len(privacy_scan['by_severity']['medium'])
+                medium_risk = len(privacy_scan["by_severity"]["medium"])
                 if medium_risk > 0:
                     self._add_violation(
                         principle="data_governance",
@@ -581,13 +590,17 @@ class CultureEnforcer:
         """检查可访问性"""
         try:
             # 扫描可访问性问题
-            accessibility_report = self.accessibility_manager.generate_comprehensive_report()
+            accessibility_report = (
+                self.accessibility_manager.generate_comprehensive_report()
+            )
 
-            total_issues = accessibility_report['total_issues']
+            total_issues = accessibility_report["total_issues"]
             if total_issues > 0:
-                accessibility_issues = accessibility_report['accessibility']['by_severity']
+                accessibility_issues = accessibility_report["accessibility"][
+                    "by_severity"
+                ]
 
-                if accessibility_issues['error']:
+                if accessibility_issues["error"]:
                     self._add_violation(
                         principle="accessibility",
                         severity="error",
@@ -595,7 +608,7 @@ class CultureEnforcer:
                         suggestion="修复WCAG合规性问题",
                     )
 
-                if accessibility_issues['warning']:
+                if accessibility_issues["warning"]:
                     self._add_violation(
                         principle="accessibility",
                         severity="warning",
@@ -604,7 +617,9 @@ class CultureEnforcer:
                     )
 
                 # 检查国际化
-                i18n_issues = accessibility_report['internationalization']['total_issues']
+                i18n_issues = accessibility_report["internationalization"][
+                    "total_issues"
+                ]
                 if i18n_issues > 0:
                     self._add_violation(
                         principle="accessibility",

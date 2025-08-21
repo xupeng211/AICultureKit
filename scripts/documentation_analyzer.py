@@ -5,10 +5,10 @@
 
 import ast
 import re
-from pathlib import Path
-from typing import Dict, List, Any
-from dataclasses import dataclass
 from collections import defaultdict
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List
 
 
 @dataclass
@@ -55,7 +55,7 @@ class DocumentationAnalyzer:
                 continue
 
             try:
-                with open(file_path, 'r', encoding='utf-8') as f:
+                with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
                     tree = ast.parse(content)
 
@@ -127,7 +127,7 @@ class DocumentationAnalyzer:
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef):
                 # 跳过私有方法和特殊方法
-                if node.name.startswith('_'):
+                if node.name.startswith("_"):
                     continue
 
                 func_docstring = ast.get_docstring(node)
@@ -178,7 +178,7 @@ class DocumentationAnalyzer:
                 continue
 
             try:
-                with open(file_path, 'r', encoding='utf-8') as f:
+                with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
 
                 self._check_markdown_structure(file_path, content)
@@ -189,10 +189,10 @@ class DocumentationAnalyzer:
 
     def _check_markdown_structure(self, file_path: Path, content: str):
         """检查Markdown结构"""
-        lines = content.split('\n')
+        lines = content.split("\n")
 
         # 检查是否有标题
-        has_title = any(line.startswith('#') for line in lines[:10])
+        has_title = any(line.startswith("#") for line in lines[:10])
         if not has_title:
             self.issues.append(
                 DocumentationIssue(
@@ -221,12 +221,12 @@ class DocumentationAnalyzer:
     def _check_markdown_links(self, file_path: Path, content: str):
         """检查Markdown链接"""
         # 查找所有链接
-        link_pattern = r'\[([^\]]+)\]\(([^)]+)\)'
+        link_pattern = r"\[([^\]]+)\]\(([^)]+)\)"
         links = re.findall(link_pattern, content)
 
         for i, (text, url) in enumerate(links, 1):
             # 检查相对路径链接是否存在
-            if not url.startswith(('http://', 'https://', 'mailto:')):
+            if not url.startswith(("http://", "https://", "mailto:")):
                 link_path = file_path.parent / url
                 if not link_path.exists():
                     self.issues.append(
@@ -249,7 +249,7 @@ class DocumentationAnalyzer:
                 continue
 
             try:
-                with open(file_path, 'r', encoding='utf-8') as f:
+                with open(file_path, "r", encoding="utf-8") as f:
                     lines = f.readlines()
 
                 self._check_comment_quality(file_path, lines)
@@ -263,7 +263,7 @@ class DocumentationAnalyzer:
             stripped = line.strip()
 
             # 检查TODO注释
-            if re.search(r'#\s*TODO', stripped, re.IGNORECASE):
+            if re.search(r"#\s*TODO", stripped, re.IGNORECASE):
                 if len(stripped) < 20:  # TODO注释过短
                     self.issues.append(
                         DocumentationIssue(
@@ -277,7 +277,7 @@ class DocumentationAnalyzer:
                     )
 
             # 检查单行注释
-            if stripped.startswith('#') and not stripped.startswith('##'):
+            if stripped.startswith("#") and not stripped.startswith("##"):
                 comment_text = stripped[1:].strip()
                 if len(comment_text) < 5:
                     self.issues.append(
@@ -297,12 +297,19 @@ class DocumentationAnalyzer:
             return False
 
         # 简单检查是否包含参数相关的关键词
-        param_keywords = ['param', 'parameter', 'arg', 'argument', 'Args:', 'Parameters:']
+        param_keywords = [
+            "param",
+            "parameter",
+            "arg",
+            "argument",
+            "Args:",
+            "Parameters:",
+        ]
         return any(keyword in docstring for keyword in param_keywords)
 
     def _should_skip_file(self, file_path: Path) -> bool:
         """判断是否跳过文件"""
-        skip_dirs = {'venv', '__pycache__', '.git', 'node_modules', '.pytest_cache'}
+        skip_dirs = {"venv", "__pycache__", ".git", "node_modules", ".pytest_cache"}
         return any(part in skip_dirs for part in file_path.parts)
 
     def _generate_documentation_report(self) -> Dict[str, Any]:
@@ -323,28 +330,28 @@ class DocumentationAnalyzer:
             by_file[issue.file_path].append(issue)
 
         return {
-            'total_issues': len(self.issues),
-            'by_severity': dict(by_severity),
-            'by_type': dict(by_type),
-            'by_file': dict(by_file),
-            'summary': {
-                'high_severity': len(by_severity['high']),
-                'medium_severity': len(by_severity['medium']),
-                'low_severity': len(by_severity['low']),
-                'files_with_issues': len(by_file),
+            "total_issues": len(self.issues),
+            "by_severity": dict(by_severity),
+            "by_type": dict(by_type),
+            "by_file": dict(by_file),
+            "summary": {
+                "high_severity": len(by_severity["high"]),
+                "medium_severity": len(by_severity["medium"]),
+                "low_severity": len(by_severity["low"]),
+                "files_with_issues": len(by_file),
             },
         }
 
 
 def main():
     """main函数"""
-    analyzer = DocumentationAnalyzer(Path('.'))
+    analyzer = DocumentationAnalyzer(Path("."))
     report = analyzer.analyze_documentation()
 
     print("\n📚 文档与注释质量分析报告")
     print("=" * 50)
 
-    summary = report['summary']
+    summary = report["summary"]
     print(f"文档问题总数: {report['total_issues']}")
     print(f"高严重性: {summary['high_severity']} 个")
     print(f"中等严重性: {summary['medium_severity']} 个")
@@ -352,11 +359,11 @@ def main():
     print(f"有问题的文件: {summary['files_with_issues']} 个")
 
     print("\n🔍 按问题类型分组:")
-    for issue_type, issues in report['by_type'].items():
+    for issue_type, issues in report["by_type"].items():
         print(f"  {issue_type}: {len(issues)} 个")
 
     print("\n🚨 中等严重性问题详情:")
-    medium_issues = report['by_severity'].get('medium', [])
+    medium_issues = report["by_severity"].get("medium", [])
     for i, issue in enumerate(medium_issues[:5], 1):
         print(f"  {i}. {issue.file_path}:{issue.line_number}")
         print(f"     {issue.description}")

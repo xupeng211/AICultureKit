@@ -1,0 +1,54 @@
+{
+  "problems": [
+    {
+      "tool": "diff-cover",
+      "type": "diff_coverage",
+      "severity": "error",
+      "message": "变更行覆盖率不足: 5.0% < 80.0%",
+      "fix_suggestion": "需要为变更的代码添加测试，提升覆盖率到80%以上",
+      "blocking": true,
+      "metadata": {
+        "current_coverage": 5.0,
+        "required_coverage": 80.0,
+        "coverage_gap": 75.0
+      }
+    },
+    {
+      "tool": "diff-cover",
+      "type": "new_file_coverage",
+      "severity": "error",
+      "file": "tools/ai_fix_agent/agent.py",
+      "message": "新文件覆盖率不足: 7.3% < 70.0%",
+      "fix_suggestion": "为新文件添加测试，提升覆盖率到70%以上",
+      "blocking": true,
+      "metadata": {
+        "file_coverage": 7.3,
+        "required_coverage": 70.0,
+        "is_new_file": true
+      }
+    },
+    {
+      "tool": "diff-cover",
+      "type": "new_file_coverage",
+      "severity": "error",
+      "file": "tools/ai_fix_agent/strategies/test_scaffold.py",
+      "message": "新文件覆盖率不足: 9.0% < 70.0%",
+      "fix_suggestion": "为新文件添加测试，提升覆盖率到70%以上",
+      "blocking": true,
+      "metadata": {
+        "file_coverage": 9.0,
+        "required_coverage": 70.0,
+        "is_new_file": true
+      }
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "blocking": 3,
+    "by_severity": {
+      "error": 3,
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

@@ -1,0 +1,123 @@
+--- /dev/null
++++ b/tests/tools/ai_fix_agent/strategies/test_test_scaffold.py
+@@ -0,0 +1,65 @@
++"""
++Tests for tools.ai_fix_agent.strategies.test_scaffold
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from tools.ai_fix_agent.strategies.test_scaffold import TestScaffoldStrategy, main
++
++class TestTestScaffoldStrategy:
++    """Tests for TestScaffoldStrategy class"""
++
++    def test_init(self):
++        """Test TestScaffoldStrategy initialization"""
++        instance = TestScaffoldStrategy()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_can_fix(self):
++        """Test TestScaffoldStrategy.can_fix method"""
++        instance = TestScaffoldStrategy()
++        result = instance.can_fix(problem=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_generate_fix(self):
++        """Test TestScaffoldStrategy.generate_fix method"""
++        instance = TestScaffoldStrategy()
++        result = instance.generate_fix(problems=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_generate_todo_list(self):
++        """Test TestScaffoldStrategy.generate_todo_list method"""
++        instance = TestScaffoldStrategy()
++        result = instance.generate_todo_list(problems=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/tools/ai_fix_agent/test_agent.py
+@@ -0,0 +1,51 @@
++"""
++Tests for tools.ai_fix_agent.agent
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from tools.ai_fix_agent.agent import AIFixAgent, main
++
++class TestAIFixAgent:
++    """Tests for AIFixAgent class"""
++
++    def test_init(self):
++        """Test AIFixAgent initialization"""
++        instance = AIFixAgent()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_generate_fixes(self):
++        """Test AIFixAgent.generate_fixes method"""
++        instance = AIFixAgent()
++        result = instance.generate_fixes(problems_file=None, output_dir=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests

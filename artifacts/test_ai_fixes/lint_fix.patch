@@ -1,0 +1,18 @@
+--- a/test_ai_fix.py
++++ b/test_ai_fix.py
+@@ -2,15 +2,11 @@
+ 测试文件，包含各种可修复的问题
+ """
+
+-import os
+-import sys
+-import json   # 未使用的导入
+-import re     # 未使用的导入
+
+
+ def test_function(param1, param2):
+     """测试函数"""
+-    unused_var = "这是未使用的变量"    # F841
++    _unused_var = "这是未使用的变量"    # F841
+     result = param1+param2           # E225: 操作符周围缺少空格
+     return result

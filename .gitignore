@@ -90,6 +90,11 @@ pip-delete-this-directory.txt
 
 # 🚀 CI/CD
 .github/workflows/cache/
+artifacts/
+diff_coverage.html
+diff_coverage.json
+bandit_report.json
+ruff_report.json
 
 # 📊 Monitoring and logs
 logs/
