@@ -43,7 +43,9 @@ class TestMonitoringConfigManager:
 
     def test_get_metric(self):
         """测试获取指标"""
-        metric = MetricConfig(name="cpu_usage", type="gauge", description="CPU usage percentage")
+        metric = MetricConfig(
+            name="cpu_usage", type="gauge", description="CPU usage percentage"
+        )
 
         self.manager.add_metric("cpu", metric)
 
@@ -56,7 +58,9 @@ class TestMonitoringConfigManager:
 
     def test_remove_metric(self):
         """测试移除指标"""
-        metric = MetricConfig(name="memory_usage", type="gauge", description="Memory usage")
+        metric = MetricConfig(
+            name="memory_usage", type="gauge", description="Memory usage"
+        )
 
         self.manager.add_metric("memory", metric)
         assert "memory" in self.manager.metrics
@@ -167,7 +171,9 @@ class TestMonitoringConfigManager:
     def test_generate_grafana_dashboard(self):
         """测试生成Grafana仪表板"""
         # 添加一些指标
-        metric1 = MetricConfig(name="cpu_usage", type="gauge", description="CPU usage percentage")
+        metric1 = MetricConfig(
+            name="cpu_usage", type="gauge", description="CPU usage percentage"
+        )
         metric2 = MetricConfig(
             name="memory_usage", type="gauge", description="Memory usage percentage"
         )
@@ -191,7 +197,9 @@ class TestMonitoringConfigManager:
         assert self.manager.validate_metric_config(valid_metric)
 
         # 无效配置 - 缺少名称
-        invalid_metric = MetricConfig(name="", type="counter", description="Invalid metric")
+        invalid_metric = MetricConfig(
+            name="", type="counter", description="Invalid metric"
+        )
         assert not self.manager.validate_metric_config(invalid_metric)
 
         # 无效配置 - 无效类型
@@ -203,7 +211,9 @@ class TestMonitoringConfigManager:
     def test_export_config(self):
         """测试导出配置"""
         # 添加一些配置
-        metric = MetricConfig(name="test_metric", type="gauge", description="Test metric")
+        metric = MetricConfig(
+            name="test_metric", type="gauge", description="Test metric"
+        )
         alert = {
             "name": "test_alert",
             "condition": "test_metric > 100",
@@ -252,9 +262,13 @@ class TestMonitoringConfigManager:
     def test_get_metrics_summary(self):
         """测试获取指标摘要"""
         # 添加不同类型的指标
-        counter_metric = MetricConfig(name="counter1", type="counter", description="Counter")
+        counter_metric = MetricConfig(
+            name="counter1", type="counter", description="Counter"
+        )
         gauge_metric = MetricConfig(name="gauge1", type="gauge", description="Gauge")
-        histogram_metric = MetricConfig(name="hist1", type="histogram", description="Histogram")
+        histogram_metric = MetricConfig(
+            name="hist1", type="histogram", description="Histogram"
+        )
 
         self.manager.add_metric("c1", counter_metric)
         self.manager.add_metric("g1", gauge_metric)

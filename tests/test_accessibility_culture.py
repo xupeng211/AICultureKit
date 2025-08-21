@@ -56,7 +56,9 @@ class TestAccessibilityChecker:
         issues = self.checker.check_html_content(bad_html, "test.html")
 
         # 应该找到标题结构问题
-        heading_issues = [issue for issue in issues if "heading" in issue.description.lower()]
+        heading_issues = [
+            issue for issue in issues if "heading" in issue.description.lower()
+        ]
         assert len(heading_issues) >= 1
 
     def test_color_contrast_check(self):
@@ -76,7 +78,9 @@ class TestAccessibilityChecker:
         issues = self.checker.check_css_content(css_content, "test.css")
 
         # 应该找到对比度问题
-        contrast_issues = [issue for issue in issues if "contrast" in issue.description.lower()]
+        contrast_issues = [
+            issue for issue in issues if "contrast" in issue.description.lower()
+        ]
         assert len(contrast_issues) >= 0  # 可能找到对比度问题
 
     def test_form_accessibility_check(self):
@@ -102,7 +106,8 @@ class TestAccessibilityChecker:
         form_issues = [
             issue
             for issue in issues
-            if "label" in issue.description.lower() or "form" in issue.description.lower()
+            if "label" in issue.description.lower()
+            or "form" in issue.description.lower()
         ]
         assert len(form_issues) >= 1
 
@@ -124,7 +129,8 @@ class TestAccessibilityChecker:
         keyboard_issues = [
             issue
             for issue in issues
-            if "keyboard" in issue.description.lower() or "tabindex" in issue.description.lower()
+            if "keyboard" in issue.description.lower()
+            or "tabindex" in issue.description.lower()
         ]
         assert len(keyboard_issues) >= 0  # 可能找到键盘导航问题
 
@@ -174,7 +180,9 @@ class TestInternationalizationChecker:
         issues = self.checker.check_python_content(python_content, "test.py")
 
         # 应该找到硬编码文本
-        hardcoded_issues = [issue for issue in issues if "hardcoded" in issue.description.lower()]
+        hardcoded_issues = [
+            issue for issue in issues if "hardcoded" in issue.description.lower()
+        ]
         assert len(hardcoded_issues) >= 2
 
     def test_chinese_text_detection(self):
@@ -222,8 +230,12 @@ class TestInternationalizationChecker:
         issues2 = self.checker.check_html_content(html_with_lang, "with_lang.html")
 
         # 没有lang属性的应该有问题
-        lang_issues1 = [issue for issue in issues1 if "lang" in issue.description.lower()]
-        lang_issues2 = [issue for issue in issues2 if "lang" in issue.description.lower()]
+        lang_issues1 = [
+            issue for issue in issues1 if "lang" in issue.description.lower()
+        ]
+        lang_issues2 = [
+            issue for issue in issues2 if "lang" in issue.description.lower()
+        ]
 
         assert len(lang_issues1) >= 1
         assert len(lang_issues2) == 0
@@ -305,12 +317,20 @@ class TestResponsiveDesignChecker:
         </html>
         """
 
-        issues1 = self.checker.check_html_content(html_without_viewport, "no_viewport.html")
-        issues2 = self.checker.check_html_content(html_with_viewport, "with_viewport.html")
+        issues1 = self.checker.check_html_content(
+            html_without_viewport, "no_viewport.html"
+        )
+        issues2 = self.checker.check_html_content(
+            html_with_viewport, "with_viewport.html"
+        )
 
         # 没有viewport的应该有问题
-        viewport_issues1 = [issue for issue in issues1 if "viewport" in issue.description.lower()]
-        viewport_issues2 = [issue for issue in issues2 if "viewport" in issue.description.lower()]
+        viewport_issues1 = [
+            issue for issue in issues1 if "viewport" in issue.description.lower()
+        ]
+        viewport_issues2 = [
+            issue for issue in issues2 if "viewport" in issue.description.lower()
+        ]
 
         assert len(viewport_issues1) >= 1
         assert len(viewport_issues2) == 0
@@ -344,8 +364,12 @@ class TestResponsiveDesignChecker:
         issues2 = self.checker.check_css_content(css_with_media, "with_media.css")
 
         # 没有媒体查询的可能有问题
-        media_issues1 = [issue for issue in issues1 if "media" in issue.description.lower()]
-        media_issues2 = [issue for issue in issues2 if "media" in issue.description.lower()]
+        media_issues1 = [
+            issue for issue in issues1 if "media" in issue.description.lower()
+        ]
+        media_issues2 = [
+            issue for issue in issues2 if "media" in issue.description.lower()
+        ]
 
         # 至少第一个应该有更多问题
         assert len(issues1) >= len(issues2)
@@ -366,7 +390,9 @@ class TestResponsiveDesignChecker:
         issues = self.checker.check_css_content(css_content, "widths.css")
 
         # 可能找到固定宽度问题
-        width_issues = [issue for issue in issues if "width" in issue.description.lower()]
+        width_issues = [
+            issue for issue in issues if "width" in issue.description.lower()
+        ]
         assert len(width_issues) >= 0
 
     def test_touch_target_size_check(self):
@@ -389,7 +415,8 @@ class TestResponsiveDesignChecker:
         touch_issues = [
             issue
             for issue in issues
-            if "touch" in issue.description.lower() or "size" in issue.description.lower()
+            if "touch" in issue.description.lower()
+            or "size" in issue.description.lower()
         ]
         assert len(touch_issues) >= 0
 

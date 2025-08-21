@@ -87,7 +87,9 @@ class AICultureLogger:
         if structured:
             formatter = logging.Formatter("%(message)s")
         else:
-            formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+            formatter = logging.Formatter(
+                "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+            )
 
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
@@ -203,7 +205,9 @@ class AICultureLogger:
         """错误日志"""
         self._log(LogLevel.ERROR, message, error=error, **kwargs)
 
-    def critical(self, message: str, error: Optional[Exception] = None, **kwargs) -> None:
+    def critical(
+        self, message: str, error: Optional[Exception] = None, **kwargs
+    ) -> None:
         """严重错误日志"""
         self._log(LogLevel.CRITICAL, message, error=error, **kwargs)
 
@@ -223,7 +227,9 @@ class AICultureLogger:
             yield
 
             duration_ms = (time.perf_counter() - start_time) * 1000
-            self.info(f"完成操作: {operation}", status="completed", duration_ms=duration_ms)
+            self.info(
+                f"完成操作: {operation}", status="completed", duration_ms=duration_ms
+            )
 
         except Exception as e:
             duration_ms = (time.perf_counter() - start_time) * 1000

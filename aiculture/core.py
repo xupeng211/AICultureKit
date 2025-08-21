@@ -120,7 +120,9 @@ class QualityTools:
                 shutil.copy2(template_file, target_file)
 
                 # 安装pre-commit hooks
-                subprocess.run(["pre-commit", "install"], cwd=self.project_path, check=True)
+                subprocess.run(
+                    ["pre-commit", "install"], cwd=self.project_path, check=True
+                )
                 return True
             return False
         except Exception as e:
@@ -180,14 +182,18 @@ exclude =
 
         try:
             # 运行flake8检查
-            result = subprocess.run(["flake8", "."], cwd=self.project_path, capture_output=True)
+            result = subprocess.run(
+                ["flake8", "."], cwd=self.project_path, capture_output=True
+            )
             results["flake8"] = result.returncode == 0
         except FileNotFoundError:
             results["flake8"] = False
 
         try:
             # 运行mypy检查
-            result = subprocess.run(["mypy", "."], cwd=self.project_path, capture_output=True)
+            result = subprocess.run(
+                ["mypy", "."], cwd=self.project_path, capture_output=True
+            )
             results["mypy"] = result.returncode == 0
         except FileNotFoundError:
             results["mypy"] = False
@@ -239,7 +245,9 @@ class ProjectTemplate:
             print(f"❌ 项目创建失败: {e}")
             return False
 
-    def _create_basic_structure(self, target: Path, project_name: str, template_type: str) -> None:
+    def _create_basic_structure(
+        self, target: Path, project_name: str, template_type: str
+    ) -> None:
         """创建基础项目结构"""
         if template_type == "python":
             self._create_python_structure(target, project_name)
@@ -263,7 +271,9 @@ class ProjectTemplate:
 
 __version__ = "0.1.0"
 '''
-        (target / project_name.replace("-", "_") / "__init__.py").write_text(init_content)
+        (target / project_name.replace("-", "_") / "__init__.py").write_text(
+            init_content
+        )
 
         # 创建主模块文件
         main_content = '''"""

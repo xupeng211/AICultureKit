@@ -155,7 +155,9 @@ class EnvironmentChecker:
                 text=True,
                 check=True,
             )
-            return len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
+            return (
+                len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
+            )
         except (subprocess.CalledProcessError, FileNotFoundError):
             return 0
 

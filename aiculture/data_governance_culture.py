@@ -327,7 +327,9 @@ class DataQualityValidator:
 
         return results
 
-    def _validate_rule(self, rule: DataQualityRule, data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _validate_rule(
+        self, rule: DataQualityRule, data: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """验证单个规则"""
         rule_result = {
             "rule_name": rule.name,
@@ -360,9 +362,7 @@ class DataQualityValidator:
                     is_valid = (min_val is None or field_value >= min_val) and (
                         max_val is None or field_value <= max_val
                     )
-                    issue_message = (
-                        f"字段 {rule.field_name} 值 {field_value} 超出范围 [{min_val}, {max_val}]"
-                    )
+                    issue_message = f"字段 {rule.field_name} 值 {field_value} 超出范围 [{min_val}, {max_val}]"
                 else:
                     is_valid = False
                     issue_message = f"字段 {rule.field_name} 不是数值类型"
@@ -371,7 +371,9 @@ class DataQualityValidator:
                 pattern = rule.parameters.get("pattern")
                 if pattern and isinstance(field_value, str):
                     is_valid = bool(re.match(pattern, field_value))
-                    issue_message = f"字段 {rule.field_name} 值 {field_value} 不匹配模式 {pattern}"
+                    issue_message = (
+                        f"字段 {rule.field_name} 值 {field_value} 不匹配模式 {pattern}"
+                    )
                 else:
                     is_valid = False
                     issue_message = f"字段 {rule.field_name} 模式验证失败"
@@ -447,7 +449,9 @@ class DataLineageTracker:
         traverse_upstream(node_id, 0)
         return lineage
 
-    def get_downstream_lineage(self, node_id: str, max_depth: int = 10) -> Dict[str, Any]:
+    def get_downstream_lineage(
+        self, node_id: str, max_depth: int = 10
+    ) -> Dict[str, Any]:
         """获取下游血缘"""
         visited = set()
         lineage = {"nodes": {}, "edges": []}
@@ -498,7 +502,9 @@ class DataLineageTracker:
             impact_summary["recommendations"].append("影响范围较大，建议分阶段实施变更")
 
         if impact_summary["critical_paths"]:
-            impact_summary["recommendations"].append("存在关键路径，需要额外的测试和验证")
+            impact_summary["recommendations"].append(
+                "存在关键路径，需要额外的测试和验证"
+            )
 
         return impact_summary
 
@@ -578,17 +584,19 @@ class GDPRComplianceChecker:
         }
 
         personal_data_fields = [
-            field for field in data_inventory if DataCategory.PERSONAL in field.categories
+            field
+            for field in data_inventory
+            if DataCategory.PERSONAL in field.categories
         ]
 
         # 检查数据最小化
-        compliance_report["requirements"]["data_minimization"] = self._check_data_minimization(
-            personal_data_fields
+        compliance_report["requirements"]["data_minimization"] = (
+            self._check_data_minimization(personal_data_fields)
         )
 
         # 检查存储限制
-        compliance_report["requirements"]["storage_limitation"] = self._check_storage_limitation(
-            personal_data_fields
+        compliance_report["requirements"]["storage_limitation"] = (
+            self._check_storage_limitation(personal_data_fields)
         )
 
         # 检查安全措施
@@ -608,7 +616,9 @@ class GDPRComplianceChecker:
         # 收集违规和建议
         for req_name, req_result in compliance_report["requirements"].items():
             compliance_report["violations"].extend(req_result.get("violations", []))
-            compliance_report["recommendations"].extend(req_result.get("recommendations", []))
+            compliance_report["recommendations"].extend(
+                req_result.get("recommendations", [])
+            )
 
         return compliance_report
 
@@ -666,7 +676,9 @@ class GDPRComplianceChecker:
                 result["score"] -= 25
 
             if not data_field.anonymization_method:
-                result["violations"].append(f"敏感字段 {data_field.name} 未定义匿名化方法")
+                result["violations"].append(
+                    f"敏感字段 {data_field.name} 未定义匿名化方法"
+                )
                 result["score"] -= 15
 
         if result["violations"]:
@@ -722,13 +734,19 @@ class DataGovernanceManager:
                         field = DataField(
                             name=field_data["name"],
                             data_type=field_data["data_type"],
-                            sensitivity_level=DataSensitivityLevel(field_data["sensitivity_level"]),
-                            categories=[DataCategory(cat) for cat in field_data["categories"]],
+                            sensitivity_level=DataSensitivityLevel(
+                                field_data["sensitivity_level"]
+                            ),
+                            categories=[
+                                DataCategory(cat) for cat in field_data["categories"]
+                            ],
                             description=field_data.get("description", ""),
                             source=field_data.get("source", ""),
                             transformations=field_data.get("transformations", []),
                             retention_period=field_data.get("retention_period"),
-                            encryption_required=field_data.get("encryption_required", False),
+                            encryption_required=field_data.get(
+                                "encryption_required", False
+                            ),
                             anonymization_method=field_data.get("anonymization_method"),
                         )
                         self.data_inventory.append(field)
@@ -765,7 +783,8 @@ class DataGovernanceManager:
         # 扫描Python文件
         for py_file in self.project_path.rglob("*.py"):
             if any(
-                part.startswith(".") or part in ["venv", "__pycache__"] for part in py_file.parts
+                part.startswith(".") or part in ["venv", "__pycache__"]
+                for part in py_file.parts
             ):
                 continue
 
@@ -784,7 +803,9 @@ class DataGovernanceManager:
             "summary": {
                 "high_risk_files": len(set(f["file"] for f in by_severity["high"])),
                 "pii_types_found": len(
-                    set(f.get("pii_type", "") for f in all_findings if f.get("pii_type"))
+                    set(
+                        f.get("pii_type", "") for f in all_findings if f.get("pii_type")
+                    )
                 ),
                 "recommendations": [
                     "移除代码中的硬编码个人信息",

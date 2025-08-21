@@ -113,9 +113,15 @@ configuration management systems for sensitive information.
 
                     # 跳过shebang和编码声明
                     for i, line in enumerate(lines):
-                        if line.startswith("#!") or "coding:" in line or "encoding:" in line:
+                        if (
+                            line.startswith("#!")
+                            or "coding:" in line
+                            or "encoding:" in line
+                        ):
                             continue
-                        if line.strip().startswith('"""') or line.strip().startswith("'''"):
+                        if line.strip().startswith('"""') or line.strip().startswith(
+                            "'''"
+                        ):
                             insert_pos = i
                             break
                         if line.strip() and not line.startswith("#"):

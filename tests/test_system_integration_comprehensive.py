@@ -15,7 +15,10 @@ class TestSystemIntegrationComprehensive(unittest.TestCase):
     def test_module_imports(self):
         """测试所有核心模块导入"""
         try:
-            pass
+            from aiculture.ai_behavior_enforcer import AIBehaviorEnforcer
+            from aiculture.culture_enforcer import CultureEnforcer
+            from aiculture.data_governance_culture import DataPrivacyScanner
+            from aiculture.problem_aggregator import ProblemAggregator
 
             self.assertTrue(True, "所有核心模块导入成功")
         except ImportError as e:
@@ -27,11 +30,11 @@ class TestSystemIntegrationComprehensive(unittest.TestCase):
             from aiculture.culture_enforcer import CultureEnforcer
 
             # 测试基本工作流程
-            enforcer = CultureEnforcer(".")
+            enforcer = CultureEnforcer('.')
             result = enforcer.enforce_all()
 
             self.assertIsInstance(result, dict)
-            self.assertIn("score", result)
+            self.assertIn('score', result)
 
         except Exception as e:
             self.fail(f"系统工作流程测试失败: {e}")

@@ -257,7 +257,11 @@ class CICDGuardian:
             with open("/proc/meminfo", "r") as f:
                 meminfo = f.read()
             mem_available = (
-                int([line for line in meminfo.split("\n") if "MemAvailable" in line][0].split()[1])
+                int(
+                    [line for line in meminfo.split("\n") if "MemAvailable" in line][
+                        0
+                    ].split()[1]
+                )
                 // 1024
             )
 

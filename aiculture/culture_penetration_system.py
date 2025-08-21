@@ -88,7 +88,9 @@ class RealTimeCultureMonitor:
         # 文件修改时间缓存
         self.file_mtimes = {}
 
-    def add_violation_callback(self, callback: Callable[[CultureViolation], None]) -> None:
+    def add_violation_callback(
+        self, callback: Callable[[CultureViolation], None]
+    ) -> None:
         """添加违规回调函数"""
         self.callbacks.append(callback)
 
@@ -183,9 +185,13 @@ class RealTimeCultureMonitor:
 
             # 检查各种文化违规
             violations.extend(self._check_test_culture(file_path, content, lines))
-            violations.extend(self._check_documentation_culture(file_path, content, lines))
+            violations.extend(
+                self._check_documentation_culture(file_path, content, lines)
+            )
             violations.extend(self._check_security_culture(file_path, content, lines))
-            violations.extend(self._check_code_quality_culture(file_path, content, lines))
+            violations.extend(
+                self._check_code_quality_culture(file_path, content, lines)
+            )
 
         except Exception as e:
             print(f"检查文件 {file_path} 时出错: {e}")
@@ -360,7 +366,9 @@ class CultureQualityGate:
             ),
         }
 
-    def check_gate(self, gate_name: str, violations: List[CultureViolation]) -> Dict[str, Any]:
+    def check_gate(
+        self, gate_name: str, violations: List[CultureViolation]
+    ) -> Dict[str, Any]:
         """检查质量门禁"""
         if gate_name not in self.gates:
             return {
@@ -535,17 +543,23 @@ class AIDevCultureAssistant:
             "recommendations": self._generate_recommendations(violations),
         }
 
-    def _generate_recommendations(self, violations: List[CultureViolation]) -> List[str]:
+    def _generate_recommendations(
+        self, violations: List[CultureViolation]
+    ) -> List[str]:
         """生成改进建议"""
         recommendations = []
 
         # 按原则统计违规数量
         principle_counts = {}
         for violation in violations:
-            principle_counts[violation.principle] = principle_counts.get(violation.principle, 0) + 1
+            principle_counts[violation.principle] = (
+                principle_counts.get(violation.principle, 0) + 1
+            )
 
         # 生成针对性建议
-        for principle, count in sorted(principle_counts.items(), key=lambda x: x[1], reverse=True):
+        for principle, count in sorted(
+            principle_counts.items(), key=lambda x: x[1], reverse=True
+        ):
             if principle == "testing":
                 recommendations.append(f"为新模块编写单元测试 ({count} 个缺失)")
             elif principle == "documentation":

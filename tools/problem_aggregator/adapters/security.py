@@ -47,8 +47,12 @@ class SecurityAdapter:
                                 "column": 0,
                                 "code": issue.get("test_id", ""),
                                 "message": issue.get("issue_text", ""),
-                                "confidence": issue.get("issue_confidence", "UNDEFINED"),
-                                "fix_suggestion": self._get_bandit_fix_suggestion(issue),
+                                "confidence": issue.get(
+                                    "issue_confidence", "UNDEFINED"
+                                ),
+                                "fix_suggestion": self._get_bandit_fix_suggestion(
+                                    issue
+                                ),
                                 "blocking": self._is_blocking_security_issue(issue),
                             }
                         )
@@ -283,7 +287,9 @@ def main():
     all_problems = bandit_problems + secrets_problems
     blocking_problems = [p for p in all_problems if p.get("blocking", False)]
 
-    print(f"总计: {len(all_problems)} 个安全问题，其中 {len(blocking_problems)} 个阻塞性问题")
+    print(
+        f"总计: {len(all_problems)} 个安全问题，其中 {len(blocking_problems)} 个阻塞性问题"
+    )
 
 
 if __name__ == "__main__":
