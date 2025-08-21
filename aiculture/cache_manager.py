@@ -54,7 +54,7 @@ class SmartCacheManager:
         try:
             with open(file_path, "rb") as f:
                 content = f.read()
-            return hashlib.md5(content).hexdigest()
+            return hashlib.sha256(content).hexdigest()  # P0 Security Fix: MD5 -> SHA256
         except (OSError, IOError):
             return ""
 

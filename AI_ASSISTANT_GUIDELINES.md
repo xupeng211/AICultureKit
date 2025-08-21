@@ -586,7 +586,7 @@ encryption_key = os.getenv('ENCRYPTION_KEY')
 # ❌ 错误：不安全的密钥处理
 password = "123456"  # 弱密码
 secret_key = "my_secret_key"  # 硬编码
-hash_value = hashlib.md5(password.encode()).hexdigest()  # 弱哈希
+hash_value = hashlib.sha256(password.encode()).hexdigest()  # P0 Security Fix: 使用强哈希算法
 ```
 
 ### 📐 **P2 - SOLID原则**

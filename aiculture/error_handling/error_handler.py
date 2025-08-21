@@ -76,7 +76,7 @@ class ErrorHandler:
         import hashlib
 
         key_data = f"{func.__name__}:{str(args)}:{str(sorted(kwargs.items()))}"
-        return hashlib.md5(key_data.encode()).hexdigest()
+        return hashlib.sha256(key_data.encode()).hexdigest()  # P0 Security Fix: MD5 -> SHA256
 
     def _get_cached_result(self, cache_key: str, ttl: int) -> Optional[Any]:
         """获取缓存结果"""
