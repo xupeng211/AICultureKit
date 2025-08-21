@@ -17,13 +17,13 @@ from .pattern_types import (
 )
 
 __all__ = [
-    'ProjectPattern',
-    'LearningResult',
-    'PatternAnalyzer',
-    'NamingPatternAnalyzer',
-    'StructurePatternAnalyzer',
-    'StylePatternAnalyzer',
-    'DocumentationPatternAnalyzer',
-    'CodeAnalyzer',
-    'LearningEngine',
+    "ProjectPattern",
+    "LearningResult",
+    "PatternAnalyzer",
+    "NamingPatternAnalyzer",
+    "StructurePatternAnalyzer",
+    "StylePatternAnalyzer",
+    "DocumentationPatternAnalyzer",
+    "CodeAnalyzer",
+    "LearningEngine",
 ]

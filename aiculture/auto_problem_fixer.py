@@ -5,7 +5,6 @@
 根据收集到的问题，按照开发文化标准自动进行优化修复。
 """
 
-import os
 import re
 import subprocess
 import sys
@@ -42,41 +41,29 @@ class AutoProblemFixer:
             ai_report = ai_fixer.analyze_and_fix_problems()
 
             # 如果AI修复效果好，直接返回
-            if ai_report['success_rate'] >= 70:
-                print(
-                    f"\n🎉 AI修复效果优秀 ({ai_report['success_rate']:.1f}%)，使用AI修复结果"
-                )
+            if ai_report["success_rate"] >= 70:
+                print(f"\n🎉 AI修复效果优秀 ({ai_report['success_rate']:.1f}%)，使用AI修复结果")
                 return {
-                    'total_problems': ai_report['total_problems'],
-                    'fixed_count': ai_report['fixed_count'],
-                    'failed_count': ai_report['failed_count'],
-                    'fixed_issues': [
-                        f"AI修复: {issue['problem']}"
-                        for issue in ai_report['fixed_issues']
+                    "total_problems": ai_report["total_problems"],
+                    "fixed_count": ai_report["fixed_count"],
+                    "failed_count": ai_report["failed_count"],
+                    "fixed_issues": [
+                        f"AI修复: {issue['problem']}" for issue in ai_report["fixed_issues"]
                     ],
-                    'failed_fixes': [
-                        f"AI无法修复: {issue['problem']}"
-                        for issue in ai_report['failed_fixes']
+                    "failed_fixes": [
+                        f"AI无法修复: {issue['problem']}" for issue in ai_report["failed_fixes"]
                     ],
-                    'success_rate': ai_report['success_rate'],
-                    'method': 'AI智能修复',
+                    "success_rate": ai_report["success_rate"],
+                    "method": "AI智能修复",
                 }
             else:
-                print(
-                    f"\n⚠️  AI修复效果一般 ({ai_report['success_rate']:.1f}%)，启动混合修复..."
-                )
+                print(f"\n⚠️  AI修复效果一般 ({ai_report['success_rate']:.1f}%)，启动混合修复...")
                 # 记录AI修复的结果
                 self.fixed_issues.extend(
-                    [
-                        f"AI修复: {issue['problem']}"
-                        for issue in ai_report['fixed_issues']
-                    ]
+                    [f"AI修复: {issue['problem']}" for issue in ai_report["fixed_issues"]]
                 )
                 self.failed_fixes.extend(
-                    [
-                        f"AI无法修复: {issue['problem']}"
-                        for issue in ai_report['failed_fixes']
-                    ]
+                    [f"AI无法修复: {issue['problem']}" for issue in ai_report["failed_fixes"]]
                 )
 
         except ImportError:
@@ -92,34 +79,30 @@ class AutoProblemFixer:
         print(f"📊 发现 {problems['summary']['total_issues']} 个问题")
 
         # 按优先级修复问题
-        for priority_item in problems['fix_priority']:
-            if priority_item['blocking']:
-                print(
-                    f"\n🎯 修复 {priority_item['category']} ({priority_item['count']} 个)"
-                )
-                self._fix_category_problems(priority_item['category'], problems)
+        for priority_item in problems["fix_priority"]:
+            if priority_item["blocking"]:
+                print(f"\n🎯 修复 {priority_item['category']} ({priority_item['count']} 个)")
+                self._fix_category_problems(priority_item["category"], problems)
 
         # 修复非阻塞性问题
-        for priority_item in problems['fix_priority']:
-            if not priority_item['blocking']:
-                print(
-                    f"\n⚡ 优化 {priority_item['category']} ({priority_item['count']} 个)"
-                )
-                self._fix_category_problems(priority_item['category'], problems)
+        for priority_item in problems["fix_priority"]:
+            if not priority_item["blocking"]:
+                print(f"\n⚡ 优化 {priority_item['category']} ({priority_item['count']} 个)")
+                self._fix_category_problems(priority_item["category"], problems)
 
         # 生成混合修复报告
         fix_report = {
-            'total_problems': problems['summary']['total_issues'],
-            'fixed_count': len(self.fixed_issues),
-            'failed_count': len(self.failed_fixes),
-            'fixed_issues': self.fixed_issues,
-            'failed_fixes': self.failed_fixes,
-            'success_rate': (
-                len(self.fixed_issues) / problems['summary']['total_issues'] * 100
-                if problems['summary']['total_issues'] > 0
+            "total_problems": problems["summary"]["total_issues"],
+            "fixed_count": len(self.fixed_issues),
+            "failed_count": len(self.failed_fixes),
+            "fixed_issues": self.fixed_issues,
+            "failed_fixes": self.failed_fixes,
+            "success_rate": (
+                len(self.fixed_issues) / problems["summary"]["total_issues"] * 100
+                if problems["summary"]["total_issues"] > 0
                 else 100
             ),
-            'method': '混合修复 (AI + 规则)',
+            "method": "混合修复 (AI + 规则)",
         }
 
         self._display_fix_report(fix_report)
@@ -128,17 +111,17 @@ class AutoProblemFixer:
     def _fix_category_problems(self, category: str, problems: Dict[str, Any]):
         """修复特定类别的问题"""
         if category == "安全问题":
-            self._fix_security_issues(problems['categories']['security_issues'])
+            self._fix_security_issues(problems["categories"]["security_issues"])
         elif category == "文化标准错误":
-            self._fix_culture_errors(problems['categories']['culture_errors'])
+            self._fix_culture_errors(problems["categories"]["culture_errors"])
         elif category == "其他警告":
-            self._fix_other_warnings(problems['categories']['culture_warnings'])
+            self._fix_other_warnings(problems["categories"]["culture_warnings"])
 
     def _fix_security_issues(self, security_issues: List[Dict[str, Any]]):
         """修复安全问题"""
         for issue in security_issues:
             try:
-                if "隐私问题" in issue['description']:
+                if "隐私问题" in issue["description"]:
                     self._fix_privacy_issues()
                     self.fixed_issues.append(f"修复隐私问题: {issue['description']}")
             except Exception as e:
@@ -152,18 +135,18 @@ class AutoProblemFixer:
         privacy_fixes = [
             # 邮箱地址脱敏
             (
-                r'\b[A-Za-z0-9._%+-]+@(?!.*(?:demo|placeholder|example|test))[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',
-                lambda m: f"user@DEMO-PLACEHOLDER.com",
+                r"\b[A-Za-z0-9._%+-]+@(?!.*(?:demo|placeholder|example|test))[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+                lambda m: "user@DEMO-PLACEHOLDER.com",
             ),
             # SSN脱敏
-            (r'\b\d{3}-\d{2}-\d{4}\b', 'XXX-XX-XXXX'),
+            (r"\b\d{3}-\d{2}-\d{4}\b", "XXX-XX-XXXX"),
             # 电话号码脱敏
             (
-                r'\b\+?1?[-.\s]?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}\b',
-                '+1-XXX-XXX-XXXX',
+                r"\b\+?1?[-.\s]?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}\b",
+                "+1-XXX-XXX-XXXX",
             ),
             # IP地址脱敏
-            (r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', '192.168.1.XXX'),
+            (r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b", "192.168.1.XXX"),
         ]
 
         # 扫描并修复所有相关文件
@@ -172,7 +155,7 @@ class AutoProblemFixer:
                 continue
 
             try:
-                with open(file_path, 'r', encoding='utf-8') as f:
+                with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
 
                 original_content = content
@@ -186,7 +169,7 @@ class AutoProblemFixer:
 
                 # 如果内容有变化，写回文件
                 if content != original_content:
-                    with open(file_path, 'w', encoding='utf-8') as f:
+                    with open(file_path, "w", encoding="utf-8") as f:
                         f.write(content)
                     print(f"    ✅ 修复文件: {file_path}")
 
@@ -199,7 +182,7 @@ class AutoProblemFixer:
                 continue
 
             try:
-                with open(file_path, 'r', encoding='utf-8') as f:
+                with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
 
                 original_content = content
@@ -212,7 +195,7 @@ class AutoProblemFixer:
                         content = re.sub(pattern, replacement, content)
 
                 if content != original_content:
-                    with open(file_path, 'w', encoding='utf-8') as f:
+                    with open(file_path, "w", encoding="utf-8") as f:
                         f.write(content)
                     print(f"    ✅ 修复文件: {file_path}")
 
@@ -223,10 +206,10 @@ class AutoProblemFixer:
         """修复文化标准错误"""
         for error in culture_errors:
             try:
-                if "代码质量" in error['description']:
+                if "代码质量" in error["description"]:
                     self._fix_code_quality()
                     self.fixed_issues.append(f"修复代码质量: {error['description']}")
-                elif "测试覆盖率" in error['description']:
+                elif "测试覆盖率" in error["description"]:
                     self._improve_test_coverage()
                     self.fixed_issues.append(f"改进测试覆盖率: {error['description']}")
             except Exception as e:
@@ -300,7 +283,7 @@ class TestBasicFunctionality(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 '''
-            with open(basic_test_file, 'w', encoding='utf-8') as f:
+            with open(basic_test_file, "w", encoding="utf-8") as f:
                 f.write(test_content)
             print("    ✅ 创建基本测试文件")
 
@@ -308,11 +291,9 @@ if __name__ == "__main__":
         """修复其他警告"""
         for warning in warnings[:3]:  # 只修复前3个警告，避免过度修复
             try:
-                if "国际化" in warning['description']:
+                if "国际化" in warning["description"]:
                     self._add_i18n_support()
-                    self.fixed_issues.append(
-                        f"添加国际化支持: {warning['description']}"
-                    )
+                    self.fixed_issues.append(f"添加国际化支持: {warning['description']}")
             except Exception as e:
                 self.failed_fixes.append(f"修复失败 - {warning['description']}: {e}")
 
@@ -340,7 +321,7 @@ def _(text: str, lang: str = None) -> str:
     # 这里可以添加实际的翻译逻辑
     return text
 '''
-            with open(i18n_dir / "__init__.py", 'w', encoding='utf-8') as f:
+            with open(i18n_dir / "__init__.py", "w", encoding="utf-8") as f:
                 f.write(config_content)
             print("    ✅ 创建国际化配置")
 
@@ -366,26 +347,26 @@ def _(text: str, lang: str = None) -> str:
         print("🔧 自动修复完成报告")
         print("=" * 80)
 
-        print(f"📊 修复统计:")
+        print("📊 修复统计:")
         print(f"   • 总问题数: {report['total_problems']} 个")
         print(f"   • 成功修复: {report['fixed_count']} 个")
         print(f"   • 修复失败: {report['failed_count']} 个")
         print(f"   • 成功率: {report['success_rate']:.1f}%")
 
-        if report['fixed_issues']:
-            print(f"\n✅ 成功修复的问题:")
-            for i, issue in enumerate(report['fixed_issues'], 1):
+        if report["fixed_issues"]:
+            print("\n✅ 成功修复的问题:")
+            for i, issue in enumerate(report["fixed_issues"], 1):
                 print(f"   {i}. {issue}")
 
-        if report['failed_fixes']:
-            print(f"\n❌ 修复失败的问题:")
-            for i, issue in enumerate(report['failed_fixes'], 1):
+        if report["failed_fixes"]:
+            print("\n❌ 修复失败的问题:")
+            for i, issue in enumerate(report["failed_fixes"], 1):
                 print(f"   {i}. {issue}")
 
-        print(f"\n🎯 建议:")
-        if report['success_rate'] >= 80:
+        print("\n🎯 建议:")
+        if report["success_rate"] >= 80:
             print("   ✅ 大部分问题已自动修复，可以重新提交")
-        elif report['success_rate'] >= 50:
+        elif report["success_rate"] >= 50:
             print("   ⚠️  部分问题已修复，请检查失败的问题并手动修复")
         else:
             print("   ❌ 自动修复效果不佳，建议手动检查和修复")
@@ -401,7 +382,7 @@ def main():
     report = fixer.auto_fix_all_problems()
 
     # 如果修复成功率高，建议重新运行检查
-    if report['success_rate'] >= 80:
+    if report["success_rate"] >= 80:
         print("\n🎉 自动修复效果良好，建议重新运行检查验证修复效果")
         sys.exit(0)
     else:

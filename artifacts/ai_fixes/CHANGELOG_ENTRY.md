@@ -31,10 +31,10 @@
    ```bash
    # 检查补丁内容
    cat artifacts/ai_fixes/lint_fix.patch
-   
+
    # 应用补丁
    git apply artifacts/ai_fixes/lint_fix.patch --index
-   
+
    # 验证更改
    git diff --cached
    ```
@@ -43,7 +43,7 @@
    ```bash
    # 重新运行问题检查
    python -m tools.problem_aggregator.aggregator
-   
+
    # 运行测试
    pytest
    ```

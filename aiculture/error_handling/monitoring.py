@@ -8,7 +8,7 @@ import threading
 import time
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from .exceptions import AICultureError, get_error_severity
 from .logging_system import get_logger
@@ -77,12 +77,12 @@ class ErrorMonitor:
 
             # 记录详细信息
             error_info = {
-                'timestamp': timestamp,
-                'type': error_type,
-                'severity': severity,
-                'message': str(error),
-                'operation': operation,
-                'context': context or {},
+                "timestamp": timestamp,
+                "type": error_type,
+                "severity": severity,
+                "message": str(error),
+                "operation": operation,
+                "context": context or {},
             }
 
             # 如果是自定义异常，添加更多信息
@@ -173,11 +173,11 @@ class PerformanceTracker:
             # 记录慢操作
             if duration_ms > self.slow_threshold_ms:
                 slow_op_info = {
-                    'timestamp': timestamp,
-                    'operation': operation,
-                    'duration_ms': duration_ms,
-                    'status': status,
-                    'context': context or {},
+                    "timestamp": timestamp,
+                    "operation": operation,
+                    "duration_ms": duration_ms,
+                    "status": status,
+                    "context": context or {},
                 }
                 self._slow_operations.append(slow_op_info)
 
@@ -197,9 +197,7 @@ class PerformanceTracker:
             current_time = time.time()
             window_start = current_time - (window_minutes * 60)
 
-            recent_operations = [
-                ts for ts in self._operation_timestamps if ts >= window_start
-            ]
+            recent_operations = [ts for ts in self._operation_timestamps if ts >= window_start]
 
             if not recent_operations:
                 return 0.0
@@ -264,36 +262,36 @@ class MonitoringManager:
 
     def get_overall_metrics(self) -> Dict[str, Any]:
         """获取整体指标"""
-        metrics = {'error_metrics': {}, 'performance_metrics': {}}
+        metrics = {"error_metrics": {}, "performance_metrics": {}}
 
         # 收集错误指标
         for name, monitor in self.error_monitors.items():
-            metrics['error_metrics'][name] = monitor.get_metrics()
+            metrics["error_metrics"][name] = monitor.get_metrics()
 
         # 收集性能指标
         for name, tracker in self.performance_trackers.items():
-            metrics['performance_metrics'][name] = tracker.get_metrics()
+            metrics["performance_metrics"][name] = tracker.get_metrics()
 
         return metrics
 
     def check_health(self) -> Dict[str, Any]:
         """健康检查"""
         health_status = {
-            'status': 'healthy',
-            'issues': [],
-            'metrics': self.get_overall_metrics(),
+            "status": "healthy",
+            "issues": [],
+            "metrics": self.get_overall_metrics(),
         }
 
         # 检查错误率
         for name, monitor in self.error_monitors.items():
             error_rate = monitor.get_error_rate()
             if error_rate > 10:  # 每分钟超过10个错误
-                health_status['status'] = 'unhealthy'
-                health_status['issues'].append(
+                health_status["status"] = "unhealthy"
+                health_status["issues"].append(
                     {
-                        'type': 'high_error_rate',
-                        'monitor': name,
-                        'error_rate': error_rate,
+                        "type": "high_error_rate",
+                        "monitor": name,
+                        "error_rate": error_rate,
                     }
                 )
 
@@ -301,12 +299,12 @@ class MonitoringManager:
         for name, tracker in self.performance_trackers.items():
             metrics = tracker.get_metrics()
             if metrics.avg_response_time > 5000:  # 平均响应时间超过5秒
-                health_status['status'] = 'degraded'
-                health_status['issues'].append(
+                health_status["status"] = "degraded"
+                health_status["issues"].append(
                     {
-                        'type': 'slow_response',
-                        'tracker': name,
-                        'avg_response_time': metrics.avg_response_time,
+                        "type": "slow_response",
+                        "tracker": name,
+                        "avg_response_time": metrics.avg_response_time,
                     }
                 )
 

@@ -16,23 +16,23 @@ class LintFixStrategy:
 
     def can_fix(self, problem: Dict[str, Any]) -> bool:
         """判断是否可以修复此问题"""
-        if problem.get('tool') != 'ruff':
+        if problem.get("tool") != "ruff":
             return False
 
-        code = problem.get('code', '')
+        code = problem.get("code", "")
 
         # 可以自动修复的错误码
         fixable_codes = [
-            'F401',  # 未使用的导入
-            'F841',  # 未使用的变量
-            'W291',  # 行尾空白
-            'W292',  # 文件末尾缺少换行
-            'I001',  # 导入排序
-            'E501',  # 行过长（通过格式化）
-            'E302',  # 函数间缺少空行
-            'E303',  # 过多空行
-            'E231',  # 逗号后缺少空格
-            'E225',  # 操作符周围缺少空格
+            "F401",  # 未使用的导入
+            "F841",  # 未使用的变量
+            "W291",  # 行尾空白
+            "W292",  # 文件末尾缺少换行
+            "I001",  # 导入排序
+            "E501",  # 行过长（通过格式化）
+            "E302",  # 函数间缺少空行
+            "E303",  # 过多空行
+            "E231",  # 逗号后缺少空格
+            "E225",  # 操作符周围缺少空格
         ]
 
         return code in fixable_codes
@@ -51,7 +51,7 @@ class LintFixStrategy:
             if not self.can_fix(problem):
                 continue
 
-            file_path = problem.get('file', '')
+            file_path = problem.get("file", "")
             if not file_path:
                 continue
 
@@ -99,7 +99,7 @@ class LintFixStrategy:
             return "", f"文件不存在: {file_path}", 0.0
 
         try:
-            with open(full_path, 'r', encoding='utf-8') as f:
+            with open(full_path, "r", encoding="utf-8") as f:
                 original_content = f.read()
         except Exception as e:
             return "", f"读取文件失败: {e}", 0.0
@@ -109,11 +109,11 @@ class LintFixStrategy:
         applied_fixes = []
 
         # 按行号排序，从后往前修复避免行号偏移
-        sorted_problems = sorted(problems, key=lambda p: p.get('line', 0), reverse=True)
+        sorted_problems = sorted(problems, key=lambda p: p.get("line", 0), reverse=True)
 
         for problem in sorted_problems:
-            code = problem.get('code', '')
-            line_num = problem.get('line', 0)
+            code = problem.get("code", "")
+            line_num = problem.get("line", 0)
 
             if line_num <= 0:
                 continue
@@ -133,15 +133,13 @@ class LintFixStrategy:
 
         return patch_content, explanation, confidence
 
-    def _apply_single_fix(
-        self, content: str, problem: Dict[str, Any]
-    ) -> Optional[Tuple[str, str]]:
+    def _apply_single_fix(self, content: str, problem: Dict[str, Any]) -> Optional[Tuple[str, str]]:
         """应用单个修复"""
 
-        code = problem.get('code', '')
-        line_num = problem.get('line', 0)
+        code = problem.get("code", "")
+        line_num = problem.get("line", 0)
 
-        lines = content.split('\n')
+        lines = content.split("\n")
         if line_num <= 0 or line_num > len(lines):
             return None
 
@@ -149,70 +147,69 @@ class LintFixStrategy:
         original_line = lines[line_idx]
 
         # 根据错误码应用修复
-        if code == 'F401':  # 未使用的导入
+        if code == "F401":  # 未使用的导入
             # 删除整行导入
-            if 'import ' in original_line:
+            if "import " in original_line:
                 lines.pop(line_idx)
-                return '\n'.join(lines), "删除未使用的导入"
+                return "\n".join(lines), "删除未使用的导入"
 
-        elif code == 'F841':  # 未使用的变量
+        elif code == "F841":  # 未使用的变量
             # 在变量名前加下划线
-            match = re.search(r'(\w+)\s*=', original_line)
+            match = re.search(r"(\w+)\s*=", original_line)
             if match:
                 var_name = match.group(1)
-                if not var_name.startswith('_'):
-                    new_line = original_line.replace(
-                        f'{var_name} =', f'_{var_name} =', 1
-                    )
+                if not var_name.startswith("_"):
+                    new_line = original_line.replace(f"{var_name} =", f"_{var_name} =", 1)
                     lines[line_idx] = new_line
-                    return '\n'.join(lines), f"变量名加下划线: {var_name} -> _{var_name}"
+                    return (
+                        "\n".join(lines),
+                        f"变量名加下划线: {var_name} -> _{var_name}",
+                    )
 
-        elif code == 'W291':  # 行尾空白
+        elif code == "W291":  # 行尾空白
             new_line = original_line.rstrip()
             lines[line_idx] = new_line
-            return '\n'.join(lines), "删除行尾空白"
+            return "\n".join(lines), "删除行尾空白"
 
-        elif code == 'W292':  # 文件末尾缺少换行
-            if not content.endswith('\n'):
-                return content + '\n', "添加文件末尾换行"
+        elif code == "W292":  # 文件末尾缺少换行
+            if not content.endswith("\n"):
+                return content + "\n", "添加文件末尾换行"
 
-        elif code == 'E302':  # 函数间缺少空行
-            if line_idx > 0 and ('def ' in original_line or 'class ' in original_line):
-                lines.insert(line_idx, '')
-                return '\n'.join(lines), "添加函数前空行"
+        elif code == "E302":  # 函数间缺少空行
+            if line_idx > 0 and ("def " in original_line or "class " in original_line):
+                lines.insert(line_idx, "")
+                return "\n".join(lines), "添加函数前空行"
 
-        elif code == 'E303':  # 过多空行
+        elif code == "E303":  # 过多空行
             # 删除多余的空行
-            if original_line.strip() == '' and line_idx > 0:
+            if original_line.strip() == "" and line_idx > 0:
                 # 检查前面是否有连续空行
                 prev_empty_count = 0
                 for i in range(line_idx - 1, -1, -1):
-                    if lines[i].strip() == '':
+                    if lines[i].strip() == "":
                         prev_empty_count += 1
                     else:
                         break
 
                 if prev_empty_count >= 2:  # 如果前面已有2个或更多空行
                     lines.pop(line_idx)
-                    return '\n'.join(lines), "删除多余空行"
+                    return "\n".join(lines), "删除多余空行"
 
-        elif code == 'E231':  # 逗号后缺少空格
-            new_line = re.sub(r',(\S)', r', \1', original_line)
+        elif code == "E231":  # 逗号后缺少空格
+            new_line = re.sub(r",(\S)", r", \1", original_line)
             if new_line != original_line:
                 lines[line_idx] = new_line
-                return '\n'.join(lines), "逗号后添加空格"
+                return "\n".join(lines), "逗号后添加空格"
 
-        elif code == 'E225':  # 操作符周围缺少空格
+        elif code == "E225":  # 操作符周围缺少空格
             # 简单的操作符空格修复
             new_line = original_line
-            for op in ['=', '+', '-', '*', '/', '==', '!=', '<=', '>=', '<', '>']:
-                new_line = re.sub(
-                    f'(\\w){re.escape(op)}(\\w)', f'\\1 {op} \\2', new_line
-                )
+            for op in ["=", "+", "-", "*", "/", "==", "!=", "<=", ">=", "<", ">"]:
+                new_line = re.sub(f"(\\w){re.escape(op)}(\\w)", f"\\1 {op} \\2", new_line)
 
             if new_line != original_line:
                 lines[line_idx] = new_line
-                return '\n'.join(lines), "操作符周围添加空格"
+                return "\n".join(lines), "操作符周围添加空格"
 
         return None
 
@@ -225,27 +222,23 @@ class LintFixStrategy:
             import os
             import tempfile
 
-            with tempfile.NamedTemporaryFile(
-                mode='w', suffix='.orig', delete=False
-            ) as orig_file:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".orig", delete=False) as orig_file:
                 orig_file.write(original)
                 orig_file_path = orig_file.name
 
-            with tempfile.NamedTemporaryFile(
-                mode='w', suffix='.fixed', delete=False
-            ) as fixed_file:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".fixed", delete=False) as fixed_file:
                 fixed_file.write(fixed)
                 fixed_file_path = fixed_file.name
 
             # 生成diff
             result = subprocess.run(
                 [
-                    'diff',
-                    '-u',
-                    '--label',
-                    f'a/{file_path}',
-                    '--label',
-                    f'b/{file_path}',
+                    "diff",
+                    "-u",
+                    "--label",
+                    f"a/{file_path}",
+                    "--label",
+                    f"b/{file_path}",
                     orig_file_path,
                     fixed_file_path,
                 ],
@@ -269,8 +262,8 @@ class LintFixStrategy:
     def _simple_diff(self, file_path: str, original: str, fixed: str) -> str:
         """生成简单的diff格式"""
 
-        orig_lines = original.split('\n')
-        fixed_lines = fixed.split('\n')
+        orig_lines = original.split("\n")
+        fixed_lines = fixed.split("\n")
 
         patch_lines = [
             f"--- a/{file_path}",
@@ -295,7 +288,7 @@ class LintFixStrategy:
             else:
                 patch_lines.append(f" {orig_line}")
 
-        return '\n'.join(patch_lines)
+        return "\n".join(patch_lines)
 
 
 def main():
@@ -305,11 +298,11 @@ def main():
     # 测试问题
     test_problems = [
         {
-            'tool': 'ruff',
-            'code': 'F401',
-            'file': 'test.py',
-            'line': 1,
-            'message': 'unused import',
+            "tool": "ruff",
+            "code": "F401",
+            "file": "test.py",
+            "line": 1,
+            "message": "unused import",
         }
     ]
 

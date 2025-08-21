@@ -14,9 +14,8 @@ import threading
 import time
 import tracemalloc
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List
 
 import psutil
 
@@ -60,10 +59,10 @@ class PerformanceProfiler:
         """开始性能分析"""
         tracemalloc.start()
         self.active_profiles[name] = {
-            'start_time': time.perf_counter(),
-            'start_memory': tracemalloc.get_traced_memory()[0],
-            'process': psutil.Process(),
-            'cpu_start': psutil.cpu_percent(),
+            "start_time": time.perf_counter(),
+            "start_memory": tracemalloc.get_traced_memory()[0],
+            "process": psutil.Process(),
+            "cpu_start": psutil.cpu_percent(),
         }
 
     def stop_profiling(self, name: str) -> PerformanceResult:
@@ -76,9 +75,9 @@ class PerformanceProfiler:
         current_memory, peak_memory = tracemalloc.get_traced_memory()
         tracemalloc.stop()
 
-        execution_time = end_time - profile['start_time']
-        memory_usage = peak_memory - profile['start_memory']
-        cpu_usage = psutil.cpu_percent() - profile['cpu_start']
+        execution_time = end_time - profile["start_time"]
+        memory_usage = peak_memory - profile["start_memory"]
+        cpu_usage = psutil.cpu_percent() - profile["cpu_start"]
 
         result = PerformanceResult(
             benchmark_name=name,
@@ -88,9 +87,9 @@ class PerformanceProfiler:
             is_regression=False,  # 将由基准比较确定
             regression_factor=1.0,
             details={
-                'peak_memory': peak_memory,
-                'current_memory': current_memory,
-                'process_memory': profile['process'].memory_info().rss,
+                "peak_memory": peak_memory,
+                "current_memory": current_memory,
+                "process_memory": profile["process"].memory_info().rss,
             },
         )
 
@@ -105,9 +104,7 @@ class PerformanceBenchmarkManager:
     def __init__(self, project_path: Path):
         """__init__函数"""
         self.project_path = project_path
-        self.benchmarks_file = (
-            project_path / ".aiculture" / "performance_benchmarks.json"
-        )
+        self.benchmarks_file = project_path / ".aiculture" / "performance_benchmarks.json"
         self.results_file = project_path / ".aiculture" / "performance_results.json"
         self.benchmarks: Dict[str, PerformanceBenchmark] = {}
         self.profiler = PerformanceProfiler()
@@ -117,7 +114,7 @@ class PerformanceBenchmarkManager:
         """加载性能基准数据"""
         if self.benchmarks_file.exists():
             try:
-                with open(self.benchmarks_file, 'r', encoding='utf-8') as f:
+                with open(self.benchmarks_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     for name, benchmark_data in data.items():
                         self.benchmarks[name] = PerformanceBenchmark(**benchmark_data)
@@ -127,16 +124,16 @@ class PerformanceBenchmarkManager:
     def _save_benchmarks(self) -> None:
         """保存性能基准数据"""
         self.benchmarks_file.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.benchmarks_file, 'w', encoding='utf-8') as f:
+        with open(self.benchmarks_file, "w", encoding="utf-8") as f:
             data = {
                 name: {
-                    'name': b.name,
-                    'category': b.category,
-                    'baseline_time': b.baseline_time,
-                    'baseline_memory': b.baseline_memory,
-                    'threshold_multiplier': b.threshold_multiplier,
-                    'created_at': b.created_at,
-                    'last_updated': b.last_updated,
+                    "name": b.name,
+                    "category": b.category,
+                    "baseline_time": b.baseline_time,
+                    "baseline_memory": b.baseline_memory,
+                    "threshold_multiplier": b.threshold_multiplier,
+                    "created_at": b.created_at,
+                    "last_updated": b.last_updated,
                 }
                 for name, b in self.benchmarks.items()
             }
@@ -175,9 +172,7 @@ class PerformanceBenchmarkManager:
         print(f"✅ 基准创建完成: {baseline_time:.4f}s, {baseline_memory}bytes")
         return benchmark
 
-    def run_benchmark(
-        self, name: str, func: Callable, *args, **kwargs
-    ) -> PerformanceResult:
+    def run_benchmark(self, name: str, func: Callable, *args, **kwargs) -> PerformanceResult:
         """运行性能基准测试"""
         if name not in self.benchmarks:
             raise ValueError(f"Benchmark {name} not found")
@@ -216,48 +211,48 @@ class PerformanceBenchmarkManager:
         results = []
         if self.results_file.exists():
             try:
-                with open(self.results_file, 'r', encoding='utf-8') as f:
+                with open(self.results_file, "r", encoding="utf-8") as f:
                     results = json.load(f)
             except Exception:
                 results = []
 
         results.append(
             {
-                'benchmark_name': result.benchmark_name,
-                'execution_time': result.execution_time,
-                'memory_usage': result.memory_usage,
-                'cpu_usage': result.cpu_usage,
-                'is_regression': result.is_regression,
-                'regression_factor': result.regression_factor,
-                'timestamp': result.timestamp,
-                'details': result.details,
+                "benchmark_name": result.benchmark_name,
+                "execution_time": result.execution_time,
+                "memory_usage": result.memory_usage,
+                "cpu_usage": result.cpu_usage,
+                "is_regression": result.is_regression,
+                "regression_factor": result.regression_factor,
+                "timestamp": result.timestamp,
+                "details": result.details,
             }
         )
 
         # 只保留最近100个结果
         results = results[-100:]
 
-        with open(self.results_file, 'w', encoding='utf-8') as f:
+        with open(self.results_file, "w", encoding="utf-8") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
 
     def get_performance_report(self) -> Dict[str, Any]:
         """获取性能报告"""
         if not self.results_file.exists():
-            return {'benchmarks': 0, 'regressions': 0, 'results': []}
+            return {"benchmarks": 0, "regressions": 0, "results": []}
 
-        with open(self.results_file, 'r', encoding='utf-8') as f:
+        with open(self.results_file, "r", encoding="utf-8") as f:
             results = json.load(f)
 
-        regressions = [r for r in results if r.get('is_regression', False)]
+        regressions = [r for r in results if r.get("is_regression", False)]
 
         return {
-            'total_benchmarks': len(self.benchmarks),
-            'total_results': len(results),
-            'regressions': len(regressions),
-            'regression_rate': len(regressions) / len(results) if results else 0,
-            'recent_results': results[-10:],
-            'worst_regressions': sorted(
-                regressions, key=lambda x: x.get('regression_factor', 1), reverse=True
+            "total_benchmarks": len(self.benchmarks),
+            "total_results": len(results),
+            "regressions": len(regressions),
+            "regression_rate": len(regressions) / len(results) if results else 0,
+            "recent_results": results[-10:],
+            "worst_regressions": sorted(
+                regressions, key=lambda x: x.get("regression_factor", 1), reverse=True
             )[:5],
         }
 
@@ -298,12 +293,12 @@ class MemoryLeakDetector:
                 memory_info = process.memory_info()
 
                 snapshot = {
-                    'timestamp': time.time(),
-                    'rss': memory_info.rss,  # 物理内存
-                    'vms': memory_info.vms,  # 虚拟内存
-                    'percent': process.memory_percent(),
-                    'open_files': len(process.open_files()),
-                    'connections': len(process.connections()),
+                    "timestamp": time.time(),
+                    "rss": memory_info.rss,  # 物理内存
+                    "vms": memory_info.vms,  # 虚拟内存
+                    "percent": process.memory_percent(),
+                    "open_files": len(process.open_files()),
+                    "connections": len(process.connections()),
                 }
 
                 self.snapshots.append(snapshot)
@@ -322,15 +317,15 @@ class MemoryLeakDetector:
         """检测内存泄漏"""
         if len(self.snapshots) < 10:
             return {
-                'status': 'insufficient_data',
-                'message': '数据不足，无法检测内存泄漏',
+                "status": "insufficient_data",
+                "message": "数据不足，无法检测内存泄漏",
             }
 
         # 分析内存趋势
         recent_snapshots = self.snapshots[-50:]  # 最近50个快照
 
-        rss_values = [s['rss'] for s in recent_snapshots]
-        vms_values = [s['vms'] for s in recent_snapshots]
+        rss_values = [s["rss"] for s in recent_snapshots]
+        vms_values = [s["vms"] for s in recent_snapshots]
 
         # 计算内存增长趋势
         rss_trend = self._calculate_trend(rss_values)
@@ -349,12 +344,12 @@ class MemoryLeakDetector:
             warnings.append(f"虚拟内存持续增长: {vms_trend / 1024 / 1024:.2f}MB/分钟")
 
         return {
-            'status': 'leak_detected' if leak_detected else 'normal',
-            'rss_trend': rss_trend,
-            'vms_trend': vms_trend,
-            'warnings': warnings,
-            'current_memory': recent_snapshots[-1] if recent_snapshots else None,
-            'snapshots_analyzed': len(recent_snapshots),
+            "status": "leak_detected" if leak_detected else "normal",
+            "rss_trend": rss_trend,
+            "vms_trend": vms_trend,
+            "warnings": warnings,
+            "current_memory": recent_snapshots[-1] if recent_snapshots else None,
+            "snapshots_analyzed": len(recent_snapshots),
         }
 
     def _calculate_trend(self, values: List[float]) -> float:
@@ -384,7 +379,7 @@ def performance_benchmark(name: str, category: str = "function"):
             # 这里可以集成到全局的性能管理器中
             return func(*args, **kwargs)
 
-        wrapper._performance_benchmark = {'name': name, 'category': category}
+        wrapper._performance_benchmark = {"name": name, "category": category}
         return wrapper
 
     return decorator

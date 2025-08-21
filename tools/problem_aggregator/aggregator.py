@@ -9,14 +9,15 @@ import argparse
 import json
 import subprocess
 import sys
-import yaml
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
 
+import yaml
+
+from .adapters.diff_coverage import DiffCoverageAdapter
 from .adapters.lint import LintAdapter
 from .adapters.security import SecurityAdapter
 from .adapters.tests import TestsAdapter
-from .adapters.diff_coverage import DiffCoverageAdapter
 
 
 class ProblemAggregator:
@@ -35,16 +36,16 @@ class ProblemAggregator:
     def _load_config(self, config_path: Optional[str] = None) -> Dict[str, Any]:
         """加载配置文件"""
         default_config = {
-            'culture': {
-                'min_test_coverage': 80.0,
-                'forbid_skipping_tests': True,
-                'forbid_disabling_hooks': True,
-                'forbid_debug_prints': True,
+            "culture": {
+                "min_test_coverage": 80.0,
+                "forbid_skipping_tests": True,
+                "forbid_disabling_hooks": True,
+                "forbid_debug_prints": True,
             },
-            'quality': {'max_complexity': 10, 'max_function_length': 50},
-            'security': {
-                'forbid_hardcoded_passwords': True,
-                'forbid_hardcoded_api_keys': True,
+            "quality": {"max_complexity": 10, "max_function_length": 50},
+            "security": {
+                "forbid_hardcoded_passwords": True,
+                "forbid_hardcoded_api_keys": True,
             },
         }
 
@@ -53,11 +54,7 @@ class ProblemAggregator:
         else:
             # 尝试找到配置文件
             possible_configs = [
-                self.project_root
-                / "tools"
-                / "problem_aggregator"
-                / "rulesets"
-                / "culture.yml",
+                self.project_root / "tools" / "problem_aggregator" / "rulesets" / "culture.yml",
                 self.project_root / ".aiculture" / "config.yml",
                 self.project_root / "aiculture.yml",
             ]
@@ -70,7 +67,7 @@ class ProblemAggregator:
 
         if config_file and config_file.exists():
             try:
-                with open(config_file, 'r', encoding='utf-8') as f:
+                with open(config_file, "r", encoding="utf-8") as f:
                     loaded_config = yaml.safe_load(f)
                     # 合并配置
                     default_config.update(loaded_config)
@@ -94,9 +91,9 @@ class ProblemAggregator:
             )
 
             if result.returncode == 0:
-                files = [f.strip() for f in result.stdout.split('\n') if f.strip()]
+                files = [f.strip() for f in result.stdout.split("\n") if f.strip()]
                 # 只返回Python文件
-                python_files = [f for f in files if f.endswith('.py')]
+                python_files = [f for f in files if f.endswith(".py")]
                 return python_files
             else:
                 print(f"警告: 获取变更文件失败: {result.stderr}")
@@ -114,7 +111,7 @@ class ProblemAggregator:
     ) -> Dict[str, Any]:
         """聚合所有问题"""
 
-        print(f"🔍 开始聚合问题检查...")
+        print("🔍 开始聚合问题检查...")
 
         # 获取要检查的文件
         if files is None:
@@ -153,7 +150,7 @@ class ProblemAggregator:
             test_problems = []
             collection_problems = self.tests_adapter.collect_tests()
             coverage_problems = self.tests_adapter.get_coverage_info(
-                self.config.get('culture', {}).get('min_test_coverage', 80.0)
+                self.config.get("culture", {}).get("min_test_coverage", 80.0)
             )
             pattern_problems = self.tests_adapter.check_test_patterns()
 
@@ -168,16 +165,12 @@ class ProblemAggregator:
         # 4. 增量覆盖率检查
         print("  📊 运行增量覆盖率检查...")
         try:
-            coverage_config = self.config.get('culture', {}).get('coverage', {})
-            if coverage_config.get('enable_diff_cover', True):
+            coverage_config = self.config.get("culture", {}).get("coverage", {})
+            if coverage_config.get("enable_diff_cover", True):
                 diff_coverage_problems = self.diff_coverage_adapter.check_diff_coverage(
                     base_branch=base,
-                    changed_lines_threshold=coverage_config.get(
-                        'changed_lines_threshold', 80.0
-                    ),
-                    new_files_threshold=coverage_config.get(
-                        'new_files_threshold', 70.0
-                    ),
+                    changed_lines_threshold=coverage_config.get("changed_lines_threshold", 80.0),
+                    new_files_threshold=coverage_config.get("new_files_threshold", 70.0),
                 )
                 all_problems.extend(diff_coverage_problems)
                 print(f"     发现 {len(diff_coverage_problems)} 个增量覆盖率问题")
@@ -197,11 +190,11 @@ class ProblemAggregator:
 
         # 统计和分类
         result = self._categorize_problems(all_problems)
-        result['metadata'] = {
-            'base': base,
-            'files_checked': len(files) if files else 'all',
-            'strict_mode': strict,
-            'config': self.config,
+        result["metadata"] = {
+            "base": base,
+            "files_checked": len(files) if files else "all",
+            "strict_mode": strict,
+            "config": self.config,
         }
 
         print(f"✅ 问题聚合完成: 总计 {len(all_problems)} 个问题")
@@ -211,7 +204,7 @@ class ProblemAggregator:
     def _check_culture_rules(self, files: List[str]) -> List[Dict[str, Any]]:
         """检查自定义文化规则"""
         problems = []
-        culture_config = self.config.get('culture', {})
+        culture_config = self.config.get("culture", {})
 
         # 检查所有Python文件（如果没有指定文件）
         if not files:
@@ -220,80 +213,77 @@ class ProblemAggregator:
 
         for file_path in files:
             full_path = self.project_root / file_path
-            if not full_path.exists() or not full_path.suffix == '.py':
+            if not full_path.exists() or not full_path.suffix == ".py":
                 continue
 
             try:
-                with open(full_path, 'r', encoding='utf-8') as f:
+                with open(full_path, "r", encoding="utf-8") as f:
                     content = f.read()
 
-                lines = content.split('\n')
+                lines = content.split("\n")
 
                 # 检查调试print语句
-                if culture_config.get('forbid_debug_prints', True):
+                if culture_config.get("forbid_debug_prints", True):
                     for i, line in enumerate(lines, 1):
-                        if 'print(' in line and not line.strip().startswith('#'):
+                        if "print(" in line and not line.strip().startswith("#"):
                             # 简单启发式：如果不在字符串中且不是注释
-                            if not self._is_in_string_or_comment(line, 'print('):
+                            if not self._is_in_string_or_comment(line, "print("):
                                 problems.append(
                                     {
-                                        'tool': 'culture',
-                                        'type': 'debug_code',
-                                        'severity': 'warning',
-                                        'file': file_path,
-                                        'line': i,
-                                        'message': '发现调试print语句',
-                                        'fix_suggestion': '移除print语句或使用logging',
-                                        'blocking': False,
+                                        "tool": "culture",
+                                        "type": "debug_code",
+                                        "severity": "warning",
+                                        "file": file_path,
+                                        "line": i,
+                                        "message": "发现调试print语句",
+                                        "fix_suggestion": "移除print语句或使用logging",
+                                        "blocking": False,
                                     }
                                 )
 
                 # 检查跳过的测试
-                if (
-                    culture_config.get('forbid_skipping_tests', True)
-                    and 'test_' in file_path
-                ):
+                if culture_config.get("forbid_skipping_tests", True) and "test_" in file_path:
                     for i, line in enumerate(lines, 1):
-                        if '@pytest.mark.skip' in line or '@unittest.skip' in line:
+                        if "@pytest.mark.skip" in line or "@unittest.skip" in line:
                             problems.append(
                                 {
-                                    'tool': 'culture',
-                                    'type': 'test_quality',
-                                    'severity': 'warning',
-                                    'file': file_path,
-                                    'line': i,
-                                    'message': '发现跳过的测试',
-                                    'fix_suggestion': '修复测试或提供跳过原因',
-                                    'blocking': False,
+                                    "tool": "culture",
+                                    "type": "test_quality",
+                                    "severity": "warning",
+                                    "file": file_path,
+                                    "line": i,
+                                    "message": "发现跳过的测试",
+                                    "fix_suggestion": "修复测试或提供跳过原因",
+                                    "blocking": False,
                                 }
                             )
 
                 # 检查TODO/FIXME
-                if culture_config.get('forbid_todo_fixme', False):
+                if culture_config.get("forbid_todo_fixme", False):
                     for i, line in enumerate(lines, 1):
-                        if 'TODO' in line.upper() or 'FIXME' in line.upper():
+                        if "TODO" in line.upper() or "FIXME" in line.upper():
                             problems.append(
                                 {
-                                    'tool': 'culture',
-                                    'type': 'code_quality',
-                                    'severity': 'info',
-                                    'file': file_path,
-                                    'line': i,
-                                    'message': '发现TODO/FIXME注释',
-                                    'fix_suggestion': '完成TODO项目或创建issue跟踪',
-                                    'blocking': False,
+                                    "tool": "culture",
+                                    "type": "code_quality",
+                                    "severity": "info",
+                                    "file": file_path,
+                                    "line": i,
+                                    "message": "发现TODO/FIXME注释",
+                                    "fix_suggestion": "完成TODO项目或创建issue跟踪",
+                                    "blocking": False,
                                 }
                             )
 
             except Exception as e:
                 problems.append(
                     {
-                        'tool': 'culture',
-                        'type': 'system',
-                        'severity': 'warning',
-                        'file': file_path,
-                        'message': f'文件检查失败: {e}',
-                        'blocking': False,
+                        "tool": "culture",
+                        "type": "system",
+                        "severity": "warning",
+                        "file": file_path,
+                        "message": f"文件检查失败: {e}",
+                        "blocking": False,
                     }
                 )
 
@@ -303,7 +293,7 @@ class ProblemAggregator:
         """简单检查目标字符串是否在字符串字面量或注释中"""
         # 这是一个简化的实现，实际应该使用AST解析
         stripped = line.strip()
-        if stripped.startswith('#'):
+        if stripped.startswith("#"):
             return True
 
         # 简单检查是否在字符串中
@@ -312,7 +302,7 @@ class ProblemAggregator:
         i = 0
         while i < len(line):
             char = line[i]
-            if char in ['"', "'"] and (i == 0 or line[i - 1] != '\\'):
+            if char in ['"', "'"] and (i == 0 or line[i - 1] != "\\"):
                 if not in_string:
                     in_string = True
                     quote_char = char
@@ -328,21 +318,21 @@ class ProblemAggregator:
     def _categorize_problems(self, problems: List[Dict[str, Any]]) -> Dict[str, Any]:
         """分类和统计问题"""
         categories = {
-            'security': [],
-            'behavior_violations': [],
-            'build_blocking': [],
-            'quality': [],
-            'style': [],
-            'system': [],
+            "security": [],
+            "behavior_violations": [],
+            "build_blocking": [],
+            "quality": [],
+            "style": [],
+            "system": [],
         }
 
-        severity_counts = {'error': 0, 'warning': 0, 'info': 0}
+        severity_counts = {"error": 0, "warning": 0, "info": 0}
         blocking_count = 0
 
         for problem in problems:
-            severity = problem.get('severity', 'info')
-            problem_type = problem.get('type', 'unknown')
-            is_blocking = problem.get('blocking', False)
+            severity = problem.get("severity", "info")
+            problem_type = problem.get("type", "unknown")
+            is_blocking = problem.get("blocking", False)
 
             # 统计
             severity_counts[severity] = severity_counts.get(severity, 0) + 1
@@ -350,45 +340,43 @@ class ProblemAggregator:
                 blocking_count += 1
 
             # 分类
-            if problem_type in ['security', 'secrets']:
-                categories['security'].append(problem)
-            elif problem_type in ['test_failure', 'test_collection']:
-                categories['build_blocking'].append(problem)
-            elif problem_type in ['debug_code', 'test_quality']:
-                categories['behavior_violations'].append(problem)
-            elif problem_type in ['lint', 'complexity']:
-                categories['quality'].append(problem)
-            elif problem_type in ['style', 'formatting']:
-                categories['style'].append(problem)
+            if problem_type in ["security", "secrets"]:
+                categories["security"].append(problem)
+            elif problem_type in ["test_failure", "test_collection"]:
+                categories["build_blocking"].append(problem)
+            elif problem_type in ["debug_code", "test_quality"]:
+                categories["behavior_violations"].append(problem)
+            elif problem_type in ["lint", "complexity"]:
+                categories["quality"].append(problem)
+            elif problem_type in ["style", "formatting"]:
+                categories["style"].append(problem)
             else:
-                categories['system'].append(problem)
+                categories["system"].append(problem)
 
         return {
-            'problems': problems,
-            'categories': categories,
-            'summary': {
-                'total': len(problems),
-                'blocking': blocking_count,
-                'by_severity': severity_counts,
+            "problems": problems,
+            "categories": categories,
+            "summary": {
+                "total": len(problems),
+                "blocking": blocking_count,
+                "by_severity": severity_counts,
             },
         }
 
 
 def main():
     """主函数"""
-    parser = argparse.ArgumentParser(description='AICultureKit Problem Aggregator')
+    parser = argparse.ArgumentParser(description="AICultureKit Problem Aggregator")
+    parser.add_argument("--base", default="HEAD", help="Git base for diff (default: HEAD)")
+    parser.add_argument("--out", help="Output JSON file path")
+    parser.add_argument("--md", help="Output Markdown report path")
     parser.add_argument(
-        '--base', default='HEAD', help='Git base for diff (default: HEAD)'
+        "--strict",
+        action="store_true",
+        help="Strict mode: exit with error if problems found",
     )
-    parser.add_argument('--out', help='Output JSON file path')
-    parser.add_argument('--md', help='Output Markdown report path')
-    parser.add_argument(
-        '--strict',
-        action='store_true',
-        help='Strict mode: exit with error if problems found',
-    )
-    parser.add_argument('--config', help='Config file path')
-    parser.add_argument('--files', nargs='*', help='Specific files to check')
+    parser.add_argument("--config", help="Config file path")
+    parser.add_argument("--files", nargs="*", help="Specific files to check")
 
     args = parser.parse_args()
 
@@ -400,13 +388,11 @@ def main():
 
     # 运行聚合
     aggregator = ProblemAggregator(config_path=args.config)
-    result = aggregator.aggregate_problems(
-        base=args.base, files=args.files, strict=args.strict
-    )
+    result = aggregator.aggregate_problems(base=args.base, files=args.files, strict=args.strict)
 
     # 输出JSON
     if args.out:
-        with open(args.out, 'w', encoding='utf-8') as f:
+        with open(args.out, "w", encoding="utf-8") as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
         print(f"📄 JSON报告已保存到: {args.out}")
 
@@ -417,13 +403,13 @@ def main():
         reporter = MarkdownReporter()
         markdown_content = reporter.generate_report(result)
 
-        with open(args.md, 'w', encoding='utf-8') as f:
+        with open(args.md, "w", encoding="utf-8") as f:
             f.write(markdown_content)
         print(f"📋 Markdown报告已保存到: {args.md}")
 
     # 显示摘要
-    summary = result['summary']
-    print(f"\n📊 问题摘要:")
+    summary = result["summary"]
+    print("\n📊 问题摘要:")
     print(f"   总计: {summary['total']} 个问题")
     print(f"   阻塞性: {summary['blocking']} 个")
     print(f"   错误: {summary['by_severity'].get('error', 0)} 个")
@@ -431,9 +417,7 @@ def main():
     print(f"   信息: {summary['by_severity'].get('info', 0)} 个")
 
     # 退出码
-    if args.strict and (
-        summary['blocking'] > 0 or summary['by_severity'].get('error', 0) > 0
-    ):
+    if args.strict and (summary["blocking"] > 0 or summary["by_severity"].get("error", 0) > 0):
         print("\n❌ 严格模式：发现阻塞性问题或错误")
         sys.exit(1)
     else:

@@ -23,9 +23,7 @@ def run_command(cmd, capture_output=True) -> None:
 
 def get_test_results() -> None:
     """获取测试结果"""
-    cmd = (
-        "python -m pytest --tb=no -q --json-report --json-report-file=test-report.json"
-    )
+    cmd = "python -m pytest --tb=no -q --json-report --json-report-file=test-report.json"
     run_command(cmd)
 
     try:
@@ -84,7 +82,7 @@ def get_quality_issues() -> None:
     """获取代码质量问题"""
     # Flake8检查
     flake8_output = run_command("flake8 . --count --statistics")
-    flake8_count = len(flake8_output.split('\n')) if flake8_output else 0
+    flake8_count = len(flake8_output.split("\n")) if flake8_output else 0
 
     # MyPy检查
     mypy_output = run_command("mypy aiculture --ignore-missing-imports")
@@ -106,7 +104,7 @@ def generate_html_report(data) -> None:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AICultureKit 质量报告</title>
     <style>
-        body {{ font-family: -apple-system, 
+        body {{ font-family: -apple-system,
             BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }}
         .container {{ max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
         .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 8px 8px 0 0; }}
@@ -166,7 +164,7 @@ def generate_html_report(data) -> None:
 
             <div class="metric success">
                 <h3>🎯 质量分数</h3>
-                <div class="value">{max(0, 
+                <div class="value">{max(0,
                     100 - data['tests']['failed'] * 10 - data['quality']['flake8_issues'] * 2 - data['quality']['mypy_errors'])}</div>
                 <div class="label">综合评分</div>
             </div>

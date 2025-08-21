@@ -14,10 +14,10 @@ sys.path.insert(0, '.')
 
 try:
     from aiculture.ai_behavior_enforcer import AIBehaviorEnforcer
-    
+
     enforcer = AIBehaviorEnforcer('.')
     result = enforcer.enforce_ai_behavior()
-    
+
     if result['violations_detected'] > 0:
         print('🚨 AI行为违规检测！')
         print(f'违规数量: {result[\"violations_detected\"]}')
@@ -30,9 +30,9 @@ try:
         print('3. 修复所有文化检查错误')
         print('4. 通过正当途径提交代码')
         sys.exit(1)
-    
+
     print('✅ AI行为规范检查通过')
-    
+
 except ImportError:
     print('⚠️ AI行为检查模块未找到，跳过检查')
 except Exception as e:
@@ -49,11 +49,11 @@ import sys
 try:
     enforcer = CultureEnforcer('.')
     result = enforcer.enforce_all()
-    
+
     print(f'📊 文化质量评分: {result.get(\"score\", 0)}/100')
     print(f'❌ 错误: {result.get(\"errors\", 0)} 个')
     print(f'⚠️  警告: {result.get(\"warnings\", 0)} 个')
-    
+
     # 如果有阻塞性错误，阻止提交
     if result.get('errors', 0) > 0:
         print('')
@@ -66,13 +66,13 @@ try:
         print('')
         print('❌ 禁止绕过此检查！这是文化标准的核心要求。')
         sys.exit(1)
-    
+
     # 如果质量评分过低，警告但不阻止
     if result.get('score', 0) < 70:
         print('⚠️  警告：文化质量评分较低，建议改进')
-    
+
     print('✅ 文化标准检查通过')
-    
+
 except Exception as e:
     print(f'❌ 文化检查失败: {e}')
     print('🛑 提交被阻止！请修复文化检查问题。')

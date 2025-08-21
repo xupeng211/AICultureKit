@@ -25,9 +25,9 @@ class AIFixAgent:
 
         # 初始化修复策略
         self.strategies = {
-            'lint': LintFixStrategy(str(self.project_root)),
-            'security': SecurityFixStrategy(str(self.project_root)),
-            'test_scaffold': TestScaffoldStrategy(str(self.project_root)),
+            "lint": LintFixStrategy(str(self.project_root)),
+            "security": SecurityFixStrategy(str(self.project_root)),
+            "test_scaffold": TestScaffoldStrategy(str(self.project_root)),
         }
 
     def generate_fixes(self, problems_file: str, output_dir: str) -> Dict[str, Any]:
@@ -42,22 +42,22 @@ class AIFixAgent:
             修复结果摘要
         """
 
-        print(f"🤖 AI修复代理启动...")
+        print("🤖 AI修复代理启动...")
         print(f"   输入: {problems_file}")
         print(f"   输出: {output_dir}")
 
         # 加载问题
         try:
-            with open(problems_file, 'r', encoding='utf-8') as f:
+            with open(problems_file, "r", encoding="utf-8") as f:
                 problems_data = json.load(f)
         except Exception as e:
             print(f"❌ 加载问题文件失败: {e}")
-            return {'success': False, 'error': str(e)}
+            return {"success": False, "error": str(e)}
 
-        problems = problems_data.get('problems', [])
+        problems = problems_data.get("problems", [])
         if not problems:
             print("ℹ️  没有发现问题，无需生成修复")
-            return {'success': True, 'patches': [], 'message': '没有问题需要修复'}
+            return {"success": True, "patches": [], "message": "没有问题需要修复"}
 
         print(f"📊 分析 {len(problems)} 个问题...")
 
@@ -84,28 +84,26 @@ class AIFixAgent:
                 continue
 
             # 生成修复
-            patch_content, explanation, confidence = strategy.generate_fix(
-                strategy_problems
-            )
+            patch_content, explanation, confidence = strategy.generate_fix(strategy_problems)
 
             if patch_content and confidence > 0.5:  # 只生成高置信度的补丁
                 # 保存补丁文件
                 patch_file = output_path / f"{strategy_name}_fix.patch"
-                with open(patch_file, 'w', encoding='utf-8') as f:
+                with open(patch_file, "w", encoding="utf-8") as f:
                     f.write(patch_content)
 
                 # 保存说明文件
                 explanation_file = output_path / f"{strategy_name}_explanation.md"
-                with open(explanation_file, 'w', encoding='utf-8') as f:
+                with open(explanation_file, "w", encoding="utf-8") as f:
                     f.write(explanation)
 
                 patch_files.append(
                     {
-                        'strategy': strategy_name,
-                        'patch_file': str(patch_file),
-                        'explanation_file': str(explanation_file),
-                        'confidence': confidence,
-                        'problems_count': len(strategy_problems),
+                        "strategy": strategy_name,
+                        "patch_file": str(patch_file),
+                        "explanation_file": str(explanation_file),
+                        "confidence": confidence,
+                        "problems_count": len(strategy_problems),
                     }
                 )
 
@@ -113,10 +111,10 @@ class AIFixAgent:
 
             else:
                 # 生成手工修复指南
-                if hasattr(strategy, 'generate_manual_guide'):
+                if hasattr(strategy, "generate_manual_guide"):
                     guide = strategy.generate_manual_guide(strategy_problems)
                     guide_file = output_path / f"{strategy_name}_manual_guide.md"
-                    with open(guide_file, 'w', encoding='utf-8') as f:
+                    with open(guide_file, "w", encoding="utf-8") as f:
                         f.write(guide)
 
                     print(f"📋 生成 {strategy_name} 手工修复指南")
@@ -124,22 +122,22 @@ class AIFixAgent:
                     print(f"⚠️  {strategy_name} 问题置信度过低，跳过自动修复")
 
             results[strategy_name] = {
-                'problems_count': len(strategy_problems),
-                'patch_generated': patch_content != "",
-                'confidence': confidence,
-                'explanation': explanation,
+                "problems_count": len(strategy_problems),
+                "patch_generated": patch_content != "",
+                "confidence": confidence,
+                "explanation": explanation,
             }
 
         # 生成总体变更日志
         changelog = self._generate_changelog(patch_files, problems_data)
         changelog_file = output_path / "CHANGELOG_ENTRY.md"
-        with open(changelog_file, 'w', encoding='utf-8') as f:
+        with open(changelog_file, "w", encoding="utf-8") as f:
             f.write(changelog)
 
         # 生成应用脚本
         apply_script = self._generate_apply_script(patch_files)
         script_file = output_path / "apply_fixes.sh"
-        with open(script_file, 'w', encoding='utf-8') as f:
+        with open(script_file, "w", encoding="utf-8") as f:
             f.write(apply_script)
         script_file.chmod(0o755)  # 设置执行权限
 
@@ -147,13 +145,13 @@ class AIFixAgent:
         print(f"🚀 生成应用脚本: {script_file}")
 
         summary = {
-            'success': True,
-            'patches': patch_files,
-            'total_problems': len(problems),
-            'strategies_used': list(results.keys()),
-            'output_directory': str(output_path),
-            'changelog_file': str(changelog_file),
-            'apply_script': str(script_file),
+            "success": True,
+            "patches": patch_files,
+            "total_problems": len(problems),
+            "strategies_used": list(results.keys()),
+            "output_directory": str(output_path),
+            "changelog_file": str(changelog_file),
+            "apply_script": str(script_file),
         }
 
         print(f"🎉 AI修复完成: 生成了 {len(patch_files)} 个补丁文件")
@@ -165,7 +163,7 @@ class AIFixAgent:
     ) -> Dict[str, List[Dict[str, Any]]]:
         """按修复策略分类问题"""
 
-        categorized = {'lint': [], 'security': [], 'test_scaffold': []}
+        categorized = {"lint": [], "security": [], "test_scaffold": []}
 
         for problem in problems:
             # 检查每个策略是否可以处理此问题
@@ -190,8 +188,8 @@ class AIFixAgent:
         lines.append("")
 
         # 摘要
-        total_problems = problems_data.get('summary', {}).get('total', 0)
-        blocking_problems = problems_data.get('summary', {}).get('blocking', 0)
+        total_problems = problems_data.get("summary", {}).get("total", 0)
+        blocking_problems = problems_data.get("summary", {}).get("blocking", 0)
 
         lines.append("## 📊 修复摘要")
         lines.append("")
@@ -217,16 +215,14 @@ class AIFixAgent:
             lines.append("")
 
             for i, patch_info in enumerate(patch_files, 1):
-                strategy = patch_info['strategy']
-                confidence = patch_info['confidence']
-                problems_count = patch_info['problems_count']
+                strategy = patch_info["strategy"]
+                confidence = patch_info["confidence"]
+                problems_count = patch_info["problems_count"]
 
                 lines.append(f"### {i}. {strategy.title()} 修复")
                 lines.append("")
                 lines.append(f"- **补丁文件**: `{Path(patch_info['patch_file']).name}`")
-                lines.append(
-                    f"- **说明文件**: `{Path(patch_info['explanation_file']).name}`"
-                )
+                lines.append(f"- **说明文件**: `{Path(patch_info['explanation_file']).name}`")
                 lines.append(f"- **置信度**: {confidence:.1%}")
                 lines.append(f"- **修复问题数**: {problems_count}")
                 lines.append("")
@@ -276,7 +272,7 @@ class AIFixAgent:
         lines.append("")
         lines.append("4. **提交更改**:")
         lines.append("   ```bash")
-        lines.append("   git commit -m \"fix: apply AI-generated fixes\"")
+        lines.append('   git commit -m "fix: apply AI-generated fixes"')
         lines.append("   ```")
         lines.append("")
 
@@ -294,7 +290,7 @@ class AIFixAgent:
         lines.append("```")
         lines.append("")
 
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
     def _generate_apply_script(self, patch_files: List[Dict[str, Any]]) -> str:
         """生成应用补丁的脚本"""
@@ -319,9 +315,9 @@ class AIFixAgent:
 
         # 创建备份分支
         lines.append("echo '💾 创建备份分支...'")
-        lines.append("BACKUP_BRANCH=\"backup-$(date +%Y%m%d-%H%M%S)\"")
-        lines.append("git branch \"$BACKUP_BRANCH\"")
-        lines.append("echo \"✅ 备份分支已创建: $BACKUP_BRANCH\"")
+        lines.append('BACKUP_BRANCH="backup-$(date +%Y%m%d-%H%M%S)"')
+        lines.append('git branch "$BACKUP_BRANCH"')
+        lines.append('echo "✅ 备份分支已创建: $BACKUP_BRANCH"')
         lines.append("")
 
         # 应用补丁
@@ -330,9 +326,9 @@ class AIFixAgent:
             lines.append("")
 
             for i, patch_info in enumerate(patch_files, 1):
-                patch_file = Path(patch_info['patch_file']).name
-                strategy = patch_info['strategy']
-                confidence = patch_info['confidence']
+                patch_file = Path(patch_info["patch_file"]).name
+                strategy = patch_info["strategy"]
+                confidence = patch_info["confidence"]
 
                 lines.append(
                     f"echo '📋 {i}/{len(patch_files)}: 应用 {strategy} 补丁 (置信度: {confidence:.1%})...'"
@@ -365,17 +361,17 @@ class AIFixAgent:
         lines.append("echo '2. 运行测试: pytest'")
         lines.append("echo '3. 提交更改: git commit -m \"fix: apply AI-generated fixes\"'")
         lines.append("echo '4. 如有问题回滚: git reset --hard HEAD~1'")
-        lines.append("echo \"5. 或使用备份分支: git checkout $BACKUP_BRANCH\"")
+        lines.append('echo "5. 或使用备份分支: git checkout $BACKUP_BRANCH"')
 
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
 
 def main():
     """主函数"""
-    parser = argparse.ArgumentParser(description='AI Fix Agent - 生成可审阅的修复补丁')
-    parser.add_argument('--in', dest='input_file', required=True, help='输入的问题JSON文件')
-    parser.add_argument('--out', dest='output_dir', required=True, help='输出目录')
-    parser.add_argument('--project-root', default='.', help='项目根目录')
+    parser = argparse.ArgumentParser(description="AI Fix Agent - 生成可审阅的修复补丁")
+    parser.add_argument("--in", dest="input_file", required=True, help="输入的问题JSON文件")
+    parser.add_argument("--out", dest="output_dir", required=True, help="输出目录")
+    parser.add_argument("--project-root", default=".", help="项目根目录")
 
     args = parser.parse_args()
 
@@ -385,17 +381,17 @@ def main():
     # 生成修复
     result = agent.generate_fixes(args.input_file, args.output_dir)
 
-    if result['success']:
-        print(f"\n📋 修复摘要:")
+    if result["success"]:
+        print("\n📋 修复摘要:")
         print(f"   生成补丁: {len(result['patches'])} 个")
         print(f"   输出目录: {result['output_directory']}")
         print(f"   变更日志: {result['changelog_file']}")
         print(f"   应用脚本: {result['apply_script']}")
 
-        if result['patches']:
-            print(f"\n🚀 应用补丁:")
+        if result["patches"]:
+            print("\n🚀 应用补丁:")
             print(f"   cd {result['output_directory']}")
-            print(f"   ./apply_fixes.sh")
+            print("   ./apply_fixes.sh")
 
         sys.exit(0)
     else:

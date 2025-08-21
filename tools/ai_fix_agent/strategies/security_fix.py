@@ -15,17 +15,17 @@ class SecurityFixStrategy:
 
     def can_fix(self, problem: Dict[str, Any]) -> bool:
         """判断是否可以修复此问题"""
-        if problem.get('tool') not in ['bandit', 'detect-secrets']:
+        if problem.get("tool") not in ["bandit", "detect-secrets"]:
             return False
 
         # 只修复高置信度的安全问题
-        if problem.get('tool') == 'bandit':
-            confidence = problem.get('confidence', 'LOW')
-            severity = problem.get('severity', 'info')
-            return confidence in ['HIGH', 'MEDIUM'] and severity in ['error', 'warning']
+        if problem.get("tool") == "bandit":
+            confidence = problem.get("confidence", "LOW")
+            severity = problem.get("severity", "info")
+            return confidence in ["HIGH", "MEDIUM"] and severity in ["error", "warning"]
 
         # detect-secrets的问题通常需要人工审查
-        if problem.get('tool') == 'detect-secrets':
+        if problem.get("tool") == "detect-secrets":
             return False  # 暂时不自动修复密钥问题
 
         return False
@@ -44,7 +44,7 @@ class SecurityFixStrategy:
             if not self.can_fix(problem):
                 continue
 
-            file_path = problem.get('file', '')
+            file_path = problem.get("file", "")
             if not file_path:
                 continue
 
@@ -92,7 +92,7 @@ class SecurityFixStrategy:
             return "", f"文件不存在: {file_path}", 0.0
 
         try:
-            with open(full_path, 'r', encoding='utf-8') as f:
+            with open(full_path, "r", encoding="utf-8") as f:
                 original_content = f.read()
         except Exception as e:
             return "", f"读取文件失败: {e}", 0.0
@@ -102,7 +102,7 @@ class SecurityFixStrategy:
         applied_fixes = []
 
         # 按行号排序，从后往前修复避免行号偏移
-        sorted_problems = sorted(problems, key=lambda p: p.get('line', 0), reverse=True)
+        sorted_problems = sorted(problems, key=lambda p: p.get("line", 0), reverse=True)
 
         for problem in sorted_problems:
             fix_result = self._apply_security_fix(fixed_content, problem)
@@ -125,13 +125,13 @@ class SecurityFixStrategy:
     ) -> Optional[Tuple[str, str]]:
         """应用单个安全修复"""
 
-        if problem.get('tool') != 'bandit':
+        if problem.get("tool") != "bandit":
             return None
 
-        test_id = problem.get('code', '')
-        line_num = problem.get('line', 0)
+        test_id = problem.get("code", "")
+        line_num = problem.get("line", 0)
 
-        lines = content.split('\n')
+        lines = content.split("\n")
         if line_num <= 0 or line_num > len(lines):
             return None
 
@@ -139,16 +139,14 @@ class SecurityFixStrategy:
         original_line = lines[line_idx]
 
         # 根据bandit测试ID应用修复
-        if test_id == 'B101':  # assert语句
+        if test_id == "B101":  # assert语句
             # 将assert替换为适当的异常或logging
-            if 'assert ' in original_line:
+            if "assert " in original_line:
                 indent = len(original_line) - len(original_line.lstrip())
-                indent_str = ' ' * indent
+                indent_str = " " * indent
 
                 # 提取assert条件
-                assert_match = re.search(
-                    r'assert\s+(.+?)(?:\s*,\s*(.+))?$', original_line.strip()
-                )
+                assert_match = re.search(r"assert\s+(.+?)(?:\s*,\s*(.+))?$", original_line.strip())
                 if assert_match:
                     condition = assert_match.group(1)
                     message = assert_match.group(2) or f'"{condition} failed"'
@@ -160,69 +158,70 @@ class SecurityFixStrategy:
                     ]
 
                     lines[line_idx : line_idx + 1] = new_lines
-                    return '\n'.join(lines), f"B101: 将assert替换为异常检查"
+                    return "\n".join(lines), "B101: 将assert替换为异常检查"
 
-        elif test_id == 'B102':  # exec使用
-            if 'exec(' in original_line:
+        elif test_id == "B102":  # exec使用
+            if "exec(" in original_line:
                 # 添加警告注释
                 indent = len(original_line) - len(original_line.lstrip())
-                indent_str = ' ' * indent
+                indent_str = " " * indent
 
-                warning_comment = f"{indent_str}# WARNING: exec() usage detected - consider safer alternatives"
+                warning_comment = (
+                    f"{indent_str}# WARNING: exec() usage detected - consider safer alternatives"
+                )
                 lines.insert(line_idx, warning_comment)
-                return '\n'.join(lines), f"B102: 为exec()使用添加安全警告"
+                return "\n".join(lines), "B102: 为exec()使用添加安全警告"
 
-        elif test_id == 'B108':  # 临时文件创建不安全
-            if 'tempfile.mktemp' in original_line:
+        elif test_id == "B108":  # 临时文件创建不安全
+            if "tempfile.mktemp" in original_line:
                 # 替换为更安全的tempfile.mkstemp
-                new_line = original_line.replace('tempfile.mktemp', 'tempfile.mkstemp')
+                new_line = original_line.replace("tempfile.mktemp", "tempfile.mkstemp")
                 lines[line_idx] = new_line
-                return '\n'.join(lines), f"B108: 使用更安全的tempfile.mkstemp"
+                return "\n".join(lines), "B108: 使用更安全的tempfile.mkstemp"
 
-        elif test_id == 'B311':  # 不安全的随机数
-            if 'random.' in original_line and any(
-                func in original_line for func in ['random()', 'randint(', 'choice(']
+        elif test_id == "B311":  # 不安全的随机数
+            if "random." in original_line and any(
+                func in original_line for func in ["random()", "randint(", "choice("]
             ):
                 # 添加导入secrets模块的建议注释
                 indent = len(original_line) - len(original_line.lstrip())
-                indent_str = ' ' * indent
+                indent_str = " " * indent
 
                 warning_comment = f"{indent_str}# SECURITY: Consider using 'secrets' module for cryptographic randomness"
                 lines.insert(line_idx, warning_comment)
-                return '\n'.join(lines), f"B311: 添加安全随机数使用建议"
+                return "\n".join(lines), "B311: 添加安全随机数使用建议"
 
-        elif test_id == 'B324':  # 不安全的哈希算法
-            if any(hash_func in original_line for hash_func in ['md5()', 'sha1()']):
+        elif test_id == "B324":  # 不安全的哈希算法
+            if any(hash_func in original_line for hash_func in ["md5()", "sha1()"]):
                 # 建议使用更安全的哈希算法
                 indent = len(original_line) - len(original_line.lstrip())
-                indent_str = ' ' * indent
+                indent_str = " " * indent
 
-                warning_comment = f"{indent_str}# SECURITY: Consider using SHA-256 or stronger hash algorithms"
+                warning_comment = (
+                    f"{indent_str}# SECURITY: Consider using SHA-256 or stronger hash algorithms"
+                )
                 lines.insert(line_idx, warning_comment)
-                return '\n'.join(lines), f"B324: 添加安全哈希算法建议"
+                return "\n".join(lines), "B324: 添加安全哈希算法建议"
 
-        elif test_id == 'B501':  # 未验证SSL证书
-            if (
-                'verify=False' in original_line
-                or 'ssl._create_unverified_context' in original_line
-            ):
+        elif test_id == "B501":  # 未验证SSL证书
+            if "verify=False" in original_line or "ssl._create_unverified_context" in original_line:
                 # 添加SSL验证警告
                 indent = len(original_line) - len(original_line.lstrip())
-                indent_str = ' ' * indent
+                indent_str = " " * indent
 
                 warning_comment = f"{indent_str}# SECURITY: SSL certificate verification disabled - ensure this is intentional"
                 lines.insert(line_idx, warning_comment)
-                return '\n'.join(lines), f"B501: 添加SSL验证警告"
+                return "\n".join(lines), "B501: 添加SSL验证警告"
 
-        elif test_id == 'B601' or test_id == 'B602':  # shell注入风险
-            if 'shell=True' in original_line:
+        elif test_id == "B601" or test_id == "B602":  # shell注入风险
+            if "shell=True" in original_line:
                 # 建议使用shell=False
                 indent = len(original_line) - len(original_line.lstrip())
-                indent_str = ' ' * indent
+                indent_str = " " * indent
 
                 warning_comment = f"{indent_str}# SECURITY: shell=True may be vulnerable to injection - validate inputs"
                 lines.insert(line_idx, warning_comment)
-                return '\n'.join(lines), f"{test_id}: 添加shell注入风险警告"
+                return "\n".join(lines), f"{test_id}: 添加shell注入风险警告"
 
         return None
 
@@ -230,8 +229,8 @@ class SecurityFixStrategy:
         """生成Git patch格式"""
 
         # 使用简单的diff格式
-        orig_lines = original.split('\n')
-        fixed_lines = fixed.split('\n')
+        orig_lines = original.split("\n")
+        fixed_lines = fixed.split("\n")
 
         patch_lines = [
             f"--- a/{file_path}",
@@ -256,7 +255,7 @@ class SecurityFixStrategy:
             else:
                 patch_lines.append(f" {orig_line}")
 
-        return '\n'.join(patch_lines)
+        return "\n".join(patch_lines)
 
     def generate_manual_guide(self, problems: List[Dict[str, Any]]) -> str:
         """为无法自动修复的问题生成手工修复指南"""
@@ -267,10 +266,10 @@ class SecurityFixStrategy:
         # 按问题类型分组
         problems_by_type = {}
         for problem in problems:
-            if problem.get('tool') == 'detect-secrets':
-                problem_type = 'secrets'
-            elif problem.get('tool') == 'bandit':
-                problem_type = problem.get('code', 'unknown')
+            if problem.get("tool") == "detect-secrets":
+                problem_type = "secrets"
+            elif problem.get("tool") == "bandit":
+                problem_type = problem.get("code", "unknown")
             else:
                 continue
 
@@ -280,12 +279,12 @@ class SecurityFixStrategy:
 
         # 生成各类型的修复指南
         for problem_type, type_problems in problems_by_type.items():
-            if problem_type == 'secrets':
+            if problem_type == "secrets":
                 guides.append(self._generate_secrets_guide(type_problems))
             else:
                 guides.append(self._generate_bandit_guide(problem_type, type_problems))
 
-        return '\n'.join(guides)
+        return "\n".join(guides)
 
     def _generate_secrets_guide(self, problems: List[Dict[str, Any]]) -> str:
         """生成密钥问题修复指南"""
@@ -293,9 +292,9 @@ class SecurityFixStrategy:
         guide = ["## 🔑 密钥泄漏修复指南\n"]
 
         for i, problem in enumerate(problems, 1):
-            file_path = problem.get('file', 'unknown')
-            line_num = problem.get('line', 0)
-            secret_type = problem.get('code', 'unknown')
+            file_path = problem.get("file", "unknown")
+            line_num = problem.get("line", 0)
+            secret_type = problem.get("code", "unknown")
 
             guide.append(f"### {i}. {file_path}:{line_num} - {secret_type}")
             guide.append("")
@@ -320,23 +319,21 @@ class SecurityFixStrategy:
             guide.append("```")
             guide.append("")
 
-        return '\n'.join(guide)
+        return "\n".join(guide)
 
-    def _generate_bandit_guide(
-        self, test_id: str, problems: List[Dict[str, Any]]
-    ) -> str:
+    def _generate_bandit_guide(self, test_id: str, problems: List[Dict[str, Any]]) -> str:
         """生成bandit问题修复指南"""
 
         guide = [f"## 🛡️ {test_id} 安全问题修复指南\n"]
 
         # 根据测试ID提供具体指导
-        if test_id == 'B105' or test_id == 'B106' or test_id == 'B107':
+        if test_id == "B105" or test_id == "B106" or test_id == "B107":
             guide.append("**问题**: 硬编码密码")
             guide.append("**修复方法**: 使用环境变量或配置文件存储密码")
-        elif test_id == 'B301':
+        elif test_id == "B301":
             guide.append("**问题**: 使用pickle模块存在安全风险")
             guide.append("**修复方法**: 考虑使用JSON或其他安全的序列化方式")
-        elif test_id == 'B601' or test_id == 'B602':
+        elif test_id == "B601" or test_id == "B602":
             guide.append("**问题**: shell注入风险")
             guide.append("**修复方法**: 避免使用shell=True，或严格验证输入")
         else:
@@ -347,14 +344,14 @@ class SecurityFixStrategy:
         guide.append("**受影响的文件:**")
 
         for problem in problems:
-            file_path = problem.get('file', 'unknown')
-            line_num = problem.get('line', 0)
-            message = problem.get('message', '')
+            file_path = problem.get("file", "unknown")
+            line_num = problem.get("line", 0)
+            message = problem.get("message", "")
             guide.append(f"- {file_path}:{line_num} - {message}")
 
         guide.append("")
 
-        return '\n'.join(guide)
+        return "\n".join(guide)
 
 
 def main():
@@ -364,13 +361,13 @@ def main():
     # 测试问题
     test_problems = [
         {
-            'tool': 'bandit',
-            'code': 'B101',
-            'file': 'test.py',
-            'line': 10,
-            'message': 'Use of assert detected',
-            'confidence': 'HIGH',
-            'severity': 'warning',
+            "tool": "bandit",
+            "code": "B101",
+            "file": "test.py",
+            "line": 10,
+            "message": "Use of assert detected",
+            "confidence": "HIGH",
+            "severity": "warning",
         }
     ]
 

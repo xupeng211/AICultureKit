@@ -13,7 +13,7 @@ import time
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import yaml
 
@@ -74,9 +74,7 @@ class NotificationChannel:
     type: str  # email, slack, webhook, sms
     config: Dict[str, Any]
     enabled: bool = True
-    severity_filter: List[AlertSeverity] = field(
-        default_factory=lambda: list(AlertSeverity)
-    )
+    severity_filter: List[AlertSeverity] = field(default_factory=lambda: list(AlertSeverity))
 
 
 class AlertingRulesManager:
@@ -224,16 +222,16 @@ class AlertingRulesManager:
         config_file = self.config_dir / "alerting_config.yaml"
         if config_file.exists():
             try:
-                with open(config_file, 'r', encoding='utf-8') as f:
+                with open(config_file, "r", encoding="utf-8") as f:
                     config = yaml.safe_load(f)
 
                 # 加载自定义规则
-                for rule_data in config.get('rules', []):
+                for rule_data in config.get("rules", []):
                     rule = AlertRule(**rule_data)
                     self.rules[rule.name] = rule
 
                 # 加载通知渠道
-                for channel_data in config.get('channels', []):
+                for channel_data in config.get("channels", []):
                     channel = NotificationChannel(**channel_data)
                     self.channels[channel.name] = channel
 
@@ -243,34 +241,34 @@ class AlertingRulesManager:
     def _save_config(self) -> None:
         """保存配置"""
         config = {
-            'rules': [
+            "rules": [
                 {
-                    'name': rule.name,
-                    'description': rule.description,
-                    'severity': rule.severity.value,
-                    'condition': rule.condition,
-                    'threshold': rule.threshold,
-                    'duration': rule.duration,
-                    'labels': rule.labels,
-                    'annotations': rule.annotations,
-                    'enabled': rule.enabled,
+                    "name": rule.name,
+                    "description": rule.description,
+                    "severity": rule.severity.value,
+                    "condition": rule.condition,
+                    "threshold": rule.threshold,
+                    "duration": rule.duration,
+                    "labels": rule.labels,
+                    "annotations": rule.annotations,
+                    "enabled": rule.enabled,
                 }
                 for rule in self.rules.values()
             ],
-            'channels': [
+            "channels": [
                 {
-                    'name': channel.name,
-                    'type': channel.type,
-                    'config': channel.config,
-                    'enabled': channel.enabled,
-                    'severity_filter': [s.value for s in channel.severity_filter],
+                    "name": channel.name,
+                    "type": channel.type,
+                    "config": channel.config,
+                    "enabled": channel.enabled,
+                    "severity_filter": [s.value for s in channel.severity_filter],
                 }
                 for channel in self.channels.values()
             ],
         }
 
         config_file = self.config_dir / "alerting_config.yaml"
-        with open(config_file, 'w', encoding='utf-8') as f:
+        with open(config_file, "w", encoding="utf-8") as f:
             yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
 
     def add_rule(self, rule: AlertRule) -> None:
@@ -321,11 +319,7 @@ class AlertingRulesManager:
                 # 发送通知
                 self._send_notifications(alert)
 
-            elif (
-                not should_fire
-                and existing_alert
-                and existing_alert.status == AlertStatus.FIRING
-            ):
+            elif not should_fire and existing_alert and existing_alert.status == AlertStatus.FIRING:
                 # 解决告警
                 existing_alert.status = AlertStatus.RESOLVED
                 existing_alert.resolved_at = time.time()
@@ -395,14 +389,10 @@ class AlertingRulesManager:
             except Exception as e:
                 print(f"发送通知失败 ({channel.name}): {e}")
 
-    def _send_console_notification(
-        self, channel: NotificationChannel, alert: Alert
-    ) -> None:
+    def _send_console_notification(self, channel: NotificationChannel, alert: Alert) -> None:
         """发送控制台通知"""
         status_emoji = "🔥" if alert.status == AlertStatus.FIRING else "✅"
-        severity_emoji = {"critical": "🚨", "warning": "⚠️", "info": "ℹ️"}[
-            alert.severity.value
-        ]
+        severity_emoji = {"critical": "🚨", "warning": "⚠️", "info": "ℹ️"}[alert.severity.value]
 
         print(
             """
@@ -416,25 +406,15 @@ class AlertingRulesManager:
 """
         )
 
-    def _send_email_notification(
-        self, channel: NotificationChannel, alert: Alert
-    ) -> None:
+    def _send_email_notification(self, channel: NotificationChannel, alert: Alert) -> None:
         """发送邮件通知（占位符实现）"""
-        print(
-            f"📧 发送邮件通知到 {channel.config.get('recipients', [])}: {alert.message}"
-        )
+        print(f"📧 发送邮件通知到 {channel.config.get('recipients', [])}: {alert.message}")
 
-    def _send_slack_notification(
-        self, channel: NotificationChannel, alert: Alert
-    ) -> None:
+    def _send_slack_notification(self, channel: NotificationChannel, alert: Alert) -> None:
         """发送Slack通知（占位符实现）"""
-        print(
-            f"💬 发送Slack通知到 {channel.config.get('webhook_url', '')}: {alert.message}"
-        )
+        print(f"💬 发送Slack通知到 {channel.config.get('webhook_url', '')}: {alert.message}")
 
-    def _send_webhook_notification(
-        self, channel: NotificationChannel, alert: Alert
-    ) -> None:
+    def _send_webhook_notification(self, channel: NotificationChannel, alert: Alert) -> None:
         """发送Webhook通知（占位符实现）"""
         print(f"🔗 发送Webhook通知到 {channel.config.get('url', '')}: {alert.message}")
 
@@ -449,23 +429,21 @@ class AlertingRulesManager:
 
     def generate_prometheus_rules(self) -> str:
         """生成Prometheus告警规则"""
-        rules = {'groups': [{'name': 'aiculture_alerts', 'rules': []}]}
+        rules = {"groups": [{"name": "aiculture_alerts", "rules": []}]}
 
         for rule in self.rules.values():
             if not rule.enabled:
                 continue
 
             prometheus_rule = {
-                'alert': rule.name,
-                'expr': self._convert_to_prometheus_expr(
-                    rule.condition, rule.threshold
-                ),
-                'for': rule.duration,
-                'labels': rule.labels,
-                'annotations': rule.annotations,
+                "alert": rule.name,
+                "expr": self._convert_to_prometheus_expr(rule.condition, rule.threshold),
+                "for": rule.duration,
+                "labels": rule.labels,
+                "annotations": rule.annotations,
             }
 
-            rules['groups'][0]['rules'].append(prometheus_rule)
+            rules["groups"][0]["rules"].append(prometheus_rule)
 
         return yaml.dump(rules, default_flow_style=False)
 
@@ -475,11 +453,15 @@ class AlertingRulesManager:
         if "avg_response_time > threshold" in condition:
             return f"avg(response_time_seconds) > {threshold/1000}"
         elif "memory_usage_percent > threshold" in condition:
-            return f"(process_resident_memory_bytes / node_memory_MemTotal_bytes) * 100 > {threshold}"
+            return (
+                f"(process_resident_memory_bytes / node_memory_MemTotal_bytes) * 100 > {threshold}"
+            )
         elif "cpu_usage_percent > threshold" in condition:
-            return f"100 - (avg(irate(node_cpu_seconds_total{{mode=\"idle\"}}[5m])) * 100) > {threshold}"
+            return (
+                f'100 - (avg(irate(node_cpu_seconds_total{{mode="idle"}}[5m])) * 100) > {threshold}'
+            )
         elif "error_rate > threshold" in condition:
-            return f"(rate(http_requests_total{{status=~\"5..\"}}) / rate(http_requests_total)) * 100 > {threshold}"
+            return f'(rate(http_requests_total{{status=~"5.."}}) / rate(http_requests_total)) * 100 > {threshold}'
         else:
             return "up == 0"  # 默认表达式
 
@@ -503,7 +485,7 @@ class AlertingRulesManager:
                 errors.append("阈值不能为负数")
 
             # 检查持续时间格式
-            if not rule.duration.endswith(('s', 'm', 'h')):
+            if not rule.duration.endswith(("s", "m", "h")):
                 errors.append("持续时间格式不正确，应该以s、m或h结尾")
 
             if errors:

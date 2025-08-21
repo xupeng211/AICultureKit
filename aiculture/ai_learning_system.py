@@ -10,9 +10,7 @@ AI学习系统 - 智能分析项目特征并生成个性化开发文化规则。
 注意：此模块已重构为模块化结构，主要功能已迁移到ai_learning子包中。
 """
 
-import json
 import logging
-import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -46,9 +44,9 @@ class AILearningEngine:
 
         # 配置
         self.config = {
-            'min_confidence': 0.7,
-            'pattern_threshold': 0.6,
-            'adaptation_rate': 0.1,
+            "min_confidence": 0.7,
+            "pattern_threshold": 0.6,
+            "adaptation_rate": 0.1,
         }
 
     def learn_project_patterns(self) -> LearningResult:
@@ -74,9 +72,9 @@ class AdaptiveStrictnessManager:
     ) -> float:
         """根据反馈调整严格度"""
         # 简化实现
-        if feedback.get('too_strict', False):
+        if feedback.get("too_strict", False):
             return max(0.1, current_strictness - 0.1)
-        elif feedback.get('too_lenient', False):
+        elif feedback.get("too_lenient", False):
             return min(1.0, current_strictness + 0.1)
         return current_strictness
 

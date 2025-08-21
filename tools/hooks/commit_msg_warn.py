@@ -1,4 +1,7 @@
-import re, sys, pathlib
+import pathlib
+import re
+import sys
+
 p = pathlib.Path(sys.argv[-1])
 msg = p.read_text(encoding="utf-8", errors="ignore").strip().splitlines()[0] if p.exists() else ""
 pat = re.compile(r"^(feat|fix|docs|style|refactor|perf|test|chore)(\([\w\-\.]+\))?:\s.+")

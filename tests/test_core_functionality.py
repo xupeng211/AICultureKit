@@ -6,8 +6,6 @@
 import tempfile
 from pathlib import Path
 
-import pytest
-
 from aiculture.core import CultureConfig, ProjectTemplate, QualityTools
 from aiculture.data_catalog import (
     DataAsset,
@@ -26,9 +24,9 @@ class TestCoreComponents:
     def test_culture_config_initialization(self):
         """测试文化配置初始化"""
         config = CultureConfig()
-        assert hasattr(config, 'principles')
-        assert hasattr(config, 'quality_gates')
-        assert hasattr(config, 'ai_guidelines')
+        assert hasattr(config, "principles")
+        assert hasattr(config, "quality_gates")
+        assert hasattr(config, "ai_guidelines")
 
     def test_project_template_creation(self):
         """测试项目模板创建"""
@@ -39,9 +37,9 @@ class TestCoreComponents:
     def test_quality_tools_initialization(self):
         """测试质量工具初始化"""
         tools = QualityTools()
-        assert hasattr(tools, 'linters')
-        assert hasattr(tools, 'formatters')
-        assert hasattr(tools, 'security_scanners')
+        assert hasattr(tools, "linters")
+        assert hasattr(tools, "formatters")
+        assert hasattr(tools, "security_scanners")
 
 
 class TestInternationalization:
@@ -50,30 +48,30 @@ class TestInternationalization:
     def test_locale_switching(self):
         """测试语言切换"""
         # 测试英文
-        set_locale('en')
-        welcome_en = _('welcome')
-        assert welcome_en == 'Welcome'
+        set_locale("en")
+        welcome_en = _("welcome")
+        assert welcome_en == "Welcome"
 
         # 测试中文
-        set_locale('zh')
-        welcome_zh = _('welcome')
-        assert welcome_zh == '欢迎'
+        set_locale("zh")
+        welcome_zh = _("welcome")
+        assert welcome_zh == "欢迎"
 
     def test_missing_translation(self):
         """测试缺失翻译"""
-        set_locale('en')
-        missing = _('non_existent_key')
-        assert missing == 'non_existent_key'
+        set_locale("en")
+        missing = _("non_existent_key")
+        assert missing == "non_existent_key"
 
     def test_parameterized_translation(self):
         """测试参数化翻译"""
-        set_locale('en')
-        score_msg = _('quality_score', score=85)
-        assert '85' in score_msg
+        set_locale("en")
+        score_msg = _("quality_score", score=85)
+        assert "85" in score_msg
 
-        set_locale('zh')
-        score_msg_zh = _('quality_score', score=85)
-        assert '85' in score_msg_zh
+        set_locale("zh")
+        score_msg_zh = _("quality_score", score=85)
+        assert "85" in score_msg_zh
 
 
 class TestDataCatalog:
@@ -87,8 +85,8 @@ class TestDataCatalog:
     def test_catalog_initialization(self):
         """测试目录初始化"""
         assert self.catalog.catalog_dir == self.temp_dir
-        assert hasattr(self.catalog, 'assets')
-        assert hasattr(self.catalog, 'lineages')
+        assert hasattr(self.catalog, "assets")
+        assert hasattr(self.catalog, "lineages")
 
     def test_asset_creation(self):
         """测试资产创建"""
@@ -147,10 +145,10 @@ class TestDataCatalog:
         report = self.catalog.generate_catalog_report()
 
         assert isinstance(report, dict)
-        assert 'total_assets' in report
-        assert 'by_type' in report
-        assert 'by_classification' in report
-        assert report['total_assets'] == 2
+        assert "total_assets" in report
+        assert "by_type" in report
+        assert "by_classification" in report
+        assert report["total_assets"] == 2
 
 
 class TestMonitoringConfig:
@@ -164,45 +162,45 @@ class TestMonitoringConfig:
     def test_manager_initialization(self):
         """测试管理器初始化"""
         assert self.manager.config_dir == self.temp_dir
-        assert hasattr(self.manager, 'services')
-        assert hasattr(self.manager, 'metrics')
+        assert hasattr(self.manager, "services")
+        assert hasattr(self.manager, "metrics")
 
     def test_prometheus_config_generation(self):
         """测试Prometheus配置生成"""
         config = self.manager.generate_prometheus_config()
 
         assert isinstance(config, dict)
-        assert 'global' in config
-        assert 'scrape_configs' in config
+        assert "global" in config
+        assert "scrape_configs" in config
 
     def test_grafana_dashboard_generation(self):
         """测试Grafana仪表板生成"""
         dashboard = self.manager.generate_grafana_dashboard("test_service")
 
         assert isinstance(dashboard, dict)
-        assert 'dashboard' in dashboard
-        assert 'title' in dashboard['dashboard']
+        assert "dashboard" in dashboard
+        assert "title" in dashboard["dashboard"]
 
     def test_service_registration(self):
         """测试服务注册"""
         service_config = {
-            'name': 'test_service',
-            'port': 8080,
-            'metrics_path': '/metrics',
-            'health_path': '/health',
+            "name": "test_service",
+            "port": 8080,
+            "metrics_path": "/metrics",
+            "health_path": "/health",
         }
 
         result = self.manager.register_service(service_config)
         assert result is True
-        assert 'test_service' in self.manager.services
+        assert "test_service" in self.manager.services
 
     def test_alerting_rules_generation(self):
         """测试告警规则生成"""
         rules = self.manager.generate_alerting_rules()
 
         assert isinstance(rules, dict)
-        assert 'groups' in rules
-        assert len(rules['groups']) > 0
+        assert "groups" in rules
+        assert len(rules["groups"]) > 0
 
 
 class TestUtilityFunctions:
@@ -227,14 +225,14 @@ class TestUtilityFunctions:
         """测试配置验证"""
         # 测试有效配置
         valid_config = {
-            'name': 'test_project',
-            'version': '1.0.0',
-            'language': 'python',
+            "name": "test_project",
+            "version": "1.0.0",
+            "language": "python",
         }
 
-        assert 'name' in valid_config
-        assert 'version' in valid_config
-        assert 'language' in valid_config
+        assert "name" in valid_config
+        assert "version" in valid_config
+        assert "language" in valid_config
 
     def test_error_handling(self):
         """测试错误处理"""
@@ -279,26 +277,26 @@ class TestIntegrationScenarios:
 
         # 5. 生成报告
         catalog_report = catalog.generate_catalog_report()
-        assert catalog_report['total_assets'] == 1
+        assert catalog_report["total_assets"] == 1
 
     def test_multilingual_support(self):
         """测试多语言支持"""
         # 测试中英文切换
         messages = {}
 
-        set_locale('en')
-        messages['en'] = {
-            'welcome': _('welcome'),
-            'quality_score': _('quality_score', score=90),
+        set_locale("en")
+        messages["en"] = {
+            "welcome": _("welcome"),
+            "quality_score": _("quality_score", score=90),
         }
 
-        set_locale('zh')
-        messages['zh'] = {
-            'welcome': _('welcome'),
-            'quality_score': _('quality_score', score=90),
+        set_locale("zh")
+        messages["zh"] = {
+            "welcome": _("welcome"),
+            "quality_score": _("quality_score", score=90),
         }
 
         # 验证不同语言的消息不同
-        assert messages['en']['welcome'] != messages['zh']['welcome']
-        assert '90' in messages['en']['quality_score']
-        assert '90' in messages['zh']['quality_score']
+        assert messages["en"]["welcome"] != messages["zh"]["welcome"]
+        assert "90" in messages["en"]["quality_score"]
+        assert "90" in messages["zh"]["quality_score"]

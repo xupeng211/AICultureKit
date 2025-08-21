@@ -115,17 +115,17 @@ class StructuredLogger:
             handler = logging.StreamHandler()
 
         # 使用JSON格式
-        formatter = logging.Formatter('%(message)s')
+        formatter = logging.Formatter("%(message)s")
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
 
     def _get_context(self) -> Dict[str, Any]:
         """获取当前上下文"""
-        return getattr(self.context, 'data', {})
+        return getattr(self.context, "data", {})
 
     def set_context(self, **kwargs) -> None:
         """设置上下文"""
-        if not hasattr(self.context, 'data'):
+        if not hasattr(self.context, "data"):
             self.context.data = {}
         self.context.data.update(kwargs)
 
@@ -133,9 +133,7 @@ class StructuredLogger:
         """清除上下文"""
         self.context.data = {}
 
-    def _create_log_entry(
-        self, level: LogLevel, message: str, **kwargs
-    ) -> StructuredLogEntry:
+    def _create_log_entry(self, level: LogLevel, message: str, **kwargs) -> StructuredLogEntry:
         """创建日志条目"""
         context = self._get_context()
 
@@ -145,16 +143,16 @@ class StructuredLogger:
             message=message,
             service=self.service_name,
             version=self.version,
-            trace_id=context.get('trace_id'),
-            span_id=context.get('span_id'),
-            user_id=context.get('user_id'),
-            request_id=context.get('request_id'),
-            component=kwargs.get('component'),
-            operation=kwargs.get('operation'),
-            duration_ms=kwargs.get('duration_ms'),
-            status=kwargs.get('status'),
-            error=kwargs.get('error'),
-            metadata=kwargs.get('metadata', {}),
+            trace_id=context.get("trace_id"),
+            span_id=context.get("span_id"),
+            user_id=context.get("user_id"),
+            request_id=context.get("request_id"),
+            component=kwargs.get("component"),
+            operation=kwargs.get("operation"),
+            duration_ms=kwargs.get("duration_ms"),
+            status=kwargs.get("status"),
+            error=kwargs.get("error"),
+            metadata=kwargs.get("metadata", {}),
         )
 
         return entry
@@ -310,9 +308,7 @@ class MetricsCollector:
         """获取指标数据"""
         with self.lock:
             if format == "json":
-                return [
-                    asdict(metric) for metric in self.metrics[-1000:]
-                ]  # 最近1000个指标
+                return [asdict(metric) for metric in self.metrics[-1000:]]  # 最近1000个指标
             elif format == "prometheus":
                 return self._format_prometheus()
             else:
@@ -340,9 +336,7 @@ class MetricsCollector:
                     labels_list = [f'{k}="{v}"' for k, v in metric.labels.items()]
                     labels_str = "{" + ",".join(labels_list) + "}"
 
-                lines.append(
-                    f"{name}{labels_str} {metric.value} {int(metric.timestamp * 1000)}"
-                )
+                lines.append(f"{name}{labels_str} {metric.value} {int(metric.timestamp * 1000)}")
 
         return "\n".join(lines)
 
@@ -361,11 +355,9 @@ class DistributedTracer:
         self.spans: Dict[str, Span] = {}
         self.active_spans = threading.local()
 
-    def start_span(
-        self, operation_name: str, parent_span_id: Optional[str] = None
-    ) -> Span:
+    def start_span(self, operation_name: str, parent_span_id: Optional[str] = None) -> Span:
         """开始一个新的Span"""
-        trace_id = getattr(self.active_spans, 'trace_id', None)
+        trace_id = getattr(self.active_spans, "trace_id", None)
         if not trace_id:
             trace_id = str(uuid.uuid4())
             self.active_spans.trace_id = trace_id
@@ -375,8 +367,7 @@ class DistributedTracer:
         span = Span(
             trace_id=trace_id,
             span_id=span_id,
-            parent_span_id=parent_span_id
-            or getattr(self.active_spans, 'span_id', None),
+            parent_span_id=parent_span_id or getattr(self.active_spans, "span_id", None),
             operation_name=operation_name,
             start_time=time.time(),
         )
@@ -397,8 +388,8 @@ class DistributedTracer:
         if span.parent_span_id:
             self.active_spans.span_id = span.parent_span_id
         else:
-            if hasattr(self.active_spans, 'span_id'):
-                delattr(self.active_spans, 'span_id')
+            if hasattr(self.active_spans, "span_id"):
+                delattr(self.active_spans, "span_id")
 
     @contextmanager
     def trace_operation(self, operation_name: str, **tags):
@@ -410,9 +401,7 @@ class DistributedTracer:
             yield span
             self.finish_span(span, "ok")
         except Exception as e:
-            span.logs.append(
-                {'timestamp': time.time(), 'level': 'error', 'message': str(e)}
-            )
+            span.logs.append({"timestamp": time.time(), "level": "error", "message": str(e)})
             self.finish_span(span, "error", error=str(e))
             raise
 
@@ -437,20 +426,18 @@ class DistributedTracer:
                 traces[span.trace_id] = []
             traces[span.trace_id].append(
                 {
-                    'traceID': span.trace_id,
-                    'spanID': span.span_id,
-                    'parentSpanID': span.parent_span_id,
-                    'operationName': span.operation_name,
-                    'startTime': int(span.start_time * 1000000),  # 微秒
-                    'duration': int((span.duration_ms or 0) * 1000),  # 微秒
-                    'tags': [{'key': k, 'value': v} for k, v in span.tags.items()],
-                    'logs': span.logs,
+                    "traceID": span.trace_id,
+                    "spanID": span.span_id,
+                    "parentSpanID": span.parent_span_id,
+                    "operationName": span.operation_name,
+                    "startTime": int(span.start_time * 1000000),  # 微秒
+                    "duration": int((span.duration_ms or 0) * 1000),  # 微秒
+                    "tags": [{"key": k, "value": v} for k, v in span.tags.items()],
+                    "logs": span.logs,
                 }
             )
 
-        return {
-            'data': [{'traceID': tid, 'spans': spans} for tid, spans in traces.items()]
-        }
+        return {"data": [{"traceID": tid, "spans": spans} for tid, spans in traces.items()]}
 
 
 class ObservabilityManager:
@@ -468,9 +455,7 @@ class ObservabilityManager:
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         # 初始化组件
-        self.logger = StructuredLogger(
-            service_name, version, self.output_dir / "app.log"
-        )
+        self.logger = StructuredLogger(service_name, version, self.output_dir / "app.log")
         self.metrics = MetricsCollector(service_name)
         self.tracer = DistributedTracer(service_name)
 
@@ -486,31 +471,29 @@ class ObservabilityManager:
             self.logger.set_context(trace_id=span.trace_id, span_id=span.span_id)
 
             # 记录开始指标
-            self.metrics.counter(
-                f"{operation_name}_started", labels={'service': self.service_name}
-            )
+            self.metrics.counter(f"{operation_name}_started", labels={"service": self.service_name})
 
             start_time = time.perf_counter()
 
             try:
-                yield {'logger': self.logger, 'metrics': self.metrics, 'span': span}
+                yield {"logger": self.logger, "metrics": self.metrics, "span": span}
 
                 # 记录成功指标
                 duration = time.perf_counter() - start_time
                 self.metrics.counter(
-                    f"{operation_name}_completed", labels={'service': self.service_name}
+                    f"{operation_name}_completed", labels={"service": self.service_name}
                 )
                 self.metrics.histogram(
                     f"{operation_name}_duration",
                     duration * 1000,
-                    labels={'service': self.service_name},
+                    labels={"service": self.service_name},
                 )
 
             except Exception as e:
                 # 记录失败指标
                 self.metrics.counter(
                     f"{operation_name}_failed",
-                    labels={'service': self.service_name, 'error': type(e).__name__},
+                    labels={"service": self.service_name, "error": type(e).__name__},
                 )
                 raise
             finally:
@@ -519,42 +502,42 @@ class ObservabilityManager:
     def export_observability_data(self) -> Dict[str, Any]:
         """导出所有可观测性数据"""
         return {
-            'service': self.service_name,
-            'version': self.version,
-            'timestamp': time.time(),
-            'metrics': self.metrics.get_metrics(),
-            'traces': self.tracer.export_traces(),
+            "service": self.service_name,
+            "version": self.version,
+            "timestamp": time.time(),
+            "metrics": self.metrics.get_metrics(),
+            "traces": self.tracer.export_traces(),
         }
 
     def generate_dashboard_config(self) -> Dict[str, Any]:
         """生成仪表板配置"""
         return {
-            'dashboard': {
-                'title': f'{self.service_name} 可观测性仪表板',
-                'panels': [
+            "dashboard": {
+                "title": f"{self.service_name} 可观测性仪表板",
+                "panels": [
                     {
-                        'title': '请求率',
-                        'type': 'graph',
-                        'metrics': ['requests_per_second'],
-                        'unit': 'req/s',
+                        "title": "请求率",
+                        "type": "graph",
+                        "metrics": ["requests_per_second"],
+                        "unit": "req/s",
                     },
                     {
-                        'title': '响应时间',
-                        'type': 'graph',
-                        'metrics': ['response_time_p95', 'response_time_p99'],
-                        'unit': 'ms',
+                        "title": "响应时间",
+                        "type": "graph",
+                        "metrics": ["response_time_p95", "response_time_p99"],
+                        "unit": "ms",
                     },
                     {
-                        'title': '错误率',
-                        'type': 'graph',
-                        'metrics': ['error_rate'],
-                        'unit': '%',
+                        "title": "错误率",
+                        "type": "graph",
+                        "metrics": ["error_rate"],
+                        "unit": "%",
                     },
                     {
-                        'title': '系统资源',
-                        'type': 'graph',
-                        'metrics': ['cpu_usage', 'memory_usage'],
-                        'unit': '%',
+                        "title": "系统资源",
+                        "type": "graph",
+                        "metrics": ["cpu_usage", "memory_usage"],
+                        "unit": "%",
                     },
                 ],
             }
@@ -567,12 +550,10 @@ if __name__ == "__main__":
     obs = ObservabilityManager("test-service", "1.0.0")
 
     # 使用全面观测
-    with obs.observe_operation(
-        "test_operation", user_id="123", request_id="req-456"
-    ) as ctx:
-        logger = ctx['logger']
-        metrics = ctx['metrics']
-        span = ctx['span']
+    with obs.observe_operation("test_operation", user_id="123", request_id="req-456") as ctx:
+        logger = ctx["logger"]
+        metrics = ctx["metrics"]
+        span = ctx["span"]
 
         logger.info("执行业务逻辑", component="business")
         metrics.counter("business_operations")

@@ -7,7 +7,6 @@
 
 import os
 import platform
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -39,10 +38,10 @@ class EnvironmentChecker:
         """
         # 检查多种虚拟环境标识
         return (
-            hasattr(sys, 'real_prefix')  # virtualenv
-            or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)  # venv
-            or os.environ.get('VIRTUAL_ENV') is not None  # 环境变量
-            or os.environ.get('CONDA_DEFAULT_ENV') is not None  # conda
+            hasattr(sys, "real_prefix")  # virtualenv
+            or (hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix)  # venv
+            or os.environ.get("VIRTUAL_ENV") is not None  # 环境变量
+            or os.environ.get("CONDA_DEFAULT_ENV") is not None  # conda
         )
 
     @staticmethod
@@ -52,7 +51,7 @@ class EnvironmentChecker:
         Returns:
             虚拟环境路径，如果不在虚拟环境中返回None
         """
-        return os.environ.get('VIRTUAL_ENV') or os.environ.get('CONDA_PREFIX')
+        return os.environ.get("VIRTUAL_ENV") or os.environ.get("CONDA_PREFIX")
 
     @staticmethod
     def get_python_info() -> Dict[str, str]:
@@ -68,13 +67,13 @@ class EnvironmentChecker:
             arch = "unknown"
 
         return {
-            'version': sys.version,
-            'version_info': f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
-            'executable': sys.executable,
-            'platform': platform.platform(),
-            'architecture': arch,
-            'prefix': sys.prefix,
-            'base_prefix': getattr(sys, 'base_prefix', sys.prefix),
+            "version": sys.version,
+            "version_info": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
+            "executable": sys.executable,
+            "platform": platform.platform(),
+            "architecture": arch,
+            "prefix": sys.prefix,
+            "base_prefix": getattr(sys, "base_prefix", sys.prefix),
         }
 
     def check_required_dependencies(self) -> Tuple[bool, List[str]]:
@@ -83,13 +82,13 @@ class EnvironmentChecker:
         Returns:
             (是否全部安装, 缺失的依赖列表)
         """
-        required_packages = ['click', 'jinja2', 'pyyaml', 'gitpython', 'cookiecutter']
+        required_packages = ["click", "jinja2", "pyyaml", "gitpython", "cookiecutter"]
 
         missing_packages = []
 
         for package in required_packages:
             try:
-                __import__(package.replace('-', '_'))
+                __import__(package.replace("-", "_"))
             except ImportError:
                 missing_packages.append(package)
 
@@ -101,13 +100,13 @@ class EnvironmentChecker:
         Returns:
             (是否全部安装, 缺失的依赖列表)
         """
-        dev_packages = ['pytest', 'black', 'isort', 'flake8', 'mypy']
+        dev_packages = ["pytest", "black", "isort", "flake8", "mypy"]
 
         missing_dev_packages = []
 
         for package in dev_packages:
             try:
-                __import__(package.replace('-', '_'))
+                __import__(package.replace("-", "_"))
             except ImportError:
                 missing_dev_packages.append(package)
 
@@ -133,12 +132,12 @@ class EnvironmentChecker:
             项目文件状态字典
         """
         required_files = {
-            'pyproject.toml': self.project_path / 'pyproject.toml',
-            'requirements.txt': self.project_path / 'requirements.txt',
-            'requirements-dev.txt': self.project_path / 'requirements-dev.txt',
-            '.gitignore': self.project_path / '.gitignore',
-            'README.md': self.project_path / 'README.md',
-            'setup_environment.sh': self.project_path / 'setup_environment.sh',
+            "pyproject.toml": self.project_path / "pyproject.toml",
+            "requirements.txt": self.project_path / "requirements.txt",
+            "requirements-dev.txt": self.project_path / "requirements-dev.txt",
+            ".gitignore": self.project_path / ".gitignore",
+            "README.md": self.project_path / "README.md",
+            "setup_environment.sh": self.project_path / "setup_environment.sh",
         }
 
         return {name: path.exists() for name, path in required_files.items()}
@@ -151,14 +150,12 @@ class EnvironmentChecker:
         """
         try:
             result = subprocess.run(
-                [sys.executable, '-m', 'pip', 'list', '--format=freeze'],
+                [sys.executable, "-m", "pip", "list", "--format=freeze"],
                 capture_output=True,
                 text=True,
                 check=True,
             )
-            return (
-                len(result.stdout.strip().split('\n')) if result.stdout.strip() else 0
-            )
+            return len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
         except (subprocess.CalledProcessError, FileNotFoundError):
             return 0
 
@@ -169,52 +166,52 @@ class EnvironmentChecker:
             Git状态信息
         """
         git_info = {
-            'is_repo': False,
-            'current_branch': None,
-            'has_uncommitted_changes': False,
-            'remote_url': None,
+            "is_repo": False,
+            "current_branch": None,
+            "has_uncommitted_changes": False,
+            "remote_url": None,
         }
 
         try:
             # 检查是否是Git仓库
             subprocess.run(
-                ['git', 'rev-parse', '--git-dir'],
+                ["git", "rev-parse", "--git-dir"],
                 cwd=self.project_path,
                 capture_output=True,
                 check=True,
             )
-            git_info['is_repo'] = True
+            git_info["is_repo"] = True
 
             # 获取当前分支
             result = subprocess.run(
-                ['git', 'branch', '--show-current'],
+                ["git", "branch", "--show-current"],
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
                 check=True,
             )
-            git_info['current_branch'] = result.stdout.strip()
+            git_info["current_branch"] = result.stdout.strip()
 
             # 检查是否有未提交的更改
             result = subprocess.run(
-                ['git', 'status', '--porcelain'],
+                ["git", "status", "--porcelain"],
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
                 check=True,
             )
-            git_info['has_uncommitted_changes'] = bool(result.stdout.strip())
+            git_info["has_uncommitted_changes"] = bool(result.stdout.strip())
 
             # 获取远程仓库URL
             try:
                 result = subprocess.run(
-                    ['git', 'remote', 'get-url', 'origin'],
+                    ["git", "remote", "get-url", "origin"],
                     cwd=self.project_path,
                     capture_output=True,
                     text=True,
                     check=True,
                 )
-                git_info['remote_url'] = result.stdout.strip()
+                git_info["remote_url"] = result.stdout.strip()
             except subprocess.CalledProcessError:
                 pass
 
@@ -234,26 +231,26 @@ class EnvironmentChecker:
         dev_deps_ok, missing_dev_deps = self.check_development_dependencies()
 
         return {
-            'timestamp': subprocess.run(
-                ['date', '+%Y-%m-%d %H:%M:%S'], capture_output=True, text=True
+            "timestamp": subprocess.run(
+                ["date", "+%Y-%m-%d %H:%M:%S"], capture_output=True, text=True
             ).stdout.strip(),
-            'virtual_environment': {
-                'is_active': self.check_virtual_env(),
-                'path': self.get_virtual_env_path(),
-                'type': self._detect_venv_type(),
+            "virtual_environment": {
+                "is_active": self.check_virtual_env(),
+                "path": self.get_virtual_env_path(),
+                "type": self._detect_venv_type(),
             },
-            'python': python_info,
-            'dependencies': {
-                'required': {'all_installed': deps_ok, 'missing': missing_deps},
-                'development': {
-                    'all_installed': dev_deps_ok,
-                    'missing': missing_dev_deps,
+            "python": python_info,
+            "dependencies": {
+                "required": {"all_installed": deps_ok, "missing": missing_deps},
+                "development": {
+                    "all_installed": dev_deps_ok,
+                    "missing": missing_dev_deps,
                 },
             },
-            'aiculture': {'installed': self.check_aiculture_installation()},
-            'project_structure': self.check_project_structure(),
-            'installed_packages_count': self.get_installed_packages_count(),
-            'git': self.check_git_status(),
+            "aiculture": {"installed": self.check_aiculture_installation()},
+            "project_structure": self.check_project_structure(),
+            "installed_packages_count": self.get_installed_packages_count(),
+            "git": self.check_git_status(),
         }
 
     def _detect_venv_type(self) -> str:
@@ -262,19 +259,19 @@ class EnvironmentChecker:
         Returns:
             虚拟环境类型字符串
         """
-        if os.environ.get('CONDA_DEFAULT_ENV'):
-            return 'conda'
-        elif os.environ.get('VIRTUAL_ENV'):
-            if 'venv' in os.environ.get('VIRTUAL_ENV', ''):
-                return 'venv'
+        if os.environ.get("CONDA_DEFAULT_ENV"):
+            return "conda"
+        elif os.environ.get("VIRTUAL_ENV"):
+            if "venv" in os.environ.get("VIRTUAL_ENV", ""):
+                return "venv"
             else:
-                return 'virtualenv'
-        elif hasattr(sys, 'real_prefix'):
-            return 'virtualenv'
-        elif hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix:
-            return 'venv'
+                return "virtualenv"
+        elif hasattr(sys, "real_prefix"):
+            return "virtualenv"
+        elif hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix:
+            return "venv"
         else:
-            return 'none'
+            return "none"
 
     def print_environment_status(self) -> None:
         """打印环境状态报告"""
@@ -284,32 +281,32 @@ class EnvironmentChecker:
         print("=" * 50)
 
         # 虚拟环境状态
-        venv = report['virtual_environment']
-        if venv['is_active']:
+        venv = report["virtual_environment"]
+        if venv["is_active"]:
             print(f"✅ 虚拟环境: {venv['type']} ({venv['path']})")
         else:
             print("❌ 虚拟环境: 未激活 (建议使用虚拟环境)")
 
         # Python信息
-        python = report['python']
+        python = report["python"]
         print(f"🐍 Python版本: {python['version_info']}")
         print(f"📍 Python路径: {python['executable']}")
         print(f"🖥️  平台: {python['platform']}")
 
         # 依赖状态
-        deps = report['dependencies']
-        if deps['required']['all_installed']:
+        deps = report["dependencies"]
+        if deps["required"]["all_installed"]:
             print("✅ 必需依赖: 全部已安装")
         else:
             print(f"❌ 缺失依赖: {', '.join(deps['required']['missing'])}")
 
-        if deps['development']['all_installed']:
+        if deps["development"]["all_installed"]:
             print("✅ 开发依赖: 全部已安装")
         else:
             print(f"⚠️  缺失开发依赖: {', '.join(deps['development']['missing'])}")
 
         # AICultureKit状态
-        if report['aiculture']['installed']:
+        if report["aiculture"]["installed"]:
             print("✅ AICultureKit: 已正确安装")
         else:
             print("❌ AICultureKit: 未安装或安装错误")
@@ -317,7 +314,7 @@ class EnvironmentChecker:
         # 项目结构
         print(f"📦 已安装包数量: {report['installed_packages_count']}")
 
-        structure = report['project_structure']
+        structure = report["project_structure"]
         missing_files = [name for name, exists in structure.items() if not exists]
         if missing_files:
             print(f"⚠️  缺失文件: {', '.join(missing_files)}")
@@ -325,10 +322,10 @@ class EnvironmentChecker:
             print("✅ 项目结构: 完整")
 
         # Git状态
-        git = report['git']
-        if git['is_repo']:
+        git = report["git"]
+        if git["is_repo"]:
             print(f"📋 Git分支: {git['current_branch']}")
-            if git['has_uncommitted_changes']:
+            if git["has_uncommitted_changes"]:
                 print("⚠️  有未提交的更改")
         else:
             print("⚠️  不是Git仓库")
@@ -344,25 +341,25 @@ class EnvironmentChecker:
         suggestions = []
         report = self.generate_environment_report()
 
-        if not report['virtual_environment']['is_active']:
+        if not report["virtual_environment"]["is_active"]:
             suggestions.append("🌟 激活虚拟环境: source aiculture-env/bin/activate")
 
-        if not report['dependencies']['required']['all_installed']:
+        if not report["dependencies"]["required"]["all_installed"]:
             suggestions.append("📦 安装必需依赖: pip install -r requirements.txt")
 
-        if not report['dependencies']['development']['all_installed']:
+        if not report["dependencies"]["development"]["all_installed"]:
             suggestions.append("🧪 安装开发依赖: pip install -r requirements-dev.txt")
 
-        if not report['aiculture']['installed']:
+        if not report["aiculture"]["installed"]:
             suggestions.append("🔧 安装AICultureKit: pip install -e .")
 
-        structure = report['project_structure']
-        if not structure.get('setup_environment.sh'):
+        structure = report["project_structure"]
+        if not structure.get("setup_environment.sh"):
             suggestions.append("📋 运行环境设置脚本: bash setup_environment.sh")
 
         # 安全地检查git状态
-        git_info = report.get('git', {})
-        if not git_info.get('is_repo', True):  # 默认假设是repo，避免误报
+        git_info = report.get("git", {})
+        if not git_info.get("is_repo", True):  # 默认假设是repo，避免误报
             suggestions.append("📋 初始化Git仓库: git init")
 
         return suggestions

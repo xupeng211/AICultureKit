@@ -16,7 +16,6 @@ import threading
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
@@ -72,9 +71,9 @@ class ResponseTimeMonitor:
         """加载配置"""
         if self.config_file.exists():
             try:
-                with open(self.config_file, 'r', encoding='utf-8') as f:
+                with open(self.config_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                    for name, threshold_data in data.get('thresholds', {}).items():
+                    for name, threshold_data in data.get("thresholds", {}).items():
                         self.thresholds[name] = ResponseTimeThreshold(**threshold_data)
             except Exception as e:
                 print(f"加载响应时间配置失败: {e}")
@@ -85,14 +84,10 @@ class ResponseTimeMonitor:
     def _set_default_thresholds(self) -> None:
         """设置默认阈值"""
         defaults = {
-            'api_default': ResponseTimeThreshold('api_default', 200, 500, 5000),
-            'function_default': ResponseTimeThreshold(
-                'function_default', 10, 100, 1000
-            ),
-            'database_default': ResponseTimeThreshold(
-                'database_default', 50, 200, 2000
-            ),
-            'file_io_default': ResponseTimeThreshold('file_io_default', 100, 500, 3000),
+            "api_default": ResponseTimeThreshold("api_default", 200, 500, 5000),
+            "function_default": ResponseTimeThreshold("function_default", 10, 100, 1000),
+            "database_default": ResponseTimeThreshold("database_default", 50, 200, 2000),
+            "file_io_default": ResponseTimeThreshold("file_io_default", 100, 500, 3000),
         }
 
         for name, threshold in defaults.items():
@@ -102,15 +97,15 @@ class ResponseTimeMonitor:
     def _save_config(self) -> None:
         """保存配置"""
         self.config_file.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.config_file, 'w', encoding='utf-8') as f:
+        with open(self.config_file, "w", encoding="utf-8") as f:
             data = {
-                'thresholds': {
+                "thresholds": {
                     name: {
-                        'name': t.name,
-                        'warning_threshold': t.warning_threshold,
-                        'error_threshold': t.error_threshold,
-                        'timeout_threshold': t.timeout_threshold,
-                        'enabled': t.enabled,
+                        "name": t.name,
+                        "warning_threshold": t.warning_threshold,
+                        "error_threshold": t.error_threshold,
+                        "timeout_threshold": t.timeout_threshold,
+                        "enabled": t.enabled,
                     }
                     for name, t in self.thresholds.items()
                 }
@@ -121,7 +116,7 @@ class ResponseTimeMonitor:
         """加载历史记录"""
         if self.records_file.exists():
             try:
-                with open(self.records_file, 'r', encoding='utf-8') as f:
+                with open(self.records_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     self.records = [
                         ResponseTimeRecord(**record) for record in data[-1000:]
@@ -132,15 +127,15 @@ class ResponseTimeMonitor:
     def _save_records(self) -> None:
         """保存记录"""
         self.records_file.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.records_file, 'w', encoding='utf-8') as f:
+        with open(self.records_file, "w", encoding="utf-8") as f:
             data = [
                 {
-                    'name': r.name,
-                    'category': r.category,
-                    'response_time': r.response_time,
-                    'timestamp': r.timestamp,
-                    'status': r.status,
-                    'details': r.details,
+                    "name": r.name,
+                    "category": r.category,
+                    "response_time": r.response_time,
+                    "timestamp": r.timestamp,
+                    "status": r.status,
+                    "details": r.details,
                 }
                 for r in self.records[-1000:]
             ]  # 只保存最近1000条
@@ -149,9 +144,7 @@ class ResponseTimeMonitor:
     def _start_background_processor(self) -> None:
         """启动后台处理线程"""
         self.monitoring = True
-        self.monitor_thread = threading.Thread(
-            target=self._process_records, daemon=True
-        )
+        self.monitor_thread = threading.Thread(target=self._process_records, daemon=True)
         self.monitor_thread.start()
 
     def _process_records(self) -> None:
@@ -184,11 +177,11 @@ class ResponseTimeMonitor:
             return
 
         if record.response_time >= threshold.timeout_threshold:
-            self._send_alert('timeout', record, threshold)
+            self._send_alert("timeout", record, threshold)
         elif record.response_time >= threshold.error_threshold:
-            self._send_alert('error', record, threshold)
+            self._send_alert("error", record, threshold)
         elif record.response_time >= threshold.warning_threshold:
-            self._send_alert('warning', record, threshold)
+            self._send_alert("warning", record, threshold)
 
     def _send_alert(
         self, level: str, record: ResponseTimeRecord, threshold: ResponseTimeThreshold
@@ -217,7 +210,7 @@ class ResponseTimeMonitor:
             yield
         except Exception as e:
             status = "error"
-            details['error'] = str(e)
+            details["error"] = str(e)
             raise
         finally:
             end_time = time.perf_counter()
@@ -234,9 +227,7 @@ class ResponseTimeMonitor:
 
             self.record_queue.put(record)
 
-    def monitor_api_call(
-        self, url: str, method: str = "GET", **kwargs
-    ) -> requests.Response:
+    def monitor_api_call(self, url: str, method: str = "GET", **kwargs) -> requests.Response:
         """监控API调用"""
         start_time = time.perf_counter()
 
@@ -260,11 +251,9 @@ class ResponseTimeMonitor:
                 timestamp=time.time(),
                 status=status,
                 details={
-                    'method': method,
-                    'url': url,
-                    'status_code': (
-                        response.status_code if 'response' in locals() else None
-                    ),
+                    "method": method,
+                    "url": url,
+                    "status_code": (response.status_code if "response" in locals() else None),
                 },
             )
 
@@ -272,9 +261,7 @@ class ResponseTimeMonitor:
 
         return response
 
-    def set_threshold(
-        self, name: str, warning: float, error: float, timeout: float
-    ) -> None:
+    def set_threshold(self, name: str, warning: float, error: float, timeout: float) -> None:
         """设置阈值"""
         self.thresholds[name] = ResponseTimeThreshold(
             name=name,
@@ -284,9 +271,7 @@ class ResponseTimeMonitor:
         )
         self._save_config()
 
-    def get_statistics(
-        self, name: Optional[str] = None, hours: int = 24
-    ) -> Dict[str, Any]:
+    def get_statistics(self, name: Optional[str] = None, hours: int = 24) -> Dict[str, Any]:
         """获取统计信息"""
         cutoff_time = time.time() - (hours * SECONDS_PER_HOUR)
 
@@ -298,23 +283,23 @@ class ResponseTimeMonitor:
         ]
 
         if not filtered_records:
-            return {'message': '没有找到匹配的记录'}
+            return {"message": "没有找到匹配的记录"}
 
         response_times = [r.response_time for r in filtered_records]
 
         return {
-            'total_requests': len(filtered_records),
-            'avg_response_time': statistics.mean(response_times),
-            'median_response_time': statistics.median(response_times),
-            'min_response_time': min(response_times),
-            'max_response_time': max(response_times),
-            'p95_response_time': self._percentile(response_times, 95),
-            'p99_response_time': self._percentile(response_times, 99),
-            'success_rate': len([r for r in filtered_records if r.status == 'success'])
+            "total_requests": len(filtered_records),
+            "avg_response_time": statistics.mean(response_times),
+            "median_response_time": statistics.median(response_times),
+            "min_response_time": min(response_times),
+            "max_response_time": max(response_times),
+            "p95_response_time": self._percentile(response_times, 95),
+            "p99_response_time": self._percentile(response_times, 99),
+            "success_rate": len([r for r in filtered_records if r.status == "success"])
             / len(filtered_records),
-            'error_rate': len([r for r in filtered_records if r.status == 'error'])
+            "error_rate": len([r for r in filtered_records if r.status == "error"])
             / len(filtered_records),
-            'timeout_rate': len([r for r in filtered_records if r.status == 'timeout'])
+            "timeout_rate": len([r for r in filtered_records if r.status == "timeout"])
             / len(filtered_records),
         }
 
@@ -324,9 +309,7 @@ class ResponseTimeMonitor:
         index = int(len(sorted_data) * percentile / 100)
         return sorted_data[min(index, len(sorted_data) - 1)]
 
-    def get_trend_analysis(
-        self, name: Optional[str] = None, hours: int = 24
-    ) -> Dict[str, Any]:
+    def get_trend_analysis(self, name: Optional[str] = None, hours: int = 24) -> Dict[str, Any]:
         """获取趋势分析"""
         cutoff_time = time.time() - (hours * SECONDS_PER_HOUR)
 
@@ -337,7 +320,7 @@ class ResponseTimeMonitor:
         ]
 
         if len(filtered_records) < 10:
-            return {'message': '数据不足，无法进行趋势分析'}
+            return {"message": "数据不足，无法进行趋势分析"}
 
         # 按小时分组
         hourly_data = {}
@@ -348,9 +331,7 @@ class ResponseTimeMonitor:
             hourly_data[hour].append(record.response_time)
 
         # 计算每小时的平均响应时间
-        hourly_averages = {
-            hour: statistics.mean(times) for hour, times in hourly_data.items()
-        }
+        hourly_averages = {hour: statistics.mean(times) for hour, times in hourly_data.items()}
 
         # 计算趋势
         hours = sorted(hourly_averages.keys())
@@ -367,14 +348,10 @@ class ResponseTimeMonitor:
                 trend = "improving"
 
         return {
-            'trend': trend,
-            'hourly_averages': hourly_averages,
-            'current_avg': (
-                statistics.mean(averages[-3:]) if len(averages) >= 3 else None
-            ),
-            'baseline_avg': (
-                statistics.mean(averages[:3]) if len(averages) >= 3 else None
-            ),
+            "trend": trend,
+            "hourly_averages": hourly_averages,
+            "current_avg": (statistics.mean(averages[-3:]) if len(averages) >= 3 else None),
+            "baseline_avg": (statistics.mean(averages[:3]) if len(averages) >= 3 else None),
         }
 
     def stop_monitoring(self) -> None:
@@ -400,7 +377,7 @@ def response_time_monitor(name: str, category: str = "function"):
                 result = func(*args, **kwargs)
                 status = "success"
                 return result
-            except Exception as e:
+            except Exception:
                 status = "error"
                 raise
             finally:
@@ -408,7 +385,7 @@ def response_time_monitor(name: str, category: str = "function"):
                 response_time = (end_time - start_time) * 1000
                 print(f"⏱️ {name}: {response_time:.2f}ms [{status}]")
 
-        wrapper._response_time_monitor = {'name': name, 'category': category}
+        wrapper._response_time_monitor = {"name": name, "category": category}
         return wrapper
 
     return decorator

@@ -95,15 +95,15 @@ class TestDataPrivacyScanner:
         """测试文件扫描"""
         # 创建测试文件
         test_file = self.temp_dir / "test_data.py"
-        with open(test_file, 'w') as f:
+        with open(test_file, "w") as f:
             f.write(
-                '''
+                """
 user_data = {
     "email": "demo@placeholder.local",
     "phone": "+1-XXX-XXX-XXXX",
     "ssn": "XXX-XX-XXXX"
 }
-'''
+"""
             )
 
         findings = self.scanner.scan_file(test_file)
@@ -227,9 +227,7 @@ class TestDataQualityValidator:
         """测试批量验证"""
         # 创建多个规则
         rules = [
-            DataQualityRule(
-                "email_completeness", "Email required", "completeness", "email", {}
-            ),
+            DataQualityRule("email_completeness", "Email required", "completeness", "email", {}),
             DataQualityRule(
                 "email_format",
                 "Email format",
@@ -306,9 +304,7 @@ class TestGDPRComplianceChecker:
         """
 
         consent_check1 = self.checker.check_consent_mechanisms(with_consent, "good.py")
-        consent_check2 = self.checker.check_consent_mechanisms(
-            without_consent, "bad.py"
-        )
+        consent_check2 = self.checker.check_consent_mechanisms(without_consent, "bad.py")
 
         assert consent_check1["has_consent_check"] is True
         assert consent_check2["has_consent_check"] is False
@@ -318,7 +314,7 @@ class TestGDPRComplianceChecker:
         # 有保留策略的代码
         with_retention = """
         DATA_RETENTION_DAYS = 365
-        
+
         def cleanup_old_data():
             cutoff_date = datetime.now() - timedelta(days=DATA_RETENTION_DAYS)
             delete_data_before(cutoff_date)
@@ -331,9 +327,7 @@ class TestGDPRComplianceChecker:
         """
 
         retention_check1 = self.checker.check_data_retention(with_retention, "good.py")
-        retention_check2 = self.checker.check_data_retention(
-            without_retention, "bad.py"
-        )
+        retention_check2 = self.checker.check_data_retention(without_retention, "bad.py")
 
         assert retention_check1["has_retention_policy"] is True
         assert retention_check2["has_retention_policy"] is False
@@ -345,23 +339,21 @@ class TestGDPRComplianceChecker:
         def register_user(email, name, phone, user_consent=True):
             if not user_consent:
                 raise ValueError("GDPR consent required")
-            
+
             user_data = {
                 "email": email,
                 "name": name,
                 "phone": phone,
                 "created_at": datetime.now()
             }
-            
+
             # 数据保留策略
             DATA_RETENTION_DAYS = 730
-            
+
             return save_user(user_data)
         """
 
-        gdpr_report = self.checker.generate_compliance_report(
-            test_content, "user_service.py"
-        )
+        gdpr_report = self.checker.generate_compliance_report(test_content, "user_service.py")
 
         assert isinstance(gdpr_report, dict)
         assert "personal_data_found" in gdpr_report
@@ -398,15 +390,15 @@ class TestDataGovernanceManager:
         """测试项目隐私扫描"""
         # 创建测试文件
         test_file = self.temp_dir / "user_data.py"
-        with open(test_file, 'w') as f:
+        with open(test_file, "w") as f:
             f.write(
-                '''
+                """
 user_info = {
     "email": "demo@placeholder.local",
     "phone": "+1-XXX-XXX-XXXX",
     "ssn": "XXX-XX-XXXX"
 }
-'''
+"""
             )
 
         # 扫描项目
@@ -442,19 +434,19 @@ user_info = {
         """测试综合治理报告"""
         # 创建测试文件
         test_file = self.temp_dir / "data_service.py"
-        with open(test_file, 'w') as f:
+        with open(test_file, "w") as f:
             f.write(
-                '''
+                """
 def process_user_data(email, name, consent=True):
     if not consent:
         raise ValueError("User consent required")
-    
+
     return {
         "email": email,
         "name": name,
         "processed_at": datetime.now()
     }
-'''
+"""
             )
 
         # 生成综合报告
@@ -484,7 +476,7 @@ class TestDataGovernanceCultureIntegration:
 
             # 创建包含各种数据问题的测试文件
             test_file = temp_dir / "user_service.py"
-            with open(test_file, 'w') as f:
+            with open(test_file, "w") as f:
                 f.write(
                     '''
 class UserService:
@@ -492,11 +484,11 @@ class UserService:
     def create_user(self, email, name, phone, ssn, consent=True):
         if not consent:
             raise ValueError("GDPR consent required")
-        
+
         # 数据验证
         if not email or "@" not in email:
             raise ValueError("Invalid email")
-        
+
         user_data = {
             "email": email,
             "name": name,
@@ -504,10 +496,10 @@ class UserService:
             "ssn": ssn,  # 高敏感数据
             "created_at": datetime.now()
         }
-        
+
         # 数据保留策略
         DATA_RETENTION_DAYS = 365
-        
+
         return self.save_user(user_data)
 '''
                 )

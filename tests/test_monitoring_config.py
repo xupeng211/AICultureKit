@@ -5,7 +5,6 @@
 
 import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch
 
 import pytest
 
@@ -23,9 +22,9 @@ class TestMonitoringConfigManager:
     def test_manager_initialization(self):
         """测试管理器初始化"""
         assert self.manager.project_path == self.temp_dir
-        assert hasattr(self.manager, 'metrics')
+        assert hasattr(self.manager, "metrics")
         assert isinstance(self.manager.metrics, dict)
-        assert hasattr(self.manager, 'alerts')
+        assert hasattr(self.manager, "alerts")
         assert isinstance(self.manager.alerts, dict)
 
     def test_add_metric(self):
@@ -44,9 +43,7 @@ class TestMonitoringConfigManager:
 
     def test_get_metric(self):
         """测试获取指标"""
-        metric = MetricConfig(
-            name="cpu_usage", type="gauge", description="CPU usage percentage"
-        )
+        metric = MetricConfig(name="cpu_usage", type="gauge", description="CPU usage percentage")
 
         self.manager.add_metric("cpu", metric)
 
@@ -59,9 +56,7 @@ class TestMonitoringConfigManager:
 
     def test_remove_metric(self):
         """测试移除指标"""
-        metric = MetricConfig(
-            name="memory_usage", type="gauge", description="Memory usage"
-        )
+        metric = MetricConfig(name="memory_usage", type="gauge", description="Memory usage")
 
         self.manager.add_metric("memory", metric)
         assert "memory" in self.manager.metrics
@@ -165,16 +160,14 @@ class TestMonitoringConfigManager:
         # 生成配置
         config = self.manager.generate_prometheus_config()
         assert isinstance(config, dict)
-        assert 'global' in config
-        assert 'scrape_configs' in config
-        assert 'rule_files' in config
+        assert "global" in config
+        assert "scrape_configs" in config
+        assert "rule_files" in config
 
     def test_generate_grafana_dashboard(self):
         """测试生成Grafana仪表板"""
         # 添加一些指标
-        metric1 = MetricConfig(
-            name="cpu_usage", type="gauge", description="CPU usage percentage"
-        )
+        metric1 = MetricConfig(name="cpu_usage", type="gauge", description="CPU usage percentage")
         metric2 = MetricConfig(
             name="memory_usage", type="gauge", description="Memory usage percentage"
         )
@@ -185,9 +178,9 @@ class TestMonitoringConfigManager:
         # 生成仪表板
         dashboard = self.manager.generate_grafana_dashboard("System Metrics")
         assert isinstance(dashboard, dict)
-        assert 'dashboard' in dashboard
-        assert dashboard['dashboard']['title'] == "System Metrics"
-        assert 'panels' in dashboard['dashboard']
+        assert "dashboard" in dashboard
+        assert dashboard["dashboard"]["title"] == "System Metrics"
+        assert "panels" in dashboard["dashboard"]
 
     def test_validate_metric_config(self):
         """测试验证指标配置"""
@@ -198,9 +191,7 @@ class TestMonitoringConfigManager:
         assert self.manager.validate_metric_config(valid_metric)
 
         # 无效配置 - 缺少名称
-        invalid_metric = MetricConfig(
-            name="", type="counter", description="Invalid metric"
-        )
+        invalid_metric = MetricConfig(name="", type="counter", description="Invalid metric")
         assert not self.manager.validate_metric_config(invalid_metric)
 
         # 无效配置 - 无效类型
@@ -212,9 +203,7 @@ class TestMonitoringConfigManager:
     def test_export_config(self):
         """测试导出配置"""
         # 添加一些配置
-        metric = MetricConfig(
-            name="test_metric", type="gauge", description="Test metric"
-        )
+        metric = MetricConfig(name="test_metric", type="gauge", description="Test metric")
         alert = {
             "name": "test_alert",
             "condition": "test_metric > 100",
@@ -227,49 +216,45 @@ class TestMonitoringConfigManager:
         # 导出配置
         config = self.manager.export_config()
         assert isinstance(config, dict)
-        assert 'metrics' in config
-        assert 'alerts' in config
-        assert 'test' in config['metrics']
-        assert 'test_alert' in config['alerts']
+        assert "metrics" in config
+        assert "alerts" in config
+        assert "test" in config["metrics"]
+        assert "test_alert" in config["alerts"]
 
     def test_import_config(self):
         """测试导入配置"""
         config = {
-            'metrics': {
-                'imported_metric': {
-                    'name': 'imported_metric',
-                    'type': 'counter',
-                    'description': 'Imported metric',
+            "metrics": {
+                "imported_metric": {
+                    "name": "imported_metric",
+                    "type": "counter",
+                    "description": "Imported metric",
                 }
             },
-            'alerts': {
-                'imported_alert': {
-                    'name': 'imported_alert',
-                    'condition': 'imported_metric > 50',
-                    'severity': 'critical',
+            "alerts": {
+                "imported_alert": {
+                    "name": "imported_alert",
+                    "condition": "imported_metric > 50",
+                    "severity": "critical",
                 }
             },
         }
 
         success = self.manager.import_config(config)
         assert success
-        assert 'imported_metric' in self.manager.metrics
-        assert 'imported_alert' in self.manager.alerts
+        assert "imported_metric" in self.manager.metrics
+        assert "imported_alert" in self.manager.alerts
 
         # 测试无效配置
-        invalid_config = {'invalid': 'config'}
+        invalid_config = {"invalid": "config"}
         assert not self.manager.import_config(invalid_config)
 
     def test_get_metrics_summary(self):
         """测试获取指标摘要"""
         # 添加不同类型的指标
-        counter_metric = MetricConfig(
-            name="counter1", type="counter", description="Counter"
-        )
+        counter_metric = MetricConfig(name="counter1", type="counter", description="Counter")
         gauge_metric = MetricConfig(name="gauge1", type="gauge", description="Gauge")
-        histogram_metric = MetricConfig(
-            name="hist1", type="histogram", description="Histogram"
-        )
+        histogram_metric = MetricConfig(name="hist1", type="histogram", description="Histogram")
 
         self.manager.add_metric("c1", counter_metric)
         self.manager.add_metric("g1", gauge_metric)
@@ -277,12 +262,12 @@ class TestMonitoringConfigManager:
 
         summary = self.manager.get_metrics_summary()
         assert isinstance(summary, dict)
-        assert 'total_metrics' in summary
-        assert 'by_type' in summary
-        assert summary['total_metrics'] == 3
-        assert summary['by_type']['counter'] == 1
-        assert summary['by_type']['gauge'] == 1
-        assert summary['by_type']['histogram'] == 1
+        assert "total_metrics" in summary
+        assert "by_type" in summary
+        assert summary["total_metrics"] == 3
+        assert summary["by_type"]["counter"] == 1
+        assert summary["by_type"]["gauge"] == 1
+        assert summary["by_type"]["histogram"] == 1
 
     def test_get_alerts_summary(self):
         """测试获取告警摘要"""
@@ -297,13 +282,13 @@ class TestMonitoringConfigManager:
 
         summary = self.manager.get_alerts_summary()
         assert isinstance(summary, dict)
-        assert 'total_alerts' in summary
-        assert 'by_severity' in summary
-        assert summary['total_alerts'] == 3
-        assert summary['by_severity']['warning'] == 1
-        assert summary['by_severity']['critical'] == 1
-        assert summary['by_severity']['info'] == 1
+        assert "total_alerts" in summary
+        assert "by_severity" in summary
+        assert summary["total_alerts"] == 3
+        assert summary["by_severity"]["warning"] == 1
+        assert summary["by_severity"]["critical"] == 1
+        assert summary["by_severity"]["info"] == 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pytest.main([__file__])

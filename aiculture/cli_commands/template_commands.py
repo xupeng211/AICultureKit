@@ -7,13 +7,10 @@ from typing import Any
 
 import click
 
-from ..core import ProjectTemplate
-
 
 @click.group()
 def template_group() -> Any:
     """项目模板管理命令"""
-    pass
 
 
 @template_group.command()
@@ -22,29 +19,29 @@ def list() -> None:
     click.echo("📋 可用的项目模板:")
 
     templates = {
-        'python-basic': {
-            'description': '基础Python项目模板',
-            'features': ['基本项目结构', 'setup.py配置', '测试框架', '文档模板'],
+        "python-basic": {
+            "description": "基础Python项目模板",
+            "features": ["基本项目结构", "setup.py配置", "测试框架", "文档模板"],
         },
-        'python-web': {
-            'description': 'Python Web应用模板',
-            'features': ['Flask/FastAPI支持', 'API文档', '数据库集成', '部署配置'],
+        "python-web": {
+            "description": "Python Web应用模板",
+            "features": ["Flask/FastAPI支持", "API文档", "数据库集成", "部署配置"],
         },
-        'python-ml': {
-            'description': 'Python机器学习项目模板',
-            'features': ['Jupyter notebooks', '数据处理', '模型训练', '实验跟踪'],
+        "python-ml": {
+            "description": "Python机器学习项目模板",
+            "features": ["Jupyter notebooks", "数据处理", "模型训练", "实验跟踪"],
         },
-        'python-cli': {
-            'description': 'Python命令行工具模板',
-            'features': ['Click框架', '配置管理', '日志记录', '打包配置'],
+        "python-cli": {
+            "description": "Python命令行工具模板",
+            "features": ["Click框架", "配置管理", "日志记录", "打包配置"],
         },
-        'javascript-basic': {
-            'description': '基础JavaScript项目模板',
-            'features': ['Node.js支持', 'npm配置', '测试框架', 'ESLint配置'],
+        "javascript-basic": {
+            "description": "基础JavaScript项目模板",
+            "features": ["Node.js支持", "npm配置", "测试框架", "ESLint配置"],
         },
-        'typescript-basic': {
-            'description': '基础TypeScript项目模板',
-            'features': ['TypeScript配置', '类型定义', '构建工具', '测试支持'],
+        "typescript-basic": {
+            "description": "基础TypeScript项目模板",
+            "features": ["TypeScript配置", "类型定义", "构建工具", "测试支持"],
         },
     }
 
@@ -52,55 +49,55 @@ def list() -> None:
         click.echo(f"\n📦 {template_name}")
         click.echo(f"   {info['description']}")
         click.echo("   特性:")
-        for feature in info['features']:
+        for feature in info["features"]:
             click.echo(f"     • {feature}")
 
 
 @template_group.command()
-@click.argument('template_name')
+@click.argument("template_name")
 def show(template_name: str) -> None:
     """显示模板详细信息"""
     click.echo(f"📦 模板详情: {template_name}")
 
     # 模板详细信息
     template_details = {
-        'python-basic': {
-            'description': '基础Python项目模板，适合小型到中型Python项目',
-            'structure': [
-                'src/',
-                'tests/',
-                'docs/',
-                'setup.py',
-                'requirements.txt',
-                'README.md',
-                '.gitignore',
-                'pyproject.toml',
+        "python-basic": {
+            "description": "基础Python项目模板，适合小型到中型Python项目",
+            "structure": [
+                "src/",
+                "tests/",
+                "docs/",
+                "setup.py",
+                "requirements.txt",
+                "README.md",
+                ".gitignore",
+                "pyproject.toml",
             ],
-            'dependencies': ['pytest', 'flake8', 'mypy', 'black'],
-            'best_practices': [
-                '遵循PEP 8代码风格',
-                '包含完整的测试套件',
-                '提供详细的文档',
-                '使用类型提示',
+            "dependencies": ["pytest", "flake8", "mypy", "black"],
+            "best_practices": [
+                "遵循PEP 8代码风格",
+                "包含完整的测试套件",
+                "提供详细的文档",
+                "使用类型提示",
             ],
         },
-        'python-web': {
-            'description': 'Python Web应用模板，支持Flask和FastAPI',
-            'structure': [
-                'app/',
-                'tests/',
-                'migrations/',
-                'config/',
-                'requirements.txt',
-                'Dockerfile',
-                'docker-compose.yml',
+        "python-web": {
+            "description": "Python Web应用模板，支持Flask和FastAPI",
+            "structure": [
+                "app/",
+                "tests/",
+                "migrations/",
+                "config/",
+                "requirements.txt",
+                "Dockerfile",
+                "docker-compose.yml",
             ],
-            'dependencies': ['flask', 'fastapi', 'sqlalchemy', 'alembic'],
-            'best_practices': [
-                'RESTful API设计',
-                '数据库迁移管理',
-                '容器化部署',
-                'API文档自动生成',
+            "dependencies": ["flask", "fastapi", "sqlalchemy", "alembic"],
+            "best_practices": [
+                "RESTful API设计",
+                "数据库迁移管理",
+                "容器化部署",
+                "API文档自动生成",
             ],
         },
     }
@@ -115,24 +112,24 @@ def show(template_name: str) -> None:
     click.echo(f"\n📝 描述: {details['description']}")
 
     click.echo("\n📁 项目结构:")
-    for item in details['structure']:
+    for item in details["structure"]:
         click.echo(f"  {item}")
 
     click.echo("\n📦 主要依赖:")
-    for dep in details['dependencies']:
+    for dep in details["dependencies"]:
         click.echo(f"  • {dep}")
 
     click.echo("\n✨ 最佳实践:")
-    for practice in details['best_practices']:
+    for practice in details["best_practices"]:
         click.echo(f"  • {practice}")
 
-    click.echo(f"\n💡 使用方法:")
+    click.echo("\n💡 使用方法:")
     click.echo(f"   aiculture project create my-project --template {template_name}")
 
 
 @template_group.command()
-@click.argument('name')
-@click.option('--path', '-p', default='.', help='模板保存路径')
+@click.argument("name")
+@click.option("--path", "-p", default=".", help="模板保存路径")
 def create(name: str, path: str) -> None:
     """创建自定义模板"""
     click.echo(f"🛠️  创建自定义模板: {name}")
@@ -188,7 +185,7 @@ scripts:
 
         # 创建README模板
         readme_file = template_path / "README.md"
-        readme_content = f"""# {{{{ project_name }}}}
+        readme_content = """# {{ project_name }}
 
 项目描述
 
@@ -212,7 +209,7 @@ pytest
 
 ## 作者
 
-{{{{ author_name }}}} <{{{{ author_email }}}}>
+{{ author_name }} <{{ author_email }}>
 """
         readme_file.write_text(readme_content)
 
@@ -247,7 +244,7 @@ pip-delete-this-directory.txt
 
 
 @template_group.command()
-@click.option('--path', '-p', default='.', help='搜索路径')
+@click.option("--path", "-p", default=".", help="搜索路径")
 def scan(path: str) -> None:
     """扫描本地自定义模板"""
     click.echo(f"🔍 扫描本地模板: {path}")
@@ -279,11 +276,11 @@ def scan(path: str) -> None:
                 try:
                     import yaml
 
-                    with open(config_file, 'r', encoding='utf-8') as f:
+                    with open(config_file, "r", encoding="utf-8") as f:
                         config = yaml.safe_load(f)
 
-                    description = config.get('description', '无描述')
-                    version = config.get('version', '未知版本')
+                    description = config.get("description", "无描述")
+                    version = config.get("version", "未知版本")
 
                     click.echo(f"   描述: {description}")
                     click.echo(f"   版本: {version}")
@@ -297,8 +294,8 @@ def scan(path: str) -> None:
 
 
 @template_group.command()
-@click.argument('template_path')
-@click.option('--name', '-n', required=True, help='模板名称')
+@click.argument("template_path")
+@click.option("--name", "-n", required=True, help="模板名称")
 def install(template_path: str, name: str) -> None:
     """安装模板到系统"""
     click.echo(f"📦 安装模板: {template_path} -> {name}")
@@ -314,9 +311,7 @@ def install(template_path: str, name: str) -> None:
         # 例如复制到系统模板目录
 
         click.echo("✅ 模板安装成功")
-        click.echo(
-            f"💡 现在可以使用: aiculture project create my-project --template {name}"
-        )
+        click.echo(f"💡 现在可以使用: aiculture project create my-project --template {name}")
 
     except Exception as e:
         click.echo(f"❌ 安装模板失败: {e}", err=True)

@@ -80,23 +80,21 @@ class AICultureLogger:
 
         # 添加处理器
         if output_file:
-            handler = logging.FileHandler(output_file, encoding='utf-8')
+            handler = logging.FileHandler(output_file, encoding="utf-8")
         else:
             handler = logging.StreamHandler(sys.stdout)
 
         if structured:
-            formatter = logging.Formatter('%(message)s')
+            formatter = logging.Formatter("%(message)s")
         else:
-            formatter = logging.Formatter(
-                '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-            )
+            formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
 
     def _get_context(self) -> LogContext:
         """获取当前日志上下文"""
-        return getattr(self.context, 'data', LogContext())
+        return getattr(self.context, "data", LogContext())
 
     def set_context(self, **kwargs) -> None:
         """设置日志上下文"""
@@ -128,21 +126,21 @@ class AICultureLogger:
         error_dict = None
         if error:
             error_dict = {
-                'type': error.__class__.__name__,
-                'message': str(error),
-                'traceback': None,  # 可以添加traceback信息
+                "type": error.__class__.__name__,
+                "message": str(error),
+                "traceback": None,  # 可以添加traceback信息
             }
 
             # 如果是自定义异常，添加更多信息
-            if hasattr(error, 'to_dict'):
+            if hasattr(error, "to_dict"):
                 error_dict.update(error.to_dict())
 
         # 处理性能信息
         performance_dict = None
-        if 'duration_ms' in kwargs:
+        if "duration_ms" in kwargs:
             performance_dict = {
-                'duration_ms': kwargs.pop('duration_ms'),
-                'operation': context.operation,
+                "duration_ms": kwargs.pop("duration_ms"),
+                "operation": context.operation,
             }
 
         # 更新上下文metadata
@@ -152,7 +150,7 @@ class AICultureLogger:
             context.metadata.update(kwargs)
 
         return LogEntry(
-            timestamp=time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+            timestamp=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             level=level.value,
             message=message,
             service=self.service,
@@ -205,9 +203,7 @@ class AICultureLogger:
         """错误日志"""
         self._log(LogLevel.ERROR, message, error=error, **kwargs)
 
-    def critical(
-        self, message: str, error: Optional[Exception] = None, **kwargs
-    ) -> None:
+    def critical(self, message: str, error: Optional[Exception] = None, **kwargs) -> None:
         """严重错误日志"""
         self._log(LogLevel.CRITICAL, message, error=error, **kwargs)
 
@@ -227,9 +223,7 @@ class AICultureLogger:
             yield
 
             duration_ms = (time.perf_counter() - start_time) * 1000
-            self.info(
-                f"完成操作: {operation}", status="completed", duration_ms=duration_ms
-            )
+            self.info(f"完成操作: {operation}", status="completed", duration_ms=duration_ms)
 
         except Exception as e:
             duration_ms = (time.perf_counter() - start_time) * 1000
@@ -248,10 +242,10 @@ class AICultureLogger:
 # 全局日志器实例
 _loggers: Dict[str, AICultureLogger] = {}
 _default_config = {
-    'service': 'aiculture',
-    'version': '1.0.0',
-    'structured': True,
-    'level': LogLevel.INFO,
+    "service": "aiculture",
+    "version": "1.0.0",
+    "structured": True,
+    "level": LogLevel.INFO,
 }
 
 
@@ -266,11 +260,11 @@ def setup_logging(
     global _default_config
     _default_config.update(
         {
-            'service': service,
-            'version': version,
-            'output_file': Path(output_file) if output_file else None,
-            'structured': structured,
-            'level': level,
+            "service": service,
+            "version": version,
+            "output_file": Path(output_file) if output_file else None,
+            "structured": structured,
+            "level": level,
         }
     )
 
@@ -285,24 +279,24 @@ def get_logger(name: str) -> AICultureLogger:
 # 便捷函数
 def debug(message: str, **kwargs) -> None:
     """全局调试日志"""
-    get_logger('aiculture').debug(message, **kwargs)
+    get_logger("aiculture").debug(message, **kwargs)
 
 
 def info(message: str, **kwargs) -> None:
     """全局信息日志"""
-    get_logger('aiculture').info(message, **kwargs)
+    get_logger("aiculture").info(message, **kwargs)
 
 
 def warning(message: str, **kwargs) -> None:
     """全局警告日志"""
-    get_logger('aiculture').warning(message, **kwargs)
+    get_logger("aiculture").warning(message, **kwargs)
 
 
 def error(message: str, error: Optional[Exception] = None, **kwargs) -> None:
     """全局错误日志"""
-    get_logger('aiculture').error(message, error=error, **kwargs)
+    get_logger("aiculture").error(message, error=error, **kwargs)
 
 
 def critical(message: str, error: Optional[Exception] = None, **kwargs) -> None:
     """全局严重错误日志"""
-    get_logger('aiculture').critical(message, error=error, **kwargs)
+    get_logger("aiculture").critical(message, error=error, **kwargs)

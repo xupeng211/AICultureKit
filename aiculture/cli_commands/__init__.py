@@ -9,4 +9,4 @@ from .project_commands import project_group
 from .quality_commands import quality_group
 from .template_commands import template_group
 
-__all__ = ['project_group', 'quality_group', 'culture_group', 'template_group']
+__all__ = ["project_group", "quality_group", "culture_group", "template_group"]

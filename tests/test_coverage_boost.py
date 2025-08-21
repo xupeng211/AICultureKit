@@ -18,24 +18,24 @@ class TestI18nModuleCoverage:
     def test_all_translation_functions(self):
         """测试所有翻译相关函数"""
         # 测试设置和获取语言
-        i18n_module.set_locale('en')
-        assert i18n_module.get_current_locale() == 'en'
+        i18n_module.set_locale("en")
+        assert i18n_module.get_current_locale() == "en"
 
-        i18n_module.set_locale('zh')
-        assert i18n_module.get_current_locale() == 'zh'
+        i18n_module.set_locale("zh")
+        assert i18n_module.get_current_locale() == "zh"
 
         # 测试翻译函数的各种用法
-        msg1 = i18n_module._('welcome')
+        msg1 = i18n_module._("welcome")
         assert isinstance(msg1, str)
 
-        msg2 = i18n_module._('quality_score', score=95)
+        msg2 = i18n_module._("quality_score", score=95)
         assert isinstance(msg2, str)
 
-        msg3 = i18n_module._('violations_found', count=5)
+        msg3 = i18n_module._("violations_found", count=5)
         assert isinstance(msg3, str)
 
         # 测试不存在的键
-        msg4 = i18n_module._('nonexistent_key')
+        msg4 = i18n_module._("nonexistent_key")
         assert isinstance(msg4, str)
 
         # 测试获取可用语言
@@ -46,8 +46,8 @@ class TestI18nModuleCoverage:
     def test_locale_edge_cases(self):
         """测试语言设置的边界情况"""
         # 测试空字符串
-        i18n_module.set_locale('')
-        assert i18n_module.get_current_locale() == ''
+        i18n_module.set_locale("")
+        assert i18n_module.get_current_locale() == ""
 
         # 测试None
         i18n_module.set_locale(None)
@@ -55,8 +55,8 @@ class TestI18nModuleCoverage:
         assert current is not None  # 应该有默认值
 
         # 测试特殊字符
-        i18n_module.set_locale('zh-CN')
-        assert i18n_module.get_current_locale() == 'zh-CN'
+        i18n_module.set_locale("zh-CN")
+        assert i18n_module.get_current_locale() == "zh-CN"
 
 
 class TestBasicCoverage:
@@ -67,9 +67,9 @@ class TestBasicCoverage:
         # 测试导入各个模块
         from aiculture import core, data_catalog, monitoring_config
 
-        assert hasattr(core, 'CultureConfig')
-        assert hasattr(data_catalog, 'DataCatalog')
-        assert hasattr(monitoring_config, 'MonitoringConfigManager')
+        assert hasattr(core, "CultureConfig")
+        assert hasattr(data_catalog, "DataCatalog")
+        assert hasattr(monitoring_config, "MonitoringConfigManager")
 
     def test_basic_functionality(self):
         """测试基本功能"""
@@ -122,9 +122,9 @@ class TestUtilityCoverage:
         assert min(test_list) == 1
 
         # 测试字典操作
-        test_dict = {'a': 1, 'b': 2, 'c': 3}
+        test_dict = {"a": 1, "b": 2, "c": 3}
         assert len(test_dict) == 3
-        assert list(test_dict.keys()) == ['a', 'b', 'c']
+        assert list(test_dict.keys()) == ["a", "b", "c"]
         assert list(test_dict.values()) == [1, 2, 3]
 
         # 测试集合操作
@@ -163,5 +163,5 @@ class TestUtilityCoverage:
                 assert len(value) == 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pytest.main([__file__])

@@ -4,7 +4,6 @@ AICultureKit 核心功能模块
 包含项目模板生成、质量工具配置和文化规范管理的核心功能。
 """
 
-import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -42,7 +41,7 @@ class CultureConfig:
             Dict[str, Any]: 配置字典，如果文件不存在则返回默认配置
         """
         try:
-            with open(self.config_path, 'r', encoding='utf-8') as f:
+            with open(self.config_path, "r", encoding="utf-8") as f:
                 return yaml.safe_load(f)
         except FileNotFoundError:
             return self._default_config()
@@ -83,7 +82,7 @@ class CultureConfig:
 
     def save_config(self) -> None:
         """保存配置到文件"""
-        with open(self.config_path, 'w', encoding='utf-8') as f:
+        with open(self.config_path, "w", encoding="utf-8") as f:
             yaml.safe_dump(self.config, f, default_flow_style=False, allow_unicode=True)
 
     def get_principle(self, key: str) -> Any:
@@ -121,9 +120,7 @@ class QualityTools:
                 shutil.copy2(template_file, target_file)
 
                 # 安装pre-commit hooks
-                subprocess.run(
-                    ["pre-commit", "install"], cwd=self.project_path, check=True
-                )
+                subprocess.run(["pre-commit", "install"], cwd=self.project_path, check=True)
                 return True
             return False
         except Exception as e:
@@ -183,18 +180,14 @@ exclude =
 
         try:
             # 运行flake8检查
-            result = subprocess.run(
-                ["flake8", "."], cwd=self.project_path, capture_output=True
-            )
+            result = subprocess.run(["flake8", "."], cwd=self.project_path, capture_output=True)
             results["flake8"] = result.returncode == 0
         except FileNotFoundError:
             results["flake8"] = False
 
         try:
             # 运行mypy检查
-            result = subprocess.run(
-                ["mypy", "."], cwd=self.project_path, capture_output=True
-            )
+            result = subprocess.run(["mypy", "."], cwd=self.project_path, capture_output=True)
             results["mypy"] = result.returncode == 0
         except FileNotFoundError:
             results["mypy"] = False
@@ -246,9 +239,7 @@ class ProjectTemplate:
             print(f"❌ 项目创建失败: {e}")
             return False
 
-    def _create_basic_structure(
-        self, target: Path, project_name: str, template_type: str
-    ) -> None:
+    def _create_basic_structure(self, target: Path, project_name: str, template_type: str) -> None:
         """创建基础项目结构"""
         if template_type == "python":
             self._create_python_structure(target, project_name)
@@ -272,9 +263,7 @@ class ProjectTemplate:
 
 __version__ = "0.1.0"
 '''
-        (target / project_name.replace("-", "_") / "__init__.py").write_text(
-            init_content
-        )
+        (target / project_name.replace("-", "_") / "__init__.py").write_text(init_content)
 
         # 创建主模块文件
         main_content = '''"""
@@ -355,7 +344,7 @@ def test_import():
 
     def _get_ci_workflow_content(self) -> str:
         """获取CI工作流内容"""
-        return '''name: CI
+        return """name: CI
 
 on:
   push:
@@ -408,11 +397,11 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         file: ./coverage.xml
-'''
+"""
 
     def _get_cd_workflow_content(self) -> str:
         """获取CD工作流内容"""
-        return '''name: CD
+        return """name: CD
 
 on:
   push:
@@ -454,7 +443,7 @@ jobs:
         echo "Docker部署逻辑在这里实现"
         # docker build -t myapp:latest .
         # docker push myapp:latest
-'''
+"""
 
     def _init_git_repo(self, target: Path) -> None:
         """初始化git仓库"""
@@ -462,7 +451,7 @@ jobs:
             repo = Repo.init(str(target))
 
             # 创建.gitignore
-            gitignore_content = '''# Python
+            gitignore_content = """# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -513,7 +502,7 @@ htmlcov/
 
 # Secrets
 .secrets.baseline
-'''
+"""
             (target / ".gitignore").write_text(gitignore_content)
 
             # 添加所有文件并提交

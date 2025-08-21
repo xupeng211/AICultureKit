@@ -7,9 +7,8 @@ from typing import Any
 """
 
 import ast
-import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Dict
 
 
 class TypeHintAdder:
@@ -26,85 +25,81 @@ class TypeHintAdder:
 
         # 基于函数名推断返回类型
         if (
-            func_name.startswith('is_')
-            or func_name.startswith('has_')
-            or func_name.startswith('can_')
+            func_name.startswith("is_")
+            or func_name.startswith("has_")
+            or func_name.startswith("can_")
         ):
-            return 'bool'
-        elif func_name.startswith('get_') and 'list' in func_name.lower():
-            return 'List[Any]'
-        elif func_name.startswith('get_') and 'dict' in func_name.lower():
-            return 'Dict[str, Any]'
-        elif func_name.startswith('get_'):
-            return 'Any'
-        elif func_name.startswith('create_') or func_name.startswith('build_'):
-            return 'Any'
-        elif func_name == '__init__':
-            return 'None'
-        elif func_name == '__str__' or func_name == '__repr__':
-            return 'str'
-        elif 'count' in func_name.lower():
-            return 'int'
-        elif 'path' in func_name.lower():
-            return 'Path'
+            return "bool"
+        elif func_name.startswith("get_") and "list" in func_name.lower():
+            return "List[Any]"
+        elif func_name.startswith("get_") and "dict" in func_name.lower():
+            return "Dict[str, Any]"
+        elif func_name.startswith("get_"):
+            return "Any"
+        elif func_name.startswith("create_") or func_name.startswith("build_"):
+            return "Any"
+        elif func_name == "__init__":
+            return "None"
+        elif func_name == "__str__" or func_name == "__repr__":
+            return "str"
+        elif "count" in func_name.lower():
+            return "int"
+        elif "path" in func_name.lower():
+            return "Path"
 
         # 检查函数体中的return语句
         for node in ast.walk(func_node):
             if isinstance(node, ast.Return):
                 if node.value is None:
-                    return 'None'
+                    return "None"
                 elif isinstance(node.value, ast.Constant):
                     if isinstance(node.value.value, bool):
-                        return 'bool'
+                        return "bool"
                     elif isinstance(node.value.value, int):
-                        return 'int'
+                        return "int"
                     elif isinstance(node.value.value, str):
-                        return 'str'
+                        return "str"
                 elif isinstance(node.value, ast.Dict):
-                    return 'Dict[str, Any]'
+                    return "Dict[str, Any]"
                 elif isinstance(node.value, ast.List):
-                    return 'List[Any]'
+                    return "List[Any]"
 
         # 默认返回类型
-        return 'Any'
+        return "Any"
 
-    def add_return_type_annotation(
-        self, content: str, func_node: ast.FunctionDef
-    ) -> str:
+    def add_return_type_annotation(self, content: str, func_node: ast.FunctionDef) -> str:
         """为函数添加返回类型注解"""
-        lines = content.split('\n')
+        lines = content.split("\n")
 
         # 找到函数定义行
         def_line_idx = func_node.lineno - 1
 
         # 检查是否已经有返回类型注解
         def_line = lines[def_line_idx]
-        if '->' in def_line:
+        if "->" in def_line:
             return content  # 已经有返回类型注解
 
         # 推断返回类型
         return_type = self.infer_return_type(func_node)
 
         # 找到冒号的位置
-        colon_pos = def_line.rfind(':')
+        colon_pos = def_line.rfind(":")
         if colon_pos == -1:
             return content  # 找不到冒号，跳过
 
         # 插入返回类型注解
-        new_def_line = (
-            def_line[:colon_pos] + f' -> {return_type}' + def_line[colon_pos:]
-        )
+        new_def_line = def_line[:colon_pos] + f" -> {return_type}" + def_line[colon_pos:]
         lines[def_line_idx] = new_def_line
 
         self.added_count += 1
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
     def add_import_statements(self, content: str, needed_imports: set) -> str:
         """添加必要的导入语句"""
         if not needed_imports:
             return content
 
-        lines = content.split('\n')
+        lines = content.split("\n")
 
         # 找到合适的位置插入导入语句
         insert_pos = 0
@@ -112,16 +107,12 @@ class TypeHintAdder:
         # 跳过文档字符串和编码声明
         for i, line in enumerate(lines):
             stripped = line.strip()
-            if (
-                stripped.startswith('#')
-                or stripped.startswith('"""')
-                or stripped.startswith("'''")
-            ):
+            if stripped.startswith("#") or stripped.startswith('"""') or stripped.startswith("'''"):
                 continue
             if (
-                stripped.startswith('from __future__')
-                or stripped.startswith('import')
-                or stripped.startswith('from')
+                stripped.startswith("from __future__")
+                or stripped.startswith("import")
+                or stripped.startswith("from")
             ):
                 insert_pos = i + 1
             elif stripped:
@@ -129,7 +120,7 @@ class TypeHintAdder:
 
         # 检查是否已经有typing导入
         has_typing_import = any(
-            'from typing import' in line or 'import typing' in line
+            "from typing import" in line or "import typing" in line
             for line in lines[: insert_pos + 5]
         )
 
@@ -138,12 +129,12 @@ class TypeHintAdder:
             lines.insert(insert_pos, import_line)
             lines.insert(insert_pos + 1, "")  # 添加空行
 
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
     def process_file(self, file_path: Path) -> bool:
         """处理单个文件"""
         try:
-            content = file_path.read_text(encoding='utf-8')
+            content = file_path.read_text(encoding="utf-8")
             tree = ast.parse(content)
 
             # 收集需要添加类型注解的函数
@@ -159,20 +150,20 @@ class TypeHintAdder:
                         # 确定需要的导入
                         return_type = self.infer_return_type(node)
                         if return_type in [
-                            'List[Any]',
-                            'Dict[str, Any]',
-                            'Any',
-                            'Optional[Any]',
+                            "List[Any]",
+                            "Dict[str, Any]",
+                            "Any",
+                            "Optional[Any]",
                         ]:
-                            if 'List' in return_type:
-                                needed_imports.add('List')
-                            if 'Dict' in return_type:
-                                needed_imports.add('Dict')
-                            if 'Any' in return_type:
-                                needed_imports.add('Any')
-                            if 'Optional' in return_type:
-                                needed_imports.add('Optional')
-                        elif return_type == 'Path':
+                            if "List" in return_type:
+                                needed_imports.add("List")
+                            if "Dict" in return_type:
+                                needed_imports.add("Dict")
+                            if "Any" in return_type:
+                                needed_imports.add("Any")
+                            if "Optional" in return_type:
+                                needed_imports.add("Optional")
+                        elif return_type == "Path":
                             # 这个需要特殊处理，因为它来自pathlib
                             pass
 
@@ -184,18 +175,14 @@ class TypeHintAdder:
 
             modified_content = content
             for func_node in functions_to_process:
-                modified_content = self.add_return_type_annotation(
-                    modified_content, func_node
-                )
+                modified_content = self.add_return_type_annotation(modified_content, func_node)
 
             # 添加必要的导入语句
             if needed_imports:
-                modified_content = self.add_import_statements(
-                    modified_content, needed_imports
-                )
+                modified_content = self.add_import_statements(modified_content, needed_imports)
 
             # 写回文件
-            file_path.write_text(modified_content, encoding='utf-8')
+            file_path.write_text(modified_content, encoding="utf-8")
             return True
 
         except Exception as e:
@@ -209,13 +196,13 @@ class TypeHintAdder:
         for py_file in self.project_path.rglob("*.py"):
             # 跳过虚拟环境和隐藏目录
             if any(
-                part.startswith('.') or part in ['venv', '__pycache__', 'build', 'dist']
+                part.startswith(".") or part in ["venv", "__pycache__", "build", "dist"]
                 for part in py_file.parts
             ):
                 continue
 
             # 跳过模板文件
-            if '{{' in str(py_file) or '}}' in str(py_file):
+            if "{{" in str(py_file) or "}}" in str(py_file):
                 continue
 
             stats["processed"] += 1
@@ -244,8 +231,8 @@ def main() -> Any:
     print(f"✏️  修改文件数: {stats['modified']}")
     print(f"🔧 添加类型注解数: {stats['added_annotations']}")
 
-    if stats['added_annotations'] > 0:
-        print(f"\n💡 建议运行以下命令格式化代码:")
+    if stats["added_annotations"] > 0:
+        print("\n💡 建议运行以下命令格式化代码:")
         print("   black . && isort .")
         print("   mypy aiculture --ignore-missing-imports")
 

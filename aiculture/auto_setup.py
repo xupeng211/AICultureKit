@@ -6,7 +6,6 @@ from typing import Any
 为项目自动配置所有必要的文化规范工具和配置文件。
 """
 
-import re
 from pathlib import Path
 
 from .ai_culture_principles import AICulturePrinciples
@@ -56,7 +55,7 @@ class AutoCultureSetup:
         self.principles.export_to_yaml(str(config_path))
 
         # 添加项目特定配置
-        with open(config_path, 'a', encoding='utf-8') as f:
+        with open(config_path, "a", encoding="utf-8") as f:
             f.write(
                 """
 # 项目特定配置
@@ -119,7 +118,7 @@ ai_behavior:
 """
 
         guidelines_path = self.project_path / "AI_PROJECT_GUIDELINES.md"
-        with open(guidelines_path, 'w', encoding='utf-8') as f:
+        with open(guidelines_path, "w", encoding="utf-8") as f:
             f.write(guidelines_content)
 
             # 添加当前项目的具体配置信息
@@ -173,10 +172,10 @@ skips = ["B101"]
 
         pyproject_path = self.project_path / "pyproject.toml"
         if pyproject_path.exists():
-            with open(pyproject_path, 'a', encoding='utf-8') as f:
+            with open(pyproject_path, "a", encoding="utf-8") as f:
                 f.write(pyproject_config)
         else:
-            with open(pyproject_path, 'w', encoding='utf-8') as f:
+            with open(pyproject_path, "w", encoding="utf-8") as f:
                 f.write("[build-system]\nrequires = ['setuptools', 'wheel']\n")
                 f.write(pyproject_config)
 
@@ -196,7 +195,7 @@ skips = ["B101"]
 }"""
 
         eslint_path = self.project_path / ".eslintrc.json"
-        with open(eslint_path, 'w', encoding='utf-8') as f:
+        with open(eslint_path, "w", encoding="utf-8") as f:
             f.write(eslint_config)
 
     def _setup_cicd(self, project_type: str) -> Any:
@@ -253,7 +252,7 @@ jobs:
 """
 
             ci_path = github_dir / "ai-culture-ci.yml"
-            with open(ci_path, 'w', encoding='utf-8') as f:
+            with open(ci_path, "w", encoding="utf-8") as f:
                 f.write(ci_content)
 
     def _create_template_files(self, project_type: str) -> Any:
@@ -286,7 +285,7 @@ Thumbs.db
 
         gitignore_path = self.project_path / ".gitignore"
         if not gitignore_path.exists():
-            with open(gitignore_path, 'w', encoding='utf-8') as f:
+            with open(gitignore_path, "w", encoding="utf-8") as f:
                 f.write(gitignore_content)
 
         # 创建requirements-dev.txt
@@ -305,7 +304,7 @@ pre-commit>=2.20.0
 
             req_dev_path = self.project_path / "requirements-dev.txt"
             if not req_dev_path.exists():
-                with open(req_dev_path, 'w', encoding='utf-8') as f:
+                with open(req_dev_path, "w", encoding="utf-8") as f:
                     f.write(dev_requirements)
 
     def _setup_precommit_hooks(self) -> Any:
@@ -348,7 +347,7 @@ pre-commit>=2.20.0
 """
 
         precommit_path = self.project_path / ".pre-commit-config.yaml"
-        with open(precommit_path, 'w', encoding='utf-8') as f:
+        with open(precommit_path, "w", encoding="utf-8") as f:
             f.write(precommit_config)
 
 

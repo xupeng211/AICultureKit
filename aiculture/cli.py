@@ -23,21 +23,20 @@ def main() -> None:
     - 生成项目模板和配置文件
     - 集成CI/CD流水线
     """
-    pass
 
 
 # 注册命令组
-main.add_command(project_group, name='project')
-main.add_command(quality_group, name='quality')
-main.add_command(culture_group, name='culture')
-main.add_command(template_group, name='template')
+main.add_command(project_group, name="project")
+main.add_command(quality_group, name="quality")
+main.add_command(culture_group, name="culture")
+main.add_command(template_group, name="template")
 
 
 # 向后兼容的快捷命令
 @main.command()
-@click.argument('project_name')
-@click.option('--path', '-p', default='.', help='项目创建路径')
-@click.option('--template', '-t', default='python-basic', help='项目模板')
+@click.argument("project_name")
+@click.option("--path", "-p", default=".", help="项目创建路径")
+@click.option("--template", "-t", default="python-basic", help="项目模板")
 def create(project_name: str, path: str, template: str) -> None:
     """快速创建项目 (向后兼容)"""
     from .cli_commands.project_commands import create as project_create
@@ -48,7 +47,7 @@ def create(project_name: str, path: str, template: str) -> None:
 
 
 @main.command()
-@click.option('--path', '-p', default='.', help='项目路径')
+@click.option("--path", "-p", default=".", help="项目路径")
 def check(path: str) -> None:
     """快速质量检查 (向后兼容)"""
     from .cli_commands.quality_commands import check as quality_check
@@ -59,7 +58,7 @@ def check(path: str) -> None:
 
 
 @main.command()
-@click.option('--path', '-p', default='.', help='项目路径')
+@click.option("--path", "-p", default=".", help="项目路径")
 def init(path: str) -> None:
     """快速初始化项目 (向后兼容)"""
     from .cli_commands.project_commands import init as project_init
@@ -69,5 +68,5 @@ def init(path: str) -> None:
     ctx.invoke(project_init, path=path)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

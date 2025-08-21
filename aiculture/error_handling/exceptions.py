@@ -26,11 +26,11 @@ class AICultureError(Exception):
     def to_dict(self) -> Dict[str, Any]:
         """转换为字典格式"""
         return {
-            'error_type': self.__class__.__name__,
-            'error_code': self.error_code,
-            'message': self.message,
-            'details': self.details,
-            'cause': str(self.cause) if self.cause else None,
+            "error_type": self.__class__.__name__,
+            "error_code": self.error_code,
+            "message": self.message,
+            "details": self.details,
+            "cause": str(self.cause) if self.cause else None,
         }
 
 
@@ -44,11 +44,11 @@ class ConfigurationError(AICultureError):
         config_key: Optional[str] = None,
         **kwargs,
     ):
-        details = kwargs.get('details', {})
+        details = kwargs.get("details", {})
         if config_file:
-            details['config_file'] = config_file
+            details["config_file"] = config_file
         if config_key:
-            details['config_key'] = config_key
+            details["config_key"] = config_key
 
         super().__init__(message, details=details, **kwargs)
 
@@ -64,13 +64,13 @@ class ValidationError(AICultureError):
         expected_type: Optional[str] = None,
         **kwargs,
     ):
-        details = kwargs.get('details', {})
+        details = kwargs.get("details", {})
         if field:
-            details['field'] = field
+            details["field"] = field
         if value is not None:
-            details['value'] = str(value)
+            details["value"] = str(value)
         if expected_type:
-            details['expected_type'] = expected_type
+            details["expected_type"] = expected_type
 
         super().__init__(message, details=details, **kwargs)
 
@@ -86,13 +86,13 @@ class ProcessingError(AICultureError):
         line_number: Optional[int] = None,
         **kwargs,
     ):
-        details = kwargs.get('details', {})
+        details = kwargs.get("details", {})
         if operation:
-            details['operation'] = operation
+            details["operation"] = operation
         if file_path:
-            details['file_path'] = file_path
+            details["file_path"] = file_path
         if line_number:
-            details['line_number'] = line_number
+            details["line_number"] = line_number
 
         super().__init__(message, details=details, **kwargs)
 
@@ -107,11 +107,11 @@ class ResourceError(AICultureError):
         resource_path: Optional[str] = None,
         **kwargs,
     ):
-        details = kwargs.get('details', {})
+        details = kwargs.get("details", {})
         if resource_type:
-            details['resource_type'] = resource_type
+            details["resource_type"] = resource_type
         if resource_path:
-            details['resource_path'] = resource_path
+            details["resource_path"] = resource_path
 
         super().__init__(message, details=details, **kwargs)
 
@@ -127,13 +127,13 @@ class IntegrationError(AICultureError):
         status_code: Optional[int] = None,
         **kwargs,
     ):
-        details = kwargs.get('details', {})
+        details = kwargs.get("details", {})
         if service:
-            details['service'] = service
+            details["service"] = service
         if endpoint:
-            details['endpoint'] = endpoint
+            details["endpoint"] = endpoint
         if status_code:
-            details['status_code'] = status_code
+            details["status_code"] = status_code
 
         super().__init__(message, details=details, **kwargs)
 
@@ -148,11 +148,11 @@ class SecurityError(AICultureError):
         severity: Optional[str] = None,
         **kwargs,
     ):
-        details = kwargs.get('details', {})
+        details = kwargs.get("details", {})
         if security_issue:
-            details['security_issue'] = security_issue
+            details["security_issue"] = security_issue
         if severity:
-            details['severity'] = severity
+            details["severity"] = severity
 
         super().__init__(message, details=details, **kwargs)
 
@@ -168,13 +168,13 @@ class PerformanceError(AICultureError):
         threshold_ms: Optional[float] = None,
         **kwargs,
     ):
-        details = kwargs.get('details', {})
+        details = kwargs.get("details", {})
         if operation:
-            details['operation'] = operation
+            details["operation"] = operation
         if duration_ms:
-            details['duration_ms'] = duration_ms
+            details["duration_ms"] = duration_ms
         if threshold_ms:
-            details['threshold_ms'] = threshold_ms
+            details["threshold_ms"] = threshold_ms
 
         super().__init__(message, details=details, **kwargs)
 
@@ -191,15 +191,15 @@ class CultureViolationError(AICultureError):
         line_number: Optional[int] = None,
         **kwargs,
     ):
-        details = kwargs.get('details', {})
+        details = kwargs.get("details", {})
         if principle:
-            details['principle'] = principle
+            details["principle"] = principle
         if severity:
-            details['severity'] = severity
+            details["severity"] = severity
         if file_path:
-            details['file_path'] = file_path
+            details["file_path"] = file_path
         if line_number:
-            details['line_number'] = line_number
+            details["line_number"] = line_number
 
         super().__init__(message, details=details, **kwargs)
 
@@ -214,26 +214,26 @@ class QualityGateError(AICultureError):
         failed_checks: Optional[list] = None,
         **kwargs,
     ):
-        details = kwargs.get('details', {})
+        details = kwargs.get("details", {})
         if gate_name:
-            details['gate_name'] = gate_name
+            details["gate_name"] = gate_name
         if failed_checks:
-            details['failed_checks'] = failed_checks
+            details["failed_checks"] = failed_checks
 
         super().__init__(message, details=details, **kwargs)
 
 
 # 异常映射表，用于从错误代码创建异常
 EXCEPTION_MAP = {
-    'configuration_error': ConfigurationError,
-    'validation_error': ValidationError,
-    'processing_error': ProcessingError,
-    'resource_error': ResourceError,
-    'integration_error': IntegrationError,
-    'security_error': SecurityError,
-    'performance_error': PerformanceError,
-    'culture_violation_error': CultureViolationError,
-    'quality_gate_error': QualityGateError,
+    "configuration_error": ConfigurationError,
+    "validation_error": ValidationError,
+    "processing_error": ProcessingError,
+    "resource_error": ResourceError,
+    "integration_error": IntegrationError,
+    "security_error": SecurityError,
+    "performance_error": PerformanceError,
+    "culture_violation_error": CultureViolationError,
+    "quality_gate_error": QualityGateError,
 }
 
 
@@ -255,7 +255,7 @@ def is_retryable_error(error: Exception) -> bool:
 
     # 集成错误中的某些状态码可重试
     if isinstance(error, IntegrationError):
-        status_code = error.details.get('status_code')
+        status_code = error.details.get("status_code")
         if status_code in [429, 502, 503, 504]:  # 限流、网关错误等
             return True
 
@@ -265,12 +265,12 @@ def is_retryable_error(error: Exception) -> bool:
 def get_error_severity(error: Exception) -> str:
     """获取错误严重程度"""
     if isinstance(error, SecurityError):
-        return 'critical'
+        return "critical"
     elif isinstance(error, (QualityGateError, CultureViolationError)):
-        return error.details.get('severity', 'warning')
+        return error.details.get("severity", "warning")
     elif isinstance(error, (ConfigurationError, ValidationError)):
-        return 'error'
+        return "error"
     elif isinstance(error, (ProcessingError, ResourceError)):
-        return 'warning'
+        return "warning"
     else:
-        return 'error'
+        return "error"

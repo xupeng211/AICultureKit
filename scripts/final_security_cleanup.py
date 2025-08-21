@@ -11,40 +11,40 @@ def get_comprehensive_replacements():
     """获取全面的替换规则"""
     return [
         # 所有邮箱地址统一替换为安全的示例
-        (r'[a-zA-Z0-9._%+-]+@example\.com', 'demo@placeholder.local'),
-        (r'[a-zA-Z0-9._%+-]+@company\.com', 'demo@placeholder.local'),
-        (r'[a-zA-Z0-9._%+-]+@company\.org', 'demo@placeholder.local'),
-        (r'[a-zA-Z0-9._%+-]+@domain\.com', 'demo@placeholder.local'),
+        (r"[a-zA-Z0-9._%+-]+@example\.com", "demo@placeholder.local"),
+        (r"[a-zA-Z0-9._%+-]+@company\.com", "demo@placeholder.local"),
+        (r"[a-zA-Z0-9._%+-]+@company\.org", "demo@placeholder.local"),
+        (r"[a-zA-Z0-9._%+-]+@domain\.com", "demo@placeholder.local"),
         # 特定的邮箱地址
-        (r'user1@example\.com', 'user1@placeholder.local'),
-        (r'user2@example\.com', 'user2@placeholder.local'),
-        (r'demo@example\.com', 'demo@placeholder.local'),
-        (r'noreply@example\.com', 'noreply@placeholder.local'),
-        (r'admin@example\.com', 'admin@placeholder.local'),
-        (r'support@example\.com', 'support@placeholder.local'),
+        (r"user1@example\.com", "user1@placeholder.local"),
+        (r"user2@example\.com", "user2@placeholder.local"),
+        (r"demo@example\.com", "demo@placeholder.local"),
+        (r"noreply@example\.com", "noreply@placeholder.local"),
+        (r"admin@example\.com", "admin@placeholder.local"),
+        (r"support@example\.com", "support@placeholder.local"),
         # IP地址
-        (r'192\.168\.1\.\d+', '192.168.1.XXX'),
-        (r'10\.0\.0\.\d+', '10.0.0.XXX'),
-        (r'172\.16\.0\.\d+', '172.16.0.XXX'),
+        (r"192\.168\.1\.\d+", "192.168.1.XXX"),
+        (r"10\.0\.0\.\d+", "10.0.0.XXX"),
+        (r"172\.16\.0\.\d+", "172.16.0.XXX"),
         # 电话号码
-        (r'\+1-\d{3}-\d{3}-\d{4}', '+1-XXX-XXX-XXXX'),
-        (r'\(\d{3}\) \d{3}-\d{4}', '(XXX) XXX-XXXX'),
-        (r'\d{3}\.\d{3}\.\d{4}', 'XXX.XXX.XXXX'),
+        (r"\+1-\d{3}-\d{3}-\d{4}", "+1-XXX-XXX-XXXX"),
+        (r"\(\d{3}\) \d{3}-\d{4}", "(XXX) XXX-XXXX"),
+        (r"\d{3}\.\d{3}\.\d{4}", "XXX.XXX.XXXX"),
         # 社会安全号码
-        (r'\d{3}-\d{2}-\d{4}', 'XXX-XX-XXXX'),
+        (r"\d{3}-\d{2}-\d{4}", "XXX-XX-XXXX"),
         # 信用卡号
-        (r'\d{4}\s?\d{4}\s?\d{4}\s?\d{4}', 'XXXX-XXXX-XXXX-XXXX'),
-        (r'\d{4}\s?\d{6}\s?\d{5}', 'XXXX-XXXXXX-XXXXX'),
+        (r"\d{4}\s?\d{4}\s?\d{4}\s?\d{4}", "XXXX-XXXX-XXXX-XXXX"),
+        (r"\d{4}\s?\d{6}\s?\d{5}", "XXXX-XXXXXX-XXXXX"),
         # API密钥和令牌
-        (r'sk-[a-zA-Z0-9]{16,}', 'DEMO_API_KEY'),
-        (r'Bearer [a-zA-Z0-9._-]+', 'Bearer DEMO_JWT_TOKEN'),
-        (r'AKIA[0-9A-Z]{16}', 'DEMO_AWS_ACCESS_KEY'),
+        (r"sk-[a-zA-Z0-9]{16,}", "DEMO_API_KEY"),
+        (r"Bearer [a-zA-Z0-9._-]+", "Bearer DEMO_JWT_TOKEN"),
+        (r"AKIA[0-9A-Z]{16}", "DEMO_AWS_ACCESS_KEY"),
         # 密码
         (r'password["\']?\s*[:=]\s*["\'][^"\']+["\']', 'password="DEMO_PASSWORD"'),
         (r'secret["\']?\s*[:=]\s*["\'][^"\']+["\']', 'secret="DEMO_SECRET"'),
         # 数据库连接
-        (r'mysql://[^:]+:[^@]+@[^/]+', 'mysql://user:password@localhost'),
-        (r'postgresql://[^:]+:[^@]+@[^/]+', 'postgresql://user:password@localhost'),
+        (r"mysql://[^:]+:[^@]+@[^/]+", "mysql://user:password@localhost"),
+        (r"postgresql://[^:]+:[^@]+@[^/]+", "postgresql://user:password@localhost"),
         # 其他敏感模式
         (r'token["\']?\s*[:=]\s*["\'][^"\']+["\']', 'token="DEMO_TOKEN"'),
         (r'key["\']?\s*[:=]\s*["\'][^"\']{8,}["\']', 'key="DEMO_KEY"'),
@@ -54,7 +54,7 @@ def get_comprehensive_replacements():
 def clean_file_thoroughly(file_path: Path) -> bool:
     """彻底清理文件中的敏感信息"""
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
@@ -66,28 +66,28 @@ def clean_file_thoroughly(file_path: Path) -> bool:
 
         # 特殊处理：将所有看起来像真实邮箱的地址替换
         # 但保留明显的占位符
-        email_pattern = r'\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b'
+        email_pattern = r"\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b"
         emails = re.findall(email_pattern, content)
 
         for email in emails:
             # 跳过已经是占位符的邮箱
             if any(
                 placeholder in email.lower()
-                for placeholder in ['placeholder', 'demo', 'example', 'test', 'xxx']
+                for placeholder in ["placeholder", "demo", "example", "test", "xxx"]
             ):
                 continue
 
             # 跳过明显的变量名
-            if email.startswith('${') or email.startswith('{'):
+            if email.startswith("${") or email.startswith("{"):
                 continue
 
             # 替换为安全的占位符
-            safe_email = f"demo@placeholder.local"
+            safe_email = "demo@placeholder.local"
             content = content.replace(email, safe_email)
 
         # 如果有变化，写回文件
         if content != original_content:
-            with open(file_path, 'w', encoding='utf-8') as f:
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(content)
             return True
 

@@ -14,13 +14,12 @@ from ..core import QualityTools
 @click.group()
 def quality_group() -> Any:
     """代码质量检查命令"""
-    pass
 
 
 @quality_group.command()
-@click.option('--path', '-p', default='.', help='项目路径')
-@click.option('--tool', '-t', multiple=True, help='指定检查工具 (flake8, mypy, pytest)')
-@click.option('--fix', is_flag=True, help='自动修复可修复的问题')
+@click.option("--path", "-p", default=".", help="项目路径")
+@click.option("--tool", "-t", multiple=True, help="指定检查工具 (flake8, mypy, pytest)")
+@click.option("--fix", is_flag=True, help="自动修复可修复的问题")
 def check(path: str, tool: tuple, fix: bool) -> None:
     """运行代码质量检查"""
     click.echo(f"🔍 运行质量检查: {path}")
@@ -31,7 +30,7 @@ def check(path: str, tool: tuple, fix: bool) -> None:
 
         # 如果没有指定工具，运行所有工具
         if not tool:
-            tool = ('flake8', 'mypy', 'pytest')
+            tool = ("flake8", "mypy", "pytest")
 
         results = {}
 
@@ -39,11 +38,11 @@ def check(path: str, tool: tuple, fix: bool) -> None:
         for tool_name in tool:
             click.echo(f"\n📋 运行 {tool_name}...")
 
-            if tool_name == 'flake8':
+            if tool_name == "flake8":
                 result = tools.run_flake8()
-            elif tool_name == 'mypy':
+            elif tool_name == "mypy":
                 result = tools.run_mypy()
-            elif tool_name == 'pytest':
+            elif tool_name == "pytest":
                 result = tools.run_pytest()
             else:
                 click.echo(f"❌ 未知工具: {tool_name}")
@@ -52,12 +51,12 @@ def check(path: str, tool: tuple, fix: bool) -> None:
             results[tool_name] = result
 
             # 显示结果
-            if result.get('success', False):
+            if result.get("success", False):
                 click.echo(f"✅ {tool_name} 检查通过")
             else:
                 click.echo(f"❌ {tool_name} 检查失败")
-                if 'output' in result:
-                    click.echo(result['output'])
+                if "output" in result:
+                    click.echo(result["output"])
 
         # 自动修复
         if fix:
@@ -73,7 +72,7 @@ def check(path: str, tool: tuple, fix: bool) -> None:
 
 
 @quality_group.command()
-@click.option('--path', '-p', default='.', help='项目路径')
+@click.option("--path", "-p", default=".", help="项目路径")
 def format(path: str) -> None:
     """格式化代码"""
     click.echo(f"🎨 格式化代码: {path}")
@@ -83,9 +82,7 @@ def format(path: str) -> None:
 
         # 运行 black
         click.echo("📋 运行 black...")
-        result = subprocess.run(
-            ['black', str(project_path)], capture_output=True, text=True
-        )
+        result = subprocess.run(["black", str(project_path)], capture_output=True, text=True)
 
         if result.returncode == 0:
             click.echo("✅ black 格式化完成")
@@ -94,9 +91,7 @@ def format(path: str) -> None:
 
         # 运行 isort
         click.echo("📋 运行 isort...")
-        result = subprocess.run(
-            ['isort', str(project_path)], capture_output=True, text=True
-        )
+        result = subprocess.run(["isort", str(project_path)], capture_output=True, text=True)
 
         if result.returncode == 0:
             click.echo("✅ isort 导入排序完成")
@@ -114,10 +109,8 @@ def format(path: str) -> None:
 
 
 @quality_group.command()
-@click.option('--path', '-p', default='.', help='项目路径')
-@click.option(
-    '--output', '-o', default='coverage-report.html', help='覆盖率报告输出文件'
-)
+@click.option("--path", "-p", default=".", help="项目路径")
+@click.option("--output", "-o", default="coverage-report.html", help="覆盖率报告输出文件")
 def coverage(path: str, output: str) -> None:
     """生成测试覆盖率报告"""
     click.echo(f"📊 生成覆盖率报告: {path}")
@@ -129,10 +122,10 @@ def coverage(path: str, output: str) -> None:
         click.echo("🧪 运行测试并收集覆盖率...")
         result = subprocess.run(
             [
-                'pytest',
-                '--cov=.',
-                f'--cov-report=html:{output}',
-                '--cov-report=term',
+                "pytest",
+                "--cov=.",
+                f"--cov-report=html:{output}",
+                "--cov-report=term",
                 str(project_path),
             ],
             capture_output=True,
@@ -156,7 +149,7 @@ def coverage(path: str, output: str) -> None:
 
 
 @quality_group.command()
-@click.option('--path', '-p', default='.', help='项目路径')
+@click.option("--path", "-p", default=".", help="项目路径")
 def metrics(path: str) -> None:
     """显示代码质量指标"""
     click.echo(f"📊 代码质量指标: {path}")
@@ -166,7 +159,7 @@ def metrics(path: str) -> None:
 
         # 统计文件数量
         python_files = list(project_path.rglob("*.py"))
-        test_files = [f for f in python_files if 'test' in str(f).lower()]
+        test_files = [f for f in python_files if "test" in str(f).lower()]
 
         click.echo(f"📄 Python 文件数: {len(python_files)}")
         click.echo(f"🧪 测试文件数: {len(test_files)}")
@@ -182,7 +175,7 @@ def metrics(path: str) -> None:
 
         for py_file in python_files:
             try:
-                with open(py_file, 'r', encoding='utf-8') as f:
+                with open(py_file, "r", encoding="utf-8") as f:
                     lines = f.readlines()
                     total_lines += len(lines)
 
@@ -190,7 +183,7 @@ def metrics(path: str) -> None:
                         stripped = line.strip()
                         if not stripped:
                             total_blank_lines += 1
-                        elif stripped.startswith('#'):
+                        elif stripped.startswith("#"):
                             total_comment_lines += 1
             except UnicodeDecodeError:
                 continue
@@ -222,7 +215,7 @@ def _auto_fix_issues(project_path: Path) -> None:
         # 运行 autopep8
         click.echo("🔧 运行 autopep8...")
         result = subprocess.run(
-            ['autopep8', '--in-place', '--recursive', str(project_path)],
+            ["autopep8", "--in-place", "--recursive", str(project_path)],
             capture_output=True,
             text=True,
         )
@@ -244,10 +237,10 @@ def _show_quality_summary(results: dict) -> None:
     total = len(results)
 
     for tool_name, result in results.items():
-        status = "✅ 通过" if result.get('success', False) else "❌ 失败"
+        status = "✅ 通过" if result.get("success", False) else "❌ 失败"
         click.echo(f"  {tool_name:<10} - {status}")
 
-        if result.get('success', False):
+        if result.get("success", False):
             passed += 1
 
     click.echo(f"\n📈 总体通过率: {passed}/{total} ({passed/max(total, 1):.1%})")

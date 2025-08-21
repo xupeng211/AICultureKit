@@ -30,8 +30,8 @@ class TestAIBehaviorComprehensive(unittest.TestCase):
         try:
             result = self.enforcer.enforce_ai_behavior()
             self.assertIsInstance(result, dict)
-            self.assertIn('violations_detected', result)
-            self.assertIn('culture_compliance', result)
+            self.assertIn("violations_detected", result)
+            self.assertIn("culture_compliance", result)
         except Exception as e:
             self.fail(f"AI行为执行测试失败: {e}")
 
@@ -39,7 +39,7 @@ class TestAIBehaviorComprehensive(unittest.TestCase):
         """测试违规检测规则"""
         try:
             # 测试是否有违规检测规则
-            self.assertTrue(hasattr(self.enforcer, 'violation_rules'))
+            self.assertTrue(hasattr(self.enforcer, "violation_rules"))
         except Exception as e:
             self.fail(f"违规检测规则测试失败: {e}")
 

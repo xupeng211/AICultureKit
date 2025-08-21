@@ -6,7 +6,6 @@
 python scripts/auto_fix_problems.py
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -28,7 +27,7 @@ def main():
     aggregator = ProblemAggregator(str(project_root))
     problems = aggregator.collect_all_problems()
 
-    if problems['summary']['total_issues'] == 0:
+    if problems["summary"]["total_issues"] == 0:
         print("✅ 恭喜！项目没有发现任何问题")
         return 0
 
@@ -36,27 +35,27 @@ def main():
     aggregator.display_problem_summary(problems)
 
     # 3. 询问是否进行自动修复
-    if problems['summary']['blocking_issues'] > 0:
+    if problems["summary"]["blocking_issues"] > 0:
         print(f"\n⚠️  发现 {problems['summary']['blocking_issues']} 个阻塞性问题")
         choice = input("是否启动自动修复？(y/n): ").lower().strip()
 
-        if choice in ['y', 'yes', '是']:
+        if choice in ["y", "yes", "是"]:
             print("\n🔧 启动自动修复...")
             fixer = AutoProblemFixer(str(project_root))
-            fix_report = fixer.auto_fix_all_problems()
+            fixer.auto_fix_all_problems()
 
             # 4. 重新检查修复效果
             print("\n🔍 重新检查修复效果...")
             new_problems = aggregator.collect_all_problems()
 
-            print(f"\n📊 修复效果对比:")
+            print("\n📊 修复效果对比:")
             print(f"   修复前: {problems['summary']['total_issues']} 个问题")
             print(f"   修复后: {new_problems['summary']['total_issues']} 个问题")
             print(
                 f"   减少了: {problems['summary']['total_issues'] - new_problems['summary']['total_issues']} 个问题"
             )
 
-            if new_problems['summary']['blocking_issues'] == 0:
+            if new_problems["summary"]["blocking_issues"] == 0:
                 print("\n🎉 所有阻塞性问题已解决！")
                 print("✅ 现在可以正常推送代码了")
                 return 0
@@ -69,15 +68,13 @@ def main():
             print("\n📋 请手动修复问题后再次运行此脚本")
             return 1
     else:
-        print(
-            f"\n✅ 没有阻塞性问题，只有 {problems['summary']['total_warnings']} 个警告"
-        )
+        print(f"\n✅ 没有阻塞性问题，只有 {problems['summary']['total_warnings']} 个警告")
         choice = input("是否优化这些警告？(y/n): ").lower().strip()
 
-        if choice in ['y', 'yes', '是']:
+        if choice in ["y", "yes", "是"]:
             print("\n⚡ 启动优化...")
             fixer = AutoProblemFixer(str(project_root))
-            fix_report = fixer.auto_fix_all_problems()
+            fixer.auto_fix_all_problems()
 
             print("\n🎉 优化完成！")
             return 0

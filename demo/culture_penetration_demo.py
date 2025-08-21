@@ -10,13 +10,11 @@ are fictional example data. In real projects, use environment variables or secur
 configuration management systems for sensitive information.
 """
 
-
 """
 文化深度渗透效果演示
 展示文化如何在开发过程中彻底渗透和自动执行
 """
 
-import os
 import tempfile
 import time
 from pathlib import Path
@@ -63,9 +61,9 @@ def demo_real_time_monitoring():
 
     # 创建一个有问题的Python文件
     problem_file = temp_dir / "bad_code.py"
-    with open(problem_file, 'w') as f:
+    with open(problem_file, "w") as f:
         f.write(
-            '''
+            """
 # 这是一个有文化违规的文件
 def long_function_without_docstring():
     password="DEMO_PASSWORD"  # 演示用占位符
@@ -79,7 +77,7 @@ def long_function_without_docstring():
 class UndocumentedClass:  # 缺少文档字符串
     def method_without_docs(self):
         pass
-'''
+"""
         )
 
     print(f"📝 创建问题文件: {problem_file}")
@@ -153,9 +151,9 @@ def demo_ai_culture_assistant():
     print(f"   总违规数: {report['total_violations']}")
     print(f"   可自动修复: {report['auto_fixable_count']}")
 
-    if report['recommendations']:
+    if report["recommendations"]:
         print("   💡 改进建议:")
-        for i, rec in enumerate(report['recommendations'][:3], 1):
+        for i, rec in enumerate(report["recommendations"][:3], 1):
             print(f"      {i}. {rec}")
     else:
         print("   🎉 暂无改进建议，文化执行良好！")

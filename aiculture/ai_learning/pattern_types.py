@@ -139,19 +139,15 @@ class NamingPatternAnalyzer(PatternAnalyzer):
 
     def _is_snake_case(self, name: str) -> bool:
         """检查是否为snake_case"""
-        return '_' in name and name.islower()
+        return "_" in name and name.islower()
 
     def _is_camel_case(self, name: str) -> bool:
         """检查是否为camelCase"""
-        return (name[0].islower() if name else False) and any(
-            c.isupper() for c in name[1:]
-        )
+        return (name[0].islower() if name else False) and any(c.isupper() for c in name[1:])
 
     def _is_pascal_case(self, name: str) -> bool:
         """检查是否为PascalCase"""
-        return (name[0].isupper() if name else False) and any(
-            c.isupper() for c in name[1:]
-        )
+        return (name[0].isupper() if name else False) and any(c.isupper() for c in name[1:])
 
 
 class StructurePatternAnalyzer(PatternAnalyzer):
@@ -162,17 +158,15 @@ class StructurePatternAnalyzer(PatternAnalyzer):
         patterns = []
 
         # 分析目录结构
-        if 'directories' in structure_data:
-            directories = structure_data['directories']
+        if "directories" in structure_data:
+            directories = structure_data["directories"]
 
             # 检查是否有标准的Python项目结构
-            standard_dirs = ['src', 'tests', 'docs', 'scripts']
+            standard_dirs = ["src", "tests", "docs", "scripts"]
             found_standard = sum(1 for d in standard_dirs if d in directories)
 
             if found_standard >= 2:
-                confidence = self._calculate_confidence(
-                    found_standard, len(standard_dirs)
-                )
+                confidence = self._calculate_confidence(found_standard, len(standard_dirs))
                 patterns.append(
                     ProjectPattern(
                         pattern_type="structure",
@@ -185,22 +179,20 @@ class StructurePatternAnalyzer(PatternAnalyzer):
                 )
 
         # 分析文件组织模式
-        if 'file_extensions' in structure_data:
-            extensions = structure_data['file_extensions']
+        if "file_extensions" in structure_data:
+            extensions = structure_data["file_extensions"]
 
             # 检查主要编程语言
-            if '.py' in extensions and extensions['.py'] > 5:
-                confidence = min(
-                    extensions['.py'] / 20, 1.0
-                )  # 20个以上Python文件认为是Python项目
+            if ".py" in extensions and extensions[".py"] > 5:
+                confidence = min(extensions[".py"] / 20, 1.0)  # 20个以上Python文件认为是Python项目
                 patterns.append(
                     ProjectPattern(
                         pattern_type="structure",
                         pattern_name="python_project",
                         pattern_value="python",
                         confidence=confidence,
-                        frequency=extensions['.py'],
-                        examples=['.py'],
+                        frequency=extensions[".py"],
+                        examples=[".py"],
                     )
                 )
 
@@ -215,9 +207,9 @@ class StylePatternAnalyzer(PatternAnalyzer):
         patterns = []
 
         # 分析引号偏好
-        if 'quote_usage' in style_data:
-            single_quotes = style_data['quote_usage'].get('single', 0)
-            double_quotes = style_data['quote_usage'].get('double', 0)
+        if "quote_usage" in style_data:
+            single_quotes = style_data["quote_usage"].get("single", 0)
+            double_quotes = style_data["quote_usage"].get("double", 0)
             total_quotes = single_quotes + double_quotes
 
             if total_quotes > 0:
@@ -247,9 +239,9 @@ class StylePatternAnalyzer(PatternAnalyzer):
                     )
 
         # 分析缩进偏好
-        if 'indentation' in style_data:
-            spaces = style_data['indentation'].get('spaces', 0)
-            tabs = style_data['indentation'].get('tabs', 0)
+        if "indentation" in style_data:
+            spaces = style_data["indentation"].get("spaces", 0)
+            tabs = style_data["indentation"].get("tabs", 0)
             total_indent = spaces + tabs
 
             if total_indent > 0:
@@ -289,8 +281,8 @@ class DocumentationPatternAnalyzer(PatternAnalyzer):
         patterns = []
 
         # 分析文档字符串风格
-        if 'docstring_style' in doc_data:
-            styles = doc_data['docstring_style']
+        if "docstring_style" in doc_data:
+            styles = doc_data["docstring_style"]
             total_docstrings = sum(styles.values())
 
             if total_docstrings > 0:
@@ -312,8 +304,8 @@ class DocumentationPatternAnalyzer(PatternAnalyzer):
                     )
 
         # 分析文档覆盖率
-        if 'coverage' in doc_data:
-            coverage = doc_data['coverage']
+        if "coverage" in doc_data:
+            coverage = doc_data["coverage"]
 
             if coverage > 0.7:  # 70%以上覆盖率
                 patterns.append(

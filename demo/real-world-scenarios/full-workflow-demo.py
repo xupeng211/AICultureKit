@@ -9,7 +9,6 @@
 4. 报告生成
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -18,7 +17,7 @@ project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from aiculture.accessibility_culture import AccessibilityCultureManager
-from aiculture.core import CultureConfig, ProjectTemplate, QualityTools
+from aiculture.core import QualityTools
 
 
 class FullWorkflowDemo:
@@ -122,23 +121,17 @@ if __name__ == "__main__":
         # 运行代码风格检查
         print("  📋 运行flake8检查...")
         flake8_result = tools.run_flake8()
-        print(
-            f"     结果: {'✅ 通过' if flake8_result.get('success', False) else '❌ 失败'}"
-        )
+        print(f"     结果: {'✅ 通过' if flake8_result.get('success', False) else '❌ 失败'}")
 
         # 运行类型检查
         print("  🔍 运行mypy检查...")
         mypy_result = tools.run_mypy()
-        print(
-            f"     结果: {'✅ 通过' if mypy_result.get('success', False) else '❌ 失败'}"
-        )
+        print(f"     结果: {'✅ 通过' if mypy_result.get('success', False) else '❌ 失败'}")
 
         # 运行测试
         print("  🧪 运行测试...")
         test_result = tools.run_pytest()
-        print(
-            f"     结果: {'✅ 通过' if test_result.get('success', False) else '❌ 失败'}"
-        )
+        print(f"     结果: {'✅ 通过' if test_result.get('success', False) else '❌ 失败'}")
 
     def run_culture_checks(self) -> None:
         """运行文化标准检查"""
@@ -151,8 +144,8 @@ if __name__ == "__main__":
         print("  🔍 检查可访问性...")
         accessibility_result = accessibility_manager.check_project_accessibility()
 
-        i18n_issues = accessibility_result.get('i18n_issues', [])
-        accessibility_issues = accessibility_result.get('accessibility_issues', [])
+        i18n_issues = accessibility_result.get("i18n_issues", [])
+        accessibility_issues = accessibility_result.get("accessibility_issues", [])
 
         print(f"     国际化问题: {len(i18n_issues)} 个")
         print(f"     可访问性问题: {len(accessibility_issues)} 个")
@@ -161,7 +154,7 @@ if __name__ == "__main__":
         print("  📊 生成可访问性报告...")
         report = accessibility_manager.generate_accessibility_report()
 
-        summary = report.get('summary', {})
+        summary = report.get("summary", {})
         print(f"     检查文件数: {summary.get('total_files_checked', 0)}")
         print(f"     发现问题数: {summary.get('total_issues_found', 0)}")
 

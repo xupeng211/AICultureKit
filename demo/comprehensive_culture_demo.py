@@ -4,7 +4,6 @@ AICultureKit 综合文化演示
 展示所有新增的文化模块功能
 """
 
-import json
 import time
 from pathlib import Path
 
@@ -63,8 +62,8 @@ def demo_performance_culture():
 
     leak_result = detector.detect_leaks()
     print(f"   检测状态: {leak_result['status']}")
-    if leak_result.get('warnings'):
-        for warning in leak_result['warnings']:
+    if leak_result.get("warnings"):
+        for warning in leak_result["warnings"]:
             print(f"   ⚠️ {warning}")
 
 
@@ -78,20 +77,18 @@ def demo_observability_culture():
 
     # 演示结构化日志
     print("📝 结构化日志演示...")
-    with obs.observe_operation(
-        "demo_operation", user_id="123", request_id="req-456"
-    ) as ctx:
-        logger = ctx['logger']
-        metrics = ctx['metrics']
+    with obs.observe_operation("demo_operation", user_id="123", request_id="req-456") as ctx:
+        logger = ctx["logger"]
+        metrics = ctx["metrics"]
 
         logger.info("开始处理请求", component="api")
-        metrics.counter("requests_total", labels={'method': 'GET', 'status': '200'})
+        metrics.counter("requests_total", labels={"method": "GET", "status": "200"})
 
         # 模拟一些工作
         time.sleep(0.05)
 
         logger.info("请求处理完成", component="api")
-        metrics.histogram("request_duration", 50, labels={'method': 'GET'})
+        metrics.histogram("request_duration", 50, labels={"method": "GET"})
 
     # 导出可观测性数据
     data = obs.export_observability_data()
@@ -108,7 +105,7 @@ def demo_observability_culture():
 
     # 获取统计信息
     stats = monitor.get_statistics()
-    if stats.get('total_requests', 0) > 0:
+    if stats.get("total_requests", 0) > 0:
         print(f"   平均响应时间: {stats['avg_response_time']:.2f}ms")
         print(f"   成功率: {stats['success_rate']:.2%}")
 
@@ -128,8 +125,8 @@ def demo_data_governance_culture():
     privacy_scan = governance.scan_project_for_privacy_issues()
     print(f"   发现问题: {privacy_scan['total_findings']} 个")
 
-    if privacy_scan['total_findings'] > 0:
-        for severity, issues in privacy_scan['by_severity'].items():
+    if privacy_scan["total_findings"] > 0:
+        for severity, issues in privacy_scan["by_severity"].items():
             if issues:
                 print(f"   {severity.upper()}: {len(issues)} 个")
 
@@ -141,7 +138,7 @@ def demo_data_governance_culture():
 
     # 显示行动项
     print("   📝 行动项:")
-    for item in compliance_report['action_items'][:3]:
+    for item in compliance_report["action_items"][:3]:
         print(f"      • {item}")
 
 
@@ -161,24 +158,24 @@ def demo_accessibility_culture():
     print(f"   总问题数: {report['total_issues']}")
 
     # 可访问性问题
-    accessibility_issues = report['accessibility']
+    accessibility_issues = report["accessibility"]
     print(f"   可访问性问题: {accessibility_issues['total_issues']} 个")
-    if accessibility_issues['total_issues'] > 0:
-        for severity, issues in accessibility_issues['by_severity'].items():
+    if accessibility_issues["total_issues"] > 0:
+        for severity, issues in accessibility_issues["by_severity"].items():
             if issues:
                 print(f"      {severity.upper()}: {len(issues)} 个")
 
     # 国际化问题
-    i18n_issues = report['internationalization']
+    i18n_issues = report["internationalization"]
     print(f"   国际化问题: {i18n_issues['total_issues']} 个")
 
     # 响应式设计问题
-    responsive_issues = report['responsive_design']
+    responsive_issues = report["responsive_design"]
     print(f"   响应式设计问题: {responsive_issues['total_issues']} 个")
 
     # 显示优先行动
     print("   📝 优先行动:")
-    for action in report['priority_actions'][:3]:
+    for action in report["priority_actions"][:3]:
         print(f"      • {action}")
 
 
@@ -240,9 +237,9 @@ def demo_comprehensive_enforcement():
     print(f"   警告: {result['warnings']} 个")
 
     # 按原则分组显示违规
-    if result.get('by_principle'):
+    if result.get("by_principle"):
         print("   📋 按原则分组的违规:")
-        for principle, violations in result['by_principle'].items():
+        for principle, violations in result["by_principle"].items():
             if violations:
                 print(f"      • {principle}: {len(violations)} 个")
 

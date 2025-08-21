@@ -14,7 +14,7 @@ import time
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from .culture_enforcer import CultureEnforcer
 from .error_handling import get_logger
@@ -148,21 +148,21 @@ class AIBehaviorEnforcer:
             result = enforcer.enforce_all()
 
             # 提取详细的违规信息
-            violations = result.get('violations', [])
-            errors = [v for v in violations if v.severity == 'error']
-            warnings = [v for v in violations if v.severity == 'warning']
+            violations = result.get("violations", [])
+            errors = [v for v in violations if v.severity == "error"]
+            warnings = [v for v in violations if v.severity == "warning"]
 
             # 构建详细的错误信息 - 显示所有错误，不限制数量
             detailed_errors = []
             for i, error in enumerate(errors, 1):
                 error_info = {
-                    'index': i,
-                    'description': error.description,
-                    'severity': error.severity,
-                    'principle': getattr(error, 'principle', 'unknown'),
-                    'file_path': getattr(error, 'file_path', None),
-                    'line_number': getattr(error, 'line_number', None),
-                    'suggestion': getattr(error, 'suggestion', None),
+                    "index": i,
+                    "description": error.description,
+                    "severity": error.severity,
+                    "principle": getattr(error, "principle", "unknown"),
+                    "file_path": getattr(error, "file_path", None),
+                    "line_number": getattr(error, "line_number", None),
+                    "suggestion": getattr(error, "suggestion", None),
                 }
                 detailed_errors.append(error_info)
 
@@ -170,13 +170,13 @@ class AIBehaviorEnforcer:
             detailed_warnings = []
             for i, warning in enumerate(warnings, 1):
                 warning_info = {
-                    'index': i,
-                    'description': warning.description,
-                    'severity': warning.severity,
-                    'principle': getattr(warning, 'principle', 'unknown'),
-                    'file_path': getattr(warning, 'file_path', None),
-                    'line_number': getattr(warning, 'line_number', None),
-                    'suggestion': getattr(warning, 'suggestion', None),
+                    "index": i,
+                    "description": warning.description,
+                    "severity": warning.severity,
+                    "principle": getattr(warning, "principle", "unknown"),
+                    "file_path": getattr(warning, "file_path", None),
+                    "line_number": getattr(warning, "line_number", None),
+                    "suggestion": getattr(warning, "suggestion", None),
                 }
                 detailed_warnings.append(warning_info)
 
@@ -188,36 +188,34 @@ class AIBehaviorEnforcer:
                 )
 
             return {
-                'compliant': result.get('errors', 0) == 0,  # 只有没有错误才算合规
-                'errors': result.get('errors', 0),
-                'warnings': result.get('warnings', 0),
-                'score': result.get('score', 100),
-                'detailed_errors': detailed_errors,
-                'detailed_warnings': detailed_warnings,
-                'total_issues': total_issues,
+                "compliant": result.get("errors", 0) == 0,  # 只有没有错误才算合规
+                "errors": result.get("errors", 0),
+                "warnings": result.get("warnings", 0),
+                "score": result.get("score", 100),
+                "detailed_errors": detailed_errors,
+                "detailed_warnings": detailed_warnings,
+                "total_issues": total_issues,
             }
 
         except Exception as e:
             self.logger.error(f"文化合规检查失败: {e}")
-            return {'compliant': False, 'error': str(e)}
+            return {"compliant": False, "error": str(e)}
 
-    def record_violation(
-        self, violation: AIBehaviorViolation, context: Dict[str, Any] = None
-    ):
+    def record_violation(self, violation: AIBehaviorViolation, context: Dict[str, Any] = None):
         """记录AI行为违规"""
         violation_record = {
-            'timestamp': time.time(),
-            'violation_type': violation.value,
-            'context': context or {},
-            'severity': self._get_rule_by_violation(violation).severity,
-            'message': self._get_rule_by_violation(violation).message,
+            "timestamp": time.time(),
+            "violation_type": violation.value,
+            "context": context or {},
+            "severity": self._get_rule_by_violation(violation).severity,
+            "message": self._get_rule_by_violation(violation).message,
         }
 
         # 读取现有违规记录
         violations = []
         if self.violation_log.exists():
             try:
-                with open(self.violation_log, 'r', encoding='utf-8') as f:
+                with open(self.violation_log, "r", encoding="utf-8") as f:
                     violations = json.load(f)
             except Exception:
                 violations = []
@@ -226,7 +224,7 @@ class AIBehaviorEnforcer:
         violations.append(violation_record)
 
         # 保存违规记录
-        with open(self.violation_log, 'w', encoding='utf-8') as f:
+        with open(self.violation_log, "w", encoding="utf-8") as f:
             json.dump(violations, f, indent=2, ensure_ascii=False)
 
         self.logger.error(f"记录AI行为违规: {violation.value}")
@@ -270,11 +268,11 @@ class AIBehaviorEnforcer:
 
         # 生成执行报告
         report = {
-            'timestamp': time.time(),
-            'violations_detected': len(violations),
-            'violations': [v.value for v in violations],
-            'culture_compliance': culture_status,
-            'enforcement_actions': [],
+            "timestamp": time.time(),
+            "violations_detected": len(violations),
+            "violations": [v.value for v in violations],
+            "culture_compliance": culture_status,
+            "enforcement_actions": [],
         }
 
         # 执行强制措施
@@ -294,55 +292,50 @@ class AIBehaviorEnforcer:
                 enforcement_actions.append(f"warned_{violation.value}")
 
         # 如果文化检查有问题，显示完整的问题分析
-        if (
-            not culture_status.get('compliant', True)
-            or culture_status.get('total_issues', 0) > 0
-        ):
-            print(f"\n🔍 完整问题分析报告:")
+        if not culture_status.get("compliant", True) or culture_status.get("total_issues", 0) > 0:
+            print("\n🔍 完整问题分析报告:")
             print(f"📊 文化质量评分: {culture_status.get('score', 0)}/100")
             print(f"❌ 错误: {culture_status.get('errors', 0)} 个")
             print(f"⚠️  警告: {culture_status.get('warnings', 0)} 个")
             print(f"📋 总问题数: {culture_status.get('total_issues', 0)} 个")
 
             # 显示所有错误详情
-            detailed_errors = culture_status.get('detailed_errors', [])
+            detailed_errors = culture_status.get("detailed_errors", [])
             if detailed_errors:
                 print(f"\n🚨 所有错误详情 ({len(detailed_errors)} 个):")
                 for error in detailed_errors:
                     print(f"  {error['index']}. {error['description']}")
-                    if error.get('file_path'):
+                    if error.get("file_path"):
                         print(f"     📁 文件: {error['file_path']}")
-                    if error.get('line_number'):
+                    if error.get("line_number"):
                         print(f"     📍 行号: {error['line_number']}")
-                    if error.get('suggestion'):
+                    if error.get("suggestion"):
                         print(f"     💡 建议: {error['suggestion']}")
                     print()
 
             # 显示所有警告详情
-            detailed_warnings = culture_status.get('detailed_warnings', [])
+            detailed_warnings = culture_status.get("detailed_warnings", [])
             if detailed_warnings:
                 print(f"⚠️  所有警告详情 ({len(detailed_warnings)} 个):")
                 for warning in detailed_warnings:
                     print(f"  {warning['index']}. {warning['description']}")
-                    if warning.get('file_path'):
+                    if warning.get("file_path"):
                         print(f"     📁 文件: {warning['file_path']}")
-                    if warning.get('line_number'):
+                    if warning.get("line_number"):
                         print(f"     📍 行号: {warning['line_number']}")
-                    if warning.get('suggestion'):
+                    if warning.get("suggestion"):
                         print(f"     💡 建议: {warning['suggestion']}")
                     print()
 
             # 提供综合修复指导
-            print(f"🎯 综合修复指导:")
-            print(
-                f"   1. 上面列出了所有 {culture_status.get('total_issues', 0)} 个问题的详细信息"
-            )
+            print("🎯 综合修复指导:")
+            print(f"   1. 上面列出了所有 {culture_status.get('total_issues', 0)} 个问题的详细信息")
             print(f"   2. 请逐一修复每个问题，特别是 {len(detailed_errors)} 个错误")
-            print(f"   3. 根据每个问题的建议进行修复")
-            print(f"   4. 修复完成后重新提交，系统会重新检查所有问题")
-            print(f"   5. 只有所有错误都解决后才能成功推送")
+            print("   3. 根据每个问题的建议进行修复")
+            print("   4. 修复完成后重新提交，系统会重新检查所有问题")
+            print("   5. 只有所有错误都解决后才能成功推送")
 
-        report['enforcement_actions'] = enforcement_actions
+        report["enforcement_actions"] = enforcement_actions
         return report
 
     def _provide_guidance(self, violation: AIBehaviorViolation):
@@ -380,7 +373,7 @@ class AIBehaviorEnforcer:
             return []
 
         try:
-            with open(self.violation_log, 'r', encoding='utf-8') as f:
+            with open(self.violation_log, "r", encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
             self.logger.error(f"读取违规历史失败: {e}")
@@ -393,28 +386,22 @@ class AIBehaviorEnforcer:
         # 统计违规类型
         violation_stats = {}
         for violation in violations:
-            vtype = violation['violation_type']
+            vtype = violation["violation_type"]
             violation_stats[vtype] = violation_stats.get(vtype, 0) + 1
 
         # 计算行为评分
         total_violations = len(violations)
-        critical_violations = len(
-            [v for v in violations if v.get('severity') == 'critical']
-        )
+        critical_violations = len([v for v in violations if v.get("severity") == "critical"])
 
-        behavior_score = max(
-            0, 100 - (critical_violations * 30) - (total_violations * 5)
-        )
+        behavior_score = max(0, 100 - (critical_violations * 30) - (total_violations * 5))
 
         return {
-            'behavior_score': behavior_score,
-            'total_violations': total_violations,
-            'critical_violations': critical_violations,
-            'violation_stats': violation_stats,
-            'recent_violations': violations[-5:] if violations else [],
-            'compliance_status': (
-                'compliant' if behavior_score >= 80 else 'non_compliant'
-            ),
+            "behavior_score": behavior_score,
+            "total_violations": total_violations,
+            "critical_violations": critical_violations,
+            "violation_stats": violation_stats,
+            "recent_violations": violations[-5:] if violations else [],
+            "compliance_status": ("compliant" if behavior_score >= 80 else "non_compliant"),
         }
 
 
@@ -430,7 +417,7 @@ def main():
         # 执行行为检查
         result = enforcer.enforce_ai_behavior()
 
-        if result['violations_detected'] > 0:
+        if result["violations_detected"] > 0:
             print(f"\n🚨 检测到 {result['violations_detected']} 个AI行为违规！")
             sys.exit(1)
         else:
