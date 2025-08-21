@@ -115,7 +115,9 @@ class SecurityFixStrategy:
 
         # 生成patch
         patch_content = self._generate_patch(file_path, original_content, fixed_content)
-        explanation = f"修复了 {len(applied_fixes)} 个安全问题: {', '.join(applied_fixes)}"
+        explanation = (
+            f"修复了 {len(applied_fixes)} 个安全问题: {', '.join(applied_fixes)}"
+        )
         confidence = 0.6  # 安全修复的置信度相对较低，需要人工审查
 
         return patch_content, explanation, confidence
@@ -146,7 +148,9 @@ class SecurityFixStrategy:
                 indent_str = " " * indent
 
                 # 提取assert条件
-                assert_match = re.search(r"assert\s+(.+?)(?:\s*,\s*(.+))?$", original_line.strip())
+                assert_match = re.search(
+                    r"assert\s+(.+?)(?:\s*,\s*(.+))?$", original_line.strip()
+                )
                 if assert_match:
                     condition = assert_match.group(1)
                     message = assert_match.group(2) or f'"{condition} failed"'
@@ -166,9 +170,7 @@ class SecurityFixStrategy:
                 indent = len(original_line) - len(original_line.lstrip())
                 indent_str = " " * indent
 
-                warning_comment = (
-                    f"{indent_str}# WARNING: exec() usage detected - consider safer alternatives"
-                )
+                warning_comment = f"{indent_str}# WARNING: exec() usage detected - consider safer alternatives"
                 lines.insert(line_idx, warning_comment)
                 return "\n".join(lines), "B102: 为exec()使用添加安全警告"
 
@@ -197,14 +199,15 @@ class SecurityFixStrategy:
                 indent = len(original_line) - len(original_line.lstrip())
                 indent_str = " " * indent
 
-                warning_comment = (
-                    f"{indent_str}# SECURITY: Consider using SHA-256 or stronger hash algorithms"
-                )
+                warning_comment = f"{indent_str}# SECURITY: Consider using SHA-256 or stronger hash algorithms"
                 lines.insert(line_idx, warning_comment)
                 return "\n".join(lines), "B324: 添加安全哈希算法建议"
 
         elif test_id == "B501":  # 未验证SSL证书
-            if "verify=False" in original_line or "ssl._create_unverified_context" in original_line:
+            if (
+                "verify=False" in original_line
+                or "ssl._create_unverified_context" in original_line
+            ):
                 # 添加SSL验证警告
                 indent = len(original_line) - len(original_line.lstrip())
                 indent_str = " " * indent
@@ -321,7 +324,9 @@ class SecurityFixStrategy:
 
         return "\n".join(guide)
 
-    def _generate_bandit_guide(self, test_id: str, problems: List[Dict[str, Any]]) -> str:
+    def _generate_bandit_guide(
+        self, test_id: str, problems: List[Dict[str, Any]]
+    ) -> str:
         """生成bandit问题修复指南"""
 
         guide = [f"## 🛡️ {test_id} 安全问题修复指南\n"]

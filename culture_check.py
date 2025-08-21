@@ -267,7 +267,9 @@ def calculate_scores(checks: Dict[str, Any]) -> Tuple[int, Dict[str, str]]:
     return score, status_info
 
 
-def print_evaluation_results(checks: Dict[str, Any], score: int, status_info: Dict[str, str]):
+def print_evaluation_results(
+    checks: Dict[str, Any], score: int, status_info: Dict[str, str]
+):
     """打印评估结果"""
     print()
     print("📊 综合评估结果:")
@@ -286,7 +288,9 @@ def print_evaluation_results(checks: Dict[str, Any], score: int, status_info: Di
 
     print(f'📊 测试覆盖率: {coverage}% ({status_info["coverage"]})')
     print(f'📝 代码质量: {flake8_errors} 个错误 ({status_info["quality"]})')
-    print(f'🔒 安全性: {high_risk} 高风险, {medium_risk} 中风险 ({status_info["security"]})')
+    print(
+        f'🔒 安全性: {high_risk} 高风险, {medium_risk} 中风险 ({status_info["security"]})'
+    )
     print(f'🔧 功能完整性: {functional_score}/25 分 ({status_info["functional"]})')
     print()
 

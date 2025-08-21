@@ -37,7 +37,11 @@ class TestScaffoldStrategy:
                 continue
 
             file_path = problem.get("file", "")
-            if file_path and file_path.endswith(".py") and not file_path.startswith("test_"):
+            if (
+                file_path
+                and file_path.endswith(".py")
+                and not file_path.startswith("test_")
+            ):
                 files_to_test.add(file_path)
 
         if not files_to_test:
@@ -90,9 +94,7 @@ class TestScaffoldStrategy:
 
         # 生成测试内容
         test_content = self._generate_test_content(file_path, classes, functions)
-        explanation = (
-            f"为 {file_path} 生成测试脚手架 ({len(classes)} 个类, {len(functions)} 个函数)"
-        )
+        explanation = f"为 {file_path} 生成测试脚手架 ({len(classes)} 个类, {len(functions)} 个函数)"
 
         return test_content, explanation
 
@@ -114,10 +116,14 @@ class TestScaffoldStrategy:
 
                     # 提取类方法
                     for item in node.body:
-                        if isinstance(item, ast.FunctionDef) and not item.name.startswith("_"):
+                        if isinstance(
+                            item, ast.FunctionDef
+                        ) and not item.name.startswith("_"):
                             method_info = {
                                 "name": item.name,
-                                "args": [arg.arg for arg in item.args.args[1:]],  # 跳过self
+                                "args": [
+                                    arg.arg for arg in item.args.args[1:]
+                                ],  # 跳过self
                                 "docstring": ast.get_docstring(item) or "",
                                 "returns": self._get_return_annotation(item),
                             }
@@ -127,7 +133,9 @@ class TestScaffoldStrategy:
 
             elif isinstance(node, ast.FunctionDef):
                 # 提取顶级函数
-                if not node.name.startswith("_") and not self._is_inside_class(node, tree):
+                if not node.name.startswith("_") and not self._is_inside_class(
+                    node, tree
+                ):
                     function_info = {
                         "name": node.name,
                         "args": [arg.arg for arg in node.args.args],
@@ -319,7 +327,9 @@ class TestScaffoldStrategy:
 
         # 如果源文件在子目录中，在tests目录下创建相同结构
         if len(source_path.parts) > 1:
-            test_path = Path("tests") / source_path.parent / f"test_{source_path.stem}.py"
+            test_path = (
+                Path("tests") / source_path.parent / f"test_{source_path.stem}.py"
+            )
         else:
             test_path = Path("tests") / f"test_{source_path.stem}.py"
 

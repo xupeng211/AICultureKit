@@ -102,7 +102,9 @@ class TestCLI:
         mock_config = MagicMock()
         mock_config_class.return_value = mock_config
 
-        result = self.runner.invoke(setup, ["--path", self.temp_dir, "--language", "python"])
+        result = self.runner.invoke(
+            setup, ["--path", self.temp_dir, "--language", "python"]
+        )
 
         assert result.exit_code == 0
         assert "正在为项目设置质量工具" in result.output

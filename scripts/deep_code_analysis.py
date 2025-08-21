@@ -144,7 +144,9 @@ class DeepCodeAnalyzer:
                         )
                     )
 
-    def _check_function_complexity(self, file_path: Path, node: ast.FunctionDef, lines: List[str]):
+    def _check_function_complexity(
+        self, file_path: Path, node: ast.FunctionDef, lines: List[str]
+    ):
         """检查函数复杂度"""
         # 计算圈复杂度
         complexity = self._calculate_cyclomatic_complexity(node)
@@ -162,7 +164,9 @@ class DeepCodeAnalyzer:
             )
 
         # 检查函数长度
-        func_lines = node.end_lineno - node.lineno + 1 if hasattr(node, "end_lineno") else 0
+        func_lines = (
+            node.end_lineno - node.lineno + 1 if hasattr(node, "end_lineno") else 0
+        )
         if func_lines > 50:
             self.issues.append(
                 CodeIssue(
@@ -188,7 +192,9 @@ class DeepCodeAnalyzer:
                 )
             )
 
-    def _check_class_design(self, file_path: Path, node: ast.ClassDef, lines: List[str]):
+    def _check_class_design(
+        self, file_path: Path, node: ast.ClassDef, lines: List[str]
+    ):
         """检查类设计"""
         # 计算类的方法数量
         methods = [n for n in node.body if isinstance(n, ast.FunctionDef)]
@@ -218,7 +224,9 @@ class DeepCodeAnalyzer:
                 )
             )
 
-    def _check_exception_handling(self, file_path: Path, node: ast.ExceptHandler, lines: List[str]):
+    def _check_exception_handling(
+        self, file_path: Path, node: ast.ExceptHandler, lines: List[str]
+    ):
         """检查异常处理"""
         # 检查裸露的except
         if node.type is None:

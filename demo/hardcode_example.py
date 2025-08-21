@@ -108,7 +108,9 @@ def rate_limit_check(user_requests) -> None:
     Args:
         user_requests: 参数说明
     """
-    max_requests_per_minute = int(os.getenv("RATE_LIMIT_REQUESTS", "100"))  # 使用环境变量
+    max_requests_per_minute = int(
+        os.getenv("RATE_LIMIT_REQUESTS", "100")
+    )  # 使用环境变量
     time_window = int(os.getenv("RATE_LIMIT_WINDOW", "60"))  # 使用环境变量
 
     if user_requests > max_requests_per_minute:
@@ -128,7 +130,9 @@ def send_notification_email(to_email, message) -> None:
     smtp_server = os.getenv("SMTP_SERVER", "smtp.example.com")  # 使用环境变量
     smtp_port = int(os.getenv("SMTP_PORT", "587"))  # 使用环境变量
     sender_email = os.getenv("SENDER_EMAIL", "noreply@demo.local")  # 使用环境变量
-    sender_password = os.getenv("SENDER_PASSWORD", "PLACEHOLDER_PASSWORD")  # 使用环境变量
+    sender_password = os.getenv(
+        "SENDER_PASSWORD", "PLACEHOLDER_PASSWORD"
+    )  # 使用环境变量
 
     # 发送邮件逻辑...
 

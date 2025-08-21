@@ -201,7 +201,9 @@ class AIBehaviorEnforcer:
             self.logger.error(f"文化合规检查失败: {e}")
             return {"compliant": False, "error": str(e)}
 
-    def record_violation(self, violation: AIBehaviorViolation, context: Dict[str, Any] = None):
+    def record_violation(
+        self, violation: AIBehaviorViolation, context: Dict[str, Any] = None
+    ):
         """记录AI行为违规"""
         violation_record = {
             "timestamp": time.time(),
@@ -292,7 +294,10 @@ class AIBehaviorEnforcer:
                 enforcement_actions.append(f"warned_{violation.value}")
 
         # 如果文化检查有问题，显示完整的问题分析
-        if not culture_status.get("compliant", True) or culture_status.get("total_issues", 0) > 0:
+        if (
+            not culture_status.get("compliant", True)
+            or culture_status.get("total_issues", 0) > 0
+        ):
             print("\n🔍 完整问题分析报告:")
             print(f"📊 文化质量评分: {culture_status.get('score', 0)}/100")
             print(f"❌ 错误: {culture_status.get('errors', 0)} 个")
@@ -329,7 +334,9 @@ class AIBehaviorEnforcer:
 
             # 提供综合修复指导
             print("🎯 综合修复指导:")
-            print(f"   1. 上面列出了所有 {culture_status.get('total_issues', 0)} 个问题的详细信息")
+            print(
+                f"   1. 上面列出了所有 {culture_status.get('total_issues', 0)} 个问题的详细信息"
+            )
             print(f"   2. 请逐一修复每个问题，特别是 {len(detailed_errors)} 个错误")
             print("   3. 根据每个问题的建议进行修复")
             print("   4. 修复完成后重新提交，系统会重新检查所有问题")
@@ -391,9 +398,13 @@ class AIBehaviorEnforcer:
 
         # 计算行为评分
         total_violations = len(violations)
-        critical_violations = len([v for v in violations if v.get("severity") == "critical"])
+        critical_violations = len(
+            [v for v in violations if v.get("severity") == "critical"]
+        )
 
-        behavior_score = max(0, 100 - (critical_violations * 30) - (total_violations * 5))
+        behavior_score = max(
+            0, 100 - (critical_violations * 30) - (total_violations * 5)
+        )
 
         return {
             "behavior_score": behavior_score,
@@ -401,7 +412,9 @@ class AIBehaviorEnforcer:
             "critical_violations": critical_violations,
             "violation_stats": violation_stats,
             "recent_violations": violations[-5:] if violations else [],
-            "compliance_status": ("compliant" if behavior_score >= 80 else "non_compliant"),
+            "compliance_status": (
+                "compliant" if behavior_score >= 80 else "non_compliant"
+            ),
         }
 
 

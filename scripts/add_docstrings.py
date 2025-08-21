@@ -30,7 +30,11 @@ class DocstringAdder:
         elif func_name.startswith("_"):
             return f'"""内部方法：{func_name[1:].replace("_", " ")}"""'
         elif func_name in ["__init__", "__str__", "__repr__"]:
-            return '"""初始化方法"""' if func_name == "__init__" else '"""字符串表示方法"""'
+            return (
+                '"""初始化方法"""'
+                if func_name == "__init__"
+                else '"""字符串表示方法"""'
+            )
         else:
             # 根据参数生成描述
             if args:
@@ -55,7 +59,9 @@ class DocstringAdder:
         else:
             return f'"""{class_name} 类"""'
 
-    def add_docstring_to_node(self, content: str, node: ast.FunctionDef | ast.ClassDef) -> str:
+    def add_docstring_to_node(
+        self, content: str, node: ast.FunctionDef | ast.ClassDef
+    ) -> str:
         """为节点添加文档字符串"""
         lines = content.split("\n")
 

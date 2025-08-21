@@ -43,7 +43,9 @@ class LintAdapter:
                             "code": issue.get("code", ""),
                             "message": issue.get("message", ""),
                             "fix_suggestion": self._get_ruff_fix_suggestion(issue),
-                            "blocking": self._is_blocking_lint_issue(issue.get("code", "")),
+                            "blocking": self._is_blocking_lint_issue(
+                                issue.get("code", "")
+                            ),
                         }
                     )
 
@@ -108,7 +110,9 @@ class LintAdapter:
                                     "severity": "warning",
                                     "file": parts[0],
                                     "line": int(parts[1]) if parts[1].isdigit() else 0,
-                                    "column": (int(parts[2]) if parts[2].isdigit() else 0),
+                                    "column": (
+                                        int(parts[2]) if parts[2].isdigit() else 0
+                                    ),
                                     "message": parts[3].strip(),
                                     "blocking": False,
                                 }

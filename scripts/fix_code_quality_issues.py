@@ -76,7 +76,9 @@ def fix_magic_numbers(file_path: Path) -> bool:
                     for i, line in enumerate(lines):
                         if line.strip().startswith(("import ", "from ")):
                             insert_pos = i + 1
-                        elif line.strip() and not line.startswith("#") and insert_pos > 0:
+                        elif (
+                            line.strip() and not line.startswith("#") and insert_pos > 0
+                        ):
                             break
 
                     # 插入常量定义
@@ -125,7 +127,9 @@ def fix_long_lines(file_path: Path) -> bool:
                                 if len(parts) == 2 and len(parts[0]) < 100:
                                     indent = len(line) - len(line.lstrip())
                                     lines[i] = parts[0] + break_char + "\n"
-                                    lines.insert(i + 1, " " * (indent + 4) + parts[1] + "\n")
+                                    lines.insert(
+                                        i + 1, " " * (indent + 4) + parts[1] + "\n"
+                                    )
                                     modified = True
                                     break
 

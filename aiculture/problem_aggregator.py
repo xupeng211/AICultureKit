@@ -53,8 +53,12 @@ class ProblemAggregator:
             behavior_result = behavior_enforcer.enforce_ai_behavior()
 
             if behavior_result["violations_detected"] > 0:
-                all_problems["categories"]["ai_behavior_violations"] = behavior_result["violations"]
-                all_problems["summary"]["blocking_issues"] += behavior_result["violations_detected"]
+                all_problems["categories"]["ai_behavior_violations"] = behavior_result[
+                    "violations"
+                ]
+                all_problems["summary"]["blocking_issues"] += behavior_result[
+                    "violations_detected"
+                ]
 
         except Exception as e:
             self.logger.warning(f"AI行为检查失败: {e}")
@@ -95,16 +99,21 @@ class ProblemAggregator:
                 if "security" in category.lower() or "privacy" in category.lower():
                     all_problems["categories"]["security_issues"].append(problem_info)
                 elif "performance" in category.lower():
-                    all_problems["categories"]["performance_issues"].append(problem_info)
+                    all_problems["categories"]["performance_issues"].append(
+                        problem_info
+                    )
                 elif "accessibility" in category.lower():
-                    all_problems["categories"]["accessibility_issues"].append(problem_info)
+                    all_problems["categories"]["accessibility_issues"].append(
+                        problem_info
+                    )
 
         except Exception as e:
             self.logger.error(f"文化检查失败: {e}")
 
         # 3. 计算总数
         all_problems["summary"]["total_issues"] = (
-            all_problems["summary"]["total_errors"] + all_problems["summary"]["total_warnings"]
+            all_problems["summary"]["total_errors"]
+            + all_problems["summary"]["total_warnings"]
         )
 
         # 4. 生成修复优先级
@@ -113,7 +122,9 @@ class ProblemAggregator:
         # 5. 转换set为list以便JSON序列化
         all_problems["files_affected"] = list(all_problems["files_affected"])
 
-        self.logger.info(f"问题收集完成: {all_problems['summary']['total_issues']} 个问题")
+        self.logger.info(
+            f"问题收集完成: {all_problems['summary']['total_issues']} 个问题"
+        )
 
         return all_problems
 
@@ -285,12 +296,12 @@ class ProblemAggregator:
 
         print("=" * 80)
 
-    def save_problem_report(self, problems: Dict[str, Any], output_file: str = None) -> str:
+    def save_problem_report(
+        self, problems: Dict[str, Any], output_file: str = None
+    ) -> str:
         """保存问题报告到文件"""
         if output_file is None:
-            output_file = (
-                f"problem_report_{problems['timestamp'].replace(' ', '_').replace(':', '-')}.json"
-            )
+            output_file = f"problem_report_{problems['timestamp'].replace(' ', '_').replace(':', '-')}.json"
 
         output_path = self.project_path / output_file
 

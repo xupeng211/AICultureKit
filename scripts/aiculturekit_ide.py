@@ -73,7 +73,9 @@ class AICultureKitIDE:
             workflow_result["steps"].append(step3_result)
 
             if step3_result["success"]:
-                workflow_result["patches_applied"] = step3_result.get("patches_applied", 0)
+                workflow_result["patches_applied"] = step3_result.get(
+                    "patches_applied", 0
+                )
                 print(f"✅ 应用 {workflow_result['patches_applied']} 个补丁")
             else:
                 print("⚠️ 补丁应用失败")
@@ -84,7 +86,9 @@ class AICultureKitIDE:
         workflow_result["steps"].append(step4_result)
 
         if step4_result["success"]:
-            workflow_result["total_problems_after"] = step4_result.get("total_problems", 0)
+            workflow_result["total_problems_after"] = step4_result.get(
+                "total_problems", 0
+            )
             print(f"✅ 修复后剩余 {workflow_result['total_problems_after']} 个问题")
         else:
             print("⚠️ 修复验证失败")
@@ -174,7 +178,9 @@ class AICultureKitIDE:
             if result.returncode == 0:
                 # 统计生成的补丁数量
                 fixes_dir = self.artifacts_dir / "ide_ai_fixes"
-                patches_count = len(list(fixes_dir.glob("*.patch"))) if fixes_dir.exists() else 0
+                patches_count = (
+                    len(list(fixes_dir.glob("*.patch"))) if fixes_dir.exists() else 0
+                )
 
                 return {
                     "step": "ai_fix_generation",
@@ -306,7 +312,9 @@ class AICultureKitIDE:
         lines.append(f"- **修复后**: {after} 个问题")
         lines.append(f"- **已修复**: {fixed} 个问题")
         lines.append(
-            f"- **修复率**: {(fixed/before*100):.1f}%" if before > 0 else "- **修复率**: N/A"
+            f"- **修复率**: {(fixed/before*100):.1f}%"
+            if before > 0
+            else "- **修复率**: N/A"
         )
         lines.append("")
 
@@ -336,7 +344,9 @@ class AICultureKitIDE:
         lines.append("")
 
         if after > 0:
-            lines.append(f"1. 查看剩余 {after} 个问题: `artifacts/ide_post_fix_report.md`")
+            lines.append(
+                f"1. 查看剩余 {after} 个问题: `artifacts/ide_post_fix_report.md`"
+            )
             lines.append("2. 手工修复无法自动处理的问题")
             lines.append("3. 重新运行工作流验证修复效果")
         else:
@@ -353,7 +363,9 @@ def main():
     """主函数"""
     parser = argparse.ArgumentParser(description="AICultureKit IDE一键工作流")
     parser.add_argument("--base", default="origin/main", help="Git基准分支")
-    parser.add_argument("--auto-apply", action="store_true", help="自动应用AI生成的补丁")
+    parser.add_argument(
+        "--auto-apply", action="store_true", help="自动应用AI生成的补丁"
+    )
     parser.add_argument("--project-root", default=".", help="项目根目录")
 
     args = parser.parse_args()

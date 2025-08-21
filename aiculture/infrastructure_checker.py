@@ -157,7 +157,10 @@ class InfrastructureChecker:
                 match = re.search(r'requires-python\s*=\s*["\']([^"\']+)["\']', content)
                 if match:
                     version_requirement = match.group(1)
-                    if ">=" in version_requirement and version_requirement.count(".") < 2:
+                    if (
+                        ">=" in version_requirement
+                        and version_requirement.count(".") < 2
+                    ):
                         self._add_violation(
                             category="版本一致性",
                             severity="warning",
@@ -175,7 +178,9 @@ class InfrastructureChecker:
                 content = workflow_file.read_text()
                 if "python-version" in content or "PYTHON_VERSION" in content:
                     # 简单检查是否使用了不同的Python版本
-                    current_python = f"{sys.version_info.major}.{sys.version_info.minor}"
+                    current_python = (
+                        f"{sys.version_info.major}.{sys.version_info.minor}"
+                    )
                     if current_python not in content:
                         self._add_violation(
                             category="版本一致性",
@@ -414,11 +419,17 @@ class InfrastructureChecker:
                 content = py_file.read_text(encoding="utf-8")
 
                 # 检查硬编码路径分隔符
-                if "\\\\" in content or content.count("/") > content.count("os.path") * 3:
+                if (
+                    "\\\\" in content
+                    or content.count("/") > content.count("os.path") * 3
+                ):
                     # 简单的启发式检查
                     lines = content.split("\n")
                     for i, line in enumerate(lines, 1):
-                        if re.search(r'["\'][A-Za-z]:[\\\/]', line) or line.count("\\\\") > 0:
+                        if (
+                            re.search(r'["\'][A-Za-z]:[\\\/]', line)
+                            or line.count("\\\\") > 0
+                        ):
                             self._add_violation(
                                 category="跨平台兼容性",
                                 severity="warning",
@@ -497,11 +508,15 @@ class InfrastructureChecker:
             or os.environ.get("VIRTUAL_ENV") is not None
         )
 
-    def get_violations_by_severity(self, severity: str) -> List[InfrastructureViolation]:
+    def get_violations_by_severity(
+        self, severity: str
+    ) -> List[InfrastructureViolation]:
         """按严重程度获取违规"""
         return [v for v in self.violations if v.severity == severity]
 
-    def get_violations_by_category(self, category: str) -> List[InfrastructureViolation]:
+    def get_violations_by_category(
+        self, category: str
+    ) -> List[InfrastructureViolation]:
         """按分类获取违规"""
         return [v for v in self.violations if v.category == category]
 

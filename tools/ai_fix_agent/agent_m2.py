@@ -54,7 +54,9 @@ class AIFixAgentM2:
         lint_result = create_lint_patches(staged_files)
 
         if lint_result["patches"]:
-            patch_files = self._save_patches(lint_result["patches"], output_path, "lint")
+            patch_files = self._save_patches(
+                lint_result["patches"], output_path, "lint"
+            )
             results["patches_generated"].extend(patch_files)
             results["total_patches"] += len(patch_files)
             results["changelog_entries"].append(lint_result["changelog"])
@@ -67,7 +69,9 @@ class AIFixAgentM2:
         security_result = create_security_patches(staged_files)
 
         if security_result["patches"]:
-            patch_files = self._save_patches(security_result["patches"], output_path, "security")
+            patch_files = self._save_patches(
+                security_result["patches"], output_path, "security"
+            )
             results["patches_generated"].extend(patch_files)
             results["total_patches"] += len(patch_files)
             results["changelog_entries"].append(security_result["changelog"])
@@ -112,7 +116,9 @@ class AIFixAgentM2:
 
         return patch_files
 
-    def _create_changelog(self, changelog_entries: List[str], changelog_path: Path) -> None:
+    def _create_changelog(
+        self, changelog_entries: List[str], changelog_path: Path
+    ) -> None:
         """创建变更日志"""
 
         lines = [
@@ -233,7 +239,9 @@ class AIFixAgentM2:
 def main():
     """主函数"""
     parser = argparse.ArgumentParser(description="AI修复代理 - M2起步版")
-    parser.add_argument("--out", dest="output_dir", default="artifacts/ai_fixes", help="输出目录")
+    parser.add_argument(
+        "--out", dest="output_dir", default="artifacts/ai_fixes", help="输出目录"
+    )
 
     args = parser.parse_args()
 

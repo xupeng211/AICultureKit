@@ -49,7 +49,9 @@ class AIIntelligentFixer:
             "fixed_issues": self.fixed_issues,
             "failed_fixes": self.failed_fixes,
             "success_rate": (
-                len(self.fixed_issues) / (len(self.fixed_issues) + len(self.failed_fixes)) * 100
+                len(self.fixed_issues)
+                / (len(self.fixed_issues) + len(self.failed_fixes))
+                * 100
                 if (len(self.fixed_issues) + len(self.failed_fixes)) > 0
                 else 0
             ),
@@ -301,7 +303,9 @@ class AIIntelligentFixer:
                     # 如果内容有变化，谨慎写回文件
                     if content != original_content:
                         # 创建备份
-                        backup_path = file_path.with_suffix(file_path.suffix + ".backup")
+                        backup_path = file_path.with_suffix(
+                            file_path.suffix + ".backup"
+                        )
                         with open(backup_path, "w", encoding="utf-8") as f:
                             f.write(original_content)
 
@@ -612,7 +616,9 @@ PRIVACY_PROTECTION_RULES = {
                         content = f.read()
 
                     # 简单检查是否包含敏感信息
-                    if re.search(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b", content):
+                    if re.search(
+                        r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b", content
+                    ):
                         files_with_issues.append(str(file_path))
 
                 except Exception:
