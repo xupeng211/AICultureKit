@@ -1,32 +1,67 @@
 #!/bin/bash
-# AI修复补丁应用脚本
-# 自动生成，请谨慎使用
+set -euo pipefail
 
-set -e  # 遇到错误时退出
+echo '🚀 应用AI修复补丁...'
+echo '========================='
 
-echo '🔍 检查Git状态...'
-if ! git diff-index --quiet HEAD --; then
-    echo '⚠️  工作区有未提交的更改，请先提交或stash'
+# 备份当前状态
+BACKUP_STASH=$(git stash create || echo '')
+if [ -n "$BACKUP_STASH" ]; then
+    echo "📦 备份创建: $BACKUP_STASH"
+fi
+
+# 应用补丁
+APPLIED_COUNT=0
+FAILED_COUNT=0
+
+echo '📄 应用补丁: lint_001.patch'
+if git apply --index 'lint_001.patch'; then
+    echo '✅ 补丁应用成功'
+    APPLIED_COUNT=$((APPLIED_COUNT + 1))
+else
+    echo '❌ 补丁应用失败: lint_001.patch'
+    FAILED_COUNT=$((FAILED_COUNT + 1))
+fi
+echo
+
+echo '📄 应用补丁: lint_002.patch'
+if git apply --index 'lint_002.patch'; then
+    echo '✅ 补丁应用成功'
+    APPLIED_COUNT=$((APPLIED_COUNT + 1))
+else
+    echo '❌ 补丁应用失败: lint_002.patch'
+    FAILED_COUNT=$((FAILED_COUNT + 1))
+fi
+echo
+
+echo '📄 应用补丁: lint_003.patch'
+if git apply --index 'lint_003.patch'; then
+    echo '✅ 补丁应用成功'
+    APPLIED_COUNT=$((APPLIED_COUNT + 1))
+else
+    echo '❌ 补丁应用失败: lint_003.patch'
+    FAILED_COUNT=$((FAILED_COUNT + 1))
+fi
+echo
+
+echo '📄 应用补丁: lint_004.patch'
+if git apply --index 'lint_004.patch'; then
+    echo '✅ 补丁应用成功'
+    APPLIED_COUNT=$((APPLIED_COUNT + 1))
+else
+    echo '❌ 补丁应用失败: lint_004.patch'
+    FAILED_COUNT=$((FAILED_COUNT + 1))
+fi
+echo
+
+echo '========================='
+echo "📊 应用结果: $APPLIED_COUNT 成功, $FAILED_COUNT 失败"
+
+if [ $FAILED_COUNT -gt 0 ]; then
+    echo '⚠️ 部分补丁应用失败，请手工检查'
     exit 1
+else
+    echo '🎉 所有补丁应用成功！'
+    echo '💡 建议运行: pre-commit run --all-files || true'
+    exit 0
 fi
-
-echo '💾 创建备份分支...'
-BACKUP_BRANCH="backup-$(date +%Y%m%d-%H%M%S)"
-git branch "$BACKUP_BRANCH"
-echo "✅ 备份分支已创建: $BACKUP_BRANCH"
-
-echo '🧪 验证修复效果...'
-if command -v python >/dev/null 2>&1; then
-    echo '运行问题检查...'
-    python -m tools.problem_aggregator.aggregator --out artifacts/post_fix_problems.json
-    echo '📊 修复后问题报告: artifacts/post_fix_problems.json'
-fi
-
-echo '🎉 补丁应用完成！'
-echo ''
-echo '下一步建议:'
-echo '1. 检查修改内容: git diff --cached'
-echo '2. 运行测试: pytest'
-echo '3. 提交更改: git commit -m "fix: apply AI-generated fixes"'
-echo '4. 如有问题回滚: git reset --hard HEAD~1'
-echo "5. 或使用备份分支: git checkout $BACKUP_BRANCH"
