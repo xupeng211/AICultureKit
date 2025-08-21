@@ -133,9 +133,7 @@ class LintFixStrategy:
 
         return patch_content, explanation, confidence
 
-    def _apply_single_fix(
-        self, content: str, problem: Dict[str, Any]
-    ) -> Optional[Tuple[str, str]]:
+    def _apply_single_fix(self, content: str, problem: Dict[str, Any]) -> Optional[Tuple[str, str]]:
         """应用单个修复"""
 
         code = problem.get("code", "")
@@ -161,9 +159,7 @@ class LintFixStrategy:
             if match:
                 var_name = match.group(1)
                 if not var_name.startswith("_"):
-                    new_line = original_line.replace(
-                        f"{var_name} =", f"_{var_name} =", 1
-                    )
+                    new_line = original_line.replace(f"{var_name} =", f"_{var_name} =", 1)
                     lines[line_idx] = new_line
                     return (
                         "\n".join(lines),
@@ -209,9 +205,7 @@ class LintFixStrategy:
             # 简单的操作符空格修复
             new_line = original_line
             for op in ["=", "+", "-", "*", "/", "==", "!=", "<=", ">=", "<", ">"]:
-                new_line = re.sub(
-                    f"(\\w){re.escape(op)}(\\w)", f"\\1 {op} \\2", new_line
-                )
+                new_line = re.sub(f"(\\w){re.escape(op)}(\\w)", f"\\1 {op} \\2", new_line)
 
             if new_line != original_line:
                 lines[line_idx] = new_line
@@ -228,15 +222,11 @@ class LintFixStrategy:
             import os
             import tempfile
 
-            with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".orig", delete=False
-            ) as orig_file:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".orig", delete=False) as orig_file:
                 orig_file.write(original)
                 orig_file_path = orig_file.name
 
-            with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".fixed", delete=False
-            ) as fixed_file:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".fixed", delete=False) as fixed_file:
                 fixed_file.write(fixed)
                 fixed_file_path = fixed_file.name
 

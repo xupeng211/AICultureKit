@@ -120,11 +120,7 @@ def fix_variable_issues(content: str) -> str:
 
     for line in lines:
         # 修复未使用的变量
-        if (
-            "F841" in line
-            or "local variable" in line
-            and "assigned to but never used" in line
-        ):
+        if "F841" in line or "local variable" in line and "assigned to but never used" in line:
             # 在变量名前加下划线表示故意未使用
             if "=" in line and not line.strip().startswith("#"):
                 parts = line.split("=", 1)
@@ -194,9 +190,7 @@ def main():
     # 获取所有Python文件
     python_files = []
     for py_file in Path("aiculture").rglob("*.py"):
-        if not any(
-            part.startswith(".") or part in ["__pycache__"] for part in py_file.parts
-        ):
+        if not any(part.startswith(".") or part in ["__pycache__"] for part in py_file.parts):
             python_files.append(py_file)
 
     print(f"📁 找到 {len(python_files)} 个Python文件")

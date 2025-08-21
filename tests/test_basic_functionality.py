@@ -136,9 +136,7 @@ class TestDataCatalogBasics:
         assert retrieved.name == "Managed Asset"
 
         # 更新资产
-        success = self.catalog.update_asset(
-            "managed_asset", {"description": "Updated description"}
-        )
+        success = self.catalog.update_asset("managed_asset", {"description": "Updated description"})
         assert success is True
 
         updated = self.catalog.get_asset("managed_asset")

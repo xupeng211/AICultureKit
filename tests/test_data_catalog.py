@@ -23,9 +23,7 @@ class TestDataCatalog:
         """测试目录初始化"""
         assert self.catalog.project_path == self.temp_dir
         assert self.catalog.catalog_dir == self.temp_dir / ".aiculture" / "data_catalog"
-        assert (
-            self.catalog.catalog_file == self.catalog.catalog_dir / "data_catalog.json"
-        )
+        assert self.catalog.catalog_file == self.catalog.catalog_dir / "data_catalog.json"
         assert isinstance(self.catalog.assets, dict)
 
     def test_scan_data_files(self):
@@ -153,9 +151,7 @@ class TestDataCatalog:
     def test_remove_asset(self):
         """测试移除资产"""
         # 添加测试资产
-        asset = DataAsset(
-            name="test_dataset", file_path="data/test.csv", file_type="csv"
-        )
+        asset = DataAsset(name="test_dataset", file_path="data/test.csv", file_type="csv")
         self.catalog.add_asset("test_key", asset)
         assert "test_key" in self.catalog.assets
 
@@ -239,9 +235,7 @@ class TestDataCatalog:
     def test_get_asset_lineage(self):
         """测试获取资产血缘"""
         # 添加测试资产
-        source_asset = DataAsset(
-            name="raw_data", file_path="data/raw.csv", file_type="csv"
-        )
+        source_asset = DataAsset(name="raw_data", file_path="data/raw.csv", file_type="csv")
         processed_asset = DataAsset(
             name="processed_data",
             file_path="data/processed.csv",

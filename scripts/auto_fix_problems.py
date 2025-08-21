@@ -68,9 +68,7 @@ def main():
             print("\n📋 请手动修复问题后再次运行此脚本")
             return 1
     else:
-        print(
-            f"\n✅ 没有阻塞性问题，只有 {problems['summary']['total_warnings']} 个警告"
-        )
+        print(f"\n✅ 没有阻塞性问题，只有 {problems['summary']['total_warnings']} 个警告")
         choice = input("是否优化这些警告？(y/n): ").lower().strip()
 
         if choice in ["y", "yes", "是"]:

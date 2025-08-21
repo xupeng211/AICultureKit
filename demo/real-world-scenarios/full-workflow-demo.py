@@ -121,23 +121,17 @@ if __name__ == "__main__":
         # 运行代码风格检查
         print("  📋 运行flake8检查...")
         flake8_result = tools.run_flake8()
-        print(
-            f"     结果: {'✅ 通过' if flake8_result.get('success', False) else '❌ 失败'}"
-        )
+        print(f"     结果: {'✅ 通过' if flake8_result.get('success', False) else '❌ 失败'}")
 
         # 运行类型检查
         print("  🔍 运行mypy检查...")
         mypy_result = tools.run_mypy()
-        print(
-            f"     结果: {'✅ 通过' if mypy_result.get('success', False) else '❌ 失败'}"
-        )
+        print(f"     结果: {'✅ 通过' if mypy_result.get('success', False) else '❌ 失败'}")
 
         # 运行测试
         print("  🧪 运行测试...")
         test_result = tools.run_pytest()
-        print(
-            f"     结果: {'✅ 通过' if test_result.get('success', False) else '❌ 失败'}"
-        )
+        print(f"     结果: {'✅ 通过' if test_result.get('success', False) else '❌ 失败'}")
 
     def run_culture_checks(self) -> None:
         """运行文化标准检查"""

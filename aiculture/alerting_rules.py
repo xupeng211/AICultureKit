@@ -74,9 +74,7 @@ class NotificationChannel:
     type: str  # email, slack, webhook, sms
     config: Dict[str, Any]
     enabled: bool = True
-    severity_filter: List[AlertSeverity] = field(
-        default_factory=lambda: list(AlertSeverity)
-    )
+    severity_filter: List[AlertSeverity] = field(default_factory=lambda: list(AlertSeverity))
 
 
 class AlertingRulesManager:
@@ -321,11 +319,7 @@ class AlertingRulesManager:
                 # 发送通知
                 self._send_notifications(alert)
 
-            elif (
-                not should_fire
-                and existing_alert
-                and existing_alert.status == AlertStatus.FIRING
-            ):
+            elif not should_fire and existing_alert and existing_alert.status == AlertStatus.FIRING:
                 # 解决告警
                 existing_alert.status = AlertStatus.RESOLVED
                 existing_alert.resolved_at = time.time()
@@ -395,14 +389,10 @@ class AlertingRulesManager:
             except Exception as e:
                 print(f"发送通知失败 ({channel.name}): {e}")
 
-    def _send_console_notification(
-        self, channel: NotificationChannel, alert: Alert
-    ) -> None:
+    def _send_console_notification(self, channel: NotificationChannel, alert: Alert) -> None:
         """发送控制台通知"""
         status_emoji = "🔥" if alert.status == AlertStatus.FIRING else "✅"
-        severity_emoji = {"critical": "🚨", "warning": "⚠️", "info": "ℹ️"}[
-            alert.severity.value
-        ]
+        severity_emoji = {"critical": "🚨", "warning": "⚠️", "info": "ℹ️"}[alert.severity.value]
 
         print(
             """
@@ -416,25 +406,15 @@ class AlertingRulesManager:
 """
         )
 
-    def _send_email_notification(
-        self, channel: NotificationChannel, alert: Alert
-    ) -> None:
+    def _send_email_notification(self, channel: NotificationChannel, alert: Alert) -> None:
         """发送邮件通知（占位符实现）"""
-        print(
-            f"📧 发送邮件通知到 {channel.config.get('recipients', [])}: {alert.message}"
-        )
+        print(f"📧 发送邮件通知到 {channel.config.get('recipients', [])}: {alert.message}")
 
-    def _send_slack_notification(
-        self, channel: NotificationChannel, alert: Alert
-    ) -> None:
+    def _send_slack_notification(self, channel: NotificationChannel, alert: Alert) -> None:
         """发送Slack通知（占位符实现）"""
-        print(
-            f"💬 发送Slack通知到 {channel.config.get('webhook_url', '')}: {alert.message}"
-        )
+        print(f"💬 发送Slack通知到 {channel.config.get('webhook_url', '')}: {alert.message}")
 
-    def _send_webhook_notification(
-        self, channel: NotificationChannel, alert: Alert
-    ) -> None:
+    def _send_webhook_notification(self, channel: NotificationChannel, alert: Alert) -> None:
         """发送Webhook通知（占位符实现）"""
         print(f"🔗 发送Webhook通知到 {channel.config.get('url', '')}: {alert.message}")
 
@@ -457,9 +437,7 @@ class AlertingRulesManager:
 
             prometheus_rule = {
                 "alert": rule.name,
-                "expr": self._convert_to_prometheus_expr(
-                    rule.condition, rule.threshold
-                ),
+                "expr": self._convert_to_prometheus_expr(rule.condition, rule.threshold),
                 "for": rule.duration,
                 "labels": rule.labels,
                 "annotations": rule.annotations,
@@ -475,9 +453,13 @@ class AlertingRulesManager:
         if "avg_response_time > threshold" in condition:
             return f"avg(response_time_seconds) > {threshold/1000}"
         elif "memory_usage_percent > threshold" in condition:
-            return f"(process_resident_memory_bytes / node_memory_MemTotal_bytes) * 100 > {threshold}"
+            return (
+                f"(process_resident_memory_bytes / node_memory_MemTotal_bytes) * 100 > {threshold}"
+            )
         elif "cpu_usage_percent > threshold" in condition:
-            return f'100 - (avg(irate(node_cpu_seconds_total{{mode="idle"}}[5m])) * 100) > {threshold}'
+            return (
+                f'100 - (avg(irate(node_cpu_seconds_total{{mode="idle"}}[5m])) * 100) > {threshold}'
+            )
         elif "error_rate > threshold" in condition:
             return f'(rate(http_requests_total{{status=~"5.."}}) / rate(http_requests_total)) * 100 > {threshold}'
         else:

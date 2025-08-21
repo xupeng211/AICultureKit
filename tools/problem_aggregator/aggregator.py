@@ -54,11 +54,7 @@ class ProblemAggregator:
         else:
             # 尝试找到配置文件
             possible_configs = [
-                self.project_root
-                / "tools"
-                / "problem_aggregator"
-                / "rulesets"
-                / "culture.yml",
+                self.project_root / "tools" / "problem_aggregator" / "rulesets" / "culture.yml",
                 self.project_root / ".aiculture" / "config.yml",
                 self.project_root / "aiculture.yml",
             ]
@@ -173,12 +169,8 @@ class ProblemAggregator:
             if coverage_config.get("enable_diff_cover", True):
                 diff_coverage_problems = self.diff_coverage_adapter.check_diff_coverage(
                     base_branch=base,
-                    changed_lines_threshold=coverage_config.get(
-                        "changed_lines_threshold", 80.0
-                    ),
-                    new_files_threshold=coverage_config.get(
-                        "new_files_threshold", 70.0
-                    ),
+                    changed_lines_threshold=coverage_config.get("changed_lines_threshold", 80.0),
+                    new_files_threshold=coverage_config.get("new_files_threshold", 70.0),
                 )
                 all_problems.extend(diff_coverage_problems)
                 print(f"     发现 {len(diff_coverage_problems)} 个增量覆盖率问题")
@@ -250,10 +242,7 @@ class ProblemAggregator:
                                 )
 
                 # 检查跳过的测试
-                if (
-                    culture_config.get("forbid_skipping_tests", True)
-                    and "test_" in file_path
-                ):
+                if culture_config.get("forbid_skipping_tests", True) and "test_" in file_path:
                     for i, line in enumerate(lines, 1):
                         if "@pytest.mark.skip" in line or "@unittest.skip" in line:
                             problems.append(
@@ -378,9 +367,7 @@ class ProblemAggregator:
 def main():
     """主函数"""
     parser = argparse.ArgumentParser(description="AICultureKit Problem Aggregator")
-    parser.add_argument(
-        "--base", default="HEAD", help="Git base for diff (default: HEAD)"
-    )
+    parser.add_argument("--base", default="HEAD", help="Git base for diff (default: HEAD)")
     parser.add_argument("--out", help="Output JSON file path")
     parser.add_argument("--md", help="Output Markdown report path")
     parser.add_argument(
@@ -401,9 +388,7 @@ def main():
 
     # 运行聚合
     aggregator = ProblemAggregator(config_path=args.config)
-    result = aggregator.aggregate_problems(
-        base=args.base, files=args.files, strict=args.strict
-    )
+    result = aggregator.aggregate_problems(base=args.base, files=args.files, strict=args.strict)
 
     # 输出JSON
     if args.out:
@@ -432,9 +417,7 @@ def main():
     print(f"   信息: {summary['by_severity'].get('info', 0)} 个")
 
     # 退出码
-    if args.strict and (
-        summary["blocking"] > 0 or summary["by_severity"].get("error", 0) > 0
-    ):
+    if args.strict and (summary["blocking"] > 0 or summary["by_severity"].get("error", 0) > 0):
         print("\n❌ 严格模式：发现阻塞性问题或错误")
         sys.exit(1)
     else:

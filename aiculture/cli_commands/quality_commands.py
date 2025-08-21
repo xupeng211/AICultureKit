@@ -82,9 +82,7 @@ def format(path: str) -> None:
 
         # 运行 black
         click.echo("📋 运行 black...")
-        result = subprocess.run(
-            ["black", str(project_path)], capture_output=True, text=True
-        )
+        result = subprocess.run(["black", str(project_path)], capture_output=True, text=True)
 
         if result.returncode == 0:
             click.echo("✅ black 格式化完成")
@@ -93,9 +91,7 @@ def format(path: str) -> None:
 
         # 运行 isort
         click.echo("📋 运行 isort...")
-        result = subprocess.run(
-            ["isort", str(project_path)], capture_output=True, text=True
-        )
+        result = subprocess.run(["isort", str(project_path)], capture_output=True, text=True)
 
         if result.returncode == 0:
             click.echo("✅ isort 导入排序完成")
@@ -114,9 +110,7 @@ def format(path: str) -> None:
 
 @quality_group.command()
 @click.option("--path", "-p", default=".", help="项目路径")
-@click.option(
-    "--output", "-o", default="coverage-report.html", help="覆盖率报告输出文件"
-)
+@click.option("--output", "-o", default="coverage-report.html", help="覆盖率报告输出文件")
 def coverage(path: str, output: str) -> None:
     """生成测试覆盖率报告"""
     click.echo(f"📊 生成覆盖率报告: {path}")

@@ -34,9 +34,7 @@ class LintAutoFixStrategy:
 
         try:
             # 创建临时文件
-            with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".py", delete=False
-            ) as temp_file:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as temp_file:
                 temp_file.write(content)
                 temp_file.flush()
                 temp_path = temp_file.name

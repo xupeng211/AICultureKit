@@ -51,8 +51,7 @@ class ErrorHandler:
         # 检查是否在可重试异常列表中
         if retry_config.retryable_exceptions:
             if not any(
-                isinstance(error, exc_type)
-                for exc_type in retry_config.retryable_exceptions
+                isinstance(error, exc_type) for exc_type in retry_config.retryable_exceptions
             ):
                 return False
 
@@ -61,9 +60,7 @@ class ErrorHandler:
 
     def _calculate_delay(self, attempt: int, retry_config: RetryConfig) -> float:
         """计算重试延迟"""
-        delay = retry_config.base_delay * (
-            retry_config.exponential_base ** (attempt - 1)
-        )
+        delay = retry_config.base_delay * (retry_config.exponential_base ** (attempt - 1))
         delay = min(delay, retry_config.max_delay)
 
         # 添加随机抖动
@@ -79,9 +76,7 @@ class ErrorHandler:
         import hashlib
 
         key_data = f"{func.__name__}:{str(args)}:{str(sorted(kwargs.items()))}"
-        return hashlib.sha256(
-            key_data.encode()
-        ).hexdigest()  # P0 Security Fix: MD5 -> SHA256
+        return hashlib.sha256(key_data.encode()).hexdigest()  # P0 Security Fix: MD5 -> SHA256
 
     def _get_cached_result(self, cache_key: str, ttl: int) -> Optional[Any]:
         """获取缓存结果"""
@@ -119,9 +114,7 @@ class ErrorHandler:
         def decorator(func: Callable) -> Callable:
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
-                return self._execute_with_retry(
-                    func, args, kwargs, retry_config, fallback_config
-                )
+                return self._execute_with_retry(func, args, kwargs, retry_config, fallback_config)
 
             return wrapper
 
@@ -142,9 +135,7 @@ class ErrorHandler:
         cache_key = None
         if fallback_config and fallback_config.use_cache:
             cache_key = self._get_cache_key(func, args, kwargs)
-            cached_result = self._get_cached_result(
-                cache_key, fallback_config.cache_ttl
-            )
+            cached_result = self._get_cached_result(cache_key, fallback_config.cache_ttl)
             if cached_result is not None:
                 self.logger.debug(f"使用缓存结果: {func.__name__}")
                 return cached_result
@@ -170,9 +161,7 @@ class ErrorHandler:
 
                 severity = get_error_severity(error)
 
-                if attempt < retry_config.max_attempts and self._should_retry(
-                    error, retry_config
-                ):
+                if attempt < retry_config.max_attempts and self._should_retry(error, retry_config):
                     delay = self._calculate_delay(attempt, retry_config)
 
                     self.logger.warning(
@@ -197,9 +186,7 @@ class ErrorHandler:
 
         # 尝试降级处理
         if fallback_config:
-            return self._execute_fallback(
-                func, args, kwargs, fallback_config, last_error
-            )
+            return self._execute_fallback(func, args, kwargs, fallback_config, last_error)
 
         # 重新抛出最后的错误
         raise last_error
@@ -215,9 +202,7 @@ class ErrorHandler:
         """执行降级处理"""
         try:
             if fallback_config.fallback_function:
-                self.logger.info(
-                    f"执行降级函数: {fallback_config.fallback_function.__name__}"
-                )
+                self.logger.info(f"执行降级函数: {fallback_config.fallback_function.__name__}")
                 return fallback_config.fallback_function(*args, **kwargs)
             elif fallback_config.fallback_value is not None:
                 self.logger.info(f"使用降级值: {fallback_config.fallback_value}")

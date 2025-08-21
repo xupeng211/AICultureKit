@@ -113,9 +113,7 @@ class QualityMonitor:
             try:
                 with open("coverage.json", "r") as f:
                     cov_data = json.load(f)
-                metrics["coverage_percent"] = cov_data.get("totals", {}).get(
-                    "percent_covered", 0
-                )
+                metrics["coverage_percent"] = cov_data.get("totals", {}).get("percent_covered", 0)
             except Exception:
                 pass  # TODO:   添加适当的异常处理
         # Flake8问题
@@ -234,10 +232,7 @@ class QualityMonitor:
                 )
 
             # 检查覆盖率下降
-            if (
-                current_metrics["coverage_percent"]
-                < prev_metrics["coverage_percent"] - 2
-            ):
+            if current_metrics["coverage_percent"] < prev_metrics["coverage_percent"] - 2:
                 alerts.append(
                     {
                         "type": "coverage_decline",
@@ -347,9 +342,7 @@ class QualityMonitor:
         print(f"  质量分数: {metrics['quality_score']}/100")
         print(f"  测试通过: {metrics['test_passed']}/{metrics['test_count']}")
         print(f"  代码覆盖率: {metrics['coverage_percent']:.1f}%")
-        print(
-            f"  代码问题: {metrics['flake8_issues']} flake8, {metrics['mypy_errors']} mypy"
-        )
+        print(f"  代码问题: {metrics['flake8_issues']} flake8, {metrics['mypy_errors']} mypy")
 
         if alerts:
             print(f"\n🚨 发现 {len(alerts)} 个警报:")

@@ -204,13 +204,9 @@ class TestsAdapter:
                         for package in root.findall(".//package"):
                             for class_elem in package.findall(".//class"):
                                 filename = class_elem.get("filename", "")
-                                class_line_rate = (
-                                    float(class_elem.get("line-rate", 0)) * 100
-                                )
+                                class_line_rate = float(class_elem.get("line-rate", 0)) * 100
 
-                                if (
-                                    class_line_rate < min_coverage * 0.7
-                                ):  # 低于70%的文件
+                                if class_line_rate < min_coverage * 0.7:  # 低于70%的文件
                                     problems.append(
                                         {
                                             "tool": "coverage",
@@ -220,9 +216,7 @@ class TestsAdapter:
                                             "message": f"文件覆盖率过低: {class_line_rate:.1f}%",
                                             "fix_suggestion": "为此文件添加更多测试用例",
                                             "blocking": False,
-                                            "metadata": {
-                                                "file_coverage": class_line_rate
-                                            },
+                                            "metadata": {"file_coverage": class_line_rate},
                                         }
                                     )
 
@@ -372,9 +366,7 @@ def main():
     all_problems = collection_problems + coverage_problems + pattern_problems
     blocking_problems = [p for p in all_problems if p.get("blocking", False)]
 
-    print(
-        f"总计: {len(all_problems)} 个测试问题，其中 {len(blocking_problems)} 个阻塞性问题"
-    )
+    print(f"总计: {len(all_problems)} 个测试问题，其中 {len(blocking_problems)} 个阻塞性问题")
 
 
 if __name__ == "__main__":

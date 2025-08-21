@@ -370,18 +370,13 @@ class AICulturePrinciples:
         """获取指定原则"""
         return self.principles.get(name)
 
-    def get_by_category(
-        self, category: PrincipleCategory
-    ) -> List[DevelopmentPrinciple]:
+    def get_by_category(self, category: PrincipleCategory) -> List[DevelopmentPrinciple]:
         """按分类获取原则"""
         return [p for p in self.principles.values() if p.category == category]
 
     def get_ai_instructions(self) -> Dict[str, List[str]]:
         """获取所有AI指令"""
-        return {
-            name: principle.ai_instructions
-            for name, principle in self.principles.items()
-        }
+        return {name: principle.ai_instructions for name, principle in self.principles.items()}
 
     def export_to_yaml(self, file_path: str) -> None:
         """导出原则到YAML文件"""
@@ -416,9 +411,7 @@ class AICulturePrinciples:
             violations.append("缺少.gitignore文件")
 
         # 检查Python项目结构
-        if (project_dir / "requirements.txt").exists() or (
-            project_dir / "pyproject.toml"
-        ).exists():
+        if (project_dir / "requirements.txt").exists() or (project_dir / "pyproject.toml").exists():
             if not (project_dir / "tests").exists():
                 violations.append("Python项目缺少tests目录")
 

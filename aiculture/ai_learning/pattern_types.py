@@ -143,15 +143,11 @@ class NamingPatternAnalyzer(PatternAnalyzer):
 
     def _is_camel_case(self, name: str) -> bool:
         """检查是否为camelCase"""
-        return (name[0].islower() if name else False) and any(
-            c.isupper() for c in name[1:]
-        )
+        return (name[0].islower() if name else False) and any(c.isupper() for c in name[1:])
 
     def _is_pascal_case(self, name: str) -> bool:
         """检查是否为PascalCase"""
-        return (name[0].isupper() if name else False) and any(
-            c.isupper() for c in name[1:]
-        )
+        return (name[0].isupper() if name else False) and any(c.isupper() for c in name[1:])
 
 
 class StructurePatternAnalyzer(PatternAnalyzer):
@@ -170,9 +166,7 @@ class StructurePatternAnalyzer(PatternAnalyzer):
             found_standard = sum(1 for d in standard_dirs if d in directories)
 
             if found_standard >= 2:
-                confidence = self._calculate_confidence(
-                    found_standard, len(standard_dirs)
-                )
+                confidence = self._calculate_confidence(found_standard, len(standard_dirs))
                 patterns.append(
                     ProjectPattern(
                         pattern_type="structure",
@@ -190,9 +184,7 @@ class StructurePatternAnalyzer(PatternAnalyzer):
 
             # 检查主要编程语言
             if ".py" in extensions and extensions[".py"] > 5:
-                confidence = min(
-                    extensions[".py"] / 20, 1.0
-                )  # 20个以上Python文件认为是Python项目
+                confidence = min(extensions[".py"] / 20, 1.0)  # 20个以上Python文件认为是Python项目
                 patterns.append(
                     ProjectPattern(
                         pattern_type="structure",

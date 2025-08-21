@@ -25,10 +25,7 @@ def fix_imports_in_file(file_path: Path) -> bool:
         ):
             imports_to_add.append("from .culture_enforcer import CultureEnforcer")
 
-        if (
-            "CICDGuardian" in content
-            and "from .cicd_culture import CICDGuardian" not in content
-        ):
+        if "CICDGuardian" in content and "from .cicd_culture import CICDGuardian" not in content:
             imports_to_add.append("from .cicd_culture import CICDGuardian")
 
         if "subprocess." in content and "import subprocess" not in content:
