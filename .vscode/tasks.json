@@ -1,0 +1,123 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "AICultureKit: Aggregate Problems",
+      "type": "shell",
+      "command": "python -m tools.problem_aggregator.aggregator --base origin/main --out artifacts/problems.json --md artifacts/problems_report.md",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "运行AICultureKit问题聚合器，生成完整的问题报告"
+    },
+    {
+      "label": "AICultureKit: Quick Check",
+      "type": "shell",
+      "command": "python -m tools.problem_aggregator.aggregator --out artifacts/quick-problems.json",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "快速检查当前变更的问题"
+    },
+    {
+      "label": "AICultureKit: Pre-commit Check",
+      "type": "shell",
+      "command": "pre-commit run --all-files",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "运行所有pre-commit检查"
+    },
+    {
+      "label": "AICultureKit: Auto Fix",
+      "type": "shell",
+      "command": "python -m black . && python -m isort . && python -m ruff check --fix .",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "自动修复代码格式和简单问题"
+    },
+    {
+      "label": "AICultureKit: Generate AI Patches",
+      "type": "shell",
+      "command": "python -m tools.ai_fix_agent.agent --in artifacts/problems.json --out artifacts/ai_fixes",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "基于问题报告生成AI修复补丁",
+      "dependsOn": "AICultureKit: Aggregate Problems"
+    },
+    {
+      "label": "AICultureKit: Apply AI Patches",
+      "type": "shell",
+      "command": "cd artifacts/ai_fixes && chmod +x apply_fixes.sh && ./apply_fixes.sh",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "应用AI生成的修复补丁",
+      "dependsOn": "AICultureKit: Generate AI Patches"
+    },
+    {
+      "label": "AICultureKit: Verify Fixes",
+      "type": "shell",
+      "command": "python -m tools.problem_aggregator.aggregator --out artifacts/post_fix_problems.json --md artifacts/post_fix_report.md",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "验证修复效果，生成修复后的问题报告"
+    },
+    {
+      "label": "AICultureKit: Full Workflow",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "AICultureKit: Aggregate Problems",
+        "AICultureKit: Generate AI Patches",
+        "AICultureKit: Apply AI Patches",
+        "AICultureKit: Verify Fixes"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      },
+      "detail": "一键执行完整工作流：聚合问题 → 生成补丁 → 应用修复 → 验证效果"
+    }
+  ]
+}

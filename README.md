@@ -117,6 +117,31 @@ aiculture check
 aiculture guide --template python
 ```
 
+### 🔍 AICultureKit 工具链（新功能）
+
+```bash
+# 1. 一键聚合所有问题
+python -m tools.problem_aggregator.aggregator --base origin/main --out artifacts/problems.json --md artifacts/problems_report.md
+
+# 2. AI生成修复补丁
+python -m tools.ai_fix_agent.agent --in artifacts/problems.json --out artifacts/ai_fixes
+
+# 3. 应用修复补丁
+cd artifacts/ai_fixes && ./apply_fixes.sh
+
+# 4. 验证修复效果
+python -m tools.problem_aggregator.aggregator --out artifacts/post_fix_problems.json
+```
+
+### 🎯 IDE一键体验
+
+```bash
+# VSCode/Cursor内一键执行完整工作流
+python scripts/aiculturekit_ide.py --base origin/main --auto-apply
+
+# 或使用VSCode任务: Ctrl+Shift+P -> Tasks: Run Task -> AICultureKit: Full Workflow
+```
+
 ### 高级用法
 
 ```bash
