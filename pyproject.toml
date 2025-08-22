@@ -131,6 +131,7 @@ source = ["aiculture"]
 omit = ["tests/*", "*/tests/*"]
 
 [tool.coverage.report]
+fail_under = 25
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
@@ -143,3 +144,8 @@ exclude_lines = [
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
 ]
+
+[tool.ruff]
+ignore = ["E501","F401","F841"]
+select = ["E","F","I","UP","B"]
+fix = true

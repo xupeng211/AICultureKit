@@ -200,7 +200,7 @@ time1 = "10:30:00"
 time2 = "14:45"
 datetime1 = "2023-12-25 10:30:00"
 datetime2 = "2023-12-25T10:30:00Z"
-timestamp = "+1-XXX-XXX-XXXX"
+timestamp = "2024-01-15 10:30:00"
 
 # 不应该匹配的内容
 version = "1.2.3"
