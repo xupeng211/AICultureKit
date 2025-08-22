@@ -1,22 +1,21 @@
-from typing import Any
-
-"""
-文化原则强制执行器
-
-自动检查和强制执行开发文化原则，确保所有代码都符合标准。
-"""
-
 import ast
 import json
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 from .accessibility_culture import AccessibilityCultureManager
 from .ai_culture_principles import AICulturePrinciples
 from .data_governance_culture import DataGovernanceManager
 from .observability_culture import ObservabilityManager
 from .performance_culture import MemoryLeakDetector, PerformanceBenchmarkManager
+
+"""
+文化原则强制执行器
+
+自动检查和强制执行开发文化原则，确保所有代码都符合标准。
+"""
 
 
 @dataclass
@@ -99,7 +98,7 @@ class CultureEnforcer:
                         line_number=0,
                         description=f"缺少必要文件: {file_name}",
                         suggestion=f"创建 {file_name} 文件",
-                    )
+                    ),
                 )
 
         # 检查测试目录
@@ -112,7 +111,7 @@ class CultureEnforcer:
                     line_number=0,
                     description="缺少测试目录",
                     suggestion="创建 tests/ 目录并添加测试用例",
-                )
+                ),
             )
 
     def _check_code_quality(self) -> Any:
@@ -157,7 +156,7 @@ class CultureEnforcer:
                                 line_number=node.lineno,
                                 description=f"类 {node.name} 可能违反单一职责原则 (方法数: {len(methods)})",
                                 suggestion="考虑将类拆分为更小的、职责单一的类",
-                            )
+                            ),
                         )
 
         except SyntaxError:
@@ -187,7 +186,7 @@ class CultureEnforcer:
                         line_number=occurrences[0],
                         description=f"检测到重复代码: '{line[:50]}...'",
                         suggestion="考虑将重复代码提取为函数或常量",
-                    )
+                    ),
                 )
 
     def _check_kiss_principle(self, file_path: Path, content: str) -> Any:
@@ -208,7 +207,7 @@ class CultureEnforcer:
                                 line_number=node.lineno,
                                 description=f"函数 {node.name} 复杂度过高 (复杂度: {complexity})",
                                 suggestion="考虑将函数拆分为更小的函数",
-                            )
+                            ),
                         )
 
         except SyntaxError:
@@ -219,9 +218,9 @@ class CultureEnforcer:
         complexity = 1  # 基础复杂度
 
         for child in ast.walk(node):
-            if isinstance(child, (ast.If, ast.While, ast.For, ast.AsyncFor)):
-                complexity += 1
-            elif isinstance(child, ast.ExceptHandler):
+            if isinstance(
+                child, ast.If | ast.While | ast.For | ast.AsyncFor
+            ) or isinstance(child, ast.ExceptHandler):
                 complexity += 1
             elif isinstance(child, ast.BoolOp):
                 complexity += len(child.values) - 1
@@ -234,6 +233,7 @@ class CultureEnforcer:
             # 使用bandit进行安全检查
             result = subprocess.run(
                 ["bandit", "-r", str(self.project_path), "-f", "json"],
+                check=False,
                 capture_output=True,
                 text=True,
                 timeout=30,  # 添加超时防止卡死
@@ -253,7 +253,7 @@ class CultureEnforcer:
                             line_number=issue["line_number"],
                             description=issue["issue_text"],
                             suggestion=f"查看bandit文档: {issue['test_id']}",
-                        )
+                        ),
                     )
 
         except FileNotFoundError:
@@ -272,6 +272,7 @@ class CultureEnforcer:
             # 运行pytest获取覆盖率
             result = subprocess.run(
                 ["pytest", "--cov=.", "--cov-report=json", "--quiet"],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -292,7 +293,7 @@ class CultureEnforcer:
                             line_number=0,
                             description=f"测试覆盖率不足: {total_coverage:.1f}%",
                             suggestion="添加更多测试用例以达到80%覆盖率",
-                        )
+                        ),
                     )
 
         except (FileNotFoundError, subprocess.CalledProcessError):
@@ -332,7 +333,7 @@ class CultureEnforcer:
                         line_number=0,
                         description="README.md缺少安装和使用说明",
                         suggestion="添加安装指南和使用示例",
-                    )
+                    ),
                 )
 
     def _generate_report(self) -> dict[str, Any]:
@@ -374,13 +375,16 @@ class CultureEnforcer:
         suggestions = []
 
         # 按严重程度排序
-        sorted_violations = sorted(self.violations, key=lambda x: 0 if x.severity == "error" else 1)
+        sorted_violations = sorted(
+            self.violations,
+            key=lambda x: 0 if x.severity == "error" else 1,
+        )
 
         for violation in sorted_violations:
             suggestions.append(
                 f"📁 {violation.file_path}:{violation.line_number}\n"
                 f"🔴 {violation.principle.upper()}: {violation.description}\n"
-                f"💡 建议: {violation.suggestion}\n"
+                f"💡 建议: {violation.suggestion}\n",
             )
 
         return suggestions
@@ -466,11 +470,11 @@ class CultureEnforcer:
 
     def _check_code_quality(self) -> None:
         """检查代码质量"""
-
         # 运行flake8检查
         try:
             result = subprocess.run(
                 ["flake8", str(self.project_path)],
+                check=False,
                 capture_output=True,
                 text=True,
                 timeout=30,
@@ -490,7 +494,9 @@ class CultureEnforcer:
         """检查性能文化"""
         try:
             # 检查是否有性能基准
-            benchmarks_file = self.project_path / ".aiculture" / "performance_benchmarks.json"
+            benchmarks_file = (
+                self.project_path / ".aiculture" / "performance_benchmarks.json"
+            )
             if not benchmarks_file.exists():
                 self._add_violation(
                     principle="performance_culture",
@@ -517,7 +523,10 @@ class CultureEnforcer:
         try:
             # 检查日志配置
             log_files = list(self.project_path.rglob("*.log"))
-            if not log_files and not (self.project_path / ".aiculture" / "observability").exists():
+            if (
+                not log_files
+                and not (self.project_path / ".aiculture" / "observability").exists()
+            ):
                 self._add_violation(
                     principle="observability",
                     severity="warning",
@@ -582,11 +591,15 @@ class CultureEnforcer:
         """检查可访问性"""
         try:
             # 扫描可访问性问题
-            accessibility_report = self.accessibility_manager.generate_comprehensive_report()
+            accessibility_report = (
+                self.accessibility_manager.generate_comprehensive_report()
+            )
 
             total_issues = accessibility_report["total_issues"]
             if total_issues > 0:
-                accessibility_issues = accessibility_report["accessibility"]["by_severity"]
+                accessibility_issues = accessibility_report["accessibility"][
+                    "by_severity"
+                ]
 
                 if accessibility_issues["error"]:
                     self._add_violation(
@@ -605,7 +618,9 @@ class CultureEnforcer:
                     )
 
                 # 检查国际化
-                i18n_issues = accessibility_report["internationalization"]["total_issues"]
+                i18n_issues = accessibility_report["internationalization"][
+                    "total_issues"
+                ]
                 if i18n_issues > 0:
                     self._add_violation(
                         principle="accessibility",

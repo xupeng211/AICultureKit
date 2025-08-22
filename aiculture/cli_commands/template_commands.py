@@ -240,7 +240,7 @@ pip-delete-this-directory.txt
 
     except Exception as e:
         click.echo(f"❌ 创建模板失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 @template_group.command()
@@ -290,7 +290,7 @@ def scan(path: str) -> None:
 
     except Exception as e:
         click.echo(f"❌ 扫描失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 @template_group.command()
@@ -311,8 +311,10 @@ def install(template_path: str, name: str) -> None:
         # 例如复制到系统模板目录
 
         click.echo("✅ 模板安装成功")
-        click.echo(f"💡 现在可以使用: aiculture project create my-project --template {name}")
+        click.echo(
+            f"💡 现在可以使用: aiculture project create my-project --template {name}"
+        )
 
     except Exception as e:
         click.echo(f"❌ 安装模板失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e

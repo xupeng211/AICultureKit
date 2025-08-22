@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-核心模块测试
-"""
+"""核心模块测试"""
 
 import tempfile
 from pathlib import Path
@@ -18,7 +16,11 @@ class TestCultureConfig:
 
     def setup_method(self):
         """设置测试"""
-        self.temp_file = tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False)
+        self.temp_file = tempfile.NamedTemporaryFile(
+            mode="w",
+            suffix=".yaml",
+            delete=False,
+        )
         self.temp_file.write("culture:\n  test: true\n")
         self.temp_file.close()
         self.config = CultureConfig(self.temp_file.name)

@@ -1,6 +1,4 @@
-"""
-安全问题修复策略
-"""
+"""安全问题修复策略"""
 
 import re
 from pathlib import Path
@@ -31,13 +29,12 @@ class SecurityFixStrategy:
         return False
 
     def generate_fix(self, problems: list[dict[str, Any]]) -> tuple[str, str, float]:
-        """
-        生成安全修复补丁
+        """生成安全修复补丁
 
         Returns:
             (patch_content, explanation, confidence)
-        """
 
+        """
         # 按文件分组问题
         problems_by_file = {}
         for problem in problems:
@@ -63,7 +60,8 @@ class SecurityFixStrategy:
 
         for file_path, file_problems in problems_by_file.items():
             file_patch, file_explanation, file_confidence = self._fix_file_problems(
-                file_path, file_problems
+                file_path,
+                file_problems,
             )
 
             if file_patch:
@@ -83,10 +81,11 @@ class SecurityFixStrategy:
         return patch_content, explanation, avg_confidence
 
     def _fix_file_problems(
-        self, file_path: str, problems: list[dict[str, Any]]
+        self,
+        file_path: str,
+        problems: list[dict[str, Any]],
     ) -> tuple[str, str, float]:
         """修复单个文件的安全问题"""
-
         full_path = self.project_root / file_path
         if not full_path.exists():
             return "", f"文件不存在: {file_path}", 0.0
@@ -115,14 +114,19 @@ class SecurityFixStrategy:
 
         # 生成patch
         patch_content = self._generate_patch(file_path, original_content, fixed_content)
-        explanation = f"修复了 {len(applied_fixes)} 个安全问题: {', '.join(applied_fixes)}"
+        explanation = (
+            f"修复了 {len(applied_fixes)} 个安全问题: {', '.join(applied_fixes)}"
+        )
         confidence = 0.6  # 安全修复的置信度相对较低，需要人工审查
 
         return patch_content, explanation, confidence
 
-    def _apply_security_fix(self, content: str, problem: dict[str, Any]) -> tuple[str, str] | None:
+    def _apply_security_fix(
+        self,
+        content: str,
+        problem: dict[str, Any],
+    ) -> tuple[str, str] | None:
         """应用单个安全修复"""
-
         if problem.get("tool") != "bandit":
             return None
 
@@ -144,7 +148,10 @@ class SecurityFixStrategy:
                 indent_str = " " * indent
 
                 # 提取assert条件
-                assert_match = re.search(r"assert\s+(.+?)(?:\s*,\s*(.+))?$", original_line.strip())
+                assert_match = re.search(
+                    r"assert\s+(.+?)(?:\s*,\s*(.+))?$",
+                    original_line.strip(),
+                )
                 if assert_match:
                     condition = assert_match.group(1)
                     message = assert_match.group(2) or f'"{condition} failed"'
@@ -164,9 +171,7 @@ class SecurityFixStrategy:
                 indent = len(original_line) - len(original_line.lstrip())
                 indent_str = " " * indent
 
-                warning_comment = (
-                    f"{indent_str}# WARNING: exec() usage detected - consider safer alternatives"
-                )
+                warning_comment = f"{indent_str}# WARNING: exec() usage detected - consider safer alternatives"
                 lines.insert(line_idx, warning_comment)
                 return "\n".join(lines), "B102: 为exec()使用添加安全警告"
 
@@ -195,14 +200,15 @@ class SecurityFixStrategy:
                 indent = len(original_line) - len(original_line.lstrip())
                 indent_str = " " * indent
 
-                warning_comment = (
-                    f"{indent_str}# SECURITY: Consider using SHA-256 or stronger hash algorithms"
-                )
+                warning_comment = f"{indent_str}# SECURITY: Consider using SHA-256 or stronger hash algorithms"
                 lines.insert(line_idx, warning_comment)
                 return "\n".join(lines), "B324: 添加安全哈希算法建议"
 
         elif test_id == "B501":  # 未验证SSL证书
-            if "verify=False" in original_line or "ssl._create_unverified_context" in original_line:
+            if (
+                "verify=False" in original_line
+                or "ssl._create_unverified_context" in original_line
+            ):
                 # 添加SSL验证警告
                 indent = len(original_line) - len(original_line.lstrip())
                 indent_str = " " * indent
@@ -225,7 +231,6 @@ class SecurityFixStrategy:
 
     def _generate_patch(self, file_path: str, original: str, fixed: str) -> str:
         """生成Git patch格式"""
-
         # 使用简单的diff格式
         orig_lines = original.split("\n")
         fixed_lines = fixed.split("\n")
@@ -257,7 +262,6 @@ class SecurityFixStrategy:
 
     def generate_manual_guide(self, problems: list[dict[str, Any]]) -> str:
         """为无法自动修复的问题生成手工修复指南"""
-
         guides = []
         guides.append("# 安全问题手工修复指南\n")
 
@@ -286,7 +290,6 @@ class SecurityFixStrategy:
 
     def _generate_secrets_guide(self, problems: list[dict[str, Any]]) -> str:
         """生成密钥问题修复指南"""
-
         guide = ["## 🔑 密钥泄漏修复指南\n"]
 
         for i, problem in enumerate(problems, 1):
@@ -319,9 +322,12 @@ class SecurityFixStrategy:
 
         return "\n".join(guide)
 
-    def _generate_bandit_guide(self, test_id: str, problems: list[dict[str, Any]]) -> str:
+    def _generate_bandit_guide(
+        self,
+        test_id: str,
+        problems: list[dict[str, Any]],
+    ) -> str:
         """生成bandit问题修复指南"""
-
         guide = [f"## 🛡️ {test_id} 安全问题修复指南\n"]
 
         # 根据测试ID提供具体指导
@@ -366,7 +372,7 @@ def main():
             "message": "Use of assert detected",
             "confidence": "HIGH",
             "severity": "warning",
-        }
+        },
     ]
 
     patch, explanation, confidence = strategy.generate_fix(test_problems)

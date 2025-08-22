@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-🤖 AI工具第一次进入项目演示
+"""🤖 AI工具第一次进入项目演示
 
 演示AI编程工具进入AICultureKit项目时，第一时间会发生什么：
 1. 自动执行基础设施检查
@@ -72,10 +71,9 @@ def simulate_ai_assistant_entry() -> None:
         print("   • 生成高质量的文档")
         print("\n💡 有什么代码需要我帮助实现吗？")
         return True
-    else:
-        print("🚨 环境不安全，无法继续代码开发")
-        print("请先修复基础设施问题再继续。")
-        return False
+    print("🚨 环境不安全，无法继续代码开发")
+    print("请先修复基础设施问题再继续。")
+    return False
 
 
 def analyze_infrastructure_result(output: str) -> None:
@@ -110,7 +108,13 @@ def check_virtual_environment() -> bool:
 def run_command(command: str) -> dict:
     """运行命令并返回结果"""
     try:
-        result = subprocess.run(command.split(), capture_output=True, text=True, timeout=30)
+        result = subprocess.run(
+            command.split(),
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
         return {
             "success": result.returncode == 0,
             "output": result.stdout,

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-最终安全清理脚本 - 彻底清理所有敏感信息
-"""
+"""最终安全清理脚本 - 彻底清理所有敏感信息"""
 
 import re
 from pathlib import Path

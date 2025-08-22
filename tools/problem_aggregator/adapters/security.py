@@ -1,6 +1,4 @@
-"""
-Security adapter for bandit and detect-secrets
-"""
+"""Security adapter for bandit and detect-secrets"""
 
 import json
 import subprocess
@@ -26,7 +24,12 @@ class SecurityAdapter:
                 cmd.append(".")
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=120
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=120,
             )
 
             if result.stdout:
@@ -40,17 +43,22 @@ class SecurityAdapter:
                                 "tool": "bandit",
                                 "type": "security",
                                 "severity": self._map_bandit_severity(
-                                    issue.get("issue_severity", "LOW")
+                                    issue.get("issue_severity", "LOW"),
                                 ),
                                 "file": issue.get("filename", ""),
                                 "line": issue.get("line_number", 0),
                                 "column": 0,
                                 "code": issue.get("test_id", ""),
                                 "message": issue.get("issue_text", ""),
-                                "confidence": issue.get("issue_confidence", "UNDEFINED"),
-                                "fix_suggestion": self._get_bandit_fix_suggestion(issue),
+                                "confidence": issue.get(
+                                    "issue_confidence",
+                                    "UNDEFINED",
+                                ),
+                                "fix_suggestion": self._get_bandit_fix_suggestion(
+                                    issue,
+                                ),
                                 "blocking": self._is_blocking_security_issue(issue),
-                            }
+                            },
                         )
 
                 except json.JSONDecodeError:
@@ -63,7 +71,7 @@ class SecurityAdapter:
                                 "severity": "warning",
                                 "message": f"Bandit输出解析失败: {result.stderr[:200]}",
                                 "blocking": False,
-                            }
+                            },
                         )
 
         except subprocess.TimeoutExpired:
@@ -74,7 +82,7 @@ class SecurityAdapter:
                     "severity": "error",
                     "message": "Bandit检查超时",
                     "blocking": False,
-                }
+                },
             )
         except FileNotFoundError:
             problems.append(
@@ -84,7 +92,7 @@ class SecurityAdapter:
                     "severity": "info",
                     "message": "Bandit未安装，跳过安全检查",
                     "blocking": False,
-                }
+                },
             )
         except Exception as e:
             problems.append(
@@ -94,7 +102,7 @@ class SecurityAdapter:
                     "severity": "warning",
                     "message": f"Bandit检查失败: {e}",
                     "blocking": False,
-                }
+                },
             )
 
         return problems
@@ -111,7 +119,12 @@ class SecurityAdapter:
                     cmd.extend(["--files", file])
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=60
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=60,
             )
 
             if result.stdout:
@@ -133,7 +146,7 @@ class SecurityAdapter:
                                     "message": f'检测到潜在密钥: {secret.get("type", "未知类型")}',
                                     "fix_suggestion": "移除硬编码密钥，使用环境变量或配置文件",
                                     "blocking": True,
-                                }
+                                },
                             )
 
                 except json.JSONDecodeError:
@@ -145,7 +158,7 @@ class SecurityAdapter:
                                 "severity": "warning",
                                 "message": "Detect-secrets输出解析失败",
                                 "blocking": False,
-                            }
+                            },
                         )
 
         except FileNotFoundError:
@@ -156,7 +169,7 @@ class SecurityAdapter:
                     "severity": "info",
                     "message": "Detect-secrets未安装，跳过密钥检查",
                     "blocking": False,
-                }
+                },
             )
         except Exception as e:
             problems.append(
@@ -166,7 +179,7 @@ class SecurityAdapter:
                     "severity": "warning",
                     "message": f"Detect-secrets检查失败: {e}",
                     "blocking": False,
-                }
+                },
             )
 
         return problems
@@ -283,7 +296,9 @@ def main():
     all_problems = bandit_problems + secrets_problems
     blocking_problems = [p for p in all_problems if p.get("blocking", False)]
 
-    print(f"总计: {len(all_problems)} 个安全问题，其中 {len(blocking_problems)} 个阻塞性问题")
+    print(
+        f"总计: {len(all_problems)} 个安全问题，其中 {len(blocking_problems)} 个阻塞性问题",
+    )
 
 
 if __name__ == "__main__":

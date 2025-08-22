@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-问题聚合器
+"""问题聚合器
 
 一次性收集和展示项目中的所有问题，避免多次循环修复。
 """
@@ -53,8 +52,12 @@ class ProblemAggregator:
             behavior_result = behavior_enforcer.enforce_ai_behavior()
 
             if behavior_result["violations_detected"] > 0:
-                all_problems["categories"]["ai_behavior_violations"] = behavior_result["violations"]
-                all_problems["summary"]["blocking_issues"] += behavior_result["violations_detected"]
+                all_problems["categories"]["ai_behavior_violations"] = behavior_result[
+                    "violations"
+                ]
+                all_problems["summary"]["blocking_issues"] += behavior_result[
+                    "violations_detected"
+                ]
 
         except Exception as e:
             self.logger.warning(f"AI行为检查失败: {e}")
@@ -95,16 +98,21 @@ class ProblemAggregator:
                 if "security" in category.lower() or "privacy" in category.lower():
                     all_problems["categories"]["security_issues"].append(problem_info)
                 elif "performance" in category.lower():
-                    all_problems["categories"]["performance_issues"].append(problem_info)
+                    all_problems["categories"]["performance_issues"].append(
+                        problem_info,
+                    )
                 elif "accessibility" in category.lower():
-                    all_problems["categories"]["accessibility_issues"].append(problem_info)
+                    all_problems["categories"]["accessibility_issues"].append(
+                        problem_info,
+                    )
 
         except Exception as e:
             self.logger.error(f"文化检查失败: {e}")
 
         # 3. 计算总数
         all_problems["summary"]["total_issues"] = (
-            all_problems["summary"]["total_errors"] + all_problems["summary"]["total_warnings"]
+            all_problems["summary"]["total_errors"]
+            + all_problems["summary"]["total_warnings"]
         )
 
         # 4. 生成修复优先级
@@ -113,7 +121,9 @@ class ProblemAggregator:
         # 5. 转换set为list以便JSON序列化
         all_problems["files_affected"] = list(all_problems["files_affected"])
 
-        self.logger.info(f"问题收集完成: {all_problems['summary']['total_issues']} 个问题")
+        self.logger.info(
+            f"问题收集完成: {all_problems['summary']['total_issues']} 个问题",
+        )
 
         return all_problems
 
@@ -130,7 +140,7 @@ class ProblemAggregator:
                     "count": len(problems["categories"]["ai_behavior_violations"]),
                     "description": "必须立即修复的AI行为违规",
                     "blocking": True,
-                }
+                },
             )
 
         # 2. 安全问题 - 高优先级
@@ -142,7 +152,7 @@ class ProblemAggregator:
                     "count": len(problems["categories"]["security_issues"]),
                     "description": "数据隐私和安全相关问题",
                     "blocking": True,
-                }
+                },
             )
 
         # 3. 文化标准错误 - 高优先级
@@ -154,7 +164,7 @@ class ProblemAggregator:
                     "count": len(problems["categories"]["culture_errors"]),
                     "description": "违反开发文化标准的错误",
                     "blocking": True,
-                }
+                },
             )
 
         # 4. 性能问题 - 中优先级
@@ -166,7 +176,7 @@ class ProblemAggregator:
                     "count": len(problems["categories"]["performance_issues"]),
                     "description": "影响系统性能的问题",
                     "blocking": False,
-                }
+                },
             )
 
         # 5. 可访问性问题 - 中优先级
@@ -178,7 +188,7 @@ class ProblemAggregator:
                     "count": len(problems["categories"]["accessibility_issues"]),
                     "description": "影响用户可访问性的问题",
                     "blocking": False,
-                }
+                },
             )
 
         # 6. 其他警告 - 低优先级
@@ -196,7 +206,7 @@ class ProblemAggregator:
                     "count": other_warnings,
                     "description": "其他需要关注的警告",
                     "blocking": False,
-                }
+                },
             )
 
         return priority_list
@@ -225,7 +235,7 @@ class ProblemAggregator:
         for priority in problems["fix_priority"]:
             blocking_text = "🚫 阻塞" if priority["blocking"] else "⚠️  警告"
             print(
-                f"   {priority['priority']}. {priority['category']} ({priority['count']} 个) - {blocking_text}"
+                f"   {priority['priority']}. {priority['category']} ({priority['count']} 个) - {blocking_text}",
             )
             print(f"      {priority['description']}")
 
@@ -285,12 +295,14 @@ class ProblemAggregator:
 
         print("=" * 80)
 
-    def save_problem_report(self, problems: dict[str, Any], output_file: str = None) -> str:
+    def save_problem_report(
+        self,
+        problems: dict[str, Any],
+        output_file: str = None,
+    ) -> str:
         """保存问题报告到文件"""
         if output_file is None:
-            output_file = (
-                f"problem_report_{problems['timestamp'].replace(' ', '_').replace(':', '-')}.json"
-            )
+            output_file = f"problem_report_{problems['timestamp'].replace(' ', '_').replace(':', '-')}.json"
 
         output_path = self.project_path / output_file
 
@@ -318,7 +330,7 @@ def main():
     # 如果有阻塞性问题，返回错误码
     if problems["summary"]["blocking_issues"] > 0:
         print(
-            f"\n🛑 发现 {problems['summary']['blocking_issues']} 个阻塞性问题，需要修复后才能继续"
+            f"\n🛑 发现 {problems['summary']['blocking_issues']} 个阻塞性问题，需要修复后才能继续",
         )
         sys.exit(1)
     else:

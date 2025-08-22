@@ -1,6 +1,4 @@
-"""
-性能文化模块测试
-"""
+"""性能文化模块测试"""
 
 import tempfile
 import time
@@ -86,7 +84,11 @@ class TestPerformanceBenchmarkManager:
             """sample_function函数"""
             return sum(range(100))
 
-        benchmark = self.manager.create_benchmark("sample_function", "function", sample_function)
+        benchmark = self.manager.create_benchmark(
+            "sample_function",
+            "function",
+            sample_function,
+        )
 
         assert isinstance(benchmark, PerformanceBenchmark)
         assert benchmark.name == "sample_function"
@@ -280,9 +282,15 @@ class TestPerformanceCultureIntegration:
                 return len(data)
 
             # 创建基准
-            cpu_benchmark = manager.create_benchmark("cpu_task", "function", cpu_intensive_task)
+            cpu_benchmark = manager.create_benchmark(
+                "cpu_task",
+                "function",
+                cpu_intensive_task,
+            )
             memory_benchmark = manager.create_benchmark(
-                "memory_task", "function", memory_intensive_task
+                "memory_task",
+                "function",
+                memory_intensive_task,
             )
 
             # 运行基准测试

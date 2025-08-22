@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-AICultureKit IDE集成脚本
+"""AICultureKit IDE集成脚本
 提供一键聚合、生成补丁、验证的完整工作流
 """
 
@@ -22,10 +21,11 @@ class AICultureKitIDE:
         self.artifacts_dir.mkdir(exist_ok=True)
 
     def run_full_workflow(
-        self, base: str = "origin/main", auto_apply: bool = False
+        self,
+        base: str = "origin/main",
+        auto_apply: bool = False,
     ) -> dict[str, Any]:
         """运行完整的一键工作流"""
-
         print("🚀 AICultureKit IDE 一键工作流启动")
         print("=" * 60)
 
@@ -73,7 +73,10 @@ class AICultureKitIDE:
             workflow_result["steps"].append(step3_result)
 
             if step3_result["success"]:
-                workflow_result["patches_applied"] = step3_result.get("patches_applied", 0)
+                workflow_result["patches_applied"] = step3_result.get(
+                    "patches_applied",
+                    0,
+                )
                 print(f"✅ 应用 {workflow_result['patches_applied']} 个补丁")
             else:
                 print("⚠️ 补丁应用失败")
@@ -84,7 +87,10 @@ class AICultureKitIDE:
         workflow_result["steps"].append(step4_result)
 
         if step4_result["success"]:
-            workflow_result["total_problems_after"] = step4_result.get("total_problems", 0)
+            workflow_result["total_problems_after"] = step4_result.get(
+                "total_problems",
+                0,
+            )
             print(f"✅ 修复后剩余 {workflow_result['total_problems_after']} 个问题")
         else:
             print("⚠️ 修复验证失败")
@@ -99,7 +105,6 @@ class AICultureKitIDE:
 
     def _run_problem_aggregator(self, base: str) -> dict[str, Any]:
         """运行问题聚合器"""
-
         try:
             cmd = [
                 "python",
@@ -114,7 +119,12 @@ class AICultureKitIDE:
             ]
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=300
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=300,
             )
 
             if result.returncode == 0:
@@ -134,20 +144,18 @@ class AICultureKitIDE:
                     "output_file": str(problems_file),
                     "report_file": str(self.artifacts_dir / "ide_problems_report.md"),
                 }
-            else:
-                return {
-                    "step": "problem_aggregation",
-                    "success": False,
-                    "error": result.stderr,
-                    "stdout": result.stdout,
-                }
+            return {
+                "step": "problem_aggregation",
+                "success": False,
+                "error": result.stderr,
+                "stdout": result.stdout,
+            }
 
         except Exception as e:
             return {"step": "problem_aggregation", "success": False, "error": str(e)}
 
     def _run_ai_fix_agent(self) -> dict[str, Any]:
         """运行AI修复代理"""
-
         try:
             problems_file = self.artifacts_dir / "ide_problems.json"
             if not problems_file.exists():
@@ -168,13 +176,20 @@ class AICultureKitIDE:
             ]
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=180
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=180,
             )
 
             if result.returncode == 0:
                 # 统计生成的补丁数量
                 fixes_dir = self.artifacts_dir / "ide_ai_fixes"
-                patches_count = len(list(fixes_dir.glob("*.patch"))) if fixes_dir.exists() else 0
+                patches_count = (
+                    len(list(fixes_dir.glob("*.patch"))) if fixes_dir.exists() else 0
+                )
 
                 return {
                     "step": "ai_fix_generation",
@@ -182,20 +197,18 @@ class AICultureKitIDE:
                     "patches_count": patches_count,
                     "output_dir": str(fixes_dir),
                 }
-            else:
-                return {
-                    "step": "ai_fix_generation",
-                    "success": False,
-                    "error": result.stderr,
-                    "stdout": result.stdout,
-                }
+            return {
+                "step": "ai_fix_generation",
+                "success": False,
+                "error": result.stderr,
+                "stdout": result.stdout,
+            }
 
         except Exception as e:
             return {"step": "ai_fix_generation", "success": False, "error": str(e)}
 
     def _apply_patches(self) -> dict[str, Any]:
         """应用AI生成的补丁"""
-
         try:
             fixes_dir = self.artifacts_dir / "ide_ai_fixes"
             apply_script = fixes_dir / "apply_fixes.sh"
@@ -212,6 +225,7 @@ class AICultureKitIDE:
 
             result = subprocess.run(
                 ["./apply_fixes.sh"],
+                check=False,
                 cwd=fixes_dir,
                 capture_output=True,
                 text=True,
@@ -234,7 +248,6 @@ class AICultureKitIDE:
 
     def _verify_fixes(self, base: str) -> dict[str, Any]:
         """验证修复效果"""
-
         try:
             cmd = [
                 "python",
@@ -249,7 +262,12 @@ class AICultureKitIDE:
             ]
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=300
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=300,
             )
 
             if result.returncode == 0:
@@ -269,19 +287,17 @@ class AICultureKitIDE:
                     "output_file": str(problems_file),
                     "report_file": str(self.artifacts_dir / "ide_post_fix_report.md"),
                 }
-            else:
-                return {
-                    "step": "fix_verification",
-                    "success": False,
-                    "error": result.stderr,
-                }
+            return {
+                "step": "fix_verification",
+                "success": False,
+                "error": result.stderr,
+            }
 
         except Exception as e:
             return {"step": "fix_verification", "success": False, "error": str(e)}
 
     def _generate_workflow_summary(self, workflow_result: dict[str, Any]) -> None:
         """生成工作流摘要"""
-
         summary_file = self.artifacts_dir / "ide_workflow_summary.md"
 
         lines = []
@@ -306,7 +322,11 @@ class AICultureKitIDE:
         lines.append(f"- **修复后**: {after} 个问题")
         lines.append(f"- **已修复**: {fixed} 个问题")
         lines.append(
-            f"- **修复率**: {(fixed/before*100):.1f}%" if before > 0 else "- **修复率**: N/A"
+            (
+                f"- **修复率**: {(fixed/before*100):.1f}%"
+                if before > 0
+                else "- **修复率**: N/A"
+            ),
         )
         lines.append("")
 
@@ -336,7 +356,9 @@ class AICultureKitIDE:
         lines.append("")
 
         if after > 0:
-            lines.append(f"1. 查看剩余 {after} 个问题: `artifacts/ide_post_fix_report.md`")
+            lines.append(
+                f"1. 查看剩余 {after} 个问题: `artifacts/ide_post_fix_report.md`",
+            )
             lines.append("2. 手工修复无法自动处理的问题")
             lines.append("3. 重新运行工作流验证修复效果")
         else:
@@ -353,7 +375,11 @@ def main():
     """主函数"""
     parser = argparse.ArgumentParser(description="AICultureKit IDE一键工作流")
     parser.add_argument("--base", default="origin/main", help="Git基准分支")
-    parser.add_argument("--auto-apply", action="store_true", help="自动应用AI生成的补丁")
+    parser.add_argument(
+        "--auto-apply",
+        action="store_true",
+        help="自动应用AI生成的补丁",
+    )
     parser.add_argument("--project-root", default=".", help="项目根目录")
 
     args = parser.parse_args()

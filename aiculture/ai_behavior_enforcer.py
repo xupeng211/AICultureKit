@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-AI行为强制执行器
+"""AI行为强制执行器.
 
 确保所有AI编程工具严格遵循开发文化标准，
 当遇到质量门禁时必须解决问题而不是绕过。
@@ -21,7 +20,7 @@ from .error_handling import get_logger
 
 
 class AIBehaviorViolation(Enum):
-    """AI行为违规类型"""
+    """AI行为违规类型."""
 
     BYPASS_QUALITY_GATE = "bypass_quality_gate"
     IGNORE_CULTURE_CHECK = "ignore_culture_check"
@@ -32,7 +31,7 @@ class AIBehaviorViolation(Enum):
 
 @dataclass
 class AIBehaviorRule:
-    """AI行为规则"""
+    """AI行为规则."""
 
     rule_id: str
     description: str
@@ -43,7 +42,7 @@ class AIBehaviorRule:
 
 
 class AIBehaviorEnforcer:
-    """AI行为强制执行器"""
+    """AI行为强制执行器."""
 
     def __init__(self, project_path: str = "."):
         self.project_path = Path(project_path)
@@ -59,7 +58,7 @@ class AIBehaviorEnforcer:
                 violation_type=AIBehaviorViolation.BYPASS_QUALITY_GATE,
                 severity="critical",
                 enforcement_action="block_operation",
-                message="🚨 严重违规：AI工具试图绕过质量门禁！必须解决问题而不是绕过标准。",
+                message="🚨 严重违规:AI工具试图绕过质量门禁！必须解决问题而不是绕过标准。",
             ),
             AIBehaviorRule(
                 rule_id="NO_DISABLE_HOOKS",
@@ -67,7 +66,7 @@ class AIBehaviorEnforcer:
                 violation_type=AIBehaviorViolation.DISABLE_HOOKS,
                 severity="critical",
                 enforcement_action="block_operation",
-                message="🚨 严重违规：AI工具试图禁用Git钩子！这违背了文化标准的核心原则。",
+                message="🚨 严重违规:AI工具试图禁用Git钩子！这违背了文化标准的核心原则。",
             ),
             AIBehaviorRule(
                 rule_id="NO_FORCE_PUSH_WITH_ERRORS",
@@ -75,7 +74,7 @@ class AIBehaviorEnforcer:
                 violation_type=AIBehaviorViolation.FORCE_PUSH_WITH_ERRORS,
                 severity="high",
                 enforcement_action="block_operation",
-                message="⚠️ 高风险违规：AI工具试图在有错误时强制推送！必须先修复所有错误。",
+                message="⚠️ 高风险违规:AI工具试图在有错误时强制推送！必须先修复所有错误。",
             ),
             AIBehaviorRule(
                 rule_id="NO_IGNORE_CULTURE_CHECK",
@@ -83,7 +82,7 @@ class AIBehaviorEnforcer:
                 violation_type=AIBehaviorViolation.IGNORE_CULTURE_CHECK,
                 severity="high",
                 enforcement_action="warn_and_guide",
-                message="⚠️ 违规警告：AI工具忽视了文化检查结果！必须分析并解决所有问题。",
+                message="⚠️ 违规警告:AI工具忽视了文化检查结果！必须分析并解决所有问题。",
             ),
             AIBehaviorRule(
                 rule_id="NO_SKIP_TESTS",
@@ -91,12 +90,12 @@ class AIBehaviorEnforcer:
                 violation_type=AIBehaviorViolation.SKIP_TESTS,
                 severity="medium",
                 enforcement_action="warn_and_guide",
-                message="⚠️ 违规警告：AI工具试图跳过测试！测试是质量保证的基础。",
+                message="⚠️ 违规警告:AI工具试图跳过测试！测试是质量保证的基础。",
             ),
         ]
 
     def detect_hook_manipulation(self) -> list[AIBehaviorViolation]:
-        """检测Git钩子操作"""
+        """检测Git钩子操作."""
         violations = []
 
         # 检查是否有禁用钩子的操作
@@ -111,7 +110,7 @@ class AIBehaviorEnforcer:
         return violations
 
     def detect_bypass_attempts(self) -> list[AIBehaviorViolation]:
-        """检测绕过质量门禁的尝试"""
+        """检测绕过质量门禁的尝试."""
         violations = []
 
         # 检查最近的Git操作
@@ -127,6 +126,7 @@ class AIBehaviorEnforcer:
                     "--grep=skip",
                     "--grep=disable",
                 ],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -142,7 +142,7 @@ class AIBehaviorEnforcer:
         return violations
 
     def check_culture_compliance(self) -> dict[str, Any]:
-        """检查文化合规性并提供详细问题信息 - 收集所有问题"""
+        """检查文化合规性并提供详细问题信息 - 收集所有问题."""
         try:
             enforcer = CultureEnforcer(str(self.project_path))
             result = enforcer.enforce_all()
@@ -184,7 +184,7 @@ class AIBehaviorEnforcer:
             total_issues = len(detailed_errors) + len(detailed_warnings)
             if total_issues > 0:
                 self.logger.warning(
-                    f"发现 {len(detailed_errors)} 个错误和 {len(detailed_warnings)} 个警告，共 {total_issues} 个问题"
+                    f"发现 {len(detailed_errors)} 个错误和 {len(detailed_warnings)} 个警告，共 {total_issues} 个问题",
                 )
 
             return {
@@ -201,8 +201,12 @@ class AIBehaviorEnforcer:
             self.logger.error(f"文化合规检查失败: {e}")
             return {"compliant": False, "error": str(e)}
 
-    def record_violation(self, violation: AIBehaviorViolation, context: dict[str, Any] = None):
-        """记录AI行为违规"""
+    def record_violation(
+        self,
+        violation: AIBehaviorViolation,
+        context: dict[str, Any] = None,
+    ):
+        """记录AI行为违规."""
         violation_record = {
             "timestamp": time.time(),
             "violation_type": violation.value,
@@ -230,7 +234,7 @@ class AIBehaviorEnforcer:
         self.logger.error(f"记录AI行为违规: {violation.value}")
 
     def _get_rule_by_violation(self, violation: AIBehaviorViolation) -> AIBehaviorRule:
-        """根据违规类型获取规则"""
+        """根据违规类型获取规则."""
         for rule in self.rules:
             if rule.violation_type == violation:
                 return rule
@@ -246,7 +250,7 @@ class AIBehaviorEnforcer:
         )
 
     def enforce_ai_behavior(self) -> dict[str, Any]:
-        """强制执行AI行为规范"""
+        """强制执行AI行为规范."""
         self.logger.info("开始AI行为规范检查...")
 
         violations = []
@@ -292,7 +296,10 @@ class AIBehaviorEnforcer:
                 enforcement_actions.append(f"warned_{violation.value}")
 
         # 如果文化检查有问题，显示完整的问题分析
-        if not culture_status.get("compliant", True) or culture_status.get("total_issues", 0) > 0:
+        if (
+            not culture_status.get("compliant", True)
+            or culture_status.get("total_issues", 0) > 0
+        ):
             print("\n🔍 完整问题分析报告:")
             print(f"📊 文化质量评分: {culture_status.get('score', 0)}/100")
             print(f"❌ 错误: {culture_status.get('errors', 0)} 个")
@@ -329,7 +336,9 @@ class AIBehaviorEnforcer:
 
             # 提供综合修复指导
             print("🎯 综合修复指导:")
-            print(f"   1. 上面列出了所有 {culture_status.get('total_issues', 0)} 个问题的详细信息")
+            print(
+                f"   1. 上面列出了所有 {culture_status.get('total_issues', 0)} 个问题的详细信息",
+            )
             print(f"   2. 请逐一修复每个问题，特别是 {len(detailed_errors)} 个错误")
             print("   3. 根据每个问题的建议进行修复")
             print("   4. 修复完成后重新提交，系统会重新检查所有问题")
@@ -391,9 +400,14 @@ class AIBehaviorEnforcer:
 
         # 计算行为评分
         total_violations = len(violations)
-        critical_violations = len([v for v in violations if v.get("severity") == "critical"])
+        critical_violations = len(
+            [v for v in violations if v.get("severity") == "critical"],
+        )
 
-        behavior_score = max(0, 100 - (critical_violations * 30) - (total_violations * 5))
+        behavior_score = max(
+            0,
+            100 - (critical_violations * 30) - (total_violations * 5),
+        )
 
         return {
             "behavior_score": behavior_score,
@@ -401,7 +415,9 @@ class AIBehaviorEnforcer:
             "critical_violations": critical_violations,
             "violation_stats": violation_stats,
             "recent_violations": violations[-5:] if violations else [],
-            "compliance_status": ("compliant" if behavior_score >= 80 else "non_compliant"),
+            "compliance_status": (
+                "compliant" if behavior_score >= 80 else "non_compliant"
+            ),
         }
 
 

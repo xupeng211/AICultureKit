@@ -1,6 +1,4 @@
-"""
-测试脚手架生成策略
-"""
+"""测试脚手架生成策略"""
 
 import ast
 from pathlib import Path
@@ -23,13 +21,12 @@ class TestScaffoldStrategy:
         ]
 
     def generate_fix(self, problems: list[dict[str, Any]]) -> tuple[str, str, float]:
-        """
-        生成测试脚手架
+        """生成测试脚手架
 
         Returns:
             (patch_content, explanation, confidence)
-        """
 
+        """
         # 收集需要测试的文件
         files_to_test = set()
         for problem in problems:
@@ -37,7 +34,11 @@ class TestScaffoldStrategy:
                 continue
 
             file_path = problem.get("file", "")
-            if file_path and file_path.endswith(".py") and not file_path.startswith("test_"):
+            if (
+                file_path
+                and file_path.endswith(".py")
+                and not file_path.startswith("test_")
+            ):
                 files_to_test.add(file_path)
 
         if not files_to_test:
@@ -65,7 +66,6 @@ class TestScaffoldStrategy:
 
     def _generate_test_file(self, file_path: str) -> tuple[str, str]:
         """为指定文件生成测试脚手架"""
-
         full_path = self.project_root / file_path
         if not full_path.exists():
             return "", f"文件不存在: {file_path}"
@@ -90,15 +90,12 @@ class TestScaffoldStrategy:
 
         # 生成测试内容
         test_content = self._generate_test_content(file_path, classes, functions)
-        explanation = (
-            f"为 {file_path} 生成测试脚手架 ({len(classes)} 个类, {len(functions)} 个函数)"
-        )
+        explanation = f"为 {file_path} 生成测试脚手架 ({len(classes)} 个类, {len(functions)} 个函数)"
 
         return test_content, explanation
 
     def _extract_testable_items(self, tree: ast.AST) -> tuple[list[dict], list[dict]]:
         """提取可测试的类和函数"""
-
         classes = []
         functions = []
 
@@ -114,10 +111,15 @@ class TestScaffoldStrategy:
 
                     # 提取类方法
                     for item in node.body:
-                        if isinstance(item, ast.FunctionDef) and not item.name.startswith("_"):
+                        if isinstance(
+                            item,
+                            ast.FunctionDef,
+                        ) and not item.name.startswith("_"):
                             method_info = {
                                 "name": item.name,
-                                "args": [arg.arg for arg in item.args.args[1:]],  # 跳过self
+                                "args": [
+                                    arg.arg for arg in item.args.args[1:]
+                                ],  # 跳过self
                                 "docstring": ast.get_docstring(item) or "",
                                 "returns": self._get_return_annotation(item),
                             }
@@ -127,7 +129,10 @@ class TestScaffoldStrategy:
 
             elif isinstance(node, ast.FunctionDef):
                 # 提取顶级函数
-                if not node.name.startswith("_") and not self._is_inside_class(node, tree):
+                if not node.name.startswith("_") and not self._is_inside_class(
+                    node,
+                    tree,
+                ):
                     function_info = {
                         "name": node.name,
                         "args": [arg.arg for arg in node.args.args],
@@ -152,15 +157,17 @@ class TestScaffoldStrategy:
         if func_node.returns:
             if isinstance(func_node.returns, ast.Name):
                 return func_node.returns.id
-            elif isinstance(func_node.returns, ast.Constant):
+            if isinstance(func_node.returns, ast.Constant):
                 return str(func_node.returns.value)
         return "Any"
 
     def _generate_test_content(
-        self, file_path: str, classes: list[dict], functions: list[dict]
+        self,
+        file_path: str,
+        classes: list[dict],
+        functions: list[dict],
     ) -> str:
         """生成测试文件内容"""
-
         # 计算模块路径
         module_path = file_path.replace("/", ".").replace(".py", "")
         f"test_{Path(file_path).stem}.py"
@@ -211,7 +218,6 @@ class TestScaffoldStrategy:
 
     def _generate_class_tests(self, class_info: dict) -> list[str]:
         """生成类测试"""
-
         lines = []
         class_name = class_info["name"]
 
@@ -251,7 +257,6 @@ class TestScaffoldStrategy:
 
     def _generate_function_tests(self, func_info: dict) -> list[str]:
         """生成函数测试"""
-
         lines = []
         func_name = func_info["name"]
         args = func_info["args"]
@@ -291,7 +296,6 @@ class TestScaffoldStrategy:
 
     def _generate_test_creation_patch(self, test_files: list[tuple[str, str]]) -> str:
         """生成创建测试文件的patch"""
-
         patches = []
 
         for file_path, test_content in test_files:
@@ -314,12 +318,13 @@ class TestScaffoldStrategy:
 
     def _get_test_file_path(self, source_file_path: str) -> str:
         """计算测试文件路径"""
-
         source_path = Path(source_file_path)
 
         # 如果源文件在子目录中，在tests目录下创建相同结构
         if len(source_path.parts) > 1:
-            test_path = Path("tests") / source_path.parent / f"test_{source_path.stem}.py"
+            test_path = (
+                Path("tests") / source_path.parent / f"test_{source_path.stem}.py"
+            )
         else:
             test_path = Path("tests") / f"test_{source_path.stem}.py"
 
@@ -327,7 +332,6 @@ class TestScaffoldStrategy:
 
     def generate_todo_list(self, problems: list[dict[str, Any]]) -> str:
         """生成测试TODO清单"""
-
         todos = []
         todos.append("# 测试覆盖率改进TODO清单\n")
 
@@ -384,7 +388,7 @@ def main():
             "type": "file_coverage",
             "file": "example.py",
             "metadata": {"file_coverage": 45.0},
-        }
+        },
     ]
 
     patch, explanation, confidence = strategy.generate_fix(test_problems)

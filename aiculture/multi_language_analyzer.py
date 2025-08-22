@@ -1,5 +1,4 @@
-"""
-多语言代码分析器 - 支持Python之外的其他编程语言。
+"""多语言代码分析器 - 支持Python之外的其他编程语言。
 
 目前支持的语言：
 - JavaScript/TypeScript
@@ -61,7 +60,10 @@ class LanguageAnalyzer(ABC):
         """分析单个文件"""
 
     @abstractmethod
-    def extract_patterns(self, file_analysis: list[dict[str, Any]]) -> list[LanguagePattern]:
+    def extract_patterns(
+        self,
+        file_analysis: list[dict[str, Any]],
+    ) -> list[LanguagePattern]:
         """从文件分析结果中提取模式"""
 
     def analyze_project(self) -> LanguageMetrics:
@@ -114,10 +116,15 @@ class LanguageAnalyzer(ABC):
 
         return any(pattern in str(file_path) for pattern in skip_patterns)
 
-    def _aggregate_analysis(self, file_analyses: list[dict[str, Any]]) -> LanguageMetrics:
+    def _aggregate_analysis(
+        self,
+        file_analyses: list[dict[str, Any]],
+    ) -> LanguageMetrics:
         """聚合多个文件的分析结果"""
         total_lines = sum(analysis.get("line_count", 0) for analysis in file_analyses)
-        total_functions = sum(analysis.get("function_count", 0) for analysis in file_analyses)
+        total_functions = sum(
+            analysis.get("function_count", 0) for analysis in file_analyses
+        )
         total_function_lines = sum(
             analysis.get("total_function_lines", 0) for analysis in file_analyses
         )
@@ -127,7 +134,9 @@ class LanguageAnalyzer(ABC):
             complexities.extend(analysis.get("complexities", []))
 
         avg_complexity = sum(complexities) / len(complexities) if complexities else 0
-        avg_function_size = total_function_lines / total_functions if total_functions > 0 else 0
+        avg_function_size = (
+            total_function_lines / total_functions if total_functions > 0 else 0
+        )
 
         # 计算命名一致性
         naming_consistency = self._calculate_naming_consistency(file_analyses)
@@ -149,7 +158,10 @@ class LanguageAnalyzer(ABC):
             patterns=patterns,
         )
 
-    def _calculate_naming_consistency(self, file_analyses: list[dict[str, Any]]) -> float:
+    def _calculate_naming_consistency(
+        self,
+        file_analyses: list[dict[str, Any]],
+    ) -> float:
         """计算命名一致性"""
         # 这是一个通用实现，子类可以重写
         all_names = []
@@ -162,16 +174,25 @@ class LanguageAnalyzer(ABC):
             return 0.0
 
         # 简单的启发式：检查camelCase vs snake_case一致性
-        camel_case_count = sum(1 for name in all_names if re.match(r"^[a-z][a-zA-Z0-9]*$", name))
-        snake_case_count = sum(1 for name in all_names if re.match(r"^[a-z][a-z0-9_]*$", name))
-        pascal_case_count = sum(1 for name in all_names if re.match(r"^[A-Z][a-zA-Z0-9]*$", name))
+        camel_case_count = sum(
+            1 for name in all_names if re.match(r"^[a-z][a-zA-Z0-9]*$", name)
+        )
+        snake_case_count = sum(
+            1 for name in all_names if re.match(r"^[a-z][a-z0-9_]*$", name)
+        )
+        pascal_case_count = sum(
+            1 for name in all_names if re.match(r"^[A-Z][a-zA-Z0-9]*$", name)
+        )
 
         total = len(all_names)
         max_style_count = max(camel_case_count, snake_case_count, pascal_case_count)
 
         return max_style_count / total if total > 0 else 0.0
 
-    def _calculate_style_consistency(self, file_analyses: list[dict[str, Any]]) -> float:
+    def _calculate_style_consistency(
+        self,
+        file_analyses: list[dict[str, Any]],
+    ) -> float:
         """计算风格一致性"""
         # 这是一个通用实现，子类可以重写
         if not file_analyses:
@@ -189,7 +210,9 @@ class LanguageAnalyzer(ABC):
 
         if indent_styles:
             most_common_indent = max(set(indent_styles), key=indent_styles.count)
-            indent_consistency = indent_styles.count(most_common_indent) / len(indent_styles)
+            indent_consistency = indent_styles.count(most_common_indent) / len(
+                indent_styles,
+            )
             total_score += indent_consistency
             total_checks += 1
 
@@ -201,7 +224,9 @@ class LanguageAnalyzer(ABC):
 
         if quote_styles:
             most_common_quote = max(set(quote_styles), key=quote_styles.count)
-            quote_consistency = quote_styles.count(most_common_quote) / len(quote_styles)
+            quote_consistency = quote_styles.count(most_common_quote) / len(
+                quote_styles,
+            )
             total_score += quote_consistency
             total_checks += 1
 
@@ -280,10 +305,9 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
         if template_literals > max(single_quotes, double_quotes):
             return "template_literals"
-        elif single_quotes > double_quotes:
+        if single_quotes > double_quotes:
             return "single"
-        else:
-            return "double"
+        return "double"
 
     def _detect_import_style(self, content: str) -> str:
         """检测导入风格"""
@@ -292,7 +316,11 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
         return "es6" if es6_imports > require_imports else "commonjs"
 
-    def _detect_language_features(self, content: str, file_extension: str) -> dict[str, bool]:
+    def _detect_language_features(
+        self,
+        content: str,
+        file_extension: str,
+    ) -> dict[str, bool]:
         """检测语言特性使用情况"""
         features = {
             "typescript": file_extension in [".ts", ".tsx"],
@@ -314,7 +342,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
                     "interfaces": "interface " in content,
                     "generics": "<" in content and ">" in content,
                     "enums": "enum " in content,
-                }
+                },
             )
 
         return features
@@ -343,7 +371,11 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
                 # 估算函数长度和复杂度
                 func_lines = self._estimate_function_size(content, match.start(), lines)
-                complexity = self._calculate_js_complexity(content, match.start(), func_lines)
+                complexity = self._calculate_js_complexity(
+                    content,
+                    match.start(),
+                    func_lines,
+                )
 
                 functions.append(
                     {
@@ -351,7 +383,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
                         "lines": func_lines,
                         "complexity": complexity,
                         "start_line": start_line,
-                    }
+                    },
                 )
 
         return functions
@@ -385,7 +417,12 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
         return classes
 
-    def _estimate_function_size(self, content: str, start_pos: int, lines: list[str]) -> int:
+    def _estimate_function_size(
+        self,
+        content: str,
+        start_pos: int,
+        lines: list[str],
+    ) -> int:
         """估算函数大小（行数）"""
         # 简单实现：从函数开始位置向下查找匹配的大括号
         brace_count = 0
@@ -395,7 +432,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
         # 从函数开始位置开始计算
         start_line = content[:start_pos].count("\n")
 
-        for i, line in enumerate(lines[start_line:], start_line):
+        for _i, line in enumerate(lines[start_line:], start_line):
             if "{" in line:
                 brace_count += line.count("{")
                 in_function = True
@@ -410,7 +447,12 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
         return func_lines
 
-    def _calculate_js_complexity(self, content: str, start_pos: int, func_lines: int) -> int:
+    def _calculate_js_complexity(
+        self,
+        content: str,
+        start_pos: int,
+        func_lines: int,
+    ) -> int:
         """计算JavaScript函数的复杂度"""
         # 提取函数内容
         start_line = content[:start_pos].count("\n")
@@ -431,7 +473,10 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
         return complexity
 
-    def extract_patterns(self, file_analyses: list[dict[str, Any]]) -> list[LanguagePattern]:
+    def extract_patterns(
+        self,
+        file_analyses: list[dict[str, Any]],
+    ) -> list[LanguagePattern]:
         """从文件分析结果中提取JavaScript/TypeScript模式"""
         patterns = []
 
@@ -460,7 +505,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
                         pattern_value=func_naming_style["style"],
                         confidence=func_naming_style["confidence"],
                         examples=func_naming_style["examples"][:3],
-                    )
+                    ),
                 )
 
         # 变量命名模式
@@ -475,7 +520,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
                         pattern_value=var_naming_style["style"],
                         confidence=var_naming_style["confidence"],
                         examples=var_naming_style["examples"][:3],
-                    )
+                    ),
                 )
 
         # 引号使用模式
@@ -493,7 +538,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
                         pattern_value=most_common_quote,
                         confidence=confidence,
                         examples=[],
-                    )
+                    ),
                 )
 
         # 导入风格模式
@@ -511,7 +556,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
                         pattern_value=most_common_import,
                         confidence=confidence,
                         examples=[],
-                    )
+                    ),
                 )
 
         # 语言特性使用模式
@@ -534,7 +579,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
                         pattern_value=usage_rate,
                         confidence=usage_rate,
                         examples=[],
-                    )
+                    ),
                 )
 
         return patterns
@@ -675,7 +720,9 @@ class MultiLanguageManager:
                 if pattern.pattern_type == "naming":
                     if pattern.pattern_name not in naming_styles:
                         naming_styles[pattern.pattern_name] = {}
-                    naming_styles[pattern.pattern_name][language] = pattern.pattern_value
+                    naming_styles[pattern.pattern_name][language] = (
+                        pattern.pattern_value
+                    )
 
         for pattern_name, language_styles in naming_styles.items():
             if len(language_styles) > 1:  # 多种语言都有这个模式
@@ -685,7 +732,7 @@ class MultiLanguageManager:
                         "pattern": pattern_name,
                         "languages": language_styles,
                         "consistent": len(set(language_styles.values())) == 1,
-                    }
+                    },
                 )
 
         # 比较代码复杂度
@@ -700,13 +747,16 @@ class MultiLanguageManager:
                     "languages": complexity_comparison,
                     "avg_complexity": sum(complexity_comparison.values())
                     / len(complexity_comparison),
-                }
+                },
             )
 
         return cross_patterns
 
 
-def save_multi_language_analysis(analysis_result: dict[str, Any], project_path: Path) -> None:
+def save_multi_language_analysis(
+    analysis_result: dict[str, Any],
+    project_path: Path,
+) -> None:
     """保存多语言分析结果"""
     result_file = project_path / ".aiculture" / "multi_language_analysis.json"
     result_file.parent.mkdir(parents=True, exist_ok=True)

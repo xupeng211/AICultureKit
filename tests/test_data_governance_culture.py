@@ -1,6 +1,4 @@
-"""
-数据治理文化模块测试
-"""
+"""数据治理文化模块测试"""
 
 import tempfile
 from pathlib import Path
@@ -103,7 +101,7 @@ user_data = {
     "phone": "+1-XXX-XXX-XXXX",
     "ssn": "XXX-XX-XXXX"
 }
-"""
+""",
             )
 
         findings = self.scanner.scan_file(test_file)
@@ -227,7 +225,13 @@ class TestDataQualityValidator:
         """测试批量验证"""
         # 创建多个规则
         rules = [
-            DataQualityRule("email_completeness", "Email required", "completeness", "email", {}),
+            DataQualityRule(
+                "email_completeness",
+                "Email required",
+                "completeness",
+                "email",
+                {},
+            ),
             DataQualityRule(
                 "email_format",
                 "Email format",
@@ -304,7 +308,10 @@ class TestGDPRComplianceChecker:
         """
 
         consent_check1 = self.checker.check_consent_mechanisms(with_consent, "good.py")
-        consent_check2 = self.checker.check_consent_mechanisms(without_consent, "bad.py")
+        consent_check2 = self.checker.check_consent_mechanisms(
+            without_consent,
+            "bad.py",
+        )
 
         assert consent_check1["has_consent_check"] is True
         assert consent_check2["has_consent_check"] is False
@@ -327,7 +334,10 @@ class TestGDPRComplianceChecker:
         """
 
         retention_check1 = self.checker.check_data_retention(with_retention, "good.py")
-        retention_check2 = self.checker.check_data_retention(without_retention, "bad.py")
+        retention_check2 = self.checker.check_data_retention(
+            without_retention,
+            "bad.py",
+        )
 
         assert retention_check1["has_retention_policy"] is True
         assert retention_check2["has_retention_policy"] is False
@@ -353,7 +363,10 @@ class TestGDPRComplianceChecker:
             return save_user(user_data)
         """
 
-        gdpr_report = self.checker.generate_compliance_report(test_content, "user_service.py")
+        gdpr_report = self.checker.generate_compliance_report(
+            test_content,
+            "user_service.py",
+        )
 
         assert isinstance(gdpr_report, dict)
         assert "personal_data_found" in gdpr_report
@@ -398,7 +411,7 @@ user_info = {
     "phone": "+1-XXX-XXX-XXXX",
     "ssn": "XXX-XX-XXXX"
 }
-"""
+""",
             )
 
         # 扫描项目
@@ -446,7 +459,7 @@ def process_user_data(email, name, consent=True):
         "name": name,
         "processed_at": datetime.now()
     }
-"""
+""",
             )
 
         # 生成综合报告
@@ -501,7 +514,7 @@ class UserService:
         DATA_RETENTION_DAYS = 365
 
         return self.save_user(user_data)
-'''
+''',
                 )
 
             # 执行完整的数据治理检查
@@ -518,7 +531,7 @@ class UserService:
 
             # 验证GDPR合规检查
             gdpr_score = governance_report["gdpr_compliance"]["compliance_score"]
-            assert isinstance(gdpr_score, (int, float))
+            assert isinstance(gdpr_score, int | float)
             assert 0 <= gdpr_score <= 100
 
         finally:

@@ -1,5 +1,4 @@
-"""
-AI学习系统 - 模式类型定义
+"""AI学习系统 - 模式类型定义
 
 定义项目分析中使用的各种模式类型和数据结构。
 """
@@ -59,7 +58,10 @@ class PatternAnalyzer:
         return min(max(confidence, 0.0), 1.0)
 
     def _extract_examples(
-        self, data: list[str], pattern_value: str, max_examples: int = 5
+        self,
+        data: list[str],
+        pattern_value: str,
+        max_examples: int = 5,
     ) -> list[str]:
         """提取模式示例"""
         examples = []
@@ -100,7 +102,7 @@ class NamingPatternAnalyzer(PatternAnalyzer):
                         confidence=confidence,
                         frequency=snake_case_count,
                         examples=self._extract_examples(names, "_"),
-                    )
+                    ),
                 )
 
         elif camel_case_count > pascal_case_count:
@@ -114,9 +116,10 @@ class NamingPatternAnalyzer(PatternAnalyzer):
                         confidence=confidence,
                         frequency=camel_case_count,
                         examples=self._extract_examples(
-                            [n for n in names if self._is_camel_case(n)], ""
+                            [n for n in names if self._is_camel_case(n)],
+                            "",
                         ),
-                    )
+                    ),
                 )
 
         elif pascal_case_count > 0:
@@ -130,9 +133,10 @@ class NamingPatternAnalyzer(PatternAnalyzer):
                         confidence=confidence,
                         frequency=pascal_case_count,
                         examples=self._extract_examples(
-                            [n for n in names if self._is_pascal_case(n)], ""
+                            [n for n in names if self._is_pascal_case(n)],
+                            "",
                         ),
-                    )
+                    ),
                 )
 
         return patterns
@@ -143,11 +147,15 @@ class NamingPatternAnalyzer(PatternAnalyzer):
 
     def _is_camel_case(self, name: str) -> bool:
         """检查是否为camelCase"""
-        return (name[0].islower() if name else False) and any(c.isupper() for c in name[1:])
+        return (name[0].islower() if name else False) and any(
+            c.isupper() for c in name[1:]
+        )
 
     def _is_pascal_case(self, name: str) -> bool:
         """检查是否为PascalCase"""
-        return (name[0].isupper() if name else False) and any(c.isupper() for c in name[1:])
+        return (name[0].isupper() if name else False) and any(
+            c.isupper() for c in name[1:]
+        )
 
 
 class StructurePatternAnalyzer(PatternAnalyzer):
@@ -166,7 +174,10 @@ class StructurePatternAnalyzer(PatternAnalyzer):
             found_standard = sum(1 for d in standard_dirs if d in directories)
 
             if found_standard >= 2:
-                confidence = self._calculate_confidence(found_standard, len(standard_dirs))
+                confidence = self._calculate_confidence(
+                    found_standard,
+                    len(standard_dirs),
+                )
                 patterns.append(
                     ProjectPattern(
                         pattern_type="structure",
@@ -175,7 +186,7 @@ class StructurePatternAnalyzer(PatternAnalyzer):
                         confidence=confidence,
                         frequency=found_standard,
                         examples=[d for d in standard_dirs if d in directories],
-                    )
+                    ),
                 )
 
         # 分析文件组织模式
@@ -184,7 +195,10 @@ class StructurePatternAnalyzer(PatternAnalyzer):
 
             # 检查主要编程语言
             if ".py" in extensions and extensions[".py"] > 5:
-                confidence = min(extensions[".py"] / 20, 1.0)  # 20个以上Python文件认为是Python项目
+                confidence = min(
+                    extensions[".py"] / 20,
+                    1.0,
+                )  # 20个以上Python文件认为是Python项目
                 patterns.append(
                     ProjectPattern(
                         pattern_type="structure",
@@ -193,7 +207,7 @@ class StructurePatternAnalyzer(PatternAnalyzer):
                         confidence=confidence,
                         frequency=extensions[".py"],
                         examples=[".py"],
-                    )
+                    ),
                 )
 
         return patterns
@@ -223,7 +237,7 @@ class StylePatternAnalyzer(PatternAnalyzer):
                             confidence=confidence,
                             frequency=single_quotes,
                             examples=["'string'"],
-                        )
+                        ),
                     )
                 else:
                     confidence = self._calculate_confidence(double_quotes, total_quotes)
@@ -235,7 +249,7 @@ class StylePatternAnalyzer(PatternAnalyzer):
                             confidence=confidence,
                             frequency=double_quotes,
                             examples=['"string"'],
-                        )
+                        ),
                     )
 
         # 分析缩进偏好
@@ -255,7 +269,7 @@ class StylePatternAnalyzer(PatternAnalyzer):
                             confidence=confidence,
                             frequency=spaces,
                             examples=["4 spaces"],
-                        )
+                        ),
                     )
                 else:
                     confidence = self._calculate_confidence(tabs, total_indent)
@@ -267,7 +281,7 @@ class StylePatternAnalyzer(PatternAnalyzer):
                             confidence=confidence,
                             frequency=tabs,
                             examples=["tabs"],
-                        )
+                        ),
                     )
 
         return patterns
@@ -300,7 +314,7 @@ class DocumentationPatternAnalyzer(PatternAnalyzer):
                             confidence=confidence,
                             frequency=count,
                             examples=[f'"""{style_name} style docstring"""'],
-                        )
+                        ),
                     )
 
         # 分析文档覆盖率
@@ -316,7 +330,7 @@ class DocumentationPatternAnalyzer(PatternAnalyzer):
                         confidence=coverage,
                         frequency=int(coverage * 100),
                         examples=["Well documented functions and classes"],
-                    )
+                    ),
                 )
 
         return patterns

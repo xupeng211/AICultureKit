@@ -9,7 +9,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from aiculture.ai_behavior_enforcer import AIBehaviorEnforcer
+from aiculture.ai_behavior_enforcer import AIBehaviorEnforcer  # noqa: E402
 
 
 class TestAIBehaviorComprehensive(unittest.TestCase):

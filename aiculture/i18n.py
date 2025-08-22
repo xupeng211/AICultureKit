@@ -1,5 +1,4 @@
-"""
-国际化支持模块
+"""国际化支持模块
 提供多语言文本管理和翻译功能
 """
 
@@ -98,7 +97,6 @@ def get_current_locale() -> str:
 
 def init_default_translations() -> None:
     """初始化默认翻译"""
-
     # 英文翻译
     en_translations = {
         # 通用消息

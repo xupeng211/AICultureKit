@@ -1,5 +1,4 @@
-"""
-安全代码修改策略
+"""安全代码修改策略
 处理常见的安全问题：subprocess shell=True、hashlib.md5、requests verify=False等
 """
 
@@ -62,7 +61,6 @@ class SecurityCodeModStrategy:
 
     def analyze_file(self, file_path: str, content: str) -> list[dict[str, Any]]:
         """分析文件中的安全问题"""
-
         issues = []
         lines = content.split("\n")
 
@@ -82,14 +80,13 @@ class SecurityCodeModStrategy:
                             "description": rule["description"],
                             "start_pos": match.start(),
                             "end_pos": match.end(),
-                        }
+                        },
                     )
 
         return issues
 
     def fix_file(self, file_path: str, content: str) -> dict[str, Any]:
         """修复单个文件的安全问题"""
-
         result = {
             "success": False,
             "original_content": content,
@@ -131,13 +128,12 @@ class SecurityCodeModStrategy:
                 result["changes"].append("发现安全问题但无法自动修复")
 
         except Exception as e:
-            result["errors"].append(f"处理文件时出错: {str(e)}")
+            result["errors"].append(f"处理文件时出错: {e!s}")
 
         return result
 
     def _apply_fix(self, content: str, issue: dict[str, Any]) -> dict[str, Any]:
         """应用具体的安全修复"""
-
         lines = content.split("\n")
         line_idx = issue["line_num"] - 1
 
@@ -153,19 +149,21 @@ class SecurityCodeModStrategy:
         # 根据规则类型应用修复
         if issue["rule"] == "hashlib_md5":
             return self._fix_hashlib_md5(content, lines, line_idx, issue)
-        elif issue["rule"] == "requests_verify_false":
+        if issue["rule"] == "requests_verify_false":
             return self._fix_requests_verify(content, lines, line_idx, issue)
-        elif issue["rule"] == "subprocess_shell_true":
+        if issue["rule"] == "subprocess_shell_true":
             return self._fix_subprocess_shell(content, lines, line_idx, issue)
-        else:
-            # 低置信度或复杂问题，添加TODO
-            return self._add_security_todo(content, lines, line_idx, issue)
+        # 低置信度或复杂问题，添加TODO
+        return self._add_security_todo(content, lines, line_idx, issue)
 
     def _fix_hashlib_md5(
-        self, content: str, lines: list[str], line_idx: int, issue: dict[str, Any]
+        self,
+        content: str,
+        lines: list[str],
+        line_idx: int,
+        issue: dict[str, Any],
     ) -> dict[str, Any]:
         """修复hashlib.md5使用"""
-
         if issue["confidence"] == "high":
             # 高置信度：直接替换为sha256
             new_line = lines[line_idx].replace("hashlib.md5(", "hashlib.sha256(")
@@ -176,14 +174,16 @@ class SecurityCodeModStrategy:
                 "content": "\n".join(lines),
                 "description": f"第{issue['line_num']}行: 将MD5替换为SHA-256",
             }
-        else:
-            return self._add_security_todo(content, lines, line_idx, issue)
+        return self._add_security_todo(content, lines, line_idx, issue)
 
     def _fix_requests_verify(
-        self, content: str, lines: list[str], line_idx: int, issue: dict[str, Any]
+        self,
+        content: str,
+        lines: list[str],
+        line_idx: int,
+        issue: dict[str, Any],
     ) -> dict[str, Any]:
         """修复requests verify=False"""
-
         if issue["confidence"] == "high":
             # 高置信度：移除verify=False参数
             new_line = re.sub(r",?\s*verify\s*=\s*False", "", lines[line_idx])
@@ -194,22 +194,27 @@ class SecurityCodeModStrategy:
                 "content": "\n".join(lines),
                 "description": f"第{issue['line_num']}行: 移除verify=False参数",
             }
-        else:
-            return self._add_security_todo(content, lines, line_idx, issue)
+        return self._add_security_todo(content, lines, line_idx, issue)
 
     def _fix_subprocess_shell(
-        self, content: str, lines: list[str], line_idx: int, issue: dict[str, Any]
+        self,
+        content: str,
+        lines: list[str],
+        line_idx: int,
+        issue: dict[str, Any],
     ) -> dict[str, Any]:
         """修复subprocess shell=True"""
-
         # subprocess shell=True比较复杂，通常需要手工处理
         return self._add_security_todo(content, lines, line_idx, issue)
 
     def _add_security_todo(
-        self, content: str, lines: list[str], line_idx: int, issue: dict[str, Any]
+        self,
+        content: str,
+        lines: list[str],
+        line_idx: int,
+        issue: dict[str, Any],
     ) -> dict[str, Any]:
         """添加安全TODO注释"""
-
         todo_comment = f"# TODO: SECURITY - {issue['description']}"
 
         # 在问题行上方添加TODO注释
@@ -223,7 +228,6 @@ class SecurityCodeModStrategy:
 
     def generate_patches(self, files: list[str]) -> list[dict[str, Any]]:
         """为文件列表生成安全修复补丁"""
-
         from ..utils import get_file_content
 
         patches = []
@@ -253,14 +257,13 @@ class SecurityCodeModStrategy:
                             "changes": fix_result["changes"],
                             "todos": fix_result["todos"],
                             "errors": fix_result["errors"],
-                        }
+                        },
                     )
 
         return patches
 
     def create_changelog_entry(self, patches: list[dict[str, Any]]) -> str:
         """创建变更日志条目"""
-
         if not patches:
             return "## 安全代码修改\n\n无安全问题需要修复。\n"
 
@@ -303,7 +306,6 @@ class SecurityCodeModStrategy:
 
 def create_security_patches(files: list[str]) -> dict[str, Any]:
     """创建安全修复补丁的便捷函数"""
-
     strategy = SecurityCodeModStrategy()
     patches = strategy.generate_patches(files)
 

@@ -1,5 +1,4 @@
-"""
-AI学习系统 - 智能分析项目特征并生成个性化开发文化规则。
+"""AI学习系统 - 智能分析项目特征并生成个性化开发文化规则。
 
 这个系统能够：
 1. 分析项目代码模式和风格
@@ -68,13 +67,15 @@ class AdaptiveStrictnessManager:
         return learning_result.recommended_strictness
 
     def adjust_strictness_based_on_feedback(
-        self, current_strictness: float, feedback: dict[str, Any]
+        self,
+        current_strictness: float,
+        feedback: dict[str, Any],
     ) -> float:
         """根据反馈调整严格度"""
         # 简化实现
         if feedback.get("too_strict", False):
             return max(0.1, current_strictness - 0.1)
-        elif feedback.get("too_lenient", False):
+        if feedback.get("too_lenient", False):
             return min(1.0, current_strictness + 0.1)
         return current_strictness
 

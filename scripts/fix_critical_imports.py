@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-修复关键导入问题的脚本
-"""
+"""修复关键导入问题的脚本"""
 
 from pathlib import Path
 
@@ -25,7 +23,10 @@ def fix_imports_in_file(file_path: Path) -> bool:
         ):
             imports_to_add.append("from .culture_enforcer import CultureEnforcer")
 
-        if "CICDGuardian" in content and "from .cicd_culture import CICDGuardian" not in content:
+        if (
+            "CICDGuardian" in content
+            and "from .cicd_culture import CICDGuardian" not in content
+        ):
             imports_to_add.append("from .cicd_culture import CICDGuardian")
 
         if "subprocess." in content and "import subprocess" not in content:
@@ -92,7 +93,6 @@ def fix_imports_in_file(file_path: Path) -> bool:
 
 def fix_specific_files():
     """修复特定文件中的已知问题"""
-
     # 修复 cli.py 中的导入问题
     cli_file = Path("aiculture/cli.py")
     if cli_file.exists():

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-深度代码质量分析工具
-"""
+"""深度代码质量分析工具"""
 
 import ast
 import re
@@ -69,7 +67,7 @@ class DeepCodeAnalyzer:
                         severity="high",
                         description=f"语法错误: {e.msg}",
                         suggestion="修复语法错误",
-                    )
+                    ),
                 )
 
             # 分析文本内容
@@ -114,7 +112,7 @@ class DeepCodeAnalyzer:
                         severity="medium",
                         description=f"行长度 {len(line)} 超过120字符",
                         suggestion="将长行拆分为多行",
-                    )
+                    ),
                 )
 
             # 检查TODO/FIXME注释
@@ -127,7 +125,7 @@ class DeepCodeAnalyzer:
                         severity="low",
                         description="发现TODO/FIXME注释",
                         suggestion="完成待办事项或创建issue跟踪",
-                    )
+                    ),
                 )
 
             # 检查硬编码字符串
@@ -141,10 +139,15 @@ class DeepCodeAnalyzer:
                             severity="medium",
                             description="发现长硬编码字符串",
                             suggestion="考虑使用常量或配置文件",
-                        )
+                        ),
                     )
 
-    def _check_function_complexity(self, file_path: Path, node: ast.FunctionDef, lines: list[str]):
+    def _check_function_complexity(
+        self,
+        file_path: Path,
+        node: ast.FunctionDef,
+        lines: list[str],
+    ):
         """检查函数复杂度"""
         # 计算圈复杂度
         complexity = self._calculate_cyclomatic_complexity(node)
@@ -158,11 +161,13 @@ class DeepCodeAnalyzer:
                     severity="high",
                     description=f"函数 {node.name} 圈复杂度过高: {complexity}",
                     suggestion="将复杂函数拆分为更小的函数",
-                )
+                ),
             )
 
         # 检查函数长度
-        func_lines = node.end_lineno - node.lineno + 1 if hasattr(node, "end_lineno") else 0
+        func_lines = (
+            node.end_lineno - node.lineno + 1 if hasattr(node, "end_lineno") else 0
+        )
         if func_lines > 50:
             self.issues.append(
                 CodeIssue(
@@ -172,7 +177,7 @@ class DeepCodeAnalyzer:
                     severity="medium",
                     description=f"函数 {node.name} 过长: {func_lines} 行",
                     suggestion="将长函数拆分为更小的函数",
-                )
+                ),
             )
 
         # 检查参数数量
@@ -185,10 +190,15 @@ class DeepCodeAnalyzer:
                     severity="medium",
                     description=f"函数 {node.name} 参数过多: {len(node.args.args)}",
                     suggestion="考虑使用数据类或字典传递参数",
-                )
+                ),
             )
 
-    def _check_class_design(self, file_path: Path, node: ast.ClassDef, lines: list[str]):
+    def _check_class_design(
+        self,
+        file_path: Path,
+        node: ast.ClassDef,
+        lines: list[str],
+    ):
         """检查类设计"""
         # 计算类的方法数量
         methods = [n for n in node.body if isinstance(n, ast.FunctionDef)]
@@ -202,7 +212,7 @@ class DeepCodeAnalyzer:
                     severity="medium",
                     description=f"类 {node.name} 方法过多: {len(methods)}",
                     suggestion="考虑将类拆分或使用组合模式",
-                )
+                ),
             )
 
         # 检查是否有文档字符串
@@ -215,10 +225,15 @@ class DeepCodeAnalyzer:
                     severity="low",
                     description=f"类 {node.name} 缺少文档字符串",
                     suggestion="添加类的文档字符串",
-                )
+                ),
             )
 
-    def _check_exception_handling(self, file_path: Path, node: ast.ExceptHandler, lines: list[str]):
+    def _check_exception_handling(
+        self,
+        file_path: Path,
+        node: ast.ExceptHandler,
+        lines: list[str],
+    ):
         """检查异常处理"""
         # 检查裸露的except
         if node.type is None:
@@ -230,7 +245,7 @@ class DeepCodeAnalyzer:
                     severity="high",
                     description="使用了裸露的except子句",
                     suggestion="指定具体的异常类型",
-                )
+                ),
             )
 
         # 检查空的异常处理
@@ -243,7 +258,7 @@ class DeepCodeAnalyzer:
                     severity="medium",
                     description="空的异常处理块",
                     suggestion="添加适当的异常处理逻辑或日志记录",
-                )
+                ),
             )
 
     def _check_magic_numbers(self, file_path: Path, node: ast.Num, lines: list[str]):
@@ -252,7 +267,7 @@ class DeepCodeAnalyzer:
         common_numbers = {0, 1, 2, -1, 100, 1000}
 
         if hasattr(node, "n") and node.n not in common_numbers:
-            if isinstance(node.n, (int, float)) and abs(node.n) > 1:
+            if isinstance(node.n, int | float) and abs(node.n) > 1:
                 self.issues.append(
                     CodeIssue(
                         file_path=str(file_path),
@@ -261,7 +276,7 @@ class DeepCodeAnalyzer:
                         severity="low",
                         description=f"发现魔法数字: {node.n}",
                         suggestion="使用命名常量替代魔法数字",
-                    )
+                    ),
                 )
 
     def _calculate_cyclomatic_complexity(self, node: ast.FunctionDef) -> int:
@@ -269,9 +284,9 @@ class DeepCodeAnalyzer:
         complexity = 1  # 基础复杂度
 
         for child in ast.walk(node):
-            if isinstance(child, (ast.If, ast.While, ast.For, ast.AsyncFor)):
-                complexity += 1
-            elif isinstance(child, ast.ExceptHandler):
+            if isinstance(
+                child, ast.If | ast.While | ast.For | ast.AsyncFor
+            ) or isinstance(child, ast.ExceptHandler):
                 complexity += 1
             elif isinstance(child, ast.BoolOp):
                 complexity += len(child.values) - 1
@@ -312,7 +327,7 @@ class DeepCodeAnalyzer:
 def main():
     """主函数"""
     analyzer = DeepCodeAnalyzer()
-    report = analyzer.analyze_project(Path("."))
+    report = analyzer.analyze_project(Path())
 
     print("\n📊 深度代码质量分析报告")
     print("=" * 50)

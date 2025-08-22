@@ -1,6 +1,4 @@
-"""
-增量覆盖率适配器 - 使用diff-cover检查变更行覆盖率
-"""
+"""增量覆盖率适配器 - 使用diff-cover检查变更行覆盖率"""
 
 import json
 import subprocess
@@ -22,7 +20,6 @@ class DiffCoverageAdapter:
         new_files_threshold: float = 70.0,
     ) -> list[dict[str, Any]]:
         """检查增量覆盖率"""
-
         problems = []
 
         # 1. 运行测试并生成覆盖率报告
@@ -36,17 +33,23 @@ class DiffCoverageAdapter:
                     "message": "无法生成覆盖率报告",
                     "fix_suggestion": "确保安装了pytest-cov并且测试可以运行",
                     "blocking": True,
-                }
+                },
             )
             return problems
 
         # 2. 运行diff-cover检查变更行覆盖率
-        diff_problems = self._run_diff_cover(coverage_xml, base_branch, changed_lines_threshold)
+        diff_problems = self._run_diff_cover(
+            coverage_xml,
+            base_branch,
+            changed_lines_threshold,
+        )
         problems.extend(diff_problems)
 
         # 3. 检查新文件覆盖率
         new_file_problems = self._check_new_files_coverage(
-            coverage_xml, base_branch, new_files_threshold
+            coverage_xml,
+            base_branch,
+            new_files_threshold,
         )
         problems.extend(new_file_problems)
 
@@ -54,7 +57,6 @@ class DiffCoverageAdapter:
 
     def _generate_coverage_report(self) -> Path | None:
         """生成覆盖率XML报告"""
-
         try:
             # 运行pytest生成覆盖率报告
             cmd = [
@@ -72,6 +74,7 @@ class DiffCoverageAdapter:
 
             result = subprocess.run(
                 cmd,
+                check=False,
                 cwd=self.project_root,
                 capture_output=True,
                 text=True,
@@ -81,9 +84,8 @@ class DiffCoverageAdapter:
             coverage_xml = self.project_root / "coverage.xml"
             if coverage_xml.exists():
                 return coverage_xml
-            else:
-                print(f"覆盖率报告生成失败: {result.stderr}")
-                return None
+            print(f"覆盖率报告生成失败: {result.stderr}")
+            return None
 
         except subprocess.TimeoutExpired:
             print("覆盖率报告生成超时")
@@ -93,10 +95,12 @@ class DiffCoverageAdapter:
             return None
 
     def _run_diff_cover(
-        self, coverage_xml: Path, base_branch: str, threshold: float
+        self,
+        coverage_xml: Path,
+        base_branch: str,
+        threshold: float,
     ) -> list[dict[str, Any]]:
         """运行diff-cover检查"""
-
         problems = []
 
         try:
@@ -110,14 +114,23 @@ class DiffCoverageAdapter:
             ]
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=120
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=120,
             )
 
             # 解析diff-cover输出
             if result.returncode != 0:
                 # diff-cover失败，解析详细信息
                 problems.extend(
-                    self._parse_diff_cover_output(result.stdout, result.stderr, threshold)
+                    self._parse_diff_cover_output(
+                        result.stdout,
+                        result.stderr,
+                        threshold,
+                    ),
                 )
 
             # 尝试读取JSON报告
@@ -138,7 +151,7 @@ class DiffCoverageAdapter:
                     "severity": "error",
                     "message": "diff-cover检查超时",
                     "blocking": False,
-                }
+                },
             )
         except Exception as e:
             problems.append(
@@ -148,16 +161,18 @@ class DiffCoverageAdapter:
                     "severity": "warning",
                     "message": f"diff-cover检查失败: {e}",
                     "blocking": False,
-                }
+                },
             )
 
         return problems
 
     def _parse_diff_cover_output(
-        self, stdout: str, stderr: str, threshold: float
+        self,
+        stdout: str,
+        stderr: str,
+        threshold: float,
     ) -> list[dict[str, Any]]:
         """解析diff-cover文本输出"""
-
         problems = []
 
         # 解析覆盖率信息
@@ -171,7 +186,7 @@ class DiffCoverageAdapter:
                 # 提取覆盖率百分比
                 try:
                     parts = line.split()
-                    for i, part in enumerate(parts):
+                    for _i, part in enumerate(parts):
                         if part.endswith("%"):
                             coverage_str = part.rstrip("%")
                             current_coverage = float(coverage_str)
@@ -188,9 +203,10 @@ class DiffCoverageAdapter:
                                         "metadata": {
                                             "current_coverage": current_coverage,
                                             "required_coverage": threshold,
-                                            "coverage_gap": threshold - current_coverage,
+                                            "coverage_gap": threshold
+                                            - current_coverage,
                                         },
-                                    }
+                                    },
                                 )
                             break
                 except (ValueError, IndexError):
@@ -206,16 +222,17 @@ class DiffCoverageAdapter:
                         "message": f"发现未覆盖的变更: {line}",
                         "fix_suggestion": "为变更的代码添加相应的测试用例",
                         "blocking": False,
-                    }
+                    },
                 )
 
         return problems
 
     def _parse_diff_cover_json(
-        self, report_data: dict[str, Any], threshold: float
+        self,
+        report_data: dict[str, Any],
+        threshold: float,
     ) -> list[dict[str, Any]]:
         """解析diff-cover JSON报告"""
-
         problems = []
 
         try:
@@ -236,7 +253,7 @@ class DiffCoverageAdapter:
                             "required_coverage": threshold,
                             "coverage_gap": threshold - diff_coverage,
                         },
-                    }
+                    },
                 )
 
             # 解析文件级别的覆盖率
@@ -259,7 +276,7 @@ class DiffCoverageAdapter:
                                 "num_statements": file_stats.get("num_statements", 0),
                                 "missing_lines": file_stats.get("missing_lines", []),
                             },
-                        }
+                        },
                     )
 
         except Exception as e:
@@ -270,16 +287,18 @@ class DiffCoverageAdapter:
                     "severity": "warning",
                     "message": f"解析diff-cover报告失败: {e}",
                     "blocking": False,
-                }
+                },
             )
 
         return problems
 
     def _check_new_files_coverage(
-        self, coverage_xml: Path, base_branch: str, threshold: float
+        self,
+        coverage_xml: Path,
+        base_branch: str,
+        threshold: float,
     ) -> list[dict[str, Any]]:
         """检查新文件的覆盖率"""
-
         problems = []
 
         try:
@@ -315,7 +334,7 @@ class DiffCoverageAdapter:
                                 "required_coverage": threshold,
                                 "is_new_file": True,
                             },
-                        }
+                        },
                     )
 
         except Exception as e:
@@ -326,31 +345,37 @@ class DiffCoverageAdapter:
                     "severity": "warning",
                     "message": f"新文件覆盖率检查失败: {e}",
                     "blocking": False,
-                }
+                },
             )
 
         return problems
 
     def _get_new_files(self, base_branch: str) -> list[str]:
         """获取相对于基准分支的新增文件"""
-
         try:
             cmd = ["git", "diff", "--name-only", "--diff-filter=A", base_branch]
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=30
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=30,
             )
 
             if result.returncode == 0:
                 return [f.strip() for f in result.stdout.split("\n") if f.strip()]
-            else:
-                return []
+            return []
 
         except Exception:
             return []
 
-    def _get_file_coverage_from_xml(self, root: ET.Element, file_path: str) -> float | None:
+    def _get_file_coverage_from_xml(
+        self,
+        root: ET.Element,
+        file_path: str,
+    ) -> float | None:
         """从XML中获取文件覆盖率"""
-
         try:
             # 查找匹配的文件
             for package in root.findall(".//package"):
@@ -367,16 +392,22 @@ class DiffCoverageAdapter:
         except Exception:
             return None
 
-    def generate_coverage_improvement_guide(self, problems: list[dict[str, Any]]) -> str:
+    def generate_coverage_improvement_guide(
+        self,
+        problems: list[dict[str, Any]],
+    ) -> str:
         """生成覆盖率改进指南"""
-
         guide = []
         guide.append("# 增量覆盖率改进指南\n")
 
         # 按问题类型分组
-        diff_coverage_problems = [p for p in problems if p.get("type") == "diff_coverage"]
+        diff_coverage_problems = [
+            p for p in problems if p.get("type") == "diff_coverage"
+        ]
         file_problems = [
-            p for p in problems if p.get("type") in ["file_diff_coverage", "new_file_coverage"]
+            p
+            for p in problems
+            if p.get("type") in ["file_diff_coverage", "new_file_coverage"]
         ]
 
         if diff_coverage_problems:
@@ -394,7 +425,7 @@ class DiffCoverageAdapter:
                 guide.append("")
                 guide.append("**改进建议**:")
                 guide.append(
-                    "1. 运行 `diff-cover coverage.xml --compare-branch=origin/main --html-report diff_coverage.html`"
+                    "1. 运行 `diff-cover coverage.xml --compare-branch=origin/main --html-report diff_coverage.html`",
                 )
                 guide.append("2. 打开 diff_coverage.html 查看具体未覆盖的行")
                 guide.append("3. 为未覆盖的变更行添加测试用例")
@@ -443,7 +474,7 @@ class DiffCoverageAdapter:
         guide.append("```bash")
         guide.append("# 使用AI生成测试脚手架")
         guide.append(
-            "python -m tools.ai_fix_agent.agent --in artifacts/problems.json --out artifacts/ai_fixes"
+            "python -m tools.ai_fix_agent.agent --in artifacts/problems.json --out artifacts/ai_fixes",
         )
         guide.append("# 应用测试脚手架补丁")
         guide.append("git apply artifacts/ai_fixes/test_scaffold.patch")

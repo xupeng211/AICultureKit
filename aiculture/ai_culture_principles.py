@@ -1,5 +1,4 @@
-"""
-AI开发文化原则配置和管理模块
+"""AI开发文化原则配置和管理模块.
 
 定义和管理所有大厂级别的开发原则，确保AI工具在开发过程中遵循这些原则。
 """
@@ -13,7 +12,7 @@ import yaml
 
 
 class PrincipleCategory(Enum):
-    """原则分类"""
+    """原则分类."""
 
     CODE_QUALITY = "code_quality"
     ARCHITECTURE = "architecture"
@@ -31,7 +30,7 @@ class PrincipleCategory(Enum):
 
 @dataclass
 class DevelopmentPrinciple:
-    """开发原则数据结构"""
+    """开发原则数据结构."""
 
     name: str
     category: PrincipleCategory
@@ -44,14 +43,14 @@ class DevelopmentPrinciple:
 
 
 class AICulturePrinciples:
-    """AI开发文化原则管理器"""
+    """AI开发文化原则管理器."""
 
     def __init__(self) -> None:
-        """内部方法： init"""
+        """内部方法: init."""
         self.principles = self._load_all_principles()
 
     def _load_all_principles(self) -> dict[str, DevelopmentPrinciple]:
-        """加载所有开发原则"""
+        """加载所有开发原则."""
         principles = {}
 
         # SOLID原则
@@ -367,19 +366,25 @@ class AICulturePrinciples:
         return principles
 
     def get_principle(self, name: str) -> DevelopmentPrinciple | None:
-        """获取指定原则"""
+        """获取指定原则."""
         return self.principles.get(name)
 
-    def get_by_category(self, category: PrincipleCategory) -> list[DevelopmentPrinciple]:
-        """按分类获取原则"""
+    def get_by_category(
+        self,
+        category: PrincipleCategory,
+    ) -> list[DevelopmentPrinciple]:
+        """按分类获取原则."""
         return [p for p in self.principles.values() if p.category == category]
 
     def get_ai_instructions(self) -> dict[str, list[str]]:
-        """获取所有AI指令"""
-        return {name: principle.ai_instructions for name, principle in self.principles.items()}
+        """获取所有AI指令."""
+        return {
+            name: principle.ai_instructions
+            for name, principle in self.principles.items()
+        }
 
     def export_to_yaml(self, file_path: str) -> None:
-        """导出原则到YAML文件"""
+        """导出原则到YAML文件."""
         data = {}
         for name, principle in self.principles.items():
             data[name] = {
@@ -397,7 +402,7 @@ class AICulturePrinciples:
             yaml.dump(data, f, default_flow_style=False, allow_unicode=True)
 
     def validate_project(self, project_path: str) -> dict[str, Any]:
-        """验证项目是否遵循原则"""
+        """验证项目是否遵循原则."""
         violations = []
         recommendations = []
 
@@ -411,7 +416,9 @@ class AICulturePrinciples:
             violations.append("缺少.gitignore文件")
 
         # 检查Python项目结构
-        if (project_dir / "requirements.txt").exists() or (project_dir / "pyproject.toml").exists():
+        if (project_dir / "requirements.txt").exists() or (
+            project_dir / "pyproject.toml"
+        ).exists():
             if not (project_dir / "tests").exists():
                 violations.append("Python项目缺少tests目录")
 

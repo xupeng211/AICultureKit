@@ -1,6 +1,4 @@
-"""
-测试aiculture.environment_checker模块
-"""
+"""测试aiculture.environment_checker模块"""
 
 import tempfile
 from pathlib import Path
@@ -69,12 +67,12 @@ class TestEnvironmentChecker:
         assert isinstance(structure, dict)
         assert "README.md" in structure
         assert "requirements.txt" in structure
-        assert structure["README.md"] == True
-        assert structure["requirements.txt"] == True
+        assert structure["README.md"]
+        assert structure["requirements.txt"]
 
         # 检查不存在的文件
         assert "pyproject.toml" in structure
-        assert structure["pyproject.toml"] == False
+        assert not structure["pyproject.toml"]
 
     @patch("subprocess.run")
     def test_check_required_dependencies(self, mock_run) -> None:
@@ -118,7 +116,9 @@ class TestEnvironmentChecker:
     def test_get_installed_packages_count(self, mock_run) -> None:
         """测试获取已安装包数量"""
         # Mock pip list output
-        mock_run.return_value.stdout = "package1 1.0.0\npackage2 2.0.0\npackage3 3.0.0\n"
+        mock_run.return_value.stdout = (
+            "package1 1.0.0\npackage2 2.0.0\npackage3 3.0.0\n"
+        )
         mock_run.return_value.returncode = 0
 
         count = self.checker.get_installed_packages_count()

@@ -8,7 +8,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from aiculture.data_governance_culture import DataPrivacyScanner
+from aiculture.data_governance_culture import DataPrivacyScanner  # noqa: E402
 
 
 class TestDataGovernanceComprehensive(unittest.TestCase):
@@ -27,7 +27,7 @@ class TestDataGovernanceComprehensive(unittest.TestCase):
         """测试PII模式检测"""
         try:
             # 测试邮箱检测
-            test_content = "联系邮箱: user@example.com"
+
             # 这里应该有检测逻辑，但为了测试稳定性，我们只测试基本功能
             self.assertTrue(hasattr(self.scanner, "pii_patterns"))
         except Exception as e:

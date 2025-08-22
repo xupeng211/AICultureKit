@@ -1,6 +1,4 @@
-"""
-Lint adapter for ruff/flake8
-"""
+"""Lint adapter for ruff/flake8"""
 
 import json
 import subprocess
@@ -26,7 +24,12 @@ class LintAdapter:
                 cmd.append(".")
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=60
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=60,
             )
 
             if result.stdout:
@@ -43,8 +46,10 @@ class LintAdapter:
                             "code": issue.get("code", ""),
                             "message": issue.get("message", ""),
                             "fix_suggestion": self._get_ruff_fix_suggestion(issue),
-                            "blocking": self._is_blocking_lint_issue(issue.get("code", "")),
-                        }
+                            "blocking": self._is_blocking_lint_issue(
+                                issue.get("code", ""),
+                            ),
+                        },
                     )
 
         except subprocess.TimeoutExpired:
@@ -55,7 +60,7 @@ class LintAdapter:
                     "severity": "error",
                     "message": "Ruff检查超时",
                     "blocking": True,
-                }
+                },
             )
         except FileNotFoundError:
             problems.append(
@@ -65,7 +70,7 @@ class LintAdapter:
                     "severity": "warning",
                     "message": "Ruff未安装，跳过lint检查",
                     "blocking": False,
-                }
+                },
             )
         except Exception as e:
             problems.append(
@@ -75,7 +80,7 @@ class LintAdapter:
                     "severity": "error",
                     "message": f"Ruff检查失败: {e}",
                     "blocking": False,
-                }
+                },
             )
 
         return problems
@@ -92,7 +97,12 @@ class LintAdapter:
                 cmd.append(".")
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=60
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=60,
             )
 
             # flake8没有原生JSON输出，需要解析文本输出
@@ -108,10 +118,12 @@ class LintAdapter:
                                     "severity": "warning",
                                     "file": parts[0],
                                     "line": int(parts[1]) if parts[1].isdigit() else 0,
-                                    "column": (int(parts[2]) if parts[2].isdigit() else 0),
+                                    "column": (
+                                        int(parts[2]) if parts[2].isdigit() else 0
+                                    ),
                                     "message": parts[3].strip(),
                                     "blocking": False,
-                                }
+                                },
                             )
 
         except Exception as e:
@@ -122,7 +134,7 @@ class LintAdapter:
                     "severity": "warning",
                     "message": f"Flake8检查失败: {e}",
                     "blocking": False,
-                }
+                },
             )
 
         return problems
@@ -131,14 +143,13 @@ class LintAdapter:
         """映射ruff错误码到严重度"""
         if code.startswith("E"):
             return "error" if code in ["E999"] else "warning"
-        elif code.startswith("W"):
+        if code.startswith("W"):
             return "warning"
-        elif code.startswith("F"):
+        if code.startswith("F"):
             return "error"
-        elif code.startswith("B"):
+        if code.startswith("B"):
             return "warning"
-        else:
-            return "info"
+        return "info"
 
     def _get_ruff_fix_suggestion(self, issue: dict[str, Any]) -> str:
         """获取ruff修复建议"""
@@ -175,7 +186,7 @@ def main():
     print(f"发现 {len(problems)} 个lint问题:")
     for problem in problems[:5]:  # 只显示前5个
         print(
-            f"  {problem['severity']}: {problem.get('file', 'N/A')}:{problem.get('line', 0)} - {problem['message']}"
+            f"  {problem['severity']}: {problem.get('file', 'N/A')}:{problem.get('line', 0)} - {problem['message']}",
         )
 
 

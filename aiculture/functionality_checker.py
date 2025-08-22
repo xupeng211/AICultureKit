@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-🎯 功能完整性检查器 - P0级别检查
+"""🎯 功能完整性检查器 - P0级别检查
 
 这个模块负责检查项目的功能完整性，确保所有功能都能真正工作，
 防止出现"代码结构完美但功能缺失"的致命问题。
@@ -34,6 +33,7 @@ class FunctionalityChecker:
 
         Args:
             project_path: 项目根目录路径
+
         """
         self.project_path = Path(project_path)
         self.violations: list[FunctionalityViolation] = []
@@ -43,6 +43,7 @@ class FunctionalityChecker:
 
         Returns:
             发现的违规列表
+
         """
         self.violations.clear()
 
@@ -91,7 +92,7 @@ class FunctionalityChecker:
                 line_number=line_number,
                 suggestion=suggestion,
                 impact=impact,
-            )
+            ),
         )
 
     # P0检查：文件依赖完整性
@@ -129,10 +130,18 @@ class FunctionalityChecker:
                 for match in matches:
                     self._validate_file_reference(py_file, match, i)
 
-    def _validate_file_reference(self, source_file: Path, file_ref: str, line_num: int) -> None:
+    def _validate_file_reference(
+        self,
+        source_file: Path,
+        file_ref: str,
+        line_num: int,
+    ) -> None:
         """验证文件引用是否存在"""
         # 跳过明显的示例和变量
-        if any(skip in file_ref.lower() for skip in ["example", "demo", "test", "temp", "$", "{"]):
+        if any(
+            skip in file_ref.lower()
+            for skip in ["example", "demo", "test", "temp", "$", "{"]
+        ):
             return
 
         # 构建可能的文件路径
@@ -219,7 +228,11 @@ class FunctionalityChecker:
                     return True
         return False
 
-    def _validate_cli_command_implementation(self, cli_file: Path, node: ast.FunctionDef) -> None:
+    def _validate_cli_command_implementation(
+        self,
+        cli_file: Path,
+        node: ast.FunctionDef,
+    ) -> None:
         """验证CLI命令的实现是否完整"""
         func_name = node.name
 
@@ -230,10 +243,10 @@ class FunctionalityChecker:
         for stmt in ast.walk(node):
             if isinstance(stmt, ast.Pass):
                 continue
-            elif isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Constant):
+            if isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Constant):
                 if "TODO" in str(stmt.value.value):
                     has_todo = True
-            elif isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            elif isinstance(stmt, ast.FunctionDef | ast.AsyncFunctionDef):
                 continue  # 跳过嵌套函数
             else:
                 has_implementation = True
@@ -257,9 +270,11 @@ class FunctionalityChecker:
 
         # 查找配置相关文件
         config_files = list(self.project_path.glob("**/*.yaml")) + list(
-            self.project_path.glob("**/*.yml")
+            self.project_path.glob("**/*.yml"),
         )
-        python_files = [f for f in self.project_path.rglob("*.py") if "config" in f.name.lower()]
+        python_files = [
+            f for f in self.project_path.rglob("*.py") if "config" in f.name.lower()
+        ]
 
         if not config_files and python_files:
             self._add_violation(
@@ -290,7 +305,11 @@ class FunctionalityChecker:
         except (UnicodeDecodeError, SyntaxError):
             pass
 
-    def _analyze_config_class_methods(self, file_path: Path, class_node: ast.ClassDef) -> None:
+    def _analyze_config_class_methods(
+        self,
+        file_path: Path,
+        class_node: ast.ClassDef,
+    ) -> None:
         """分析配置类方法的返回类型一致性"""
         class_name = class_node.name
 
@@ -512,7 +531,7 @@ class FunctionalityChecker:
         info_count = len([v for v in self.violations if v.severity == "info"])
 
         # 按分类统计
-        categories = {}
+        categories: dict[str, list] = {}
         for violation in self.violations:
             if violation.category not in categories:
                 categories[violation.category] = []
@@ -524,12 +543,13 @@ class FunctionalityChecker:
                     "line_number": violation.line_number,
                     "suggestion": violation.suggestion,
                     "impact": violation.impact,
-                }
+                },
             )
 
         # 计算功能完整性分数
         functionality_score = max(
-            0, 100 - (critical_count * 25 + warning_count * 10 + info_count * 2)
+            0,
+            100 - (critical_count * 25 + warning_count * 10 + info_count * 2),
         )
 
         return {

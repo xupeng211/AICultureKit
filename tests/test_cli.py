@@ -1,9 +1,6 @@
-"""
-测试aiculture.cli模块
-"""
+"""测试aiculture.cli模块"""
 
 import tempfile
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
@@ -47,7 +44,8 @@ class TestCLI:
         mock_template.create_project.return_value = True
 
         result = self.runner.invoke(
-            create, ["test-project", "--path", self.temp_dir, "--template", "python"]
+            create,
+            ["test-project", "--path", self.temp_dir, "--template", "python"],
         )
 
         assert result.exit_code == 0

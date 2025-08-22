@@ -1,5 +1,4 @@
-"""
-AI学习系统模块
+"""AI学习系统模块
 
 提供智能项目分析和个性化规则生成功能。
 """
@@ -17,13 +16,13 @@ from .pattern_types import (
 )
 
 __all__ = [
-    "ProjectPattern",
+    "CodeAnalyzer",
+    "DocumentationPatternAnalyzer",
+    "LearningEngine",
     "LearningResult",
-    "PatternAnalyzer",
     "NamingPatternAnalyzer",
+    "PatternAnalyzer",
+    "ProjectPattern",
     "StructurePatternAnalyzer",
     "StylePatternAnalyzer",
-    "DocumentationPatternAnalyzer",
-    "CodeAnalyzer",
-    "LearningEngine",
 ]

@@ -1,14 +1,13 @@
+from pathlib import Path
 from typing import Any
+
+from .ai_culture_principles import AICulturePrinciples
 
 """
 自动化项目设置脚本
 
 为项目自动配置所有必要的文化规范工具和配置文件。
 """
-
-from pathlib import Path
-
-from .ai_culture_principles import AICulturePrinciples
 
 
 class AutoCultureSetup:
@@ -80,7 +79,7 @@ ai_behavior:
   documentation_generation: true
   test_generation: true
   refactoring_suggestions: true
-"""
+""",
             )
 
     def _create_ai_guidelines(self) -> Any:
@@ -132,7 +131,7 @@ ai_behavior:
 - 预提交检查：已启用
 
 请确保所有代码都符合以上标准！
-"""
+""",
             )
 
     def _setup_quality_tools(self, project_type: str) -> Any:

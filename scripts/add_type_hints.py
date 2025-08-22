@@ -1,13 +1,11 @@
-from typing import Any
-
 #!/usr/bin/env python3
-"""
-类型注解添加器
+"""类型注解添加器
 为缺失类型注解的函数添加基础类型提示
 """
 
 import ast
 from pathlib import Path
+from typing import Any
 
 
 class TypeHintAdder:
@@ -29,21 +27,23 @@ class TypeHintAdder:
             or func_name.startswith("can_")
         ):
             return "bool"
-        elif func_name.startswith("get_") and "list" in func_name.lower():
+        if func_name.startswith("get_") and "list" in func_name.lower():
             return "List[Any]"
-        elif func_name.startswith("get_") and "dict" in func_name.lower():
+        if func_name.startswith("get_") and "dict" in func_name.lower():
             return "Dict[str, Any]"
-        elif func_name.startswith("get_"):
+        if (
+            func_name.startswith("get_")
+            or func_name.startswith("create_")
+            or func_name.startswith("build_")
+        ):
             return "Any"
-        elif func_name.startswith("create_") or func_name.startswith("build_"):
-            return "Any"
-        elif func_name == "__init__":
+        if func_name == "__init__":
             return "None"
-        elif func_name == "__str__" or func_name == "__repr__":
+        if func_name == "__str__" or func_name == "__repr__":
             return "str"
-        elif "count" in func_name.lower():
+        if "count" in func_name.lower():
             return "int"
-        elif "path" in func_name.lower():
+        if "path" in func_name.lower():
             return "Path"
 
         # 检查函数体中的return语句
@@ -51,12 +51,12 @@ class TypeHintAdder:
             if isinstance(node, ast.Return):
                 if node.value is None:
                     return "None"
-                elif isinstance(node.value, ast.Constant):
+                if isinstance(node.value, ast.Constant):
                     if isinstance(node.value.value, bool):
                         return "bool"
-                    elif isinstance(node.value.value, int):
+                    if isinstance(node.value.value, int):
                         return "int"
-                    elif isinstance(node.value.value, str):
+                    if isinstance(node.value.value, str):
                         return "str"
                 elif isinstance(node.value, ast.Dict):
                     return "Dict[str, Any]"
@@ -66,7 +66,11 @@ class TypeHintAdder:
         # 默认返回类型
         return "Any"
 
-    def add_return_type_annotation(self, content: str, func_node: ast.FunctionDef) -> str:
+    def add_return_type_annotation(
+        self,
+        content: str,
+        func_node: ast.FunctionDef,
+    ) -> str:
         """为函数添加返回类型注解"""
         lines = content.split("\n")
 
@@ -87,7 +91,9 @@ class TypeHintAdder:
             return content  # 找不到冒号，跳过
 
         # 插入返回类型注解
-        new_def_line = def_line[:colon_pos] + f" -> {return_type}" + def_line[colon_pos:]
+        new_def_line = (
+            def_line[:colon_pos] + f" -> {return_type}" + def_line[colon_pos:]
+        )
         lines[def_line_idx] = new_def_line
 
         self.added_count += 1
@@ -106,7 +112,11 @@ class TypeHintAdder:
         # 跳过文档字符串和编码声明
         for i, line in enumerate(lines):
             stripped = line.strip()
-            if stripped.startswith("#") or stripped.startswith('"""') or stripped.startswith("'''"):
+            if (
+                stripped.startswith("#")
+                or stripped.startswith('"""')
+                or stripped.startswith("'''")
+            ):
                 continue
             if (
                 stripped.startswith("from __future__")
@@ -174,11 +184,17 @@ class TypeHintAdder:
 
             modified_content = content
             for func_node in functions_to_process:
-                modified_content = self.add_return_type_annotation(modified_content, func_node)
+                modified_content = self.add_return_type_annotation(
+                    modified_content,
+                    func_node,
+                )
 
             # 添加必要的导入语句
             if needed_imports:
-                modified_content = self.add_import_statements(modified_content, needed_imports)
+                modified_content = self.add_import_statements(
+                    modified_content,
+                    needed_imports,
+                )
 
             # 写回文件
             file_path.write_text(modified_content, encoding="utf-8")

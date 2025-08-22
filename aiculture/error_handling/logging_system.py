@@ -1,5 +1,4 @@
-"""
-统一日志记录系统
+"""统一日志记录系统
 
 提供结构化、可配置的日志记录功能。
 """
@@ -87,7 +86,9 @@ class AICultureLogger:
         if structured:
             formatter = logging.Formatter("%(message)s")
         else:
-            formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+            formatter = logging.Formatter(
+                "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            )
 
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
@@ -117,7 +118,11 @@ class AICultureLogger:
         self.context.data = LogContext()
 
     def _create_log_entry(
-        self, level: LogLevel, message: str, error: Exception | None = None, **kwargs
+        self,
+        level: LogLevel,
+        message: str,
+        error: Exception | None = None,
+        **kwargs,
     ) -> LogEntry:
         """创建日志条目"""
         context = self._get_context()
@@ -160,7 +165,13 @@ class AICultureLogger:
             performance=performance_dict,
         )
 
-    def _log(self, level: LogLevel, message: str, error: Exception | None = None, **kwargs) -> None:
+    def _log(
+        self,
+        level: LogLevel,
+        message: str,
+        error: Exception | None = None,
+        **kwargs,
+    ) -> None:
         """记录日志"""
         if self.structured:
             entry = self._create_log_entry(level, message, error, **kwargs)
@@ -221,7 +232,11 @@ class AICultureLogger:
             yield
 
             duration_ms = (time.perf_counter() - start_time) * 1000
-            self.info(f"完成操作: {operation}", status="completed", duration_ms=duration_ms)
+            self.info(
+                f"完成操作: {operation}",
+                status="completed",
+                duration_ms=duration_ms,
+            )
 
         except Exception as e:
             duration_ms = (time.perf_counter() - start_time) * 1000
@@ -263,7 +278,7 @@ def setup_logging(
             "output_file": Path(output_file) if output_file else None,
             "structured": structured,
             "level": level,
-        }
+        },
     )
 
 

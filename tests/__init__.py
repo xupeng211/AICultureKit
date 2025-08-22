@@ -1,3 +1,1 @@
-"""
-AICultureKit 测试套件
-"""
+"""AICultureKit 测试套件"""

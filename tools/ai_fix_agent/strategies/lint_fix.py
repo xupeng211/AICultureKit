@@ -1,6 +1,4 @@
-"""
-Lint问题修复策略
-"""
+"""Lint问题修复策略"""
 
 import re
 import subprocess
@@ -38,13 +36,12 @@ class LintFixStrategy:
         return code in fixable_codes
 
     def generate_fix(self, problems: list[dict[str, Any]]) -> tuple[str, str, float]:
-        """
-        生成修复补丁
+        """生成修复补丁
 
         Returns:
             (patch_content, explanation, confidence)
-        """
 
+        """
         # 按文件分组问题
         problems_by_file = {}
         for problem in problems:
@@ -70,7 +67,8 @@ class LintFixStrategy:
 
         for file_path, file_problems in problems_by_file.items():
             file_patch, file_explanation, file_confidence = self._fix_file_problems(
-                file_path, file_problems
+                file_path,
+                file_problems,
             )
 
             if file_patch:
@@ -90,10 +88,11 @@ class LintFixStrategy:
         return patch_content, explanation, avg_confidence
 
     def _fix_file_problems(
-        self, file_path: str, problems: list[dict[str, Any]]
+        self,
+        file_path: str,
+        problems: list[dict[str, Any]],
     ) -> tuple[str, str, float]:
         """修复单个文件的问题"""
-
         full_path = self.project_root / file_path
         if not full_path.exists():
             return "", f"文件不存在: {file_path}", 0.0
@@ -133,9 +132,12 @@ class LintFixStrategy:
 
         return patch_content, explanation, confidence
 
-    def _apply_single_fix(self, content: str, problem: dict[str, Any]) -> tuple[str, str] | None:
+    def _apply_single_fix(
+        self,
+        content: str,
+        problem: dict[str, Any],
+    ) -> tuple[str, str] | None:
         """应用单个修复"""
-
         code = problem.get("code", "")
         line_num = problem.get("line", 0)
 
@@ -159,7 +161,11 @@ class LintFixStrategy:
             if match:
                 var_name = match.group(1)
                 if not var_name.startswith("_"):
-                    new_line = original_line.replace(f"{var_name} =", f"_{var_name} =", 1)
+                    new_line = original_line.replace(
+                        f"{var_name} =",
+                        f"_{var_name} =",
+                        1,
+                    )
                     lines[line_idx] = new_line
                     return (
                         "\n".join(lines),
@@ -205,7 +211,11 @@ class LintFixStrategy:
             # 简单的操作符空格修复
             new_line = original_line
             for op in ["=", "+", "-", "*", "/", "==", "!=", "<=", ">=", "<", ">"]:
-                new_line = re.sub(f"(\\w){re.escape(op)}(\\w)", f"\\1 {op} \\2", new_line)
+                new_line = re.sub(
+                    f"(\\w){re.escape(op)}(\\w)",
+                    f"\\1 {op} \\2",
+                    new_line,
+                )
 
             if new_line != original_line:
                 lines[line_idx] = new_line
@@ -215,18 +225,25 @@ class LintFixStrategy:
 
     def _generate_patch(self, file_path: str, original: str, fixed: str) -> str:
         """生成Git patch格式"""
-
         # 使用git diff生成标准patch
         try:
             # 创建临时文件
             import os
             import tempfile
 
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".orig", delete=False) as orig_file:
+            with tempfile.NamedTemporaryFile(
+                mode="w",
+                suffix=".orig",
+                delete=False,
+            ) as orig_file:
                 orig_file.write(original)
                 orig_file_path = orig_file.name
 
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".fixed", delete=False) as fixed_file:
+            with tempfile.NamedTemporaryFile(
+                mode="w",
+                suffix=".fixed",
+                delete=False,
+            ) as fixed_file:
                 fixed_file.write(fixed)
                 fixed_file_path = fixed_file.name
 
@@ -242,6 +259,7 @@ class LintFixStrategy:
                     orig_file_path,
                     fixed_file_path,
                 ],
+                check=False,
                 capture_output=True,
                 text=True,
             )
@@ -261,7 +279,6 @@ class LintFixStrategy:
 
     def _simple_diff(self, file_path: str, original: str, fixed: str) -> str:
         """生成简单的diff格式"""
-
         orig_lines = original.split("\n")
         fixed_lines = fixed.split("\n")
 
@@ -303,7 +320,7 @@ def main():
             "file": "test.py",
             "line": 1,
             "message": "unused import",
-        }
+        },
     ]
 
     patch, explanation, confidence = strategy.generate_fix(test_problems)

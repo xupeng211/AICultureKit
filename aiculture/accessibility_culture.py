@@ -1,7 +1,6 @@
-"""
-可访问性文化模块 - 无障碍设计、国际化支持、多设备兼容性
+"""可访问性文化模块 - 无障碍设计、国际化支持、多设备兼容性.
 
-提供：
+提供:
 1. 无障碍设计检查 (WCAG 2.1)
 2. 国际化支持验证 (i18n)
 3. 多设备兼容性测试
@@ -19,7 +18,7 @@ from typing import Any
 
 
 class AccessibilityLevel(Enum):
-    """可访问性级别 (WCAG)"""
+    """可访问性级别 (WCAG)."""
 
     A = "A"
     AA = "AA"
@@ -27,7 +26,7 @@ class AccessibilityLevel(Enum):
 
 
 class AccessibilityCategory(Enum):
-    """可访问性类别"""
+    """可访问性类别."""
 
     PERCEIVABLE = "perceivable"
     OPERABLE = "operable"
@@ -36,7 +35,7 @@ class AccessibilityCategory(Enum):
 
 
 class DeviceType(Enum):
-    """设备类型"""
+    """设备类型."""
 
     DESKTOP = "desktop"
     TABLET = "tablet"
@@ -47,7 +46,7 @@ class DeviceType(Enum):
 
 @dataclass
 class AccessibilityIssue:
-    """可访问性问题"""
+    """可访问性问题."""
 
     rule_id: str
     severity: str  # error, warning, info
@@ -63,7 +62,7 @@ class AccessibilityIssue:
 
 @dataclass
 class I18nIssue:
-    """国际化问题"""
+    """国际化问题."""
 
     issue_type: str  # hardcoded_text, missing_translation, locale_format
     severity: str
@@ -76,7 +75,7 @@ class I18nIssue:
 
 @dataclass
 class ResponsiveIssue:
-    """响应式设计问题"""
+    """响应式设计问题."""
 
     issue_type: str  # viewport, breakpoint, touch_target, font_size
     severity: str
@@ -88,10 +87,10 @@ class ResponsiveIssue:
 
 
 class AccessibilityChecker:
-    """无障碍设计检查器"""
+    """无障碍设计检查器."""
 
-    def __init__(self):
-        """__init__函数"""
+    def __init__(self) -> None:
+        """__init__函数."""
         # HTML可访问性规则
         self.html_rules = {
             "missing_alt_text": {
@@ -104,7 +103,11 @@ class AccessibilityChecker:
                 "wcag_reference": "WCAG 2.1 SC 1.1.1",
             },
             "missing_form_labels": {
-                "pattern": r'<input(?![^>]*(?:aria-label|aria-labelledby))(?![^>]*id="[^"]*")(?![^>]*type="(?:hidden|submit|button)")[^>]*>',
+                "pattern": (
+                    r"<input(?![^>]*(?:aria-label|aria-labelledby))"
+                    r'(?![^>]*id="[^"]*")'
+                    r'(?![^>]*type="(?:hidden|submit|button)")[^>]*>'
+                ),
                 "severity": "error",
                 "category": AccessibilityCategory.PERCEIVABLE,
                 "level": AccessibilityLevel.A,
@@ -173,18 +176,19 @@ class AccessibilityChecker:
         }
 
     def check_html_file(self, file_path: Path) -> list[AccessibilityIssue]:
-        """检查HTML文件的可访问性"""
+        """检查HTML文件的可访问性."""
         issues = []
 
         try:
-            with open(file_path, encoding="utf-8") as f:
-                content = f.read()
-
-            lines = content.split("\n")
+            content = file_path.read_text(encoding="utf-8")
 
             # 检查HTML规则
             for rule_id, rule in self.html_rules.items():
-                matches = re.finditer(rule["pattern"], content, re.IGNORECASE | re.MULTILINE)
+                matches = re.finditer(
+                    rule["pattern"],
+                    content,
+                    re.IGNORECASE | re.MULTILINE,
+                )
 
                 for match in matches:
                     line_num = content[: match.start()].count("\n") + 1
@@ -206,22 +210,25 @@ class AccessibilityChecker:
             # 检查标题层级
             issues.extend(self._check_heading_hierarchy(content, str(file_path)))
 
-        except Exception as e:
+        except OSError as e:
             print(f"检查文件 {file_path} 时出错: {e}")
 
         return issues
 
     def check_jsx_file(self, file_path: Path) -> list[AccessibilityIssue]:
-        """检查JSX文件的可访问性"""
+        """检查JSX文件的可访问性."""
         issues = []
 
         try:
-            with open(file_path, encoding="utf-8") as f:
-                content = f.read()
+            content = file_path.read_text(encoding="utf-8")
 
             # 检查JSX规则
             for rule_id, rule in self.jsx_rules.items():
-                matches = re.finditer(rule["pattern"], content, re.IGNORECASE | re.MULTILINE)
+                matches = re.finditer(
+                    rule["pattern"],
+                    content,
+                    re.IGNORECASE | re.MULTILINE,
+                )
 
                 for match in matches:
                     line_num = content[: match.start()].count("\n") + 1
@@ -240,13 +247,17 @@ class AccessibilityChecker:
                     )
                     issues.append(issue)
 
-        except Exception as e:
+        except OSError as e:
             print(f"检查JSX文件 {file_path} 时出错: {e}")
 
         return issues
 
-    def _check_heading_hierarchy(self, content: str, file_path: str) -> list[AccessibilityIssue]:
-        """检查标题层级结构"""
+    def _check_heading_hierarchy(
+        self,
+        content: str,
+        file_path: str,
+    ) -> list[AccessibilityIssue]:
+        """检查标题层级结构."""
         issues = []
         heading_pattern = r"<h([1-6])[^>]*>"
         headings = []
@@ -280,10 +291,10 @@ class AccessibilityChecker:
 
 
 class InternationalizationChecker:
-    """国际化检查器"""
+    """国际化检查器."""
 
-    def __init__(self):
-        """__init__函数"""
+    def __init__(self) -> None:
+        """__init__函数."""
         # 硬编码文本模式
         self.hardcoded_text_patterns = [
             r'["\']([A-Za-z\s]{3,})["\']',  # 引号中的英文文本
@@ -325,9 +336,12 @@ class InternationalizationChecker:
         ]
 
     def _check_hardcoded_text_in_line(
-        self, line: str, line_num: int, file_path: Path
+        self,
+        line: str,
+        line_num: int,
+        file_path: Path,
     ) -> list[I18nIssue]:
-        """检查单行中的硬编码文本"""
+        """检查单行中的硬编码文本."""
         issues = []
 
         for pattern in self.hardcoded_text_patterns:
@@ -351,9 +365,12 @@ class InternationalizationChecker:
         return issues
 
     def _check_datetime_format_in_line(
-        self, line: str, line_num: int, file_path: Path
+        self,
+        line: str,
+        line_num: int,
+        file_path: Path,
     ) -> list[I18nIssue]:
-        """检查单行中的日期时间格式"""
+        """检查单行中的日期时间格式."""
         issues = []
 
         for pattern in self.datetime_patterns:
@@ -373,13 +390,11 @@ class InternationalizationChecker:
         return issues
 
     def check_file(self, file_path: Path) -> list[I18nIssue]:
-        """检查文件的国际化问题"""
+        """检查文件的国际化问题."""
         issues = []
 
         try:
-            with open(file_path, encoding="utf-8") as f:
-                content = f.read()
-
+            content = file_path.read_text(encoding="utf-8")
             lines = content.split("\n")
 
             # 检查硬编码文本
@@ -389,20 +404,32 @@ class InternationalizationChecker:
                     continue
 
                 # 检查硬编码文本
-                hardcoded_issues = self._check_hardcoded_text_in_line(line, line_num, file_path)
+                hardcoded_issues = self._check_hardcoded_text_in_line(
+                    line,
+                    line_num,
+                    file_path,
+                )
                 issues.extend(hardcoded_issues)
 
                 # 检查日期时间格式
-                datetime_issues = self._check_datetime_format_in_line(line, line_num, file_path)
+                datetime_issues = self._check_datetime_format_in_line(
+                    line,
+                    line_num,
+                    file_path,
+                )
                 issues.extend(datetime_issues)
 
-        except Exception as e:
+        except OSError as e:
             print(f"检查国际化文件 {file_path} 时出错: {e}")
 
         return issues
 
-    def _collect_translation_keys(self, obj: dict[str, Any], prefix: str = "") -> set[str]:
-        """收集翻译键"""
+    def _collect_translation_keys(
+        self,
+        obj: dict[str, Any],
+        prefix: str = "",
+    ) -> set[str]:
+        """收集翻译键."""
         keys = set()
         if isinstance(obj, dict):
             for key, value in obj.items():
@@ -412,8 +439,11 @@ class InternationalizationChecker:
                     keys.update(self._collect_translation_keys(value, full_key))
         return keys
 
-    def _load_translation_files(self, locale_dir: Path) -> tuple[dict[str, dict], set[str]]:
-        """加载所有翻译文件"""
+    def _load_translation_files(
+        self,
+        locale_dir: Path,
+    ) -> tuple[dict[str, dict], set[str]]:
+        """加载所有翻译文件."""
         translation_files = {}
         base_keys = set()
 
@@ -428,15 +458,17 @@ class InternationalizationChecker:
                     if not base_keys:
                         base_keys = keys
 
-            except Exception as e:
+            except (OSError, json.JSONDecodeError) as e:
                 print(f"读取翻译文件 {json_file} 时出错: {e}")
 
         return translation_files, base_keys
 
     def _find_missing_translations(
-        self, translation_files: dict[str, dict], base_keys: set[str]
+        self,
+        translation_files: dict[str, dict],
+        base_keys: set[str],
     ) -> dict[str, list[str]]:
-        """查找缺失的翻译"""
+        """查找缺失的翻译."""
         missing_translations = {}
 
         for locale, translations in translation_files.items():
@@ -454,16 +486,16 @@ class InternationalizationChecker:
         base_keys: set[str],
         missing_translations: dict[str, list[str]],
     ) -> dict[str, float]:
-        """计算完整性比率"""
+        """计算完整性比率."""
         return {
             locale: (len(base_keys) - len(missing_translations.get(locale, [])))
             / len(base_keys)
             * 100
-            for locale in translation_files.keys()
+            for locale in translation_files
         }
 
     def check_translation_completeness(self, locale_dir: Path) -> dict[str, Any]:
-        """检查翻译完整性"""
+        """检查翻译完整性."""
         if not locale_dir.exists():
             return {"error": "本地化目录不存在"}
 
@@ -471,11 +503,16 @@ class InternationalizationChecker:
         translation_files, base_keys = self._load_translation_files(locale_dir)
 
         # 查找缺失的翻译
-        missing_translations = self._find_missing_translations(translation_files, base_keys)
+        missing_translations = self._find_missing_translations(
+            translation_files,
+            base_keys,
+        )
 
         # 计算完整性比率
         completeness_rate = self._calculate_completeness_rates(
-            translation_files, base_keys, missing_translations
+            translation_files,
+            base_keys,
+            missing_translations,
         )
 
         return {
@@ -487,10 +524,10 @@ class InternationalizationChecker:
 
 
 class ResponsiveDesignChecker:
-    """响应式设计检查器"""
+    """响应式设计检查器."""
 
-    def __init__(self):
-        """__init__函数"""
+    def __init__(self) -> None:
+        """__init__函数."""
         self.css_rules = {
             "missing_viewport": {
                 "pattern": r'<meta\s+name=["\']viewport["\']',
@@ -519,7 +556,7 @@ class ResponsiveDesignChecker:
         }
 
     def check_css_file(self, file_path: Path) -> list[ResponsiveIssue]:
-        """检查CSS文件的响应式设计"""
+        """检查CSS文件的响应式设计."""
         issues = []
 
         try:
@@ -548,13 +585,13 @@ class ResponsiveDesignChecker:
                     )
                     issues.append(issue)
 
-        except Exception as e:
+        except OSError as e:
             print(f"检查CSS文件 {file_path} 时出错: {e}")
 
         return issues
 
     def check_html_file(self, file_path: Path) -> list[ResponsiveIssue]:
-        """检查HTML文件的响应式设计"""
+        """检查HTML文件的响应式设计."""
         issues = []
 
         try:
@@ -562,7 +599,11 @@ class ResponsiveDesignChecker:
                 content = f.read()
 
             # 检查viewport meta标签
-            if not re.search(r'<meta\s+name=["\']viewport["\']', content, re.IGNORECASE):
+            if not re.search(
+                r'<meta\s+name=["\']viewport["\']',
+                content,
+                re.IGNORECASE,
+            ):
                 issue = ResponsiveIssue(
                     issue_type="missing_viewport",
                     severity="error",
@@ -574,24 +615,24 @@ class ResponsiveDesignChecker:
                 )
                 issues.append(issue)
 
-        except Exception as e:
+        except OSError as e:
             print(f"检查HTML文件 {file_path} 时出错: {e}")
 
         return issues
 
 
 class AccessibilityCultureManager:
-    """可访问性文化管理器"""
+    """可访问性文化管理器."""
 
-    def __init__(self, project_path: Path):
-        """__init__函数"""
+    def __init__(self, project_path: Path) -> None:
+        """__init__函数."""
         self.project_path = project_path
         self.accessibility_checker = AccessibilityChecker()
         self.i18n_checker = InternationalizationChecker()
         self.responsive_checker = ResponsiveDesignChecker()
 
     def scan_project_accessibility(self) -> dict[str, Any]:
-        """扫描项目可访问性"""
+        """扫描项目可访问性."""
         all_issues = []
         file_count = 0
 
@@ -631,7 +672,7 @@ class AccessibilityCultureManager:
         }
 
     def scan_project_i18n(self) -> dict[str, Any]:
-        """扫描项目国际化"""
+        """扫描项目国际化."""
         all_issues = []
         file_count = 0
 
@@ -647,7 +688,9 @@ class AccessibilityCultureManager:
 
         # 检查翻译完整性
         locale_dir = self.project_path / "locales"
-        translation_completeness = self.i18n_checker.check_translation_completeness(locale_dir)
+        translation_completeness = self.i18n_checker.check_translation_completeness(
+            locale_dir,
+        )
 
         # 按类型分组
         by_type = {}
@@ -662,12 +705,13 @@ class AccessibilityCultureManager:
             "by_type": by_type,
             "translation_completeness": translation_completeness,
             "recommendations": self._generate_i18n_recommendations(
-                all_issues, translation_completeness
+                all_issues,
+                translation_completeness,
             ),
         }
 
     def scan_project_responsive(self) -> dict[str, Any]:
-        """扫描项目响应式设计"""
+        """扫描项目响应式设计."""
         all_issues = []
         file_count = 0
 
@@ -701,7 +745,7 @@ class AccessibilityCultureManager:
         }
 
     def generate_comprehensive_report(self) -> dict[str, Any]:
-        """生成综合可访问性报告"""
+        """生成综合可访问性报告."""
         accessibility_scan = self.scan_project_accessibility()
         i18n_scan = self.scan_project_i18n()
         responsive_scan = self.scan_project_responsive()
@@ -738,12 +782,16 @@ class AccessibilityCultureManager:
     def _should_skip_file(self, file_path: Path) -> bool:
         """判断是否跳过文件"""
         return any(
-            part.startswith(".") or part in ["node_modules", "venv", "__pycache__", "build", "dist"]
+            part.startswith(".")
+            or part in ["node_modules", "venv", "__pycache__", "build", "dist"]
             for part in file_path.parts
         )
 
-    def _calculate_wcag_compliance(self, issues: list[AccessibilityIssue]) -> dict[str, Any]:
-        """计算WCAG合规性"""
+    def _calculate_wcag_compliance(
+        self,
+        issues: list[AccessibilityIssue],
+    ) -> dict[str, Any]:
+        """计算WCAG合规性."""
         level_counts = {level.value: 0 for level in AccessibilityLevel}
 
         for issue in issues:
@@ -757,14 +805,21 @@ class AccessibilityCultureManager:
             "compliant_level": (
                 "None"
                 if level_counts["A"] > 0
-                else ("A" if level_counts["AA"] > 0 else "AA" if level_counts["AAA"] > 0 else "AAA")
+                else (
+                    "A"
+                    if level_counts["AA"] > 0
+                    else "AA"
+                    if level_counts["AAA"] > 0
+                    else "AAA"
+                )
             ),
         }
 
     def _generate_accessibility_recommendations(
-        self, issues: list[AccessibilityIssue]
+        self,
+        issues: list[AccessibilityIssue],
     ) -> list[str]:
-        """生成可访问性建议"""
+        """生成可访问性建议."""
         recommendations = []
 
         error_count = len([i for i in issues if i.severity == "error"])
@@ -775,31 +830,38 @@ class AccessibilityCultureManager:
         if alt_issues > 0:
             recommendations.append("为所有图片添加有意义的alt文本")
 
-        form_issues = len([i for i in issues if "form" in i.rule_id or "label" in i.rule_id])
+        form_issues = len(
+            [i for i in issues if "form" in i.rule_id or "label" in i.rule_id],
+        )
         if form_issues > 0:
             recommendations.append("为表单元素添加适当的标签")
 
         return recommendations
 
     def _generate_i18n_recommendations(
-        self, issues: list[I18nIssue], translation_data: dict[str, Any]
+        self,
+        issues: list[I18nIssue],
+        translation_data: dict[str, Any],
     ) -> list[str]:
-        """生成国际化建议"""
+        """生成国际化建议."""
         recommendations = []
 
         hardcoded_count = len([i for i in issues if i.issue_type == "hardcoded_text"])
         if hardcoded_count > 0:
             recommendations.append(f"替换 {hardcoded_count} 个硬编码文本为国际化函数")
 
-        if "missing_translations" in translation_data and translation_data["missing_translations"]:
+        if translation_data.get("missing_translations"):
             recommendations.append("完善缺失的翻译内容")
 
         recommendations.append("建立翻译内容管理和审核流程")
 
         return recommendations
 
-    def _generate_responsive_recommendations(self, issues: list[ResponsiveIssue]) -> list[str]:
-        """生成响应式设计建议"""
+    def _generate_responsive_recommendations(
+        self,
+        issues: list[ResponsiveIssue],
+    ) -> list[str]:
+        """生成响应式设计建议."""
         recommendations = []
 
         viewport_issues = len([i for i in issues if i.issue_type == "missing_viewport"])
@@ -818,7 +880,7 @@ class AccessibilityCultureManager:
 # 使用示例
 if __name__ == "__main__":
     # 初始化可访问性文化管理器
-    accessibility = AccessibilityCultureManager(Path("."))
+    accessibility = AccessibilityCultureManager(Path())
 
     # 生成综合报告
     report = accessibility.generate_comprehensive_report()

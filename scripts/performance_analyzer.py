@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-性能分析器
+"""性能分析器
 分析代码中可能的性能问题并提供优化建议
 """
 
@@ -44,10 +43,14 @@ class PerformanceAnalyzer:
                     "description": f"无法解析文件: {e}",
                     "suggestion": "检查语法错误",
                     "severity": "error",
-                }
+                },
             ]
 
-    def check_large_functions(self, tree: ast.AST, file_path: Path) -> list[dict[str, Any]]:
+    def check_large_functions(
+        self,
+        tree: ast.AST,
+        file_path: Path,
+    ) -> list[dict[str, Any]]:
         """检查过大的函数"""
         issues = []
 
@@ -66,18 +69,22 @@ class PerformanceAnalyzer:
                                 "description": f"函数 '{node.name}' 过大 ({func_lines} 行)",
                                 "suggestion": "考虑将大函数拆分为多个小函数",
                                 "severity": "warning" if func_lines < 100 else "error",
-                            }
+                            },
                         )
 
         return issues
 
-    def check_nested_loops(self, tree: ast.AST, file_path: Path) -> list[dict[str, Any]]:
+    def check_nested_loops(
+        self,
+        tree: ast.AST,
+        file_path: Path,
+    ) -> list[dict[str, Any]]:
         """检查嵌套循环"""
         issues = []
 
         def count_nested_loops(node, depth=0):
             """count_nested_loops函数"""
-            if isinstance(node, (ast.For, ast.While)):
+            if isinstance(node, ast.For | ast.While):
                 depth += 1
                 if depth > 2:
                     issues.append(
@@ -88,7 +95,7 @@ class PerformanceAnalyzer:
                             "description": f"深度嵌套循环 (深度: {depth})",
                             "suggestion": "考虑使用函数或生成器来减少嵌套",
                             "severity": "warning",
-                        }
+                        },
                     )
 
             for child in ast.iter_child_nodes(node):
@@ -98,7 +105,10 @@ class PerformanceAnalyzer:
         return issues
 
     def check_string_concatenation(
-        self, tree: ast.AST, file_path: Path, lines: list[str]
+        self,
+        tree: ast.AST,
+        file_path: Path,
+        lines: list[str],
     ) -> list[dict[str, Any]]:
         """检查字符串拼接性能问题"""
         issues = []
@@ -109,15 +119,21 @@ class PerformanceAnalyzer:
                 if (
                     isinstance(node.left, ast.Str)
                     or isinstance(node.right, ast.Str)
-                    or (isinstance(node.left, ast.Constant) and isinstance(node.left.value, str))
-                    or (isinstance(node.right, ast.Constant) and isinstance(node.right.value, str))
+                    or (
+                        isinstance(node.left, ast.Constant)
+                        and isinstance(node.left.value, str)
+                    )
+                    or (
+                        isinstance(node.right, ast.Constant)
+                        and isinstance(node.right.value, str)
+                    )
                 ):
                     # 检查是否在循环中
                     parent = node
                     in_loop = False
                     while hasattr(parent, "parent"):
                         parent = parent.parent
-                        if isinstance(parent, (ast.For, ast.While)):
+                        if isinstance(parent, ast.For | ast.While):
                             in_loop = True
                             break
 
@@ -130,13 +146,16 @@ class PerformanceAnalyzer:
                                 "description": "循环中的字符串拼接可能影响性能",
                                 "suggestion": "考虑使用列表收集字符串，最后用join()连接",
                                 "severity": "warning",
-                            }
+                            },
                         )
 
         return issues
 
     def check_inefficient_patterns(
-        self, tree: ast.AST, file_path: Path, lines: list[str]
+        self,
+        tree: ast.AST,
+        file_path: Path,
+        lines: list[str],
     ) -> list[dict[str, Any]]:
         """检查低效的代码模式"""
         issues = []
@@ -154,7 +173,7 @@ class PerformanceAnalyzer:
                         "description": "使用range(len())进行迭代",
                         "suggestion": "考虑直接迭代列表或使用enumerate()",
                         "severity": "info",
-                    }
+                    },
                 )
 
             # 检查重复的字典查找
@@ -167,12 +186,16 @@ class PerformanceAnalyzer:
                         "description": "可能存在重复的字典查找",
                         "suggestion": "考虑将查找结果缓存到变量中",
                         "severity": "info",
-                    }
+                    },
                 )
 
         return issues
 
-    def check_file_size(self, file_path: Path, lines: list[str]) -> list[dict[str, Any]]:
+    def check_file_size(
+        self,
+        file_path: Path,
+        lines: list[str],
+    ) -> list[dict[str, Any]]:
         """检查文件大小"""
         issues = []
         line_count = len(lines)
@@ -186,7 +209,7 @@ class PerformanceAnalyzer:
                     "description": f"文件过大 ({line_count} 行)",
                     "suggestion": "考虑将大文件拆分为多个模块",
                     "severity": "warning" if line_count < 1000 else "error",
-                }
+                },
             )
 
         return issues

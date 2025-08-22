@@ -1,5 +1,4 @@
-"""
-数据治理文化模块 - 数据隐私、质量、血缘追踪和合规检查
+"""数据治理文化模块 - 数据隐私、质量、血缘追踪和合规检查
 
 提供：
 1. 数据隐私保护检查
@@ -225,7 +224,7 @@ class DataPrivacyScanner:
                                 "matched_text": matched_text,
                                 "severity": "high",
                                 "recommendation": f"避免在代码中硬编码{pii_type}信息",
-                            }
+                            },
                         )
 
                 # 检查敏感字段名
@@ -242,7 +241,7 @@ class DataPrivacyScanner:
                                 "matched_text": match.group(),
                                 "severity": "medium",
                                 "recommendation": f"确保{field_type}字段有适当的保护措施",
-                            }
+                            },
                         )
 
         except Exception as e:
@@ -252,7 +251,7 @@ class DataPrivacyScanner:
                     "file": str(file_path),
                     "error": str(e),
                     "severity": "low",
-                }
+                },
             )
 
         return findings
@@ -280,7 +279,7 @@ class DataPrivacyScanner:
                                 "data_type": column_type,
                                 "severity": "high",
                                 "recommendation": f"为{field_type}字段实施加密和访问控制",
-                            }
+                            },
                         )
 
         return findings
@@ -327,7 +326,11 @@ class DataQualityValidator:
 
         return results
 
-    def _validate_rule(self, rule: DataQualityRule, data: list[dict[str, Any]]) -> dict[str, Any]:
+    def _validate_rule(
+        self,
+        rule: DataQualityRule,
+        data: list[dict[str, Any]],
+    ) -> dict[str, Any]:
         """验证单个规则"""
         rule_result = {
             "rule_name": rule.name,
@@ -356,13 +359,11 @@ class DataQualityValidator:
             elif rule.rule_type == "range":
                 min_val = rule.parameters.get("min")
                 max_val = rule.parameters.get("max")
-                if isinstance(field_value, (int, float)):
+                if isinstance(field_value, int | float):
                     is_valid = (min_val is None or field_value >= min_val) and (
                         max_val is None or field_value <= max_val
                     )
-                    issue_message = (
-                        f"字段 {rule.field_name} 值 {field_value} 超出范围 [{min_val}, {max_val}]"
-                    )
+                    issue_message = f"字段 {rule.field_name} 值 {field_value} 超出范围 [{min_val}, {max_val}]"
                 else:
                     is_valid = False
                     issue_message = f"字段 {rule.field_name} 不是数值类型"
@@ -371,7 +372,9 @@ class DataQualityValidator:
                 pattern = rule.parameters.get("pattern")
                 if pattern and isinstance(field_value, str):
                     is_valid = bool(re.match(pattern, field_value))
-                    issue_message = f"字段 {rule.field_name} 值 {field_value} 不匹配模式 {pattern}"
+                    issue_message = (
+                        f"字段 {rule.field_name} 值 {field_value} 不匹配模式 {pattern}"
+                    )
                 else:
                     is_valid = False
                     issue_message = f"字段 {rule.field_name} 模式验证失败"
@@ -388,7 +391,7 @@ class DataQualityValidator:
                         "rule_name": rule.name,
                         "severity": rule.severity,
                         "message": issue_message,
-                    }
+                    },
                 )
 
         return rule_result
@@ -411,7 +414,11 @@ class DataLineageTracker:
         self.edges.append(edge)
 
     def track_transformation(
-        self, source_id: str, target_id: str, transformation: str, **metadata
+        self,
+        source_id: str,
+        target_id: str,
+        transformation: str,
+        **metadata,
     ) -> None:
         """追踪数据转换"""
         edge = DataLineageEdge(
@@ -447,7 +454,11 @@ class DataLineageTracker:
         traverse_upstream(node_id, 0)
         return lineage
 
-    def get_downstream_lineage(self, node_id: str, max_depth: int = 10) -> dict[str, Any]:
+    def get_downstream_lineage(
+        self,
+        node_id: str,
+        max_depth: int = 10,
+    ) -> dict[str, Any]:
         """获取下游血缘"""
         visited = set()
         lineage = {"nodes": {}, "edges": []}
@@ -490,7 +501,7 @@ class DataLineageTracker:
                         "source": edge.source_id,
                         "target": edge.target_id,
                         "transformation": edge.transformation,
-                    }
+                    },
                 )
 
         # 生成建议
@@ -498,7 +509,9 @@ class DataLineageTracker:
             impact_summary["recommendations"].append("影响范围较大，建议分阶段实施变更")
 
         if impact_summary["critical_paths"]:
-            impact_summary["recommendations"].append("存在关键路径，需要额外的测试和验证")
+            impact_summary["recommendations"].append(
+                "存在关键路径，需要额外的测试和验证",
+            )
 
         return impact_summary
 
@@ -532,7 +545,7 @@ class DataLineageTracker:
                 ensure_ascii=False,
             )
 
-        elif format == "dot":
+        if format == "dot":
             # Graphviz DOT格式
             lines = ["digraph DataLineage {"]
 
@@ -543,7 +556,7 @@ class DataLineageTracker:
             # 添加边
             for edge in self.edges:
                 lines.append(
-                    f'  "{edge.source_id}" -> "{edge.target_id}" [label="{edge.transformation}"];'
+                    f'  "{edge.source_id}" -> "{edge.target_id}" [label="{edge.transformation}"];',
                 )
 
             lines.append("}")
@@ -578,27 +591,29 @@ class GDPRComplianceChecker:
         }
 
         personal_data_fields = [
-            field for field in data_inventory if DataCategory.PERSONAL in field.categories
+            field
+            for field in data_inventory
+            if DataCategory.PERSONAL in field.categories
         ]
 
         # 检查数据最小化
-        compliance_report["requirements"]["data_minimization"] = self._check_data_minimization(
-            personal_data_fields
+        compliance_report["requirements"]["data_minimization"] = (
+            self._check_data_minimization(personal_data_fields)
         )
 
         # 检查存储限制
-        compliance_report["requirements"]["storage_limitation"] = self._check_storage_limitation(
-            personal_data_fields
+        compliance_report["requirements"]["storage_limitation"] = (
+            self._check_storage_limitation(personal_data_fields)
         )
 
         # 检查安全措施
         compliance_report["requirements"]["security"] = self._check_security_measures(
-            personal_data_fields
+            personal_data_fields,
         )
 
         # 检查数据准确性
         compliance_report["requirements"]["accuracy"] = self._check_data_accuracy(
-            personal_data_fields
+            personal_data_fields,
         )
 
         # 计算总体评分
@@ -606,9 +621,11 @@ class GDPRComplianceChecker:
         compliance_report["overall_score"] = sum(scores) / len(scores) if scores else 0
 
         # 收集违规和建议
-        for req_name, req_result in compliance_report["requirements"].items():
+        for _req_name, req_result in compliance_report["requirements"].items():
             compliance_report["violations"].extend(req_result.get("violations", []))
-            compliance_report["recommendations"].extend(req_result.get("recommendations", []))
+            compliance_report["recommendations"].extend(
+                req_result.get("recommendations", []),
+            )
 
         return compliance_report
 
@@ -666,7 +683,9 @@ class GDPRComplianceChecker:
                 result["score"] -= 25
 
             if not data_field.anonymization_method:
-                result["violations"].append(f"敏感字段 {data_field.name} 未定义匿名化方法")
+                result["violations"].append(
+                    f"敏感字段 {data_field.name} 未定义匿名化方法",
+                )
                 result["score"] -= 15
 
         if result["violations"]:
@@ -722,13 +741,20 @@ class DataGovernanceManager:
                         field = DataField(
                             name=field_data["name"],
                             data_type=field_data["data_type"],
-                            sensitivity_level=DataSensitivityLevel(field_data["sensitivity_level"]),
-                            categories=[DataCategory(cat) for cat in field_data["categories"]],
+                            sensitivity_level=DataSensitivityLevel(
+                                field_data["sensitivity_level"],
+                            ),
+                            categories=[
+                                DataCategory(cat) for cat in field_data["categories"]
+                            ],
                             description=field_data.get("description", ""),
                             source=field_data.get("source", ""),
                             transformations=field_data.get("transformations", []),
                             retention_period=field_data.get("retention_period"),
-                            encryption_required=field_data.get("encryption_required", False),
+                            encryption_required=field_data.get(
+                                "encryption_required",
+                                False,
+                            ),
                             anonymization_method=field_data.get("anonymization_method"),
                         )
                         self.data_inventory.append(field)
@@ -752,7 +778,7 @@ class DataGovernanceManager:
                     "retention_period": data_field.retention_period,
                     "encryption_required": data_field.encryption_required,
                     "anonymization_method": data_field.anonymization_method,
-                }
+                },
             )
 
         with open(inventory_file, "w", encoding="utf-8") as f:
@@ -765,7 +791,8 @@ class DataGovernanceManager:
         # 扫描Python文件
         for py_file in self.project_path.rglob("*.py"):
             if any(
-                part.startswith(".") or part in ["venv", "__pycache__"] for part in py_file.parts
+                part.startswith(".") or part in ["venv", "__pycache__"]
+                for part in py_file.parts
             ):
                 continue
 
@@ -784,7 +811,9 @@ class DataGovernanceManager:
             "summary": {
                 "high_risk_files": len(set(f["file"] for f in by_severity["high"])),
                 "pii_types_found": len(
-                    set(f.get("pii_type", "") for f in all_findings if f.get("pii_type"))
+                    set(
+                        f.get("pii_type", "") for f in all_findings if f.get("pii_type")
+                    ),
                 ),
                 "recommendations": [
                     "移除代码中的硬编码个人信息",
@@ -821,7 +850,7 @@ class DataGovernanceManager:
 # 使用示例
 if __name__ == "__main__":
     # 初始化数据治理管理器
-    governance = DataGovernanceManager(Path("."))
+    governance = DataGovernanceManager(Path())
 
     # 添加示例数据字段
     user_email = DataField(

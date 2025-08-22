@@ -1,6 +1,4 @@
-"""
-测试增量覆盖率功能
-"""
+"""测试增量覆盖率功能"""
 
 
 def test_diff_coverage_adapter_import():

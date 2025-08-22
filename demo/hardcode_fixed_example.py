@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-硬编码问题修复示例 - 大厂标准的配置管理
-"""
+"""硬编码问题修复示例 - 大厂标准的配置管理"""
 
 import logging
 import os
@@ -128,6 +126,7 @@ class DatabaseService:
 
         Args:
             config: 数据库配置对象
+
         """
         self.config = config
         self.connection = None
@@ -158,6 +157,7 @@ class ExternalApiService:
 
         Args:
             config: API配置对象
+
         """
         self.config = config
 
@@ -169,6 +169,7 @@ class ExternalApiService:
 
         Returns:
             API响应数据
+
         """
         url = f"{self.config.base_url}/users/{user_id}"
         headers = {
@@ -197,6 +198,7 @@ class FileService:
 
         Args:
             log_directory: 日志目录路径
+
         """
         self.log_directory = log_directory or os.getenv("LOG_DIR", "/tmp")
 
@@ -206,6 +208,7 @@ class FileService:
         Args:
             data: 要保存的数据
             filename: 文件名
+
         """
         file_path = os.path.join(self.log_directory, filename)
 
@@ -232,6 +235,7 @@ class DiscountService:
 
         Args:
             config: 折扣配置对象
+
         """
         self.config = config
 
@@ -244,6 +248,7 @@ class DiscountService:
 
         Returns:
             折扣后金额
+
         """
         discount_rates = {
             UserType.PREMIUM: self.config.premium_rate,
@@ -267,6 +272,7 @@ class RateLimitService:
 
         Args:
             config: 限流配置对象
+
         """
         self.config = config
 
@@ -278,12 +284,13 @@ class RateLimitService:
 
         Returns:
             是否允许请求
+
         """
         is_allowed = user_requests <= self.config.max_requests_per_minute
 
         if not is_allowed:
             logger.warning(
-                f"Rate limit exceeded: {user_requests} > {self.config.max_requests_per_minute}"
+                f"Rate limit exceeded: {user_requests} > {self.config.max_requests_per_minute}",
             )
 
         return is_allowed
@@ -298,6 +305,7 @@ class ServerManager:
 
         Args:
             config: 服务器配置对象
+
         """
         self.config = config
 
@@ -343,6 +351,7 @@ class ServiceFactory:
 
         Args:
             config: 应用配置对象
+
         """
         self.config = config
 

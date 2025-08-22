@@ -1,0 +1,20 @@
+# Ruff ignore patterns
+# 排除所有模板文件和目录
+aiculture/templates/
+aiculture/templates/**
+templates/
+templates/**
+examples/
+examples/**
+scaffolds/
+scaffolds/**
+
+# 排除具体的模板文件
+aiculture/templates/pyproject.toml.template
+aiculture/templates/python/pyproject.toml.template
+
+# 排除其他可能的模板文件
+*.template
+*.tmpl
+**/*.template
+**/*.tmpl 

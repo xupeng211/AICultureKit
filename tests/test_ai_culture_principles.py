@@ -1,6 +1,4 @@
-"""
-测试aiculture.ai_culture_principles模块
-"""
+"""测试aiculture.ai_culture_principles模块"""
 
 from aiculture.ai_culture_principles import (
     AICulturePrinciples,
@@ -48,7 +46,9 @@ class TestAICulturePrinciples:
         principles = AICulturePrinciples()
 
         # 测试获取代码质量类别的原则
-        code_quality_principles = principles.get_by_category(PrincipleCategory.CODE_QUALITY)
+        code_quality_principles = principles.get_by_category(
+            PrincipleCategory.CODE_QUALITY,
+        )
         assert isinstance(code_quality_principles, list)
 
         # 验证返回的都是正确类别的原则
@@ -64,7 +64,9 @@ class TestAICulturePrinciples:
             first_principle_name = list(principles.principles.keys())[0]
             found_principle = principles.get_principle(first_principle_name)
             assert found_principle is not None
-            assert found_principle.name == principles.principles[first_principle_name].name
+            assert (
+                found_principle.name == principles.principles[first_principle_name].name
+            )
 
         # 测试获取不存在的原则
         found_principle = principles.get_principle("nonexistent_principle")

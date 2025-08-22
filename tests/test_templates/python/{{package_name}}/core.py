@@ -1,5 +1,4 @@
-"""
-测试模块: aiculture.templatesthon.{{package_name}}.core
+"""测试模块: aiculture.templatesthon.{{package_name}}.core
 TODO: 添加具体的测试用例
 """
 

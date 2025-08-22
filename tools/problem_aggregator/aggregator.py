@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Problem Aggregator - 前置问题聚合器
+"""Problem Aggregator - 前置问题聚合器
 
 在提交前本地就给出"这次提交会被拦截的所有问题清单"
 """
@@ -54,7 +53,11 @@ class ProblemAggregator:
         else:
             # 尝试找到配置文件
             possible_configs = [
-                self.project_root / "tools" / "problem_aggregator" / "rulesets" / "culture.yml",
+                self.project_root
+                / "tools"
+                / "problem_aggregator"
+                / "rulesets"
+                / "culture.yml",
                 self.project_root / ".aiculture" / "config.yml",
                 self.project_root / "aiculture.yml",
             ]
@@ -87,7 +90,12 @@ class ProblemAggregator:
                 cmd = ["git", "diff", base, "--name-only"]
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=30
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=30,
             )
 
             if result.returncode == 0:
@@ -95,9 +103,8 @@ class ProblemAggregator:
                 # 只返回Python文件
                 python_files = [f for f in files if f.endswith(".py")]
                 return python_files
-            else:
-                print(f"警告: 获取变更文件失败: {result.stderr}")
-                return []
+            print(f"警告: 获取变更文件失败: {result.stderr}")
+            return []
 
         except Exception as e:
             print(f"警告: 获取变更文件失败: {e}")
@@ -110,7 +117,6 @@ class ProblemAggregator:
         strict: bool = False,
     ) -> dict[str, Any]:
         """聚合所有问题"""
-
         print("🔍 开始聚合问题检查...")
 
         # 获取要检查的文件
@@ -150,7 +156,7 @@ class ProblemAggregator:
             test_problems = []
             collection_problems = self.tests_adapter.collect_tests()
             coverage_problems = self.tests_adapter.get_coverage_info(
-                self.config.get("culture", {}).get("min_test_coverage", 80.0)
+                self.config.get("culture", {}).get("min_test_coverage", 80.0),
             )
             pattern_problems = self.tests_adapter.check_test_patterns()
 
@@ -169,8 +175,14 @@ class ProblemAggregator:
             if coverage_config.get("enable_diff_cover", True):
                 diff_coverage_problems = self.diff_coverage_adapter.check_diff_coverage(
                     base_branch=base,
-                    changed_lines_threshold=coverage_config.get("changed_lines_threshold", 80.0),
-                    new_files_threshold=coverage_config.get("new_files_threshold", 70.0),
+                    changed_lines_threshold=coverage_config.get(
+                        "changed_lines_threshold",
+                        80.0,
+                    ),
+                    new_files_threshold=coverage_config.get(
+                        "new_files_threshold",
+                        70.0,
+                    ),
                 )
                 all_problems.extend(diff_coverage_problems)
                 print(f"     发现 {len(diff_coverage_problems)} 个增量覆盖率问题")
@@ -238,11 +250,14 @@ class ProblemAggregator:
                                         "message": "发现调试print语句",
                                         "fix_suggestion": "移除print语句或使用logging",
                                         "blocking": False,
-                                    }
+                                    },
                                 )
 
                 # 检查跳过的测试
-                if culture_config.get("forbid_skipping_tests", True) and "test_" in file_path:
+                if (
+                    culture_config.get("forbid_skipping_tests", True)
+                    and "test_" in file_path
+                ):
                     for i, line in enumerate(lines, 1):
                         if "@pytest.mark.skip" in line or "@unittest.skip" in line:
                             problems.append(
@@ -255,7 +270,7 @@ class ProblemAggregator:
                                     "message": "发现跳过的测试",
                                     "fix_suggestion": "修复测试或提供跳过原因",
                                     "blocking": False,
-                                }
+                                },
                             )
 
                 # 检查TODO/FIXME
@@ -272,7 +287,7 @@ class ProblemAggregator:
                                     "message": "发现TODO/FIXME注释",
                                     "fix_suggestion": "完成TODO项目或创建issue跟踪",
                                     "blocking": False,
-                                }
+                                },
                             )
 
             except Exception as e:
@@ -284,7 +299,7 @@ class ProblemAggregator:
                         "file": file_path,
                         "message": f"文件检查失败: {e}",
                         "blocking": False,
-                    }
+                    },
                 )
 
         return problems
@@ -367,7 +382,11 @@ class ProblemAggregator:
 def main():
     """主函数"""
     parser = argparse.ArgumentParser(description="AICultureKit Problem Aggregator")
-    parser.add_argument("--base", default="HEAD", help="Git base for diff (default: HEAD)")
+    parser.add_argument(
+        "--base",
+        default="HEAD",
+        help="Git base for diff (default: HEAD)",
+    )
     parser.add_argument("--out", help="Output JSON file path")
     parser.add_argument("--md", help="Output Markdown report path")
     parser.add_argument(
@@ -388,7 +407,11 @@ def main():
 
     # 运行聚合
     aggregator = ProblemAggregator(config_path=args.config)
-    result = aggregator.aggregate_problems(base=args.base, files=args.files, strict=args.strict)
+    result = aggregator.aggregate_problems(
+        base=args.base,
+        files=args.files,
+        strict=args.strict,
+    )
 
     # 输出JSON
     if args.out:
@@ -417,7 +440,9 @@ def main():
     print(f"   信息: {summary['by_severity'].get('info', 0)} 个")
 
     # 退出码
-    if args.strict and (summary["blocking"] > 0 or summary["by_severity"].get("error", 0) > 0):
+    if args.strict and (
+        summary["blocking"] > 0 or summary["by_severity"].get("error", 0) > 0
+    ):
         print("\n❌ 严格模式：发现阻塞性问题或错误")
         sys.exit(1)
     else:

@@ -1,7 +1,6 @@
-"""
-AICultureKit - 标准化AI主导开发的文化和最佳实践工具包
+"""AICultureKit - 标准化AI主导开发的文化和最佳实践工具包.
 
-这个包提供了：
+这个包提供了:
 - 项目模板和脚手架功能
 - 代码质量和CI/CD配置
 - AI协作指南和最佳实践
@@ -16,8 +15,8 @@ from .cli import main
 from .core import CultureConfig, ProjectTemplate, QualityTools
 
 __all__ = [
+    "CultureConfig",
     "ProjectTemplate",
     "QualityTools",
-    "CultureConfig",
     "main",
 ]

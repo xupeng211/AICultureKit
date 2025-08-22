@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-可访问性文化扩展测试 - 提升覆盖率
-"""
+"""可访问性文化扩展测试 - 提升覆盖率"""
 
 import tempfile
 from pathlib import Path
@@ -44,7 +42,7 @@ def greet_user():
 
 def format_date():
     return "2023-12-25"  # 硬编码日期
-"""
+""",
         )
 
         # 创建HTML文件
@@ -61,7 +59,7 @@ def format_date():
     <button onclick="doSomething()">Click me</button>
 </body>
 </html>
-"""
+""",
         )
 
         result = self.manager.check_project_accessibility()
@@ -237,7 +235,7 @@ ratio = "16:9"
         "theme": "Theme"
     }
 }
-"""
+""",
         )
 
         # 创建中文翻译文件（缺少一些键）
@@ -250,7 +248,7 @@ ratio = "16:9"
         "language": "语言"
     }
 }
-"""
+""",
         )
 
         result = self.checker.check_translation_completeness(locale_dir)
@@ -311,7 +309,7 @@ class TestAccessibilityCheckerExtended:
     <div style="color: #000; background: #fff;">Good contrast text</div>
 </body>
 </html>
-"""
+""",
         )
 
         issues = self.checker.check_file(html_file)
@@ -354,7 +352,7 @@ class TestAccessibilityCheckerExtended:
     background-color: #fff;
     font-size: 16px;
 }
-"""
+""",
         )
 
         issues = self.checker.check_file(css_file)
@@ -396,7 +394,9 @@ class TestI18nIssueExtended:
         assert issue.file_path == "/path/to/file.py"
         assert issue.line_number == 42
         assert issue.text_content == "Hello, World!"
-        assert issue.recommendation == "Use internationalization function like _() or t()"
+        assert (
+            issue.recommendation == "Use internationalization function like _() or t()"
+        )
 
     def test_issue_creation_with_minimal_fields(self):
         """测试创建包含最少字段的问题"""

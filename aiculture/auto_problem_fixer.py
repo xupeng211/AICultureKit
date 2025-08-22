@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-自动问题修复器
+"""自动问题修复器
 
 根据收集到的问题，按照开发文化标准自动进行优化修复。
 """
@@ -42,29 +41,37 @@ class AutoProblemFixer:
 
             # 如果AI修复效果好，直接返回
             if ai_report["success_rate"] >= 70:
-                print(f"\n🎉 AI修复效果优秀 ({ai_report['success_rate']:.1f}%)，使用AI修复结果")
+                print(
+                    f"\n🎉 AI修复效果优秀 ({ai_report['success_rate']:.1f}%)，使用AI修复结果",
+                )
                 return {
                     "total_problems": ai_report["total_problems"],
                     "fixed_count": ai_report["fixed_count"],
                     "failed_count": ai_report["failed_count"],
                     "fixed_issues": [
-                        f"AI修复: {issue['problem']}" for issue in ai_report["fixed_issues"]
+                        f"AI修复: {issue['problem']}"
+                        for issue in ai_report["fixed_issues"]
                     ],
                     "failed_fixes": [
-                        f"AI无法修复: {issue['problem']}" for issue in ai_report["failed_fixes"]
+                        f"AI无法修复: {issue['problem']}"
+                        for issue in ai_report["failed_fixes"]
                     ],
                     "success_rate": ai_report["success_rate"],
                     "method": "AI智能修复",
                 }
-            else:
-                print(f"\n⚠️  AI修复效果一般 ({ai_report['success_rate']:.1f}%)，启动混合修复...")
-                # 记录AI修复的结果
-                self.fixed_issues.extend(
-                    [f"AI修复: {issue['problem']}" for issue in ai_report["fixed_issues"]]
-                )
-                self.failed_fixes.extend(
-                    [f"AI无法修复: {issue['problem']}" for issue in ai_report["failed_fixes"]]
-                )
+            print(
+                f"\n⚠️  AI修复效果一般 ({ai_report['success_rate']:.1f}%)，启动混合修复...",
+            )
+            # 记录AI修复的结果
+            self.fixed_issues.extend(
+                [f"AI修复: {issue['problem']}" for issue in ai_report["fixed_issues"]],
+            )
+            self.failed_fixes.extend(
+                [
+                    f"AI无法修复: {issue['problem']}"
+                    for issue in ai_report["failed_fixes"]
+                ],
+            )
 
         except ImportError:
             print("\n⚠️  AI智能修复模块未找到，使用传统规则修复")
@@ -81,13 +88,17 @@ class AutoProblemFixer:
         # 按优先级修复问题
         for priority_item in problems["fix_priority"]:
             if priority_item["blocking"]:
-                print(f"\n🎯 修复 {priority_item['category']} ({priority_item['count']} 个)")
+                print(
+                    f"\n🎯 修复 {priority_item['category']} ({priority_item['count']} 个)",
+                )
                 self._fix_category_problems(priority_item["category"], problems)
 
         # 修复非阻塞性问题
         for priority_item in problems["fix_priority"]:
             if not priority_item["blocking"]:
-                print(f"\n⚡ 优化 {priority_item['category']} ({priority_item['count']} 个)")
+                print(
+                    f"\n⚡ 优化 {priority_item['category']} ({priority_item['count']} 个)",
+                )
                 self._fix_category_problems(priority_item["category"], problems)
 
         # 生成混合修复报告
@@ -223,6 +234,7 @@ class AutoProblemFixer:
             # 运行black格式化
             result = subprocess.run(
                 ["python", "-m", "black", ".", "--quiet"],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -233,6 +245,7 @@ class AutoProblemFixer:
             # 运行isort导入排序
             result = subprocess.run(
                 ["python", "-m", "isort", ".", "--quiet"],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -293,7 +306,9 @@ if __name__ == "__main__":
             try:
                 if "国际化" in warning["description"]:
                     self._add_i18n_support()
-                    self.fixed_issues.append(f"添加国际化支持: {warning['description']}")
+                    self.fixed_issues.append(
+                        f"添加国际化支持: {warning['description']}",
+                    )
             except Exception as e:
                 self.failed_fixes.append(f"修复失败 - {warning['description']}: {e}")
 

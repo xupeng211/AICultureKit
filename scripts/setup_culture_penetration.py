@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-文化深度渗透设置脚本
+"""文化深度渗透设置脚本
 自动配置文化渗透系统，确保开发文化在项目中彻底执行
 """
 
@@ -204,7 +203,7 @@ def setup_github_actions(project_path: Path) -> None:
                         "with": {"file": "./coverage.xml"},
                     },
                 ],
-            }
+            },
         },
     }
 
@@ -348,7 +347,7 @@ def setup_culture_dashboard(project_path: Path) -> None:
 
 def main():
     """主函数"""
-    project_path = Path(".")
+    project_path = Path()
 
     print("🚀 开始设置文化深度渗透系统")
     print("=" * 60)
@@ -386,7 +385,7 @@ def main():
 
         print("\n🚀 立即启用:")
         print(
-            "   1. 启动实时监控: python -c \"from aiculture.culture_penetration_system import AIDevCultureAssistant; from pathlib import Path; assistant = AIDevCultureAssistant(Path('.')); assistant.start_assistance()\""
+            "   1. 启动实时监控: python -c \"from aiculture.culture_penetration_system import AIDevCultureAssistant; from pathlib import Path; assistant = AIDevCultureAssistant(Path('.')); assistant.start_assistance()\"",
         )
         print("   2. 查看仪表板: open .aiculture/dashboard/index.html")
         print('   3. 测试Git钩子: git add . && git commit -m "test culture check"')

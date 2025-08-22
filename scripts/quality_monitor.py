@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-AICultureKit 实时质量监控系统
+"""AICultureKit 实时质量监控系统
 监控代码质量变化，自动生成报告和通知
 """
 
@@ -42,7 +41,7 @@ class QualityMonitor:
                 line_count INTEGER,
                 quality_score INTEGER
             )
-        """
+        """,
         )
 
         cursor.execute(
@@ -55,7 +54,7 @@ class QualityMonitor:
                 severity TEXT NOT NULL,
                 resolved BOOLEAN DEFAULT FALSE
             )
-        """
+        """,
         )
 
         conn.commit()
@@ -66,6 +65,7 @@ class QualityMonitor:
         try:
             result = subprocess.run(
                 cmd,
+                check=False,
                 shell=True,  # TODO:    考虑使用更安全的方式, capture_output=True, text=True, cwd=self.project_path
             )
             return result.returncode == 0, result.stdout.strip()
@@ -94,7 +94,7 @@ class QualityMonitor:
 
         # 测试信息
         success, output = self.run_command(
-            "python -m pytest --tb=no -q --json-report --json-report-file=temp_test_report.json"
+            "python -m pytest --tb=no -q --json-report --json-report-file=temp_test_report.json",
         )
         if success and Path("temp_test_report.json").exists():
             try:
@@ -107,13 +107,16 @@ class QualityMonitor:
                 pass  # TODO:   添加适当的异常处理
         # 覆盖率信息
         success, output = self.run_command(
-            "python -m pytest --cov=aiculture --cov-report=json --tb=no -q"
+            "python -m pytest --cov=aiculture --cov-report=json --tb=no -q",
         )
         if success and Path("coverage.json").exists():
             try:
                 with open("coverage.json") as f:
                     cov_data = json.load(f)
-                metrics["coverage_percent"] = cov_data.get("totals", {}).get("percent_covered", 0)
+                metrics["coverage_percent"] = cov_data.get("totals", {}).get(
+                    "percent_covered",
+                    0,
+                )
             except Exception:
                 pass  # TODO:   添加适当的异常处理
         # Flake8问题
@@ -132,7 +135,7 @@ class QualityMonitor:
             metrics["file_count"] = int(output)
 
         success, output = self.run_command(
-            "find aiculture -name '*.py' -exec wc -l {} + | tail -1 | awk '{print $1}'"
+            "find aiculture -name '*.py' -exec wc -l {} + | tail -1 | awk '{print $1}'",
         )
         if success and output.isdigit():
             metrics["line_count"] = int(output)
@@ -202,12 +205,14 @@ class QualityMonitor:
             SELECT * FROM quality_metrics
             ORDER BY timestamp DESC
             LIMIT 2
-        """
+        """,
         )
 
         rows = cursor.fetchall()
         if len(rows) >= 2:
-            prev_metrics = dict(zip([col[0] for col in cursor.description], rows[1], strict=False))
+            prev_metrics = dict(
+                zip([col[0] for col in cursor.description], rows[1], strict=False),
+            )
 
             # 检查质量下降
             if current_metrics["quality_score"] < prev_metrics["quality_score"] - 5:
@@ -216,7 +221,7 @@ class QualityMonitor:
                         "type": "quality_decline",
                         "message": f"质量分数下降: {prev_metrics['quality_score']} → {current_metrics['quality_score']}",
                         "severity": "warning",
-                    }
+                    },
                 )
 
             # 检查测试失败增加
@@ -228,17 +233,20 @@ class QualityMonitor:
                         "type": "test_regression",
                         "message": f"测试失败增加: {prev_failed} → {curr_failed}",
                         "severity": "error",
-                    }
+                    },
                 )
 
             # 检查覆盖率下降
-            if current_metrics["coverage_percent"] < prev_metrics["coverage_percent"] - 2:
+            if (
+                current_metrics["coverage_percent"]
+                < prev_metrics["coverage_percent"] - 2
+            ):
                 alerts.append(
                     {
                         "type": "coverage_decline",
                         "message": f"覆盖率下降: {prev_metrics['coverage_percent']:.1f}% → {current_metrics['coverage_percent']:.1f}%",
                         "severity": "warning",
-                    }
+                    },
                 )
 
         # 检查绝对阈值
@@ -248,7 +256,7 @@ class QualityMonitor:
                     "type": "low_coverage",
                     "message": f"代码覆盖率过低: {current_metrics['coverage_percent']:.1f}%",
                     "severity": "warning",
-                }
+                },
             )
 
         if current_metrics["test_count"] - current_metrics["test_passed"] > 0:
@@ -257,7 +265,7 @@ class QualityMonitor:
                     "type": "test_failures",
                     "message": f"有 {current_metrics['test_count'] - current_metrics['test_passed']} 个测试失败",
                     "severity": "error",
-                }
+                },
             )
 
         # 保存警报
@@ -342,7 +350,9 @@ class QualityMonitor:
         print(f"  质量分数: {metrics['quality_score']}/100")
         print(f"  测试通过: {metrics['test_passed']}/{metrics['test_count']}")
         print(f"  代码覆盖率: {metrics['coverage_percent']:.1f}%")
-        print(f"  代码问题: {metrics['flake8_issues']} flake8, {metrics['mypy_errors']} mypy")
+        print(
+            f"  代码问题: {metrics['flake8_issues']} flake8, {metrics['mypy_errors']} mypy",
+        )
 
         if alerts:
             print(f"\n🚨 发现 {len(alerts)} 个警报:")

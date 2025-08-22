@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-AI学习系统综合测试 - 专门提升覆盖率
-"""
+"""AI学习系统综合测试 - 专门提升覆盖率"""
 
 import tempfile
 from pathlib import Path
@@ -44,7 +42,7 @@ class TestClass:
 
     def test_method(self):
         return "test"
-"""
+""",
         )
 
         # 执行学习
@@ -67,7 +65,7 @@ def function_one():
 class ClassOne:
     def method_one(self):
         return "one"
-"""
+""",
         )
 
         (self.temp_dir / "module2.py").write_text(
@@ -78,7 +76,7 @@ def function_two():
 class ClassTwo:
     def method_two(self):
         return "two"
-"""
+""",
         )
 
         # 执行学习

@@ -1,6 +1,4 @@
-"""
-可访问性文化模块测试
-"""
+"""可访问性文化模块测试"""
 
 import tempfile
 from pathlib import Path
@@ -56,7 +54,9 @@ class TestAccessibilityChecker:
         issues = self.checker.check_html_content(bad_html, "test.html")
 
         # 应该找到标题结构问题
-        heading_issues = [issue for issue in issues if "heading" in issue.description.lower()]
+        heading_issues = [
+            issue for issue in issues if "heading" in issue.description.lower()
+        ]
         assert len(heading_issues) >= 1
 
     def test_color_contrast_check(self):
@@ -76,7 +76,9 @@ class TestAccessibilityChecker:
         issues = self.checker.check_css_content(css_content, "test.css")
 
         # 应该找到对比度问题
-        contrast_issues = [issue for issue in issues if "contrast" in issue.description.lower()]
+        contrast_issues = [
+            issue for issue in issues if "contrast" in issue.description.lower()
+        ]
         assert len(contrast_issues) >= 0  # 可能找到对比度问题
 
     def test_form_accessibility_check(self):
@@ -102,7 +104,8 @@ class TestAccessibilityChecker:
         form_issues = [
             issue
             for issue in issues
-            if "label" in issue.description.lower() or "form" in issue.description.lower()
+            if "label" in issue.description.lower()
+            or "form" in issue.description.lower()
         ]
         assert len(form_issues) >= 1
 
@@ -124,7 +127,8 @@ class TestAccessibilityChecker:
         keyboard_issues = [
             issue
             for issue in issues
-            if "keyboard" in issue.description.lower() or "tabindex" in issue.description.lower()
+            if "keyboard" in issue.description.lower()
+            or "tabindex" in issue.description.lower()
         ]
         assert len(keyboard_issues) >= 0  # 可能找到键盘导航问题
 
@@ -174,7 +178,9 @@ class TestInternationalizationChecker:
         issues = self.checker.check_python_content(python_content, "test.py")
 
         # 应该找到硬编码文本
-        hardcoded_issues = [issue for issue in issues if "hardcoded" in issue.description.lower()]
+        hardcoded_issues = [
+            issue for issue in issues if "hardcoded" in issue.description.lower()
+        ]
         assert len(hardcoded_issues) >= 2
 
     def test_chinese_text_detection(self):
@@ -222,8 +228,12 @@ class TestInternationalizationChecker:
         issues2 = self.checker.check_html_content(html_with_lang, "with_lang.html")
 
         # 没有lang属性的应该有问题
-        lang_issues1 = [issue for issue in issues1 if "lang" in issue.description.lower()]
-        lang_issues2 = [issue for issue in issues2 if "lang" in issue.description.lower()]
+        lang_issues1 = [
+            issue for issue in issues1 if "lang" in issue.description.lower()
+        ]
+        lang_issues2 = [
+            issue for issue in issues2 if "lang" in issue.description.lower()
+        ]
 
         assert len(lang_issues1) >= 1
         assert len(lang_issues2) == 0
@@ -305,12 +315,22 @@ class TestResponsiveDesignChecker:
         </html>
         """
 
-        issues1 = self.checker.check_html_content(html_without_viewport, "no_viewport.html")
-        issues2 = self.checker.check_html_content(html_with_viewport, "with_viewport.html")
+        issues1 = self.checker.check_html_content(
+            html_without_viewport,
+            "no_viewport.html",
+        )
+        issues2 = self.checker.check_html_content(
+            html_with_viewport,
+            "with_viewport.html",
+        )
 
         # 没有viewport的应该有问题
-        viewport_issues1 = [issue for issue in issues1 if "viewport" in issue.description.lower()]
-        viewport_issues2 = [issue for issue in issues2 if "viewport" in issue.description.lower()]
+        viewport_issues1 = [
+            issue for issue in issues1 if "viewport" in issue.description.lower()
+        ]
+        viewport_issues2 = [
+            issue for issue in issues2 if "viewport" in issue.description.lower()
+        ]
 
         assert len(viewport_issues1) >= 1
         assert len(viewport_issues2) == 0
@@ -344,8 +364,12 @@ class TestResponsiveDesignChecker:
         issues2 = self.checker.check_css_content(css_with_media, "with_media.css")
 
         # 没有媒体查询的可能有问题
-        media_issues1 = [issue for issue in issues1 if "media" in issue.description.lower()]
-        media_issues2 = [issue for issue in issues2 if "media" in issue.description.lower()]
+        media_issues1 = [
+            issue for issue in issues1 if "media" in issue.description.lower()
+        ]
+        media_issues2 = [
+            issue for issue in issues2 if "media" in issue.description.lower()
+        ]
 
         # 至少第一个应该有更多问题
         assert len(issues1) >= len(issues2)
@@ -366,7 +390,9 @@ class TestResponsiveDesignChecker:
         issues = self.checker.check_css_content(css_content, "widths.css")
 
         # 可能找到固定宽度问题
-        width_issues = [issue for issue in issues if "width" in issue.description.lower()]
+        width_issues = [
+            issue for issue in issues if "width" in issue.description.lower()
+        ]
         assert len(width_issues) >= 0
 
     def test_touch_target_size_check(self):
@@ -389,7 +415,8 @@ class TestResponsiveDesignChecker:
         touch_issues = [
             issue
             for issue in issues
-            if "touch" in issue.description.lower() or "size" in issue.description.lower()
+            if "touch" in issue.description.lower()
+            or "size" in issue.description.lower()
         ]
         assert len(touch_issues) >= 0
 
@@ -430,7 +457,7 @@ class TestAccessibilityCultureManager:
                     <h3>Subtitle</h3>     <!-- 跳过h2 -->
                 </body>
             </html>
-            """
+            """,
             )
 
         # 创建测试Python文件
@@ -445,7 +472,7 @@ class TestAccessibilityCultureManager:
             def welcome():
                 """welcome函数"""
                 print("欢迎使用")  # 硬编码中文
-            '''
+            ''',
             )
 
         # 扫描项目
@@ -474,7 +501,7 @@ class TestAccessibilityCultureManager:
                     <div onclick="click()">Click me</div>  <!-- 不可访问 -->
                 </body>
             </html>
-            """
+            """,
             )
 
         css_file = self.temp_dir / "style.css"
@@ -489,7 +516,7 @@ class TestAccessibilityCultureManager:
                 width: 15px;    /* 触摸目标太小 */
                 height: 15px;
             }
-            """
+            """,
             )
 
         # 生成综合报告
@@ -523,7 +550,7 @@ class TestAccessibilityCultureManager:
                     <p style="color: #888; background: #999;">Low contrast</p>  <!-- 轻微 -->
                 </body>
             </html>
-            """
+            """,
             )
 
         scan_result = self.manager.scan_project()
@@ -586,7 +613,7 @@ class TestAccessibilityCultureIntegration:
                         </main>
                     </body>
                 </html>
-                """
+                """,
                 )
 
             css_file = temp_dir / "style.css"
@@ -616,7 +643,7 @@ class TestAccessibilityCultureIntegration:
                     min-height: 44px;
                     padding: 10px 20px;
                 }
-                """
+                """,
                 )
 
             py_file = temp_dir / "app.py"
@@ -636,7 +663,7 @@ class TestAccessibilityCultureIntegration:
                 def get_message():
                     """get_message函数"""
                     return {"message": _("Welcome to our application")}
-                '''
+                ''',
                 )
 
             # 执行完整的可访问性检查

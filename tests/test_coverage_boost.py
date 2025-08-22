@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-覆盖率提升测试 - 专门用于提升测试覆盖率
-"""
+"""覆盖率提升测试 - 专门用于提升测试覆盖率"""
 
 import tempfile
 from pathlib import Path

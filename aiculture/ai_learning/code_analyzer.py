@@ -1,5 +1,4 @@
-"""
-AI学习系统 - 代码分析器
+"""AI学习系统 - 代码分析器
 
 负责分析项目代码，提取各种模式和特征。
 """
@@ -236,7 +235,9 @@ class CodeAnalyzer:
 
         # 计算文档覆盖率
         total_items = doc_data["total_functions"] + doc_data["total_classes"]
-        documented_items = doc_data["documented_functions"] + doc_data["documented_classes"]
+        documented_items = (
+            doc_data["documented_functions"] + doc_data["documented_classes"]
+        )
 
         if total_items > 0:
             doc_data["coverage"] = documented_items / total_items
@@ -272,7 +273,7 @@ class CodeAnalyzer:
                                     "name": node.name,
                                     "complexity": complexity,
                                     "file": str(file_path),
-                                }
+                                },
                             )
 
             except (SyntaxError, UnicodeDecodeError):
@@ -280,10 +281,12 @@ class CodeAnalyzer:
 
         # 计算统计信息
         if complexity_data["function_complexities"]:
-            complexity_data["avg_complexity"] = sum(complexity_data["function_complexities"]) / len(
-                complexity_data["function_complexities"]
+            complexity_data["avg_complexity"] = sum(
+                complexity_data["function_complexities"],
+            ) / len(complexity_data["function_complexities"])
+            complexity_data["max_complexity"] = max(
+                complexity_data["function_complexities"],
             )
-            complexity_data["max_complexity"] = max(complexity_data["function_complexities"])
 
         return complexity_data
 
@@ -292,11 +295,11 @@ class CodeAnalyzer:
         complexity = 1  # 基础复杂度
 
         for child in ast.walk(node):
-            if isinstance(child, (ast.If, ast.While, ast.For, ast.AsyncFor)):
-                complexity += 1
-            elif isinstance(child, ast.ExceptHandler):
-                complexity += 1
-            elif isinstance(child, ast.With, ast.AsyncWith):
+            if (
+                isinstance(child, ast.If | ast.While | ast.For | ast.AsyncFor)
+                or isinstance(child, ast.ExceptHandler)
+                or isinstance(child, ast.With, ast.AsyncWith)
+            ):
                 complexity += 1
             elif isinstance(child, ast.BoolOp):
                 complexity += len(child.values) - 1
@@ -370,7 +373,8 @@ class CodeAnalyzer:
 
                 # 检查是否为测试文件
                 is_test_file = (
-                    "test" in file_path.name.lower() or "test" in str(file_path.parent).lower()
+                    "test" in file_path.name.lower()
+                    or "test" in str(file_path.parent).lower()
                 )
 
                 if is_test_file:
@@ -386,7 +390,9 @@ class CodeAnalyzer:
                 # 计算测试函数数量
                 tree = ast.parse(content)
                 for node in ast.walk(tree):
-                    if isinstance(node, ast.FunctionDef) and node.name.startswith("test_"):
+                    if isinstance(node, ast.FunctionDef) and node.name.startswith(
+                        "test_",
+                    ):
                         testing_data["test_functions"] += 1
 
             except (SyntaxError, UnicodeDecodeError):
@@ -394,6 +400,8 @@ class CodeAnalyzer:
 
         # 估算测试覆盖率
         if len(python_files) > 0:
-            testing_data["test_coverage_estimate"] = testing_data["test_files"] / len(python_files)
+            testing_data["test_coverage_estimate"] = testing_data["test_files"] / len(
+                python_files,
+            )
 
         return testing_data

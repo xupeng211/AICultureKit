@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-文档质量分析工具
-"""
+"""文档质量分析工具"""
 
 import ast
 import re
@@ -79,7 +77,7 @@ class DocumentationAnalyzer:
                     severity="medium",
                     description="模块缺少文档字符串",
                     suggestion="添加模块级别的文档字符串，说明模块的用途和功能",
-                )
+                ),
             )
         elif len(module_docstring.strip()) < 10:
             self.issues.append(
@@ -90,7 +88,7 @@ class DocumentationAnalyzer:
                     severity="low",
                     description="模块文档字符串过短",
                     suggestion="扩展模块文档字符串，提供更详细的说明",
-                )
+                ),
             )
 
     def _check_class_docstrings(self, file_path: Path, tree: ast.AST):
@@ -108,7 +106,7 @@ class DocumentationAnalyzer:
                             severity="medium",
                             description=f"类 {node.name} 缺少文档字符串",
                             suggestion="添加类文档字符串，说明类的用途、属性和方法",
-                        )
+                        ),
                     )
                 elif len(class_docstring.strip()) < 20:
                     self.issues.append(
@@ -119,7 +117,7 @@ class DocumentationAnalyzer:
                             severity="low",
                             description=f"类 {node.name} 文档字符串过短",
                             suggestion="扩展类文档字符串，提供更详细的说明",
-                        )
+                        ),
                     )
 
     def _check_function_docstrings(self, file_path: Path, tree: ast.AST):
@@ -141,7 +139,7 @@ class DocumentationAnalyzer:
                             severity="low",
                             description=f"函数 {node.name} 缺少文档字符串",
                             suggestion="添加函数文档字符串，说明参数、返回值和功能",
-                        )
+                        ),
                     )
                 elif len(func_docstring.strip()) < 15:
                     self.issues.append(
@@ -152,7 +150,7 @@ class DocumentationAnalyzer:
                             severity="low",
                             description=f"函数 {node.name} 文档字符串过短",
                             suggestion="扩展函数文档字符串，提供更详细的说明",
-                        )
+                        ),
                     )
 
                 # 检查参数文档
@@ -166,7 +164,7 @@ class DocumentationAnalyzer:
                                 severity="low",
                                 description=f"函数 {node.name} 缺少参数文档",
                                 suggestion="在文档字符串中添加参数说明",
-                            )
+                            ),
                         )
 
     def _analyze_markdown_docs(self):
@@ -202,7 +200,7 @@ class DocumentationAnalyzer:
                     severity="medium",
                     description="Markdown文档缺少标题",
                     suggestion="在文档开头添加主标题",
-                )
+                ),
             )
 
         # 检查文档长度
@@ -215,7 +213,7 @@ class DocumentationAnalyzer:
                     severity="low",
                     description="文档内容过短",
                     suggestion="扩展文档内容，提供更详细的信息",
-                )
+                ),
             )
 
     def _check_markdown_links(self, file_path: Path, content: str):
@@ -224,7 +222,7 @@ class DocumentationAnalyzer:
         link_pattern = r"\[([^\]]+)\]\(([^)]+)\)"
         links = re.findall(link_pattern, content)
 
-        for i, (text, url) in enumerate(links, 1):
+        for i, (_text, url) in enumerate(links, 1):
             # 检查相对路径链接是否存在
             if not url.startswith(("http://", "https://", "mailto:")):
                 link_path = file_path.parent / url
@@ -237,7 +235,7 @@ class DocumentationAnalyzer:
                             severity="medium",
                             description=f"链接指向不存在的文件: {url}",
                             suggestion="检查链接路径是否正确或创建对应的文件",
-                        )
+                        ),
                     )
 
     def _analyze_code_comments(self):
@@ -273,7 +271,7 @@ class DocumentationAnalyzer:
                             severity="low",
                             description="TODO注释过短，缺少详细说明",
                             suggestion="扩展TODO注释，说明具体需要做什么",
-                        )
+                        ),
                     )
 
             # 检查单行注释
@@ -288,7 +286,7 @@ class DocumentationAnalyzer:
                             severity="low",
                             description="注释过短，缺少有用信息",
                             suggestion="提供更详细的注释说明",
-                        )
+                        ),
                     )
 
     def _has_parameter_docs(self, docstring: str) -> bool:
@@ -345,7 +343,7 @@ class DocumentationAnalyzer:
 
 def main():
     """main函数"""
-    analyzer = DocumentationAnalyzer(Path("."))
+    analyzer = DocumentationAnalyzer(Path())
     report = analyzer.analyze_documentation()
 
     print("\n📚 文档与注释质量分析报告")

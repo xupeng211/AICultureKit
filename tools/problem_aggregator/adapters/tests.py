@@ -1,6 +1,4 @@
-"""
-Tests and coverage adapter for pytest
-"""
+"""Tests and coverage adapter for pytest"""
 
 import subprocess
 import xml.etree.ElementTree as ET
@@ -23,7 +21,12 @@ class TestsAdapter:
             cmd = ["python", "-m", "pytest", "--collect-only", "--quiet", "--tb=no"]
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=60
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=60,
             )
 
             if result.returncode != 0:
@@ -35,7 +38,7 @@ class TestsAdapter:
                         "message": f"测试收集失败: {result.stderr[:200]}",
                         "fix_suggestion": "检查测试文件语法和导入",
                         "blocking": True,
-                    }
+                    },
                 )
             else:
                 # 解析收集到的测试数量
@@ -57,7 +60,7 @@ class TestsAdapter:
                             "message": "未发现任何测试用例",
                             "fix_suggestion": "添加测试文件和测试用例",
                             "blocking": False,
-                        }
+                        },
                     )
 
         except subprocess.TimeoutExpired:
@@ -68,7 +71,7 @@ class TestsAdapter:
                     "severity": "error",
                     "message": "测试收集超时",
                     "blocking": False,
-                }
+                },
             )
         except FileNotFoundError:
             problems.append(
@@ -78,7 +81,7 @@ class TestsAdapter:
                     "severity": "warning",
                     "message": "Pytest未安装，跳过测试检查",
                     "blocking": False,
-                }
+                },
             )
         except Exception as e:
             problems.append(
@@ -88,7 +91,7 @@ class TestsAdapter:
                     "severity": "warning",
                     "message": f"测试收集失败: {e}",
                     "blocking": False,
-                }
+                },
             )
 
         return problems
@@ -102,7 +105,12 @@ class TestsAdapter:
             cmd = ["python", "-m", "pytest", "--maxfail=1", "--tb=short", "--quiet"]
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=120
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=120,
             )
 
             if result.returncode != 0:
@@ -123,7 +131,7 @@ class TestsAdapter:
                         "message": f'测试失败: {"; ".join(failure_info[:3])}',
                         "fix_suggestion": "修复失败的测试用例",
                         "blocking": True,
-                    }
+                    },
                 )
 
         except subprocess.TimeoutExpired:
@@ -135,7 +143,7 @@ class TestsAdapter:
                     "message": "测试运行超时",
                     "fix_suggestion": "优化测试性能或增加超时时间",
                     "blocking": True,
-                }
+                },
             )
         except Exception as e:
             problems.append(
@@ -145,7 +153,7 @@ class TestsAdapter:
                     "severity": "warning",
                     "message": f"测试运行失败: {e}",
                     "blocking": False,
-                }
+                },
             )
 
         return problems
@@ -167,7 +175,12 @@ class TestsAdapter:
             ]
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=180
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=180,
             )
 
             # 尝试解析XML覆盖率报告
@@ -197,16 +210,20 @@ class TestsAdapter:
                                         "required_coverage": min_coverage,
                                         "branch_coverage": branch_rate,
                                     },
-                                }
+                                },
                             )
 
                         # 检查低覆盖率文件
                         for package in root.findall(".//package"):
                             for class_elem in package.findall(".//class"):
                                 filename = class_elem.get("filename", "")
-                                class_line_rate = float(class_elem.get("line-rate", 0)) * 100
+                                class_line_rate = (
+                                    float(class_elem.get("line-rate", 0)) * 100
+                                )
 
-                                if class_line_rate < min_coverage * 0.7:  # 低于70%的文件
+                                if (
+                                    class_line_rate < min_coverage * 0.7
+                                ):  # 低于70%的文件
                                     problems.append(
                                         {
                                             "tool": "coverage",
@@ -216,8 +233,10 @@ class TestsAdapter:
                                             "message": f"文件覆盖率过低: {class_line_rate:.1f}%",
                                             "fix_suggestion": "为此文件添加更多测试用例",
                                             "blocking": False,
-                                            "metadata": {"file_coverage": class_line_rate},
-                                        }
+                                            "metadata": {
+                                                "file_coverage": class_line_rate,
+                                            },
+                                        },
                                     )
 
                 except ET.ParseError:
@@ -228,7 +247,7 @@ class TestsAdapter:
                             "severity": "warning",
                             "message": "覆盖率报告解析失败",
                             "blocking": False,
-                        }
+                        },
                     )
             else:
                 # 尝试从stdout解析覆盖率
@@ -258,7 +277,7 @@ class TestsAdapter:
                                                 "current_coverage": current_coverage,
                                                 "required_coverage": min_coverage,
                                             },
-                                        }
+                                        },
                                     )
                                 break
                     except ValueError:
@@ -272,7 +291,7 @@ class TestsAdapter:
                             "message": "无法获取覆盖率信息",
                             "fix_suggestion": "确保安装了pytest-cov插件",
                             "blocking": False,
-                        }
+                        },
                     )
 
         except subprocess.TimeoutExpired:
@@ -283,7 +302,7 @@ class TestsAdapter:
                     "severity": "error",
                     "message": "覆盖率检查超时",
                     "blocking": False,
-                }
+                },
             )
         except FileNotFoundError:
             problems.append(
@@ -293,7 +312,7 @@ class TestsAdapter:
                     "severity": "info",
                     "message": "Pytest-cov未安装，跳过覆盖率检查",
                     "blocking": False,
-                }
+                },
             )
         except Exception as e:
             problems.append(
@@ -303,7 +322,7 @@ class TestsAdapter:
                     "severity": "warning",
                     "message": f"覆盖率检查失败: {e}",
                     "blocking": False,
-                }
+                },
             )
 
         return problems
@@ -317,7 +336,12 @@ class TestsAdapter:
             cmd = ["python", "-m", "pytest", "--collect-only", "-v"]
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True, timeout=60
+                cmd,
+                check=False,
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+                timeout=60,
             )
 
             if "SKIPPED" in result.stdout:
@@ -330,7 +354,7 @@ class TestsAdapter:
                         "message": f"发现 {skip_count} 个跳过的测试",
                         "fix_suggestion": "检查跳过的测试是否有合理原因",
                         "blocking": False,
-                    }
+                    },
                 )
 
         except Exception as e:
@@ -341,7 +365,7 @@ class TestsAdapter:
                     "severity": "info",
                     "message": f"测试模式检查失败: {e}",
                     "blocking": False,
-                }
+                },
             )
 
         return problems
@@ -366,7 +390,9 @@ def main():
     all_problems = collection_problems + coverage_problems + pattern_problems
     blocking_problems = [p for p in all_problems if p.get("blocking", False)]
 
-    print(f"总计: {len(all_problems)} 个测试问题，其中 {len(blocking_problems)} 个阻塞性问题")
+    print(
+        f"总计: {len(all_problems)} 个测试问题，其中 {len(blocking_problems)} 个阻塞性问题",
+    )
 
 
 if __name__ == "__main__":

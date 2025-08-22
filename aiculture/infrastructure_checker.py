@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-🏗️ 基础设施检查器 - 检查项目基础设施配置
+"""🏗️ 基础设施检查器 - 检查项目基础设施配置
 
 这个模块用于检查项目的基础设施配置，包括环境管理、依赖管理、
 配置管理、跨平台兼容性等问题。
@@ -35,6 +34,7 @@ class InfrastructureChecker:
 
         Args:
             project_path: 项目根目录路径
+
         """
         self.project_path = Path(project_path)
         self.violations: list[InfrastructureViolation] = []
@@ -44,6 +44,7 @@ class InfrastructureChecker:
 
         Returns:
             发现的违规列表
+
         """
         self.violations.clear()
 
@@ -92,7 +93,7 @@ class InfrastructureChecker:
                 line_number=line_number,
                 suggestion=suggestion,
                 auto_fixable=auto_fixable,
-            )
+            ),
         )
 
     # 环境管理检查
@@ -157,7 +158,10 @@ class InfrastructureChecker:
                 match = re.search(r'requires-python\s*=\s*["\']([^"\']+)["\']', content)
                 if match:
                     version_requirement = match.group(1)
-                    if ">=" in version_requirement and version_requirement.count(".") < 2:
+                    if (
+                        ">=" in version_requirement
+                        and version_requirement.count(".") < 2
+                    ):
                         self._add_violation(
                             category="版本一致性",
                             severity="warning",
@@ -175,7 +179,9 @@ class InfrastructureChecker:
                 content = workflow_file.read_text()
                 if "python-version" in content or "PYTHON_VERSION" in content:
                     # 简单检查是否使用了不同的Python版本
-                    current_python = f"{sys.version_info.major}.{sys.version_info.minor}"
+                    current_python = (
+                        f"{sys.version_info.major}.{sys.version_info.minor}"
+                    )
                     if current_python not in content:
                         self._add_violation(
                             category="版本一致性",
@@ -385,8 +391,7 @@ class InfrastructureChecker:
         jenkins_file = self.project_path / "Jenkinsfile"
 
         has_ci_cd = (
-            github_actions.exists()
-            and any(github_actions.glob("*.yml"))
+            (github_actions.exists() and any(github_actions.glob("*.yml")))
             or gitlab_ci.exists()
             or jenkins_file.exists()
         )
@@ -414,11 +419,17 @@ class InfrastructureChecker:
                 content = py_file.read_text(encoding="utf-8")
 
                 # 检查硬编码路径分隔符
-                if "\\\\" in content or content.count("/") > content.count("os.path") * 3:
+                if (
+                    "\\\\" in content
+                    or content.count("/") > content.count("os.path") * 3
+                ):
                     # 简单的启发式检查
                     lines = content.split("\n")
                     for i, line in enumerate(lines, 1):
-                        if re.search(r'["\'][A-Za-z]:[\\\/]', line) or line.count("\\\\") > 0:
+                        if (
+                            re.search(r'["\'][A-Za-z]:[\\\/]', line)
+                            or line.count("\\\\") > 0
+                        ):
                             self._add_violation(
                                 category="跨平台兼容性",
                                 severity="warning",
@@ -497,11 +508,17 @@ class InfrastructureChecker:
             or os.environ.get("VIRTUAL_ENV") is not None
         )
 
-    def get_violations_by_severity(self, severity: str) -> list[InfrastructureViolation]:
+    def get_violations_by_severity(
+        self,
+        severity: str,
+    ) -> list[InfrastructureViolation]:
         """按严重程度获取违规"""
         return [v for v in self.violations if v.severity == severity]
 
-    def get_violations_by_category(self, category: str) -> list[InfrastructureViolation]:
+    def get_violations_by_category(
+        self,
+        category: str,
+    ) -> list[InfrastructureViolation]:
         """按分类获取违规"""
         return [v for v in self.violations if v.category == category]
 
@@ -517,7 +534,7 @@ class InfrastructureChecker:
         info_count = len(self.get_violations_by_severity("info"))
         auto_fixable_count = len(self.get_auto_fixable_violations())
 
-        categories = {}
+        categories: dict[str, list] = {}
         for violation in self.violations:
             if violation.category not in categories:
                 categories[violation.category] = []
@@ -529,7 +546,7 @@ class InfrastructureChecker:
                     "line_number": violation.line_number,
                     "suggestion": violation.suggestion,
                     "auto_fixable": violation.auto_fixable,
-                }
+                },
             )
 
         return {
@@ -542,6 +559,7 @@ class InfrastructureChecker:
             },
             "categories": categories,
             "infrastructure_score": max(
-                0, 100 - (critical_count * 20 + warning_count * 10 + info_count * 2)
+                0,
+                100 - (critical_count * 20 + warning_count * 10 + info_count * 2),
             ),
         }

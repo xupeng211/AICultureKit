@@ -1,5 +1,4 @@
-"""
-监控配置管理模块
+"""监控配置管理模块
 提供Grafana、Prometheus等监控系统的配置生成和管理
 """
 
@@ -98,7 +97,8 @@ class MonitoringConfigManager:
         self.dashboards.append(dashboard)
 
     def generate_prometheus_config(
-        self, scrape_configs: list[dict[str, Any]] = None
+        self,
+        scrape_configs: list[dict[str, Any]] = None,
     ) -> dict[str, Any]:
         """生成Prometheus配置"""
         default_scrape_configs = [
@@ -107,14 +107,18 @@ class MonitoringConfigManager:
                 "static_configs": [{"targets": ["localhost:8000"]}],
                 "scrape_interval": "15s",
                 "metrics_path": "/metrics",
-            }
+            },
         ]
 
         config = {
             "global": {"scrape_interval": "15s", "evaluation_interval": "15s"},
             "rule_files": ["alert_rules.yml"],
             "scrape_configs": scrape_configs or default_scrape_configs,
-            "alerting": {"alertmanagers": [{"static_configs": [{"targets": ["localhost:9093"]}]}]},
+            "alerting": {
+                "alertmanagers": [
+                    {"static_configs": [{"targets": ["localhost:9093"]}]}
+                ],
+            },
         }
 
         return config
@@ -140,7 +144,8 @@ class MonitoringConfigManager:
         return {"groups": groups}
 
     def generate_grafana_datasource(
-        self, prometheus_url: str = "http://localhost:9090"
+        self,
+        prometheus_url: str = "http://localhost:9090",
     ) -> dict[str, Any]:
         """生成Grafana数据源配置"""
         return {
@@ -153,7 +158,7 @@ class MonitoringConfigManager:
                     "url": prometheus_url,
                     "isDefault": True,
                     "editable": True,
-                }
+                },
             ],
         }
 
@@ -164,7 +169,12 @@ class MonitoringConfigManager:
                 "id": 1,
                 "title": _("Culture Quality Score"),
                 "type": "stat",
-                "targets": [{"expr": "aiculture_quality_score", "legendFormat": "Quality Score"}],
+                "targets": [
+                    {
+                        "expr": "aiculture_quality_score",
+                        "legendFormat": "Quality Score",
+                    },
+                ],
                 "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
                 "options": {
                     "reduceOptions": {
@@ -186,12 +196,12 @@ class MonitoringConfigManager:
                                 {"color": "red", "value": 0},
                                 {"color": "yellow", "value": 70},
                                 {"color": "green", "value": 85},
-                            ]
+                            ],
                         },
                         "unit": "percent",
                         "min": 0,
                         "max": 100,
-                    }
+                    },
                 },
             },
             {
@@ -202,7 +212,7 @@ class MonitoringConfigManager:
                     {
                         "expr": "sum by (principle) (aiculture_violations_total)",
                         "legendFormat": "{{principle}}",
-                    }
+                    },
                 ],
                 "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
                 "options": {
@@ -224,10 +234,12 @@ class MonitoringConfigManager:
                     {
                         "expr": "aiculture_test_coverage_percent",
                         "legendFormat": "Test Coverage",
-                    }
+                    },
                 ],
                 "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8},
-                "yAxes": [{"label": "Percentage", "min": 0, "max": 100, "unit": "percent"}],
+                "yAxes": [
+                    {"label": "Percentage", "min": 0, "max": 100, "unit": "percent"},
+                ],
                 "thresholds": [
                     {
                         "value": 80,
@@ -235,7 +247,7 @@ class MonitoringConfigManager:
                         "op": "lt",
                         "fill": True,
                         "line": True,
-                    }
+                    },
                 ],
             },
             {
@@ -247,11 +259,13 @@ class MonitoringConfigManager:
                         "expr": "aiculture_security_issues",
                         "format": "table",
                         "instant": True,
-                    }
+                    },
                 ],
                 "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
                 "options": {"showHeader": True},
-                "fieldConfig": {"defaults": {"custom": {"align": "auto", "displayMode": "auto"}}},
+                "fieldConfig": {
+                    "defaults": {"custom": {"align": "auto", "displayMode": "auto"}},
+                },
             },
             {
                 "id": 5,
@@ -277,7 +291,7 @@ class MonitoringConfigManager:
                 "id": None,
                 "title": _("AICultureKit Monitoring"),
                 "description": _(
-                    "Comprehensive monitoring dashboard for development culture metrics"
+                    "Comprehensive monitoring dashboard for development culture metrics",
                 ),
                 "tags": ["aiculture", "monitoring", "culture"],
                 "timezone": "browser",
@@ -314,16 +328,16 @@ class MonitoringConfigManager:
                 {
                     "name": "web.hook",
                     "webhook_configs": [
-                        {"url": "http://localhost:5001/webhook", "send_resolved": True}
+                        {"url": "http://localhost:5001/webhook", "send_resolved": True},
                     ],
-                }
+                },
             ],
             "inhibit_rules": [
                 {
                     "source_match": {"severity": "critical"},
                     "target_match": {"severity": "warning"},
                     "equal": ["alertname", "dev", "instance"],
-                }
+                },
             ],
         }
 
@@ -346,7 +360,10 @@ class MonitoringConfigManager:
 
         # Grafana仪表板
         dashboard_config = self.generate_culture_dashboard()
-        with open(self.grafana_config / "dashboards" / "culture_dashboard.json", "w") as f:
+        with open(
+            self.grafana_config / "dashboards" / "culture_dashboard.json",
+            "w",
+        ) as f:
             json.dump(dashboard_config, f, indent=2, ensure_ascii=False)
 
         # Alertmanager配置

@@ -1,6 +1,4 @@
-"""
-基础功能测试 - 快速提升测试覆盖率
-"""
+"""基础功能测试 - 快速提升测试覆盖率"""
 
 import tempfile
 from pathlib import Path
@@ -136,7 +134,10 @@ class TestDataCatalogBasics:
         assert retrieved.name == "Managed Asset"
 
         # 更新资产
-        success = self.catalog.update_asset("managed_asset", {"description": "Updated description"})
+        success = self.catalog.update_asset(
+            "managed_asset",
+            {"description": "Updated description"},
+        )
         assert success is True
 
         updated = self.catalog.get_asset("managed_asset")
@@ -342,7 +343,7 @@ class TestClass:
     def test_method(self):
         """A test method."""
         return "test"
-'''
+''',
             )
 
         self.enforcer = CultureEnforcer(str(self.temp_dir))
@@ -378,8 +379,6 @@ class TestIntegrationBasics:
         """测试模块导入"""
         # 测试所有主要模块都可以导入
         try:
-            pass
-
             assert True  # 如果能到这里说明导入成功
         except ImportError as e:
             pytest.fail(f"Module import failed: {e}")

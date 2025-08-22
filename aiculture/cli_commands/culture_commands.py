@@ -18,7 +18,9 @@ def culture_group() -> Any:
 
 @culture_group.command()
 @click.option("--path", "-p", default=".", help="项目路径")
-@click.option("--type", "-t", multiple=True, help="检查类型 (accessibility, i18n, performance)")
+@click.option(
+    "--type", "-t", multiple=True, help="检查类型 (accessibility, i18n, performance)"
+)
 def check(path: str, type: tuple) -> None:
     """检查文化标准合规性"""
     click.echo(f"🌍 检查文化标准: {path}")
@@ -51,7 +53,9 @@ def check(path: str, type: tuple) -> None:
             if i18n_issues:
                 click.echo("\n  📋 国际化问题详情:")
                 for issue in i18n_issues[:5]:  # 只显示前5个
-                    click.echo(f"    • {issue.description} ({issue.file_path}:{issue.line_number})")
+                    click.echo(
+                        f"    • {issue.description} ({issue.file_path}:{issue.line_number})"
+                    )
 
                 if len(i18n_issues) > 5:
                     click.echo(f"    ... 还有 {len(i18n_issues) - 5} 个问题")
@@ -80,7 +84,7 @@ def check(path: str, type: tuple) -> None:
 
     except Exception as e:
         click.echo(f"❌ 文化标准检查失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 @culture_group.command()
@@ -127,7 +131,9 @@ def report(path: str, output: str) -> None:
                 report_content += f"### {issue.get('type', '未知类型')}\n\n"
                 report_content += f"- **文件**: {issue.get('file', '未知')}\n"
                 report_content += f"- **描述**: {issue.get('description', '无描述')}\n"
-                report_content += f"- **建议**: {issue.get('recommendation', '无建议')}\n\n"
+                report_content += (
+                    f"- **建议**: {issue.get('recommendation', '无建议')}\n\n"
+                )
         else:
             report_content += "🎉 未发现任何问题！\n\n"
 
@@ -150,12 +156,14 @@ def report(path: str, output: str) -> None:
 
     except Exception as e:
         click.echo(f"❌ 生成报告失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 @culture_group.command()
 @click.option("--path", "-p", default=".", help="项目路径")
-@click.option("--strictness", "-s", default=0.7, type=float, help="执行严格度 (0.0-1.0)")
+@click.option(
+    "--strictness", "-s", default=0.7, type=float, help="执行严格度 (0.0-1.0)"
+)
 def enforce(path: str, strictness: float) -> None:
     """执行文化标准"""
     click.echo(f"⚖️  执行文化标准: {path}")
@@ -198,7 +206,7 @@ def enforce(path: str, strictness: float) -> None:
 
     except Exception as e:
         click.echo(f"❌ 执行文化标准失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 @culture_group.command()
@@ -238,7 +246,7 @@ def learn(path: str) -> None:
 
     except Exception as e:
         click.echo(f"❌ 学习失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 @culture_group.command()

@@ -1,5 +1,4 @@
-"""
-AICultureKit 核心功能模块
+"""AICultureKit 核心功能模块
 
 包含项目模板生成、质量工具配置和文化规范管理的核心功能。
 """
@@ -23,6 +22,7 @@ class CultureConfig:
     Attributes:
         config_path (str): 配置文件路径
         config (Dict[str, Any]): 加载的配置数据
+
     """
 
     def __init__(self, config_path: str | None = None) -> None:
@@ -30,6 +30,7 @@ class CultureConfig:
 
         Args:
             config_path: 配置文件路径，默认为 "aiculture.yaml"
+
         """
         self.config_path = config_path or "aiculture.yaml"
         self.config = self._load_config()
@@ -39,6 +40,7 @@ class CultureConfig:
 
         Returns:
             Dict[str, Any]: 配置字典，如果文件不存在则返回默认配置
+
         """
         try:
             with open(self.config_path, encoding="utf-8") as f:
@@ -77,7 +79,7 @@ class CultureConfig:
                     "incremental_development": True,
                     "documentation_first": True,
                 },
-            }
+            },
         }
 
     def save_config(self) -> None:
@@ -98,6 +100,7 @@ class QualityTools:
 
     Attributes:
         project_path (Path): 项目根目录路径
+
     """
 
     def __init__(self, project_path: str = ".") -> None:
@@ -105,6 +108,7 @@ class QualityTools:
 
         Args:
             project_path: 项目根目录路径，默认为当前目录
+
         """
         self.project_path = Path(project_path)
         self.templates_path = Path(__file__).parent / "templates"
@@ -120,7 +124,11 @@ class QualityTools:
                 shutil.copy2(template_file, target_file)
 
                 # 安装pre-commit hooks
-                subprocess.run(["pre-commit", "install"], cwd=self.project_path, check=True)
+                subprocess.run(
+                    ["pre-commit", "install"],
+                    cwd=self.project_path,
+                    check=True,
+                )
                 return True
             return False
         except Exception as e:
@@ -131,7 +139,7 @@ class QualityTools:
         """设置代码检查工具"""
         if language == "python":
             return self._setup_python_linting()
-        elif language == "javascript":
+        if language == "javascript":
             return self._setup_js_linting()
         return False
 
@@ -172,7 +180,10 @@ exclude =
         try:
             # 运行black格式化检查
             result = subprocess.run(
-                ["black", "--check", "."], cwd=self.project_path, capture_output=True
+                ["black", "--check", "."],
+                check=False,
+                cwd=self.project_path,
+                capture_output=True,
             )
             results["black"] = result.returncode == 0
         except FileNotFoundError:
@@ -180,14 +191,24 @@ exclude =
 
         try:
             # 运行flake8检查
-            result = subprocess.run(["flake8", "."], cwd=self.project_path, capture_output=True)
+            result = subprocess.run(
+                ["flake8", "."],
+                check=False,
+                cwd=self.project_path,
+                capture_output=True,
+            )
             results["flake8"] = result.returncode == 0
         except FileNotFoundError:
             results["flake8"] = False
 
         try:
             # 运行mypy检查
-            result = subprocess.run(["mypy", "."], cwd=self.project_path, capture_output=True)
+            result = subprocess.run(
+                ["mypy", "."],
+                check=False,
+                cwd=self.project_path,
+                capture_output=True,
+            )
             results["mypy"] = result.returncode == 0
         except FileNotFoundError:
             results["mypy"] = False
@@ -203,6 +224,7 @@ class ProjectTemplate:
 
     Attributes:
         templates_path (Path): 模板文件目录路径
+
     """
 
     def __init__(self) -> None:
@@ -211,7 +233,10 @@ class ProjectTemplate:
         self.jinja_env = Environment(loader=FileSystemLoader(str(self.templates_path)))
 
     def create_project(
-        self, project_name: str, target_path: str, template_type: str = "python"
+        self,
+        project_name: str,
+        target_path: str,
+        template_type: str = "python",
     ) -> bool:
         """创建新项目"""
         try:
@@ -239,7 +264,12 @@ class ProjectTemplate:
             print(f"❌ 项目创建失败: {e}")
             return False
 
-    def _create_basic_structure(self, target: Path, project_name: str, template_type: str) -> None:
+    def _create_basic_structure(
+        self,
+        target: Path,
+        project_name: str,
+        template_type: str,
+    ) -> None:
         """创建基础项目结构"""
         if template_type == "python":
             self._create_python_structure(target, project_name)
@@ -263,7 +293,9 @@ class ProjectTemplate:
 
 __version__ = "0.1.0"
 '''
-        (target / project_name.replace("-", "_") / "__init__.py").write_text(init_content)
+        (target / project_name.replace("-", "_") / "__init__.py").write_text(
+            init_content,
+        )
 
         # 创建主模块文件
         main_content = '''"""

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-快速文化标准符合度检查
-"""
+"""快速文化标准符合度检查"""
 
 import subprocess
 import sys
@@ -24,6 +22,7 @@ def check_test_coverage():
                 "--cov-report=term",
                 "--quiet",
             ],
+            check=False,
             capture_output=True,
             text=True,
             timeout=30,
@@ -48,6 +47,7 @@ def check_code_quality():
     try:
         result = subprocess.run(
             ["flake8", "aiculture", "--count", "--statistics"],
+            check=False,
             capture_output=True,
             text=True,
             timeout=30,
@@ -71,7 +71,7 @@ def check_security_issues():
     try:
         from aiculture.data_governance_culture import DataGovernanceManager
 
-        governance = DataGovernanceManager(Path("."))
+        governance = DataGovernanceManager(Path())
         scan_result = governance.scan_project_for_privacy_issues()
 
         high_risk = len(scan_result.get("by_severity", {}).get("high", []))
@@ -186,36 +186,33 @@ def calculate_coverage_score(coverage: int) -> tuple[int, str]:
     """计算测试覆盖率评分"""
     if coverage >= 80:
         return 30, "优秀"
-    elif coverage >= 60:
+    if coverage >= 60:
         return 20, "良好"
-    elif coverage >= 30:
+    if coverage >= 30:
         return 10, "一般"
-    else:
-        return 0, "不足"
+    return 0, "不足"
 
 
 def calculate_quality_score(flake8_errors: int) -> tuple[int, str]:
     """计算代码质量评分"""
     if flake8_errors == 0:
         return 25, "优秀"
-    elif flake8_errors <= 5:
+    if flake8_errors <= 5:
         return 20, "良好"
-    elif flake8_errors <= 15:
+    if flake8_errors <= 15:
         return 10, "一般"
-    else:
-        return 0, "不足"
+    return 0, "不足"
 
 
 def calculate_security_score(high_risk: int, medium_risk: int) -> tuple[int, str]:
     """计算安全性评分"""
     if high_risk == 0 and medium_risk <= 5:
         return 20, "优秀"
-    elif high_risk == 0 and medium_risk <= 20:
+    if high_risk == 0 and medium_risk <= 20:
         return 15, "良好"
-    elif high_risk <= 2:
+    if high_risk <= 2:
         return 10, "一般"
-    else:
-        return 0, "不足"
+    return 0, "不足"
 
 
 def calculate_functional_score(checks: dict[str, Any]) -> tuple[int, str]:
@@ -230,12 +227,11 @@ def calculate_functional_score(checks: dict[str, Any]) -> tuple[int, str]:
 
     if functional_score >= 20:
         return functional_score, "优秀"
-    elif functional_score >= 15:
+    if functional_score >= 15:
         return functional_score, "良好"
-    elif functional_score >= 10:
+    if functional_score >= 10:
         return functional_score, "一般"
-    else:
-        return functional_score, "不足"
+    return functional_score, "不足"
 
 
 def calculate_scores(checks: dict[str, Any]) -> tuple[int, dict[str, str]]:
@@ -267,7 +263,11 @@ def calculate_scores(checks: dict[str, Any]) -> tuple[int, dict[str, str]]:
     return score, status_info
 
 
-def print_evaluation_results(checks: dict[str, Any], score: int, status_info: dict[str, str]):
+def print_evaluation_results(
+    checks: dict[str, Any],
+    score: int,
+    status_info: dict[str, str],
+):
     """打印评估结果"""
     print()
     print("📊 综合评估结果:")
@@ -281,12 +281,14 @@ def print_evaluation_results(checks: dict[str, Any], score: int, status_info: di
             8 if checks["i18n"] else 0,
             8 if checks["data_catalog"] else 0,
             9 if checks["monitoring"] else 0,
-        ]
+        ],
     )
 
     print(f'📊 测试覆盖率: {coverage}% ({status_info["coverage"]})')
     print(f'📝 代码质量: {flake8_errors} 个错误 ({status_info["quality"]})')
-    print(f'🔒 安全性: {high_risk} 高风险, {medium_risk} 中风险 ({status_info["security"]})')
+    print(
+        f'🔒 安全性: {high_risk} 高风险, {medium_risk} 中风险 ({status_info["security"]})',
+    )
     print(f'🔧 功能完整性: {functional_score}/25 分 ({status_info["functional"]})')
     print()
 

@@ -1,5 +1,4 @@
-"""
-性能文化模块 - 性能基准测试、回归检测、内存监控
+"""性能文化模块 - 性能基准测试、回归检测、内存监控
 
 提供全面的性能文化保障，包括：
 1. 性能基准测试框架
@@ -105,7 +104,9 @@ class PerformanceBenchmarkManager:
     def __init__(self, project_path: Path):
         """__init__函数"""
         self.project_path = project_path
-        self.benchmarks_file = project_path / ".aiculture" / "performance_benchmarks.json"
+        self.benchmarks_file = (
+            project_path / ".aiculture" / "performance_benchmarks.json"
+        )
         self.results_file = project_path / ".aiculture" / "performance_results.json"
         self.benchmarks: dict[str, PerformanceBenchmark] = {}
         self.profiler = PerformanceProfiler()
@@ -141,7 +142,12 @@ class PerformanceBenchmarkManager:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
     def create_benchmark(
-        self, name: str, category: str, func: Callable, *args, **kwargs
+        self,
+        name: str,
+        category: str,
+        func: Callable,
+        *args,
+        **kwargs,
     ) -> PerformanceBenchmark:
         """创建性能基准"""
         print(f"🏃 创建性能基准: {name}")
@@ -173,7 +179,13 @@ class PerformanceBenchmarkManager:
         print(f"✅ 基准创建完成: {baseline_time:.4f}s, {baseline_memory}bytes")
         return benchmark
 
-    def run_benchmark(self, name: str, func: Callable, *args, **kwargs) -> PerformanceResult:
+    def run_benchmark(
+        self,
+        name: str,
+        func: Callable,
+        *args,
+        **kwargs,
+    ) -> PerformanceResult:
         """运行性能基准测试"""
         if name not in self.benchmarks:
             raise ValueError(f"Benchmark {name} not found")
@@ -227,7 +239,7 @@ class PerformanceBenchmarkManager:
                 "regression_factor": result.regression_factor,
                 "timestamp": result.timestamp,
                 "details": result.details,
-            }
+            },
         )
 
         # 只保留最近100个结果
@@ -253,7 +265,9 @@ class PerformanceBenchmarkManager:
             "regression_rate": len(regressions) / len(results) if results else 0,
             "recent_results": results[-10:],
             "worst_regressions": sorted(
-                regressions, key=lambda x: x.get("regression_factor", 1), reverse=True
+                regressions,
+                key=lambda x: x.get("regression_factor", 1),
+                reverse=True,
             )[:5],
         }
 
@@ -274,7 +288,9 @@ class MemoryLeakDetector:
 
         self.monitoring = True
         self.monitor_thread = threading.Thread(
-            target=self._monitor_memory, args=(interval,), daemon=True
+            target=self._monitor_memory,
+            args=(interval,),
+            daemon=True,
         )
         self.monitor_thread.start()
         print(f"🔍 开始内存监控，间隔: {interval}秒")
@@ -389,7 +405,7 @@ def performance_benchmark(name: str, category: str = "function"):
 # 使用示例
 if __name__ == "__main__":
     # 示例用法
-    manager = PerformanceBenchmarkManager(Path("."))
+    manager = PerformanceBenchmarkManager(Path())
 
     @performance_benchmark("test_function", "function")
     def test_function():

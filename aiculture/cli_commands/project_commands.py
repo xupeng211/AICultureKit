@@ -1,6 +1,4 @@
-"""
-项目相关的CLI命令
-"""
+"""项目相关的CLI命令"""
 
 from pathlib import Path
 from typing import Any
@@ -47,7 +45,7 @@ def create(name: str, template: str, path: str) -> None:
 
     except Exception as e:
         click.echo(f"❌ 创建项目失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 @project_group.command()
@@ -133,7 +131,7 @@ node_modules/
 
     except Exception as e:
         click.echo(f"❌ 初始化失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 @project_group.command()
@@ -181,7 +179,7 @@ def status(path: str) -> None:
 
     except Exception as e:
         click.echo(f"❌ 获取状态失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 @project_group.command()
@@ -268,4 +266,4 @@ def report(path: str, output: str) -> None:
 
     except Exception as e:
         click.echo(f"❌ 生成报告失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e

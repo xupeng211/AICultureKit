@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-AI智能修复器
+"""AI智能修复器.
 
 使用AI分析具体错误详情，生成针对性的修复方案并执行。
 """
@@ -15,7 +14,7 @@ from .problem_aggregator import ProblemAggregator
 
 
 class AIIntelligentFixer:
-    """AI智能修复器 - 使用AI分析问题并生成针对性修复方案"""
+    """AI智能修复器 - 使用AI分析问题并生成针对性修复方案."""
 
     def __init__(self, project_path: str = "."):
         self.project_path = Path(project_path)
@@ -24,20 +23,20 @@ class AIIntelligentFixer:
         self.failed_fixes = []
 
     def analyze_and_fix_problems(self) -> dict[str, Any]:
-        """AI分析问题并生成修复方案"""
+        """AI分析问题并生成修复方案."""
         self.logger.info("启动AI智能修复系统...")
 
         # 1. 收集所有问题详情
         aggregator = ProblemAggregator(str(self.project_path))
         problems = aggregator.collect_all_problems()
 
-        print("🤖 AI智能修复系统启动")
-        print(f"📊 分析 {problems['summary']['total_issues']} 个问题...")
+        self.logger.info("🤖 AI智能修复系统启动")
+        self.logger.info(f"📊 分析 {problems['summary']['total_issues']} 个问题...")
 
         # 2. 对每个问题进行AI分析和修复
         for category, issues in problems["categories"].items():
             if issues and category in ["culture_errors", "security_issues"]:
-                print(f"\n🎯 AI分析 {category} ({len(issues)} 个问题)")
+                self.logger.info(f"\n🎯 AI分析 {category} ({len(issues)} 个问题)")
                 self._ai_analyze_and_fix_category(category, issues)
 
         # 3. 生成修复报告
@@ -49,7 +48,9 @@ class AIIntelligentFixer:
             "fixed_issues": self.fixed_issues,
             "failed_fixes": self.failed_fixes,
             "success_rate": (
-                len(self.fixed_issues) / (len(self.fixed_issues) + len(self.failed_fixes)) * 100
+                len(self.fixed_issues)
+                / (len(self.fixed_issues) + len(self.failed_fixes))
+                * 100
                 if (len(self.fixed_issues) + len(self.failed_fixes)) > 0
                 else 0
             ),
@@ -59,15 +60,15 @@ class AIIntelligentFixer:
         return fix_report
 
     def _ai_analyze_and_fix_category(self, category: str, issues: list[dict[str, Any]]):
-        """AI分析特定类别的问题并生成修复方案"""
+        """AI分析特定类别的问题并生成修复方案."""
         for i, issue in enumerate(issues, 1):
-            print(f"  🔍 分析问题 {i}: {issue['description']}")
+            self.logger.info(f"  🔍 分析问题 {i}: {issue['description']}")
 
             # AI分析问题
             analysis = self._ai_analyze_problem(issue)
 
             if analysis["fixable"]:
-                print(f"    💡 AI建议: {analysis['fix_strategy']}")
+                self.logger.info(f"    💡 AI建议: {analysis['fix_strategy']}")
 
                 # 执行AI生成的修复方案
                 success = self._execute_ai_fix(issue, analysis)
@@ -78,22 +79,22 @@ class AIIntelligentFixer:
                             "problem": issue["description"],
                             "fix_strategy": analysis["fix_strategy"],
                             "files_modified": analysis.get("files_to_modify", []),
-                        }
+                        },
                     )
-                    print("    ✅ 修复成功")
+                    self.logger.info("    ✅ 修复成功")
                 else:
                     self.failed_fixes.append(
-                        {"problem": issue["description"], "reason": "执行修复方案失败"}
+                        {"problem": issue["description"], "reason": "执行修复方案失败"},
                     )
-                    print("    ❌ 修复失败")
+                    self.logger.error("    ❌ 修复失败")
             else:
-                print(f"    ⚠️  AI判断: {analysis['reason']}")
+                self.logger.warning(f"    ⚠️  AI判断: {analysis['reason']}")
                 self.failed_fixes.append(
-                    {"problem": issue["description"], "reason": analysis["reason"]}
+                    {"problem": issue["description"], "reason": analysis["reason"]},
                 )
 
     def _ai_analyze_problem(self, issue: dict[str, Any]) -> dict[str, Any]:
-        """AI分析单个问题并生成修复策略 - 增加置信度评估"""
+        """AI分析单个问题并生成修复策略 - 增加置信度评估."""
         description = issue["description"]
         file_path = issue.get("file_path")
         suggestion = issue.get("suggestion", "")
@@ -129,7 +130,7 @@ class AIIntelligentFixer:
         return analysis
 
     def _assess_fix_confidence(self, issue: dict[str, Any]) -> float:
-        """AI评估修复成功的置信度"""
+        """AI评估修复成功的置信度."""
         description = issue["description"]
 
         # 基于问题类型评估置信度
@@ -137,38 +138,35 @@ class AIIntelligentFixer:
             # 隐私问题相对简单，置信度较高
             if "高风险" in description:
                 return 0.85  # 85%置信度
-            else:
-                return 0.70  # 70%置信度
-        elif "代码质量" in description:
+            return 0.70  # 70%置信度
+        if "代码质量" in description:
             # 代码质量问题通常可以自动修复
             return 0.90  # 90%置信度
-        elif "测试覆盖率" in description:
+        if "测试覆盖率" in description:
             # 测试生成相对复杂
             return 0.60  # 60%置信度
-        elif "国际化" in description:
+        if "国际化" in description:
             # 国际化支持相对简单
             return 0.75  # 75%置信度
-        else:
-            # 未知问题类型
-            return 0.30  # 30%置信度
+        # 未知问题类型
+        return 0.30  # 30%置信度
 
     def _assess_fix_risk(self, issue: dict[str, Any]) -> str:
-        """AI评估修复风险等级"""
+        """AI评估修复风险等级."""
         description = issue["description"]
         file_path = issue.get("file_path", "")
 
         # 基于文件类型评估风险
         if ".json" in file_path:
             return "high"  # JSON文件修复风险高
-        elif ".py" in file_path and "core" in file_path:
+        if ".py" in file_path and "core" in file_path:
             return "medium"  # 核心Python文件风险中等
-        elif "隐私问题" in description:
+        if "隐私问题" in description:
             return "low"  # 隐私脱敏风险较低
-        else:
-            return "medium"  # 默认中等风险
+        return "medium"  # 默认中等风险
 
     def _analyze_privacy_issue(self, issue: dict[str, Any]) -> dict[str, Any]:
-        """AI分析隐私问题"""
+        """AI分析隐私问题."""
         description = issue["description"]
 
         # 提取隐私问题的具体数量和类型
@@ -180,16 +178,15 @@ class AIIntelligentFixer:
                 "method": "smart_privacy_scan",
                 "files_to_modify": self._find_files_with_privacy_issues(),
             }
-        else:
-            return {
-                "fixable": True,
-                "fix_strategy": "AI优化敏感字段保护措施",
-                "method": "enhance_privacy_protection",
-                "files_to_modify": [],
-            }
+        return {
+            "fixable": True,
+            "fix_strategy": "AI优化敏感字段保护措施",
+            "method": "enhance_privacy_protection",
+            "files_to_modify": [],
+        }
 
     def _analyze_code_quality_issue(self, issue: dict[str, Any]) -> dict[str, Any]:
-        """AI分析代码质量问题"""
+        """AI分析代码质量问题."""
         return {
             "fixable": True,
             "fix_strategy": "AI自动代码格式化和质量优化",
@@ -198,7 +195,7 @@ class AIIntelligentFixer:
         }
 
     def _analyze_test_coverage_issue(self, issue: dict[str, Any]) -> dict[str, Any]:
-        """AI分析测试覆盖率问题"""
+        """AI分析测试覆盖率问题."""
         return {
             "fixable": True,
             "fix_strategy": "AI智能生成缺失的测试用例",
@@ -207,7 +204,7 @@ class AIIntelligentFixer:
         }
 
     def _analyze_i18n_issue(self, issue: dict[str, Any]) -> dict[str, Any]:
-        """AI分析国际化问题"""
+        """AI分析国际化问题."""
         return {
             "fixable": True,
             "fix_strategy": "AI智能添加国际化支持",
@@ -216,28 +213,27 @@ class AIIntelligentFixer:
         }
 
     def _execute_ai_fix(self, issue: dict[str, Any], analysis: dict[str, Any]) -> bool:
-        """执行AI生成的修复方案"""
+        """执行AI生成的修复方案."""
         method = analysis.get("method")
 
         try:
             if method == "smart_privacy_scan":
                 return self._smart_privacy_scan_and_fix()
-            elif method == "auto_code_quality":
+            if method == "auto_code_quality":
                 return self._auto_code_quality_fix()
-            elif method == "generate_tests":
+            if method == "generate_tests":
                 return self._generate_missing_tests()
-            elif method == "add_i18n_support":
+            if method == "add_i18n_support":
                 return self._add_intelligent_i18n_support()
-            elif method == "enhance_privacy_protection":
+            if method == "enhance_privacy_protection":
                 return self._enhance_privacy_protection()
-            else:
-                return False
+            return False
         except Exception as e:
             self.logger.error(f"执行修复方案失败: {e}")
             return False
 
     def _smart_privacy_scan_and_fix(self) -> bool:
-        """AI智能隐私扫描和修复 - 增强安全性和可靠性"""
+        """AI智能隐私扫描和修复 - 增强安全性和可靠性."""
         print("    🔍 AI智能扫描敏感信息...")
 
         # 使用更智能的方法找到真正的敏感信息
@@ -295,13 +291,15 @@ class AIIntelligentFixer:
                             if self._is_real_sensitive_info(match, config):
                                 content = content.replace(match, config["replacement"])
                                 print(
-                                    f"      🔒 脱敏 {info_type}: {match[:10]}... -> {config['replacement']}"
+                                    f"      🔒 脱敏 {info_type}: {match[:10]}... -> {config['replacement']}",
                                 )
 
                     # 如果内容有变化，谨慎写回文件
                     if content != original_content:
                         # 创建备份
-                        backup_path = file_path.with_suffix(file_path.suffix + ".backup")
+                        backup_path = file_path.with_suffix(
+                            file_path.suffix + ".backup",
+                        )
                         with open(backup_path, "w", encoding="utf-8") as f:
                             f.write(original_content)
 
@@ -345,7 +343,7 @@ class AIIntelligentFixer:
                         if self._is_real_sensitive_info(match, config):
                             content = content.replace(match, config["replacement"])
                             print(
-                                f"      🔒 JSON脱敏 {info_type}: {match[:10]}... -> {config['replacement']}"
+                                f"      🔒 JSON脱敏 {info_type}: {match[:10]}... -> {config['replacement']}",
                             )
 
                 # 验证修复后的JSON仍然有效
@@ -383,7 +381,7 @@ class AIIntelligentFixer:
         return fixed_files > 0
 
     def _is_real_sensitive_info(self, match: str, config: dict[str, Any]) -> bool:
-        """AI智能判断是否为真实敏感信息"""
+        """AI智能判断是否为真实敏感信息."""
         match_lower = match.lower()
 
         # 检查排除域名
@@ -413,7 +411,7 @@ class AIIntelligentFixer:
         return True
 
     def _auto_code_quality_fix(self) -> bool:
-        """AI自动代码质量修复"""
+        """AI自动代码质量修复."""
         print("    🎨 AI自动代码质量优化...")
 
         success = True
@@ -422,6 +420,7 @@ class AIIntelligentFixer:
             # 运行black格式化
             result = subprocess.run(
                 ["python", "-m", "black", ".", "--quiet"],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -437,6 +436,7 @@ class AIIntelligentFixer:
             # 运行isort导入排序
             result = subprocess.run(
                 ["python", "-m", "isort", ".", "--quiet"],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -451,7 +451,7 @@ class AIIntelligentFixer:
         return success
 
     def _generate_missing_tests(self) -> bool:
-        """AI智能生成缺失的测试用例"""
+        """AI智能生成缺失的测试用例."""
         print("    🧪 AI智能生成测试用例...")
 
         tests_dir = self.project_path / "tests"
@@ -513,7 +513,7 @@ if __name__ == "__main__":
         return False
 
     def _add_intelligent_i18n_support(self) -> bool:
-        """AI智能添加国际化支持"""
+        """AI智能添加国际化支持."""
         print("    🌍 AI智能添加国际化支持...")
 
         # 创建智能国际化系统
@@ -568,7 +568,7 @@ _ = i18n._
         return False
 
     def _enhance_privacy_protection(self) -> bool:
-        """AI增强隐私保护措施"""
+        """AI增强隐私保护措施."""
         print("    🛡️ AI增强隐私保护...")
 
         # 创建隐私保护配置
@@ -599,7 +599,7 @@ PRIVACY_PROTECTION_RULES = {
         return False
 
     def _find_files_with_privacy_issues(self) -> list[str]:
-        """找到包含隐私问题的文件"""
+        """找到包含隐私问题的文件."""
         files_with_issues = []
 
         for file_path in self.project_path.rglob("*"):
@@ -612,7 +612,10 @@ PRIVACY_PROTECTION_RULES = {
                         content = f.read()
 
                     # 简单检查是否包含敏感信息
-                    if re.search(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b", content):
+                    if re.search(
+                        r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+                        content,
+                    ):
                         files_with_issues.append(str(file_path))
 
                 except Exception:
@@ -621,7 +624,7 @@ PRIVACY_PROTECTION_RULES = {
         return files_with_issues
 
     def _should_skip_file(self, file_path: Path) -> bool:
-        """判断是否应该跳过文件"""
+        """判断是否应该跳过文件."""
         skip_patterns = [
             ".git",
             "__pycache__",
@@ -637,7 +640,7 @@ PRIVACY_PROTECTION_RULES = {
         return any(pattern in str(file_path) for pattern in skip_patterns)
 
     def _display_ai_fix_report(self, report: dict[str, Any]):
-        """显示AI修复报告"""
+        """显示AI修复报告."""
         print("\n" + "=" * 80)
         print("🤖 AI智能修复完成报告")
         print("=" * 80)
@@ -675,7 +678,7 @@ PRIVACY_PROTECTION_RULES = {
 
 
 def main():
-    """主函数"""
+    """主函数."""
     fixer = AIIntelligentFixer()
 
     print("🤖 启动AI智能修复系统...")

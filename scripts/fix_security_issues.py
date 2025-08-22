@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-自动修复高风险安全问题的脚本
-"""
+"""自动修复高风险安全问题的脚本"""
 
 import re
 from pathlib import Path
@@ -112,9 +110,15 @@ configuration management systems for sensitive information.
 
                     # 跳过shebang和编码声明
                     for i, line in enumerate(lines):
-                        if line.startswith("#!") or "coding:" in line or "encoding:" in line:
+                        if (
+                            line.startswith("#!")
+                            or "coding:" in line
+                            or "encoding:" in line
+                        ):
                             continue
-                        if line.strip().startswith('"""') or line.strip().startswith("'''"):
+                        if line.strip().startswith('"""') or line.strip().startswith(
+                            "'''",
+                        ):
                             insert_pos = i
                             break
                         if line.strip() and not line.startswith("#"):
@@ -171,7 +175,7 @@ def main():
                         ]
                     ):
                         files_to_check.append(file_path)
-            except:
+            except Exception:
                 continue
 
     print(f"📁 找到 {len(files_to_check)} 个需要检查的文件")

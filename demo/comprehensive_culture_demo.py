@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-AICultureKit 综合文化演示
+"""AICultureKit 综合文化演示
 展示所有新增的文化模块功能
 """
 
@@ -33,7 +32,7 @@ def demo_performance_culture():
     print("=" * 50)
 
     # 性能基准管理
-    manager = PerformanceBenchmarkManager(Path("."))
+    manager = PerformanceBenchmarkManager(Path())
 
     # 创建示例函数
     def sample_function():
@@ -77,7 +76,11 @@ def demo_observability_culture():
 
     # 演示结构化日志
     print("📝 结构化日志演示...")
-    with obs.observe_operation("demo_operation", user_id="123", request_id="req-456") as ctx:
+    with obs.observe_operation(
+        "demo_operation",
+        user_id="123",
+        request_id="req-456",
+    ) as ctx:
         logger = ctx["logger"]
         metrics = ctx["metrics"]
 
@@ -97,7 +100,7 @@ def demo_observability_culture():
 
     # 响应时间监控
     print("⏱️ 响应时间监控演示...")
-    monitor = ResponseTimeMonitor(Path("."))
+    monitor = ResponseTimeMonitor(Path())
 
     # 监控函数执行
     with monitor.monitor_execution("demo_function", "function"):
@@ -118,7 +121,7 @@ def demo_data_governance_culture():
     print("=" * 50)
 
     # 初始化数据治理管理器
-    governance = DataGovernanceManager(Path("."))
+    governance = DataGovernanceManager(Path())
 
     # 扫描隐私问题
     print("🔍 隐私问题扫描...")
@@ -148,7 +151,7 @@ def demo_accessibility_culture():
     print("=" * 50)
 
     # 初始化可访问性管理器
-    accessibility = AccessibilityCultureManager(Path("."))
+    accessibility = AccessibilityCultureManager(Path())
 
     # 生成综合报告
     print("🔍 可访问性综合扫描...")
@@ -185,7 +188,7 @@ def demo_alerting_system():
     print("=" * 50)
 
     # 初始化告警管理器
-    alerting = AlertingRulesManager(Path("."))
+    alerting = AlertingRulesManager(Path())
 
     # 模拟指标数据
     metrics = {

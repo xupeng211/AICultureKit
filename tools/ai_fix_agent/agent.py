@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-AI修复代理 - M2起步版
+"""AI修复代理 - M2起步版
 从已暂存文件生成lint和安全修复补丁
 """
 
@@ -22,7 +21,6 @@ class AIFixAgent:
 
     def run_staged_files_mode(self, output_dir: str) -> dict[str, Any]:
         """运行已暂存文件模式（M2起步版）"""
-
         print("🚀 AI修复代理启动 (M2起步版)")
         print("📁 处理已暂存的Python文件...")
 
@@ -53,7 +51,11 @@ class AIFixAgent:
         lint_result = create_lint_patches(staged_files)
 
         if lint_result["patches"]:
-            patch_files = self._save_patches(lint_result["patches"], output_path, "lint")
+            patch_files = self._save_patches(
+                lint_result["patches"],
+                output_path,
+                "lint",
+            )
             results["patches_generated"].extend(patch_files)
             results["total_patches"] += len(patch_files)
             results["changelog_entries"].append(lint_result["changelog"])
@@ -66,7 +68,11 @@ class AIFixAgent:
         security_result = create_security_patches(staged_files)
 
         if security_result["patches"]:
-            patch_files = self._save_patches(security_result["patches"], output_path, "security")
+            patch_files = self._save_patches(
+                security_result["patches"],
+                output_path,
+                "security",
+            )
             results["patches_generated"].extend(patch_files)
             results["total_patches"] += len(patch_files)
             results["changelog_entries"].append(security_result["changelog"])
@@ -90,7 +96,6 @@ class AIFixAgent:
 
     def run(self, output_dir: str = "artifacts/ai_fixes") -> bool:
         """运行AI修复代理"""
-
         # M2起步版：处理已暂存文件
         result = self.run_staged_files_mode(output_dir)
         return result["success"]
@@ -99,7 +104,12 @@ class AIFixAgent:
 def main():
     """主函数"""
     parser = argparse.ArgumentParser(description="AI修复代理 - M2起步版")
-    parser.add_argument("--out", dest="output_dir", default="artifacts/ai_fixes", help="输出目录")
+    parser.add_argument(
+        "--out",
+        dest="output_dir",
+        default="artifacts/ai_fixes",
+        help="输出目录",
+    )
 
     args = parser.parse_args()
 

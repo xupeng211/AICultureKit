@@ -1,6 +1,4 @@
-"""
-测试aiculture.culture_enforcer模块
-"""
+"""测试aiculture.culture_enforcer模块"""
 
 import tempfile
 from pathlib import Path
@@ -101,7 +99,9 @@ class TestCultureEnforcer:
         self.enforcer._check_file_structure()
 
         # 应该有一些违规记录（缺少其他必要文件）
-        structure_violations = [v for v in self.enforcer.violations if "文件结构" in v.description]
+        structure_violations = [
+            v for v in self.enforcer.violations if "文件结构" in v.description
+        ]
         # 至少应该检测到一些缺失的文件
         assert len(structure_violations) >= 0  # 可能为0如果所有必要文件都存在
 

@@ -1,5 +1,4 @@
-"""
-错误监控和性能跟踪
+"""错误监控和性能跟踪
 
 提供错误统计、性能监控和告警功能。
 """
@@ -197,7 +196,9 @@ class PerformanceTracker:
             current_time = time.time()
             window_start = current_time - (window_minutes * 60)
 
-            recent_operations = [ts for ts in self._operation_timestamps if ts >= window_start]
+            recent_operations = [
+                ts for ts in self._operation_timestamps if ts >= window_start
+            ]
 
             if not recent_operations:
                 return 0.0
@@ -292,7 +293,7 @@ class MonitoringManager:
                         "type": "high_error_rate",
                         "monitor": name,
                         "error_rate": error_rate,
-                    }
+                    },
                 )
 
         # 检查性能
@@ -305,7 +306,7 @@ class MonitoringManager:
                         "type": "slow_response",
                         "tracker": name,
                         "avg_response_time": metrics.avg_response_time,
-                    }
+                    },
                 )
 
         return health_status

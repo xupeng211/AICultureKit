@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-AICultureKit 项目文化标准最终验证
-"""
+"""AICultureKit 项目文化标准最终验证"""
 
 import sys
 from pathlib import Path

@@ -1,5 +1,4 @@
-"""
-模式学习集成系统 - 结合AI学习系统和多语言分析，提供综合的项目模式学习。
+"""模式学习集成系统 - 结合AI学习系统和多语言分析，提供综合的项目模式学习。
 
 这个模块将:
 1. 整合Python和其他语言的分析结果
@@ -65,25 +64,34 @@ class PatternLearningIntegrator:
 
         # 3. 分析跨语言模式
         cross_language_patterns = self._analyze_cross_language_patterns(
-            python_learning, multi_language_analysis
+            python_learning,
+            multi_language_analysis,
         )
 
         # 4. 评估整体项目成熟度
-        overall_maturity = self._assess_overall_maturity(python_learning, multi_language_analysis)
+        overall_maturity = self._assess_overall_maturity(
+            python_learning,
+            multi_language_analysis,
+        )
 
         # 5. 计算推荐严格度
         recommended_strictness = self._calculate_unified_strictness(
-            python_learning, multi_language_analysis, overall_maturity
+            python_learning,
+            multi_language_analysis,
+            overall_maturity,
         )
 
         # 6. 生成语言特定规则
         language_specific_rules = self._generate_language_specific_rules(
-            multi_language_analysis, cross_language_patterns
+            multi_language_analysis,
+            cross_language_patterns,
         )
 
         # 7. 生成统一建议
         unified_recommendations = self._generate_unified_recommendations(
-            python_learning, multi_language_analysis, cross_language_patterns
+            python_learning,
+            multi_language_analysis,
+            cross_language_patterns,
         )
 
         return IntegratedLearningResult(
@@ -131,7 +139,9 @@ class PatternLearningIntegrator:
 
                 # 生成建议
                 recommendation = self._generate_pattern_recommendation(
-                    pattern_name, language_values, consistency_score
+                    pattern_name,
+                    language_values,
+                    consistency_score,
                 )
 
                 patterns.append(
@@ -141,11 +151,13 @@ class PatternLearningIntegrator:
                         pattern_values=language_values,
                         consistency_score=consistency_score,
                         recommendation=recommendation,
-                    )
+                    ),
                 )
 
         # 分析特殊的跨语言模式
-        patterns.extend(self._analyze_special_cross_patterns(python_learning, multi_lang_analysis))
+        patterns.extend(
+            self._analyze_special_cross_patterns(python_learning, multi_lang_analysis),
+        )
 
         return patterns
 
@@ -160,7 +172,7 @@ class PatternLearningIntegrator:
             return 1.0 if len(unique_values) == 1 else 0.5
 
         # 对于数值类型
-        if all(isinstance(v, (int, float)) for v in language_values.values()):
+        if all(isinstance(v, int | float) for v in language_values.values()):
             values = list(language_values.values())
             if not values:
                 return 0.0
@@ -195,10 +207,9 @@ class PatternLearningIntegrator:
         """生成模式建议"""
         if consistency_score >= 0.8:
             return f"✅ {pattern_name}在所有语言中保持良好一致性，继续维持当前标准"
-        elif consistency_score >= 0.5:
+        if consistency_score >= 0.5:
             return f"⚠️ {pattern_name}在不同语言间存在轻微差异，建议统一标准"
-        else:
-            return f"❌ {pattern_name}在不同语言间差异较大，需要制定统一的跨语言规范"
+        return f"❌ {pattern_name}在不同语言间差异较大，需要制定统一的跨语言规范"
 
     def _analyze_special_cross_patterns(
         self,
@@ -228,9 +239,10 @@ class PatternLearningIntegrator:
                     pattern_values=complexity_values,
                     consistency_score=consistency,
                     recommendation=self._generate_complexity_recommendation(
-                        complexity_values, consistency
+                        complexity_values,
+                        consistency,
                     ),
-                )
+                ),
             )
 
         # 函数大小对比模式
@@ -247,15 +259,18 @@ class PatternLearningIntegrator:
                     pattern_values=function_size_values,
                     consistency_score=consistency,
                     recommendation=self._generate_function_size_recommendation(
-                        function_size_values, consistency
+                        function_size_values,
+                        consistency,
                     ),
-                )
+                ),
             )
 
         return patterns
 
     def _generate_complexity_recommendation(
-        self, complexity_values: dict[str, float], consistency: float
+        self,
+        complexity_values: dict[str, float],
+        consistency: float,
     ) -> str:
         """生成复杂度建议"""
         avg_complexity = sum(complexity_values.values()) / len(complexity_values)
@@ -263,15 +278,15 @@ class PatternLearningIntegrator:
         if consistency >= 0.8:
             if avg_complexity <= 5:
                 return "✅ 所有语言的复杂度都保持在理想范围内且一致"
-            else:
-                return "⚠️ 所有语言的复杂度都偏高，建议整体简化逻辑"
-        else:
-            max_lang = max(complexity_values.items(), key=lambda x: x[1])
-            min_lang = min(complexity_values.items(), key=lambda x: x[1])
-            return f"❌ 复杂度不一致：{max_lang[0]}({max_lang[1]:.1f}) vs {min_lang[0]}({min_lang[1]:.1f})，需要平衡各语言的实现复杂度"
+            return "⚠️ 所有语言的复杂度都偏高，建议整体简化逻辑"
+        max_lang = max(complexity_values.items(), key=lambda x: x[1])
+        min_lang = min(complexity_values.items(), key=lambda x: x[1])
+        return f"❌ 复杂度不一致：{max_lang[0]}({max_lang[1]:.1f}) vs {min_lang[0]}({min_lang[1]:.1f})，需要平衡各语言的实现复杂度"
 
     def _generate_function_size_recommendation(
-        self, size_values: dict[str, float], consistency: float
+        self,
+        size_values: dict[str, float],
+        consistency: float,
     ) -> str:
         """生成函数大小建议"""
         avg_size = sum(size_values.values()) / len(size_values)
@@ -279,12 +294,10 @@ class PatternLearningIntegrator:
         if consistency >= 0.8:
             if avg_size <= 20:
                 return "✅ 所有语言的函数大小都保持在合理范围内且一致"
-            else:
-                return "⚠️ 所有语言的函数都偏大，建议拆分长函数"
-        else:
-            max_lang = max(size_values.items(), key=lambda x: x[1])
-            min_lang = min(size_values.items(), key=lambda x: x[1])
-            return f"❌ 函数大小不一致：{max_lang[0]}({max_lang[1]:.1f}行) vs {min_lang[0]}({min_lang[1]:.1f}行)，建议统一函数长度标准"
+            return "⚠️ 所有语言的函数都偏大，建议拆分长函数"
+        max_lang = max(size_values.items(), key=lambda x: x[1])
+        min_lang = min(size_values.items(), key=lambda x: x[1])
+        return f"❌ 函数大小不一致：{max_lang[0]}({max_lang[1]:.1f}行) vs {min_lang[0]}({min_lang[1]:.1f}行)，建议统一函数长度标准"
 
     def _assess_overall_maturity(
         self,
@@ -300,7 +313,7 @@ class PatternLearningIntegrator:
             maturity_scores.append(python_score)
 
         # 其他语言成熟度评估
-        for lang_name, metrics in multi_lang_analysis.items():
+        for _lang_name, metrics in multi_lang_analysis.items():
             lang_score = self._calculate_language_maturity_score(metrics)
             maturity_scores.append(lang_score)
 
@@ -311,10 +324,9 @@ class PatternLearningIntegrator:
 
         if avg_score >= 0.8:
             return "expert"
-        elif avg_score >= 0.6:
+        if avg_score >= 0.6:
             return "intermediate"
-        else:
-            return "beginner"
+        return "beginner"
 
     def _maturity_to_score(self, maturity: str) -> float:
         """将成熟度等级转换为分数"""
@@ -336,7 +348,9 @@ class PatternLearningIntegrator:
 
         # 复杂度评分 (权重: 0.3)
         complexity_score = (
-            1.0 if metrics.avg_complexity <= 5 else max(0, 1 - (metrics.avg_complexity - 5) / 10)
+            1.0
+            if metrics.avg_complexity <= 5
+            else max(0, 1 - (metrics.avg_complexity - 5) / 10)
         )
         score += complexity_score * 0.3
         weight_sum += 0.3
@@ -370,7 +384,9 @@ class PatternLearningIntegrator:
             # 计算命名一致性
             naming_styles = []
             for metrics in multi_lang_analysis.values():
-                naming_patterns = [p for p in metrics.patterns if "naming" in p.pattern_name]
+                naming_patterns = [
+                    p for p in metrics.patterns if "naming" in p.pattern_name
+                ]
                 if naming_patterns:
                     naming_styles.extend([p.pattern_value for p in naming_patterns])
 
@@ -436,7 +452,10 @@ class PatternLearningIntegrator:
 
         return language_rules
 
-    def _generate_python_recommendations(self, python_learning: LearningResult) -> list[str]:
+    def _generate_python_recommendations(
+        self,
+        python_learning: LearningResult,
+    ) -> list[str]:
         """生成Python相关建议"""
         recommendations = []
 
@@ -455,7 +474,8 @@ class PatternLearningIntegrator:
         return recommendations
 
     def _generate_multilang_recommendations(
-        self, multi_lang_analysis: dict[str, LanguageMetrics]
+        self,
+        multi_lang_analysis: dict[str, LanguageMetrics],
     ) -> list[str]:
         """生成多语言相关建议"""
         recommendations = []
@@ -475,15 +495,20 @@ class PatternLearningIntegrator:
                 low_quality_langs.append(lang)
 
         if high_quality_langs:
-            recommendations.append(f"以下语言代码质量较高: {', '.join(high_quality_langs)}")
+            recommendations.append(
+                f"以下语言代码质量较高: {', '.join(high_quality_langs)}",
+            )
 
         if low_quality_langs:
-            recommendations.append(f"以下语言需要重点改进: {', '.join(low_quality_langs)}")
+            recommendations.append(
+                f"以下语言需要重点改进: {', '.join(low_quality_langs)}",
+            )
 
         return recommendations
 
     def _generate_cross_pattern_recommendations(
-        self, cross_patterns: list[CrossLanguagePattern]
+        self,
+        cross_patterns: list[CrossLanguagePattern],
     ) -> list[str]:
         """生成跨语言模式建议"""
         recommendations = []
@@ -497,10 +522,14 @@ class PatternLearningIntegrator:
         weak_patterns = [p for p in cross_patterns if p.strength < 0.4]
 
         if strong_patterns:
-            recommendations.append(f"发现 {len(strong_patterns)} 个强跨语言模式，建议继续强化")
+            recommendations.append(
+                f"发现 {len(strong_patterns)} 个强跨语言模式，建议继续强化",
+            )
 
         if weak_patterns:
-            recommendations.append(f"发现 {len(weak_patterns)} 个弱跨语言模式，建议改进一致性")
+            recommendations.append(
+                f"发现 {len(weak_patterns)} 个弱跨语言模式，建议改进一致性",
+            )
 
         return recommendations
 
@@ -515,13 +544,19 @@ class PatternLearningIntegrator:
 
         # 基于Python学习结果的建议
         if python_learning:
-            recommendations.extend(self._generate_python_recommendations(python_learning))
+            recommendations.extend(
+                self._generate_python_recommendations(python_learning),
+            )
 
         # 基于多语言分析的建议
-        recommendations.extend(self._generate_multilang_recommendations(multi_lang_analysis))
+        recommendations.extend(
+            self._generate_multilang_recommendations(multi_lang_analysis),
+        )
 
         # 基于跨语言模式的建议
-        recommendations.extend(self._generate_cross_pattern_recommendations(cross_patterns))
+        recommendations.extend(
+            self._generate_cross_pattern_recommendations(cross_patterns),
+        )
 
         # 基于复杂度的建议
         complexity_pattern = next(
@@ -535,27 +570,38 @@ class PatternLearningIntegrator:
         for lang_name, metrics in multi_lang_analysis.items():
             if lang_name == "javascript":
                 # JavaScript特定建议
-                ts_patterns = [p for p in metrics.patterns if "typescript" in p.pattern_name]
+                ts_patterns = [
+                    p for p in metrics.patterns if "typescript" in p.pattern_name
+                ]
                 if ts_patterns and any(p.pattern_value < 0.5 for p in ts_patterns):
-                    recommendations.append("📝 考虑增加TypeScript使用比例，提升类型安全性")
+                    recommendations.append(
+                        "📝 考虑增加TypeScript使用比例，提升类型安全性",
+                    )
 
         # 基于整体质量的建议
         avg_naming_consistency = sum(
             m.naming_consistency for m in multi_lang_analysis.values()
         ) / len(multi_lang_analysis)
         if avg_naming_consistency < 0.8:
-            recommendations.append("📝 命名规范不够一致，建议为每种语言制定明确的命名标准")
+            recommendations.append(
+                "📝 命名规范不够一致，建议为每种语言制定明确的命名标准",
+            )
 
         avg_style_consistency = sum(
             m.style_consistency for m in multi_lang_analysis.values()
         ) / len(multi_lang_analysis)
         if avg_style_consistency < 0.8:
-            recommendations.append("🎨 代码风格不够统一，建议为每种语言配置代码格式化工具")
+            recommendations.append(
+                "🎨 代码风格不够统一，建议为每种语言配置代码格式化工具",
+            )
 
         return recommendations
 
 
-def save_integrated_learning_result(result: IntegratedLearningResult, project_path: Path) -> None:
+def save_integrated_learning_result(
+    result: IntegratedLearningResult,
+    project_path: Path,
+) -> None:
     """保存集成学习结果"""
     result_file = project_path / ".aiculture" / "integrated_learning_result.json"
     result_file.parent.mkdir(parents=True, exist_ok=True)

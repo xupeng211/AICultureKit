@@ -1,6 +1,4 @@
-"""
-AI修复代理工具函数
-"""
+"""AI修复代理工具函数"""
 
 import subprocess
 import tempfile
@@ -17,7 +15,9 @@ def get_staged_python_files() -> list[str]:
             text=True,
             check=True,
         )
-        files = [f for f in result.stdout.strip().split("\n") if f.endswith(".py") and f]
+        files = [
+            f for f in result.stdout.strip().split("\n") if f.endswith(".py") and f
+        ]
         return files
     except subprocess.CalledProcessError:
         return []
@@ -45,7 +45,14 @@ def write_file_content(file_path: str, content: str) -> bool:
 def run_command(cmd: list[str], cwd: str | None = None) -> dict[str, Any]:
     """运行命令并返回结果"""
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=60)
+        result = subprocess.run(
+            cmd,
+            check=False,
+            capture_output=True,
+            text=True,
+            cwd=cwd,
+            timeout=60,
+        )
         return {
             "success": result.returncode == 0,
             "stdout": result.stdout,
@@ -68,17 +75,26 @@ def create_patch(original_content: str, fixed_content: str, file_path: str) -> s
     if original_content == fixed_content:
         return ""
 
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".orig", delete=False) as orig_file:
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        suffix=".orig",
+        delete=False,
+    ) as orig_file:
         orig_file.write(original_content)
         orig_file.flush()
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".fixed", delete=False) as fixed_file:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            suffix=".fixed",
+            delete=False,
+        ) as fixed_file:
             fixed_file.write(fixed_content)
             fixed_file.flush()
 
             try:
                 result = subprocess.run(
                     ["diff", "-u", orig_file.name, fixed_file.name],
+                    check=False,
                     capture_output=True,
                     text=True,
                 )
@@ -86,8 +102,14 @@ def create_patch(original_content: str, fixed_content: str, file_path: str) -> s
                 if result.stdout:
                     # 替换临时文件名为实际文件名
                     patch_content = result.stdout
-                    patch_content = patch_content.replace(orig_file.name, f"a/{file_path}")
-                    patch_content = patch_content.replace(fixed_file.name, f"b/{file_path}")
+                    patch_content = patch_content.replace(
+                        orig_file.name,
+                        f"a/{file_path}",
+                    )
+                    patch_content = patch_content.replace(
+                        fixed_file.name,
+                        f"b/{file_path}",
+                    )
                     return patch_content
 
             finally:
@@ -101,7 +123,10 @@ def backup_working_directory() -> str:
     """备份当前工作目录状态"""
     try:
         result = subprocess.run(
-            ["git", "stash", "create"], capture_output=True, text=True, check=True
+            ["git", "stash", "create"],
+            capture_output=True,
+            text=True,
+            check=True,
         )
         return result.stdout.strip()
     except subprocess.CalledProcessError:
@@ -129,7 +154,7 @@ def count_patch_lines(patch_content: str) -> int:
             line
             for line in patch_content.split("\n")
             if line.startswith(("+", "-")) and not line.startswith(("+++", "---"))
-        ]
+        ],
     )
 
 

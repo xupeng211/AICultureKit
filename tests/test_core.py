@@ -1,6 +1,4 @@
-"""
-测试aiculture.core模块
-"""
+"""测试aiculture.core模块"""
 
 import os
 import tempfile

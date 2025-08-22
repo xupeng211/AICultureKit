@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+import os
+
+import mysql.connector
+import requests
+
 """
 ⚠️  安全声明：
 本文件是演示代码，包含的所有敏感信息（如邮箱、IP地址、密码等）都是虚构的示例数据。
@@ -13,12 +18,6 @@ configuration management systems for sensitive information.
 """
 硬编码问题示例 - 用于演示AICultureKit检测能力
 """
-
-
-import os
-
-import mysql.connector
-import requests
 
 # 🔒 数据隐私声明 / Data Privacy Notice:
 # 本演示代码中的所有敏感字段名和数据都是虚构的示例，仅用于展示功能。
@@ -47,6 +46,7 @@ def call_external_api(user_id) -> None:
 
     Args:
         user_id: 参数说明
+
     """
     api_url = os.getenv("API_URL", "https://api.example.com/v1/users")  # 使用环境变量
     api_key = os.getenv("API_KEY", "demo-placeholder-token")  # 使用环境变量
@@ -65,6 +65,7 @@ def save_user_data(data) -> None:
 
     Args:
         data: 参数说明
+
     """
     file_path = os.getenv("LOG_FILE_PATH", "/tmp/demo_users.log")  # 使用环境变量
     with open(file_path, "a") as f:
@@ -80,13 +81,13 @@ def calculate_discount(user_type, amount) -> None:
     Args:
         user_type: 参数说明
         amount: 参数说明
+
     """
     if user_type == "premium":
         return amount * 0.85  # 硬编码折扣率 15%
-    elif user_type == "vip":
+    if user_type == "vip":
         return amount * 0.75  # 硬编码折扣率 25%
-    else:
-        return amount * 0.95  # 硬编码折扣率 5%
+    return amount * 0.95  # 硬编码折扣率 5%
 
 
 # ❌ 硬编码示例5: 端口和服务配置
@@ -108,8 +109,11 @@ def rate_limit_check(user_requests) -> None:
 
     Args:
         user_requests: 参数说明
+
     """
-    max_requests_per_minute = int(os.getenv("RATE_LIMIT_REQUESTS", "100"))  # 使用环境变量
+    max_requests_per_minute = int(
+        os.getenv("RATE_LIMIT_REQUESTS", "100"),
+    )  # 使用环境变量
     time_window = int(os.getenv("RATE_LIMIT_WINDOW", "60"))  # 使用环境变量
 
     if user_requests > max_requests_per_minute:
@@ -125,11 +129,15 @@ def send_notification_email(to_email, message) -> None:
     Args:
         to_email: 参数说明
         message: 参数说明
+
     """
     smtp_server = os.getenv("SMTP_SERVER", "smtp.example.com")  # 使用环境变量
     smtp_port = int(os.getenv("SMTP_PORT", "587"))  # 使用环境变量
     sender_email = os.getenv("SENDER_EMAIL", "noreply@demo.local")  # 使用环境变量
-    sender_password = os.getenv("SENDER_PASSWORD", "PLACEHOLDER_PASSWORD")  # 使用环境变量
+    sender_password = os.getenv(
+        "SENDER_PASSWORD",
+        "PLACEHOLDER_PASSWORD",
+    )  # 使用环境变量
 
     # 发送邮件逻辑...
 
@@ -140,6 +148,7 @@ def encrypt_sensitive_data(data) -> None:
 
     Args:
         data: 参数说明
+
     """
     encryption_key = os.getenv("ENCRYPTION_KEY", "PLACEHOLDER_KEY")  # 使用环境变量
     # 加密逻辑...

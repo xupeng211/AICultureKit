@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-完整工作流演示 - 简化版本
+"""完整工作流演示 - 简化版本
 
 展示AICultureKit的完整工作流程，包括：
 1. 项目初始化
@@ -16,8 +15,8 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from aiculture.accessibility_culture import AccessibilityCultureManager
-from aiculture.core import QualityTools
+from aiculture.accessibility_culture import AccessibilityCultureManager  # noqa: E402
+from aiculture.core import QualityTools  # noqa: E402
 
 
 class FullWorkflowDemo:
@@ -106,7 +105,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-'''
+''',
         )
 
         print("✅ 示例项目创建完成")
@@ -121,17 +120,23 @@ if __name__ == "__main__":
         # 运行代码风格检查
         print("  📋 运行flake8检查...")
         flake8_result = tools.run_flake8()
-        print(f"     结果: {'✅ 通过' if flake8_result.get('success', False) else '❌ 失败'}")
+        print(
+            f"     结果: {'✅ 通过' if flake8_result.get('success', False) else '❌ 失败'}",
+        )
 
         # 运行类型检查
         print("  🔍 运行mypy检查...")
         mypy_result = tools.run_mypy()
-        print(f"     结果: {'✅ 通过' if mypy_result.get('success', False) else '❌ 失败'}")
+        print(
+            f"     结果: {'✅ 通过' if mypy_result.get('success', False) else '❌ 失败'}",
+        )
 
         # 运行测试
         print("  🧪 运行测试...")
         test_result = tools.run_pytest()
-        print(f"     结果: {'✅ 通过' if test_result.get('success', False) else '❌ 失败'}")
+        print(
+            f"     结果: {'✅ 通过' if test_result.get('success', False) else '❌ 失败'}",
+        )
 
     def run_culture_checks(self) -> None:
         """运行文化标准检查"""

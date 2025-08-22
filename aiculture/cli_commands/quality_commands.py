@@ -1,6 +1,4 @@
-"""
-质量检查相关的CLI命令
-"""
+"""质量检查相关的CLI命令"""
 
 import subprocess
 from pathlib import Path
@@ -68,7 +66,7 @@ def check(path: str, tool: tuple, fix: bool) -> None:
 
     except Exception as e:
         click.echo(f"❌ 质量检查失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 @quality_group.command()
@@ -82,7 +80,12 @@ def format(path: str) -> None:
 
         # 运行 black
         click.echo("📋 运行 black...")
-        result = subprocess.run(["black", str(project_path)], capture_output=True, text=True)
+        result = subprocess.run(
+            ["black", str(project_path)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
 
         if result.returncode == 0:
             click.echo("✅ black 格式化完成")
@@ -91,7 +94,12 @@ def format(path: str) -> None:
 
         # 运行 isort
         click.echo("📋 运行 isort...")
-        result = subprocess.run(["isort", str(project_path)], capture_output=True, text=True)
+        result = subprocess.run(
+            ["isort", str(project_path)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
 
         if result.returncode == 0:
             click.echo("✅ isort 导入排序完成")
@@ -100,17 +108,22 @@ def format(path: str) -> None:
 
         click.echo("🎉 代码格式化完成！")
 
-    except FileNotFoundError:
+    except FileNotFoundError as e:
         click.echo("❌ 格式化工具未安装，请运行: pip install black isort")
-        raise click.Abort()
+        raise click.Abort() from e
     except Exception as e:
         click.echo(f"❌ 格式化失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 @quality_group.command()
 @click.option("--path", "-p", default=".", help="项目路径")
-@click.option("--output", "-o", default="coverage-report.html", help="覆盖率报告输出文件")
+@click.option(
+    "--output",
+    "-o",
+    default="coverage-report.html",
+    help="覆盖率报告输出文件",
+)
 def coverage(path: str, output: str) -> None:
     """生成测试覆盖率报告"""
     click.echo(f"📊 生成覆盖率报告: {path}")
@@ -128,6 +141,7 @@ def coverage(path: str, output: str) -> None:
                 "--cov-report=term",
                 str(project_path),
             ],
+            check=False,
             capture_output=True,
             text=True,
         )
@@ -140,12 +154,12 @@ def coverage(path: str, output: str) -> None:
         else:
             click.echo(f"❌ 覆盖率报告生成失败: {result.stderr}")
 
-    except FileNotFoundError:
+    except FileNotFoundError as e:
         click.echo("❌ pytest-cov 未安装，请运行: pip install pytest-cov")
-        raise click.Abort()
+        raise click.Abort() from e
     except Exception as e:
         click.echo(f"❌ 生成覆盖率报告失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 @quality_group.command()
@@ -206,7 +220,7 @@ def metrics(path: str) -> None:
 
     except Exception as e:
         click.echo(f"❌ 获取指标失败: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
 
 def _auto_fix_issues(project_path: Path) -> None:
@@ -216,6 +230,7 @@ def _auto_fix_issues(project_path: Path) -> None:
         click.echo("🔧 运行 autopep8...")
         result = subprocess.run(
             ["autopep8", "--in-place", "--recursive", str(project_path)],
+            check=False,
             capture_output=True,
             text=True,
         )

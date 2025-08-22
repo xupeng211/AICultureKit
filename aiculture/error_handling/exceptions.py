@@ -1,5 +1,4 @@
-"""
-统一异常类定义
+"""统一异常类定义
 
 定义项目中使用的所有自定义异常类，提供清晰的错误分类和处理。
 """
@@ -246,7 +245,7 @@ def create_exception(error_code: str, message: str, **kwargs) -> AICultureError:
 def is_retryable_error(error: Exception) -> bool:
     """判断错误是否可重试"""
     # 网络相关错误通常可重试
-    if isinstance(error, (ConnectionError, TimeoutError)):
+    if isinstance(error, ConnectionError | TimeoutError):
         return True
 
     # 资源暂时不可用
@@ -266,11 +265,10 @@ def get_error_severity(error: Exception) -> str:
     """获取错误严重程度"""
     if isinstance(error, SecurityError):
         return "critical"
-    elif isinstance(error, (QualityGateError, CultureViolationError)):
+    if isinstance(error, QualityGateError | CultureViolationError):
         return error.details.get("severity", "warning")
-    elif isinstance(error, (ConfigurationError, ValidationError)):
+    if isinstance(error, ConfigurationError | ValidationError):
         return "error"
-    elif isinstance(error, (ProcessingError, ResourceError)):
+    if isinstance(error, ProcessingError | ResourceError):
         return "warning"
-    else:
-        return "error"
+    return "error"

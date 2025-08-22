@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-AICultureKit 智能代码修复器
+"""AICultureKit 智能代码修复器
 自动检测和修复常见的代码质量问题
 """
 
@@ -23,6 +22,7 @@ class SmartCodeFixer:
         try:
             result = subprocess.run(
                 cmd,
+                check=False,
                 shell=True,  # TODO:    考虑使用更安全的方式, capture_output=True, text=True, cwd=self.project_path
             )
             return result.returncode == 0, result.stdout + result.stderr
@@ -35,7 +35,7 @@ class SmartCodeFixer:
 
         # 使用autoflake移除未使用的导入
         success, output = self.run_command(
-            "autoflake --in-place --remove-all-unused-imports --recursive ."
+            "autoflake --in-place --remove-all-unused-imports --recursive .",
         )
 
         if success:
@@ -82,7 +82,8 @@ class SmartCodeFixer:
         fixed_count = 0
         for py_file in self.project_path.rglob("*.py"):
             if any(
-                part.startswith(".") or part in ["venv", "env", "aiculture-env", "__pycache__"]
+                part.startswith(".")
+                or part in ["venv", "env", "aiculture-env", "__pycache__"]
                 for part in py_file.parts
             ):
                 continue

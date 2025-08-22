@@ -15,8 +15,8 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from aiculture.error_handling import (  # 异常类; 日志系统; 错误处理; 监控
-    FallbackConfig,
+from aiculture.error_handling import FallbackConfig  # 异常类; 日志系统; 错误处理; 监控
+from aiculture.error_handling import (
     LogLevel,
     ProcessingError,
     ResourceError,

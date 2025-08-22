@@ -1,5 +1,4 @@
-"""
-AI学习系统 - 学习引擎
+"""AI学习系统 - 学习引擎
 
 基于项目分析结果生成个性化的开发文化规则。
 """
@@ -149,7 +148,9 @@ class LearningEngine:
 
             # 检查标准目录
             standard_dirs = ["tests", "docs", "src"]
-            found_dirs = sum(1 for d in standard_dirs if d in structure.get("directories", []))
+            found_dirs = sum(
+                1 for d in standard_dirs if d in structure.get("directories", [])
+            )
             score += (found_dirs / len(standard_dirs)) * 20
             max_score += 20
 
@@ -165,7 +166,8 @@ class LearningEngine:
         if "imports" in project_info:
             imports = project_info["imports"]
             wildcard_ratio = imports.get("wildcard_imports", 0) / max(
-                sum(imports.get("import_types", {}).values()), 1
+                sum(imports.get("import_types", {}).values()),
+                1,
             )
 
             # 通配符导入越少越好
@@ -179,15 +181,16 @@ class LearningEngine:
 
             if maturity_ratio >= 0.8:
                 return "expert"
-            elif maturity_ratio >= 0.5:
+            if maturity_ratio >= 0.5:
                 return "intermediate"
-            else:
-                return "beginner"
+            return "beginner"
 
         return "beginner"
 
     def _calculate_recommended_strictness(
-        self, maturity: str, patterns: list[ProjectPattern]
+        self,
+        maturity: str,
+        patterns: list[ProjectPattern],
     ) -> float:
         """计算推荐的严格度"""
         base_strictness = {"beginner": 0.3, "intermediate": 0.6, "expert": 0.8}
@@ -204,7 +207,9 @@ class LearningEngine:
         return min(max(strictness, 0.1), 1.0)
 
     def _generate_custom_rules(
-        self, patterns: list[ProjectPattern], project_info: dict[str, Any]
+        self,
+        patterns: list[ProjectPattern],
+        project_info: dict[str, Any],
     ) -> dict[str, Any]:
         """生成自定义规则"""
         rules = {"flake8": {}, "mypy": {}, "pylint": {}, "black": {}, "isort": {}}
@@ -360,4 +365,4 @@ class LearningEngine:
             return result
 
         except (OSError, json.JSONDecodeError, KeyError) as e:
-            raise ValueError(f"加载学习结果失败: {e}")
+            raise ValueError(f"加载学习结果失败: {e}") from e

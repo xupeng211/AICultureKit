@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-AICultureKit 自动质量报告生成器
+"""AICultureKit 自动质量报告生成器
 生成详细的HTML质量报告，包含代码覆盖率、测试结果、代码质量指标等
 """
 
@@ -14,6 +13,7 @@ def run_command(cmd, capture_output=True) -> None:
     try:
         result = subprocess.run(
             cmd,
+            check=False,
             shell=True,  # TODO:    考虑使用更安全的方式, capture_output=capture_output, text=True
         )
         return result.stdout.strip() if result.returncode == 0 else ""
@@ -23,7 +23,9 @@ def run_command(cmd, capture_output=True) -> None:
 
 def get_test_results() -> None:
     """获取测试结果"""
-    cmd = "python -m pytest --tb=no -q --json-report --json-report-file=test-report.json"
+    cmd = (
+        "python -m pytest --tb=no -q --json-report --json-report-file=test-report.json"
+    )
     run_command(cmd)
 
     try:
@@ -60,7 +62,7 @@ def get_code_metrics() -> None:
     """获取代码指标"""
     # 代码行数
     total_lines = run_command(
-        "find aiculture -name '*.py' -exec wc -l {} + | tail -1 | awk '{print $1}'"
+        "find aiculture -name '*.py' -exec wc -l {} + | tail -1 | awk '{print $1}'",
     )
 
     # 文件数量

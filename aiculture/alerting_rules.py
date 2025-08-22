@@ -1,5 +1,4 @@
-"""
-告警规则模板 - 标准化的告警规则和通知机制
+"""告警规则模板 - 标准化的告警规则和通知机制
 
 提供：
 1. 标准告警规则模板
@@ -74,7 +73,9 @@ class NotificationChannel:
     type: str  # email, slack, webhook, sms
     config: dict[str, Any]
     enabled: bool = True
-    severity_filter: list[AlertSeverity] = field(default_factory=lambda: list(AlertSeverity))
+    severity_filter: list[AlertSeverity] = field(
+        default_factory=lambda: list(AlertSeverity),
+    )
 
 
 class AlertingRulesManager:
@@ -319,7 +320,11 @@ class AlertingRulesManager:
                 # 发送通知
                 self._send_notifications(alert)
 
-            elif not should_fire and existing_alert and existing_alert.status == AlertStatus.FIRING:
+            elif (
+                not should_fire
+                and existing_alert
+                and existing_alert.status == AlertStatus.FIRING
+            ):
                 # 解决告警
                 existing_alert.status = AlertStatus.RESOLVED
                 existing_alert.resolved_at = time.time()
@@ -338,19 +343,19 @@ class AlertingRulesManager:
 
         if "avg_response_time > threshold" in condition:
             return metrics.get("avg_response_time", 0) > threshold
-        elif "memory_usage_percent > threshold" in condition:
+        if "memory_usage_percent > threshold" in condition:
             return metrics.get("memory_usage_percent", 0) > threshold
-        elif "cpu_usage_percent > threshold" in condition:
+        if "cpu_usage_percent > threshold" in condition:
             return metrics.get("cpu_usage_percent", 0) > threshold
-        elif "error_rate > threshold" in condition:
+        if "error_rate > threshold" in condition:
             return metrics.get("error_rate", 0) > threshold
-        elif "service_availability < threshold" in condition:
+        if "service_availability < threshold" in condition:
             return metrics.get("service_availability", 100) < threshold
-        elif "test_coverage < threshold" in condition:
+        if "test_coverage < threshold" in condition:
             return metrics.get("test_coverage", 100) < threshold
-        elif "security_issues > threshold" in condition:
+        if "security_issues > threshold" in condition:
             return metrics.get("security_issues", 0) > threshold
-        elif "data_quality_score < threshold" in condition:
+        if "data_quality_score < threshold" in condition:
             return metrics.get("data_quality_score", 100) < threshold
 
         return False
@@ -389,10 +394,16 @@ class AlertingRulesManager:
             except Exception as e:
                 print(f"发送通知失败 ({channel.name}): {e}")
 
-    def _send_console_notification(self, channel: NotificationChannel, alert: Alert) -> None:
+    def _send_console_notification(
+        self,
+        channel: NotificationChannel,
+        alert: Alert,
+    ) -> None:
         """发送控制台通知"""
         status_emoji = "🔥" if alert.status == AlertStatus.FIRING else "✅"
-        severity_emoji = {"critical": "🚨", "warning": "⚠️", "info": "ℹ️"}[alert.severity.value]
+        severity_emoji = {"critical": "🚨", "warning": "⚠️", "info": "ℹ️"}[
+            alert.severity.value
+        ]
 
         print(
             """
@@ -403,18 +414,34 @@ class AlertingRulesManager:
 消息: {alert.message}
 时间: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(alert.timestamp))}
 标签: {alert.labels}
-"""
+""",
         )
 
-    def _send_email_notification(self, channel: NotificationChannel, alert: Alert) -> None:
+    def _send_email_notification(
+        self,
+        channel: NotificationChannel,
+        alert: Alert,
+    ) -> None:
         """发送邮件通知（占位符实现）"""
-        print(f"📧 发送邮件通知到 {channel.config.get('recipients', [])}: {alert.message}")
+        print(
+            f"📧 发送邮件通知到 {channel.config.get('recipients', [])}: {alert.message}",
+        )
 
-    def _send_slack_notification(self, channel: NotificationChannel, alert: Alert) -> None:
+    def _send_slack_notification(
+        self,
+        channel: NotificationChannel,
+        alert: Alert,
+    ) -> None:
         """发送Slack通知（占位符实现）"""
-        print(f"💬 发送Slack通知到 {channel.config.get('webhook_url', '')}: {alert.message}")
+        print(
+            f"💬 发送Slack通知到 {channel.config.get('webhook_url', '')}: {alert.message}",
+        )
 
-    def _send_webhook_notification(self, channel: NotificationChannel, alert: Alert) -> None:
+    def _send_webhook_notification(
+        self,
+        channel: NotificationChannel,
+        alert: Alert,
+    ) -> None:
         """发送Webhook通知（占位符实现）"""
         print(f"🔗 发送Webhook通知到 {channel.config.get('url', '')}: {alert.message}")
 
@@ -437,7 +464,10 @@ class AlertingRulesManager:
 
             prometheus_rule = {
                 "alert": rule.name,
-                "expr": self._convert_to_prometheus_expr(rule.condition, rule.threshold),
+                "expr": self._convert_to_prometheus_expr(
+                    rule.condition,
+                    rule.threshold,
+                ),
                 "for": rule.duration,
                 "labels": rule.labels,
                 "annotations": rule.annotations,
@@ -452,18 +482,13 @@ class AlertingRulesManager:
         # 简化的转换逻辑
         if "avg_response_time > threshold" in condition:
             return f"avg(response_time_seconds) > {threshold/1000}"
-        elif "memory_usage_percent > threshold" in condition:
-            return (
-                f"(process_resident_memory_bytes / node_memory_MemTotal_bytes) * 100 > {threshold}"
-            )
-        elif "cpu_usage_percent > threshold" in condition:
-            return (
-                f'100 - (avg(irate(node_cpu_seconds_total{{mode="idle"}}[5m])) * 100) > {threshold}'
-            )
-        elif "error_rate > threshold" in condition:
+        if "memory_usage_percent > threshold" in condition:
+            return f"(process_resident_memory_bytes / node_memory_MemTotal_bytes) * 100 > {threshold}"
+        if "cpu_usage_percent > threshold" in condition:
+            return f'100 - (avg(irate(node_cpu_seconds_total{{mode="idle"}}[5m])) * 100) > {threshold}'
+        if "error_rate > threshold" in condition:
             return f'(rate(http_requests_total{{status=~"5.."}}) / rate(http_requests_total)) * 100 > {threshold}'
-        else:
-            return "up == 0"  # 默认表达式
+        return "up == 0"  # 默认表达式
 
     def validate_rules(self) -> dict[str, list[str]]:
         """验证告警规则"""
@@ -497,7 +522,7 @@ class AlertingRulesManager:
 # 使用示例
 if __name__ == "__main__":
     # 初始化告警管理器
-    alerting = AlertingRulesManager(Path("."))
+    alerting = AlertingRulesManager(Path())
 
     # 添加控制台通知渠道
     console_channel = NotificationChannel(

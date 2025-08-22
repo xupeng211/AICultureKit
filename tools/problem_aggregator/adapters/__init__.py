@@ -1,3 +1,1 @@
-"""
-Adapters for various linting and checking tools
-"""
+"""Adapters for various linting and checking tools"""

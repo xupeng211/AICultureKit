@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+import tempfile
+import time
+from pathlib import Path
+
+from aiculture.culture_enforcer import CultureEnforcer
+from aiculture.culture_penetration_system import (
+    AIDevCultureAssistant,
+    RealTimeCultureMonitor,
+)
+
 """
 ⚠️  安全声明：
 本文件是演示代码，包含的所有敏感信息（如邮箱、IP地址、密码等）都是虚构的示例数据。
@@ -14,14 +24,6 @@ configuration management systems for sensitive information.
 文化深度渗透效果演示
 展示文化如何在开发过程中彻底渗透和自动执行
 """
-
-import tempfile
-import time
-from pathlib import Path
-
-from aiculture.culture_enforcer import CultureEnforcer
-
-# 导入文化渗透系统
 
 # 🔒 数据隐私声明 / Data Privacy Notice:
 # 本演示代码中的所有敏感字段名和数据都是虚构的示例，仅用于展示功能。
@@ -74,7 +76,7 @@ def long_function_without_docstring():
 class UndocumentedClass:  # 缺少文档字符串
     def method_without_docs(self):
         pass
-"""
+""",
         )
 
     print(f"📝 创建问题文件: {problem_file}")
@@ -99,7 +101,7 @@ def demo_quality_gates():
     print("\n🚪 质量门禁演示")
     print("=" * 50)
 
-    assistant = AIDevCultureAssistant(Path("."))
+    assistant = AIDevCultureAssistant(Path())
 
     # 测试不同的门禁
     gates = ["commit_gate", "merge_gate", "release_gate"]
@@ -121,7 +123,7 @@ def demo_quality_gates():
                 file_path="test_file.py",
                 line_number=1,
                 suggestion="添加测试用例",
-            )
+            ),
         ]
 
         gate_result = assistant.quality_gate.check_gate(gate_name, test_violations)
@@ -134,7 +136,7 @@ def demo_ai_culture_assistant():
     print("\n🤖 AI文化助手演示")
     print("=" * 50)
 
-    assistant = AIDevCultureAssistant(Path("."))
+    assistant = AIDevCultureAssistant(Path())
 
     # 测试提交前检查
     print("🔍 执行提交前检查...")
@@ -267,4 +269,6 @@ def main():
 
 
 if __name__ == "__main__":
+    main()
+    main()
     main()

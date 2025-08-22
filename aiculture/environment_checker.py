@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-🔍 环境检查器 - 检查开发环境配置
+"""🔍 环境检查器 - 检查开发环境配置
 
 这个模块用于检查Python虚拟环境、依赖安装状态和开发环境配置。
 """
@@ -10,6 +9,7 @@ import platform
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 
 class EnvironmentChecker:
@@ -20,6 +20,7 @@ class EnvironmentChecker:
 
         Args:
             project_path: 项目路径，默认为当前目录
+
         """
         if project_path is None:
             self.project_path = Path.cwd()
@@ -34,6 +35,7 @@ class EnvironmentChecker:
 
         Returns:
             是否在虚拟环境中运行
+
         """
         # 检查多种虚拟环境标识
         return (
@@ -49,6 +51,7 @@ class EnvironmentChecker:
 
         Returns:
             虚拟环境路径，如果不在虚拟环境中返回None
+
         """
         return os.environ.get("VIRTUAL_ENV") or os.environ.get("CONDA_PREFIX")
 
@@ -58,6 +61,7 @@ class EnvironmentChecker:
 
         Returns:
             Python环境信息字典
+
         """
         try:
             arch = platform.architecture()[0]
@@ -80,6 +84,7 @@ class EnvironmentChecker:
 
         Returns:
             (是否全部安装, 缺失的依赖列表)
+
         """
         required_packages = ["click", "jinja2", "pyyaml", "gitpython", "cookiecutter"]
 
@@ -98,6 +103,7 @@ class EnvironmentChecker:
 
         Returns:
             (是否全部安装, 缺失的依赖列表)
+
         """
         dev_packages = ["pytest", "black", "isort", "flake8", "mypy"]
 
@@ -116,10 +122,9 @@ class EnvironmentChecker:
 
         Returns:
             是否正确安装
+
         """
         try:
-            pass
-
             return True
         except ImportError:
             return False
@@ -129,6 +134,7 @@ class EnvironmentChecker:
 
         Returns:
             项目文件状态字典
+
         """
         required_files = {
             "pyproject.toml": self.project_path / "pyproject.toml",
@@ -146,6 +152,7 @@ class EnvironmentChecker:
 
         Returns:
             已安装包的数量
+
         """
         try:
             result = subprocess.run(
@@ -154,15 +161,18 @@ class EnvironmentChecker:
                 text=True,
                 check=True,
             )
-            return len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
+            return (
+                len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
+            )
         except (subprocess.CalledProcessError, FileNotFoundError):
             return 0
 
-    def check_git_status(self) -> dict[str, any]:
+    def check_git_status(self) -> dict[str, Any]:
         """检查Git仓库状态
 
         Returns:
             Git状态信息
+
         """
         git_info = {
             "is_repo": False,
@@ -224,6 +234,7 @@ class EnvironmentChecker:
 
         Returns:
             环境状态完整报告
+
         """
         python_info = self.get_python_info()
         deps_ok, missing_deps = self.check_required_dependencies()
@@ -231,7 +242,10 @@ class EnvironmentChecker:
 
         return {
             "timestamp": subprocess.run(
-                ["date", "+%Y-%m-%d %H:%M:%S"], capture_output=True, text=True
+                ["date", "+%Y-%m-%d %H:%M:%S"],
+                check=False,
+                capture_output=True,
+                text=True,
             ).stdout.strip(),
             "virtual_environment": {
                 "is_active": self.check_virtual_env(),
@@ -257,20 +271,19 @@ class EnvironmentChecker:
 
         Returns:
             虚拟环境类型字符串
+
         """
         if os.environ.get("CONDA_DEFAULT_ENV"):
             return "conda"
-        elif os.environ.get("VIRTUAL_ENV"):
+        if os.environ.get("VIRTUAL_ENV"):
             if "venv" in os.environ.get("VIRTUAL_ENV", ""):
                 return "venv"
-            else:
-                return "virtualenv"
-        elif hasattr(sys, "real_prefix"):
             return "virtualenv"
-        elif hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix:
+        if hasattr(sys, "real_prefix"):
+            return "virtualenv"
+        if hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix:
             return "venv"
-        else:
-            return "none"
+        return "none"
 
     def print_environment_status(self) -> None:
         """打印环境状态报告"""
@@ -336,6 +349,7 @@ class EnvironmentChecker:
 
         Returns:
             修复建议列表
+
         """
         suggestions = []
         report = self.generate_environment_report()

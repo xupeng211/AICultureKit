@@ -146,9 +146,18 @@ exclude_lines = [
 ]
 
 [tool.ruff]
-ignore = ["E501", "F401", "F841"]
-select = ["E", "F", "I", "UP", "B"]
+line-length = 88
 fix = true
+extend-exclude = [
+    "aiculture/templates/**",
+    "templates/**",
+    "examples/**",
+    "scaffolds/**",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501", "F401", "F841"]
 
 # 开发模式配置
 [tool.aiculture.dev_mode]
@@ -162,3 +171,4 @@ quick_commit = true
 enabled = false
 coverage_threshold = 80
 strict_checks = true
+

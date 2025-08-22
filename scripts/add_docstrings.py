@@ -1,13 +1,11 @@
-from typing import Any
-
 #!/usr/bin/env python3
-"""
-安全的文档字符串添加器
+"""安全的文档字符串添加器
 为缺失文档字符串的函数和类添加基础文档
 """
 
 import ast
 from pathlib import Path
+from typing import Any
 
 
 class DocstringAdder:
@@ -26,17 +24,19 @@ class DocstringAdder:
         # 基于函数名生成描述
         if func_name.startswith("test_"):
             return f'"""测试 {func_name[5:].replace("_", " ")} 功能"""'
-        elif func_name.startswith("_"):
+        if func_name.startswith("_"):
             return f'"""内部方法：{func_name[1:].replace("_", " ")}"""'
-        elif func_name in ["__init__", "__str__", "__repr__"]:
-            return '"""初始化方法"""' if func_name == "__init__" else '"""字符串表示方法"""'
-        else:
-            # 根据参数生成描述
-            if args:
-                args_desc = "\n        ".join(f"{arg}: 参数说明" for arg in args)
-                return f'"""执行 {func_name.replace("_", " ")} 操作\n    \n    Args:\n        {args_desc}\n    """'
-            else:
-                return f'"""执行 {func_name.replace("_", " ")} 操作"""'
+        if func_name in ["__init__", "__str__", "__repr__"]:
+            return (
+                '"""初始化方法"""'
+                if func_name == "__init__"
+                else '"""字符串表示方法"""'
+            )
+        # 根据参数生成描述
+        if args:
+            args_desc = "\n        ".join(f"{arg}: 参数说明" for arg in args)
+            return f'"""执行 {func_name.replace("_", " ")} 操作\n    \n    Args:\n        {args_desc}\n    """'
+        return f'"""执行 {func_name.replace("_", " ")} 操作"""'
 
     def generate_class_docstring(self, class_node: ast.ClassDef) -> str:
         """为类生成文档字符串"""
@@ -45,16 +45,19 @@ class DocstringAdder:
         # 基于类名生成描述
         if class_name.endswith("Test"):
             return f'"""测试 {class_name[:-4]} 类"""'
-        elif class_name.endswith("Manager"):
+        if class_name.endswith("Manager"):
             return f'"""{class_name[:-7]} 管理器"""'
-        elif class_name.endswith("Checker"):
+        if class_name.endswith("Checker"):
             return f'"""{class_name[:-7]} 检查器"""'
-        elif class_name.endswith("Config"):
+        if class_name.endswith("Config"):
             return f'"""{class_name[:-6]} 配置类"""'
-        else:
-            return f'"""{class_name} 类"""'
+        return f'"""{class_name} 类"""'
 
-    def add_docstring_to_node(self, content: str, node: ast.FunctionDef | ast.ClassDef) -> str:
+    def add_docstring_to_node(
+        self,
+        content: str,
+        node: ast.FunctionDef | ast.ClassDef,
+    ) -> str:
         """为节点添加文档字符串"""
         lines = content.split("\n")
 
@@ -94,7 +97,7 @@ class DocstringAdder:
             nodes_to_process = []
 
             for node in ast.walk(tree):
-                if isinstance(node, (ast.FunctionDef, ast.ClassDef)):
+                if isinstance(node, ast.FunctionDef | ast.ClassDef):
                     # 检查是否已有文档字符串
                     if not ast.get_docstring(node):
                         nodes_to_process.append(node)

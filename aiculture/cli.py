@@ -1,5 +1,4 @@
-"""
-AICultureKit CLI 命令行接口
+"""AICultureKit CLI 命令行接口
 
 提供便捷的命令行工具来管理AI开发文化和项目模板。
 
@@ -14,8 +13,7 @@ from .cli_commands import culture_group, project_group, quality_group, template_
 @click.group()
 @click.version_option(version="0.1.0")
 def main() -> None:
-    """
-    AICultureKit - 标准化AI主导开发的文化和最佳实践工具包
+    """AICultureKit - 标准化AI主导开发的文化和最佳实践工具包
 
     使用这个工具来：
     - 创建遵循最佳实践的新项目

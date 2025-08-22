@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-AICultureKit 自动测试生成器
+"""AICultureKit 自动测试生成器
 基于代码分析自动生成测试用例
 """
 
@@ -47,7 +46,11 @@ class AutoTestGenerator:
             "bases": [ast.unparse(base) for base in class_node.bases],
         }
 
-    def generate_function_tests(self, func_info: dict[str, Any], module_name: str) -> str:
+    def generate_function_tests(
+        self,
+        func_info: dict[str, Any],
+        module_name: str,
+    ) -> str:
         """为函数生成测试代码"""
         func_name = func_info["name"]
         args = func_info["args"]
@@ -155,7 +158,9 @@ class Test{class_name}:
             return ""
 
         module_name = (
-            str(py_file.relative_to(self.project_path)).replace("/", ".").replace(".py", "")
+            str(py_file.relative_to(self.project_path))
+            .replace("/", ".")
+            .replace(".py", "")
         )
 
         # 生成测试文件头部

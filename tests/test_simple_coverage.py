@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-简单覆盖率测试 - 专注于实际存在的功能
-"""
+"""简单覆盖率测试 - 专注于实际存在的功能"""
 
 import tempfile
 from pathlib import Path
@@ -139,7 +137,9 @@ class TestDataGovernance:
 
     def test_manager_initialization(self):
         """测试管理器初始化"""
-        assert self.manager.config_dir == self.temp_dir / ".aiculture" / "data_governance"
+        assert (
+            self.manager.config_dir == self.temp_dir / ".aiculture" / "data_governance"
+        )
         assert hasattr(self.manager, "data_inventory")
 
     def test_privacy_scanning(self):
@@ -275,7 +275,7 @@ class TestErrorHandling:
         # 测试安全的文件读取
         try:
             non_existent_path.read_text()
-            assert False, "Should have raised an exception"
+            raise AssertionError("Should have raised an exception")
         except FileNotFoundError:
             assert True  # 期望的异常
 

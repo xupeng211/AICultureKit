@@ -1,5 +1,4 @@
-"""
-Lint自动修复策略
+"""Lint自动修复策略
 处理ruff/black/isort等格式化问题
 """
 
@@ -23,7 +22,6 @@ class LintAutoFixStrategy:
 
     def fix_file(self, file_path: str, content: str) -> dict[str, Any]:
         """修复单个文件的lint问题"""
-
         result = {
             "success": False,
             "original_content": content,
@@ -34,7 +32,11 @@ class LintAutoFixStrategy:
 
         try:
             # 创建临时文件
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as temp_file:
+            with tempfile.NamedTemporaryFile(
+                mode="w",
+                suffix=".py",
+                delete=False,
+            ) as temp_file:
                 temp_file.write(content)
                 temp_file.flush()
                 temp_path = temp_file.name
@@ -75,7 +77,7 @@ class LintAutoFixStrategy:
                 Path(temp_path).unlink(missing_ok=True)
 
         except Exception as e:
-            result["errors"].append(f"处理文件时出错: {str(e)}")
+            result["errors"].append(f"处理文件时出错: {e!s}")
 
         return result
 
@@ -93,7 +95,6 @@ class LintAutoFixStrategy:
 
     def generate_patches(self, files: list[str]) -> list[dict[str, Any]]:
         """为文件列表生成lint修复补丁"""
-
         patches = []
         total_changes = 0
 
@@ -121,7 +122,7 @@ class LintAutoFixStrategy:
                             "patch_content": patch_content,
                             "changes": fix_result["changes"],
                             "errors": fix_result["errors"],
-                        }
+                        },
                     )
                     total_changes += 1
 
@@ -129,7 +130,6 @@ class LintAutoFixStrategy:
 
     def create_changelog_entry(self, patches: list[dict[str, Any]]) -> str:
         """创建变更日志条目"""
-
         if not patches:
             return "## Lint自动修复\n\n无需修复的文件。\n"
 
@@ -166,7 +166,6 @@ class LintAutoFixStrategy:
 
 def create_lint_patches(files: list[str]) -> dict[str, Any]:
     """创建lint修复补丁的便捷函数"""
-
     strategy = LintAutoFixStrategy()
     patches = strategy.generate_patches(files)
 

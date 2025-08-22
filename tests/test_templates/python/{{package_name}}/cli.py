@@ -1,5 +1,4 @@
-"""
-测试模块: aiculture.templatesthon.{{package_name}}.cli
+"""测试模块: aiculture.templatesthon.{{package_name}}.cli
 TODO: 添加具体的测试用例
 """
 

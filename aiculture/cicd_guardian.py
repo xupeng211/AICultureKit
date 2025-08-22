@@ -1,5 +1,4 @@
-"""
-CI/CD智能守护系统
+"""CI/CD智能守护系统
 全面检测和预防构建失败的智能化解决方案
 """
 
@@ -105,7 +104,7 @@ class CICDGuardian:
                         impact="基础镜像更新可能导致构建失败",
                         prevention="使用固定版本号，如 python:3.10-slim",
                         auto_fix=True,
-                    )
+                    ),
                 )
 
             # 检查多阶段构建
@@ -118,7 +117,7 @@ class CICDGuardian:
                         impact="镜像体积大，构建时间长",
                         prevention="采用多阶段构建优化镜像大小",
                         auto_fix=False,
-                    )
+                    ),
                 )
 
         # 检查系统依赖
@@ -131,7 +130,7 @@ class CICDGuardian:
                     impact="镜像体积增大",
                     prevention="添加 rm -rf /var/lib/apt/lists/*",
                     auto_fix=True,
-                )
+                ),
             )
 
     def _check_dependencies(self) -> Any:
@@ -161,13 +160,14 @@ class CICDGuardian:
                         impact="依赖版本更新可能导致构建失败",
                         prevention="使用 pip freeze 生成精确版本锁定",
                         auto_fix=True,
-                    )
+                    ),
                 )
 
         # 检查依赖安全性
         try:
             result = subprocess.run(
                 ["safety", "check", "-r", str(req_file)],
+                check=False,
                 capture_output=True,
                 text=True,
                 timeout=30,
@@ -181,7 +181,7 @@ class CICDGuardian:
                         impact="存在安全风险，可能被拒绝部署",
                         prevention="更新有漏洞的依赖包",
                         auto_fix=False,
-                    )
+                    ),
                 )
         except (subprocess.TimeoutExpired, FileNotFoundError):
             pass
@@ -216,7 +216,7 @@ class CICDGuardian:
                     impact="构建过程中可能网络失败",
                     prevention="配置重试机制和备用镜像源",
                     auto_fix=False,
-                )
+                ),
             )
 
     def _check_resources(self) -> Any:
@@ -238,7 +238,7 @@ class CICDGuardian:
                     impact="构建过程中可能空间不足失败",
                     prevention="清理磁盘空间或增加存储",
                     auto_fix=False,
-                )
+                ),
             )
         elif free_gb < 10:
             self.risks.append(
@@ -249,7 +249,7 @@ class CICDGuardian:
                     impact="可能影响构建性能",
                     prevention="建议清理不必要文件",
                     auto_fix=False,
-                )
+                ),
             )
 
         # 检查内存使用
@@ -257,7 +257,11 @@ class CICDGuardian:
             with open("/proc/meminfo") as f:
                 meminfo = f.read()
             mem_available = (
-                int([line for line in meminfo.split("\n") if "MemAvailable" in line][0].split()[1])
+                int(
+                    [line for line in meminfo.split("\n") if "MemAvailable" in line][
+                        0
+                    ].split()[1],
+                )
                 // 1024
             )
 
@@ -270,7 +274,7 @@ class CICDGuardian:
                         impact="构建过程可能内存溢出",
                         prevention="关闭不必要进程或增加内存",
                         auto_fix=False,
-                    )
+                    ),
                 )
         except (FileNotFoundError, IndexError):
             pass  # 非Linux系统
@@ -290,7 +294,7 @@ class CICDGuardian:
                     impact="可能复制不必要文件，增加构建时间",
                     prevention="创建.dockerignore排除不必要文件",
                     auto_fix=True,
-                )
+                ),
             )
 
         # 检查CI/CD配置
@@ -312,7 +316,7 @@ class CICDGuardian:
                                 impact="可能导致无限等待",
                                 prevention="添加 timeout-minutes 配置",
                                 auto_fix=True,
-                            )
+                            ),
                         )
 
     def _check_code_quality(self) -> Any:
@@ -329,7 +333,7 @@ class CICDGuardian:
                     impact="无法自动质量检查和修复",
                     prevention="运行 aiculture enable-culture 启用",
                     auto_fix=True,
-                )
+                ),
             )
 
     def _check_security(self) -> Any:
@@ -364,7 +368,7 @@ class CICDGuardian:
                                 impact="敏感信息泄露风险",
                                 prevention="使用环境变量或密钥管理服务",
                                 auto_fix=False,
-                            )
+                            ),
                         )
                         break
             except Exception:
@@ -413,12 +417,11 @@ class CICDGuardian:
         """获取建议"""
         if score >= 90:
             return "✅ 构建风险很低，可以安全部署"
-        elif score >= 70:
+        if score >= 70:
             return "⚠️ 存在中等风险，建议修复后部署"
-        elif score >= 50:
+        if score >= 50:
             return "🚨 存在高风险，必须修复关键问题"
-        else:
-            return "🔥 风险极高，禁止部署，需要全面修复"
+        return "🔥 风险极高，禁止部署，需要全面修复"
 
     def auto_fix_issues(self) -> dict[str, Any]:
         """自动修复问题"""
@@ -435,7 +438,8 @@ class CICDGuardian:
                     else:
                         failed_fixes.append(risk.description)
                 except Exception as e:
-                    failed_fixes.append(f"{risk.description}: {str(e)}")
+                    raise e
+                    failed_fixes.append(f"{risk.description}: {e!s}")
 
         return {
             "fixed": fixed_issues,
@@ -451,13 +455,13 @@ class CICDGuardian:
         """修复具体问题"""
         if "latest标签" in risk.description:
             return self._fix_dockerfile_base_image()
-        elif "dockerignore" in risk.description:
+        if "dockerignore" in risk.description:
             return self._create_dockerignore()
-        elif "未固定版本" in risk.description:
+        if "未固定版本" in risk.description:
             return self._fix_requirements_versions()
-        elif "超时设置" in risk.description:
+        if "超时设置" in risk.description:
             return self._add_workflow_timeouts()
-        elif "AI开发文化配置" in risk.description:
+        if "AI开发文化配置" in risk.description:
             return self._setup_ai_culture()
 
         return False
@@ -549,6 +553,7 @@ dist/
         try:
             result = subprocess.run(
                 ["pip", "freeze"],
+                check=False,
                 capture_output=True,
                 text=True,
                 timeout=MINUTES_PER_HOUR,
@@ -575,7 +580,7 @@ dist/
                 workflow = yaml.safe_load(f)
 
             jobs = workflow.get("jobs", {})
-            for job_name, job_config in jobs.items():
+            for _job_name, job_config in jobs.items():
                 if "timeout-minutes" not in job_config:
                     job_config["timeout-minutes"] = 30
                     modified = True

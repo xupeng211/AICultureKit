@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-AI智能测试优化器
+"""AI智能测试优化器
 
 当测试覆盖率不符合要求时，AI自动接手测试工作，
 进行全方面的测试和优化，确保代码质量达标。
@@ -111,6 +110,7 @@ class AITestOptimizer:
                     "--cov-report=json:coverage.json",
                     "-v",
                 ],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -178,7 +178,9 @@ class AITestOptimizer:
                         analysis["classes_found"].append(f"{py_file.stem}.{node.name}")
                     elif isinstance(node, ast.FunctionDef):
                         module_info["functions"].append(node.name)
-                        analysis["functions_found"].append(f"{py_file.stem}.{node.name}")
+                        analysis["functions_found"].append(
+                            f"{py_file.stem}.{node.name}",
+                        )
 
                 if module_info["classes"] or module_info["functions"]:
                     analysis["modules_found"].append(module_info)
@@ -187,7 +189,7 @@ class AITestOptimizer:
                 self.logger.warning(f"分析文件失败 {py_file}: {e}")
 
         print(
-            f"  📊 发现 {len(analysis['classes_found'])} 个类，{len(analysis['functions_found'])} 个函数"
+            f"  📊 发现 {len(analysis['classes_found'])} 个类，{len(analysis['functions_found'])} 个函数",
         )
         return analysis
 
@@ -292,7 +294,9 @@ if __name__ == "__main__":
     unittest.main()
 '''
 
-        test_file = self.project_path / "tests" / "test_culture_enforcer_comprehensive.py"
+        test_file = (
+            self.project_path / "tests" / "test_culture_enforcer_comprehensive.py"
+        )
         try:
             with open(test_file, "w", encoding="utf-8") as f:
                 f.write(test_content)
@@ -372,7 +376,9 @@ if __name__ == "__main__":
     unittest.main()
 '''
 
-        test_file = self.project_path / "tests" / "test_problem_aggregator_comprehensive.py"
+        test_file = (
+            self.project_path / "tests" / "test_problem_aggregator_comprehensive.py"
+        )
         try:
             with open(test_file, "w", encoding="utf-8") as f:
                 f.write(test_content)
@@ -502,7 +508,9 @@ if __name__ == "__main__":
     unittest.main()
 '''
 
-        test_file = self.project_path / "tests" / "test_data_governance_comprehensive.py"
+        test_file = (
+            self.project_path / "tests" / "test_data_governance_comprehensive.py"
+        )
         try:
             with open(test_file, "w", encoding="utf-8") as f:
                 f.write(test_content)
@@ -572,7 +580,9 @@ if __name__ == "__main__":
     unittest.main()
 '''
 
-        test_file = self.project_path / "tests" / "test_system_integration_comprehensive.py"
+        test_file = (
+            self.project_path / "tests" / "test_system_integration_comprehensive.py"
+        )
         try:
             with open(test_file, "w", encoding="utf-8") as f:
                 f.write(test_content)
@@ -599,6 +609,7 @@ if __name__ == "__main__":
             # 代码格式化
             result = subprocess.run(
                 ["python", "-m", "black", ".", "--quiet"],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -608,6 +619,7 @@ if __name__ == "__main__":
             # 导入排序
             result = subprocess.run(
                 ["python", "-m", "isort", ".", "--quiet"],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -637,6 +649,7 @@ if __name__ == "__main__":
             # 运行所有测试
             result = subprocess.run(
                 ["python", "-m", "pytest", "--cov=aiculture", "-v"],
+                check=False,
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -691,13 +704,17 @@ if __name__ == "__main__":
 
         if results.get("phase_3_optimization"):
             opt_results = results["phase_3_optimization"]
-            print(f"   • 代码格式化: {'✅' if opt_results['code_formatting'] else '❌'}")
+            print(
+                f"   • 代码格式化: {'✅' if opt_results['code_formatting'] else '❌'}",
+            )
             print(f"   • 导入排序: {'✅' if opt_results['import_sorting'] else '❌'}")
 
         if results.get("phase_4_validation"):
             val_results = results["phase_4_validation"]
             print(f"   • 测试通过: {'✅' if val_results['tests_pass'] else '❌'}")
-            print(f"   • 覆盖率改善: {'✅' if val_results['coverage_improved'] else '❌'}")
+            print(
+                f"   • 覆盖率改善: {'✅' if val_results['coverage_improved'] else '❌'}",
+            )
 
         print("\n🎯 AI建议:")
         if results["success"]:
@@ -720,9 +737,8 @@ def main():
         results = optimizer.ai_takeover_testing()
 
         return 0 if results["success"] else 1
-    else:
-        print("\n✅ 测试覆盖率达标，无需AI接手")
-        return 0
+    print("\n✅ 测试覆盖率达标，无需AI接手")
+    return 0
 
 
 if __name__ == "__main__":

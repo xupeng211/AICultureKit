@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-核心功能测试 - 提升测试覆盖率
-"""
+"""核心功能测试 - 提升测试覆盖率"""
 
 import tempfile
 from pathlib import Path

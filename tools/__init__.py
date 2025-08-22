@@ -1,3 +1,1 @@
-"""
-AICultureKit Tools Package
-"""
+"""AICultureKit Tools Package"""
