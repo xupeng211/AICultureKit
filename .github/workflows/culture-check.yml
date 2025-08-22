@@ -1,31 +1,45 @@
+name: "文化检查"
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+      - develop
+
 jobs:
   culture-check:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: "\u8BBE\u7F6EPython"
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    - name: "\u5B89\u88C5\u4F9D\u8D56"
-      run: pip install -r requirements.txt
-    - name: "\u6267\u884C\u6587\u5316\u68C0\u67E5"
-      run: "PYTHONPATH=. python -c \"from aiculture.culture_enforcer import CultureEnforcer;\
-        \ result = CultureEnforcer('.').enforce_all(); print(f'\u8D28\u91CF\u8BC4\u5206\
-        : {result[\\\"score\\\"]}/100'); exit(1 if result['errors'] > 0 else 0)\""
-    - name: "\u8FD0\u884C\u6D4B\u8BD5"
-      run: python -m pytest --cov=aiculture --cov-report=xml
-    - name: "\u4E0A\u4F20\u8986\u76D6\u7387\u62A5\u544A"
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-name: "\u6587\u5316\u68C0\u67E5"
-'on':
-  pull_request:
-    branches:
-    - main
-    - develop
-  push:
-    branches:
-    - main
-    - develop
+      - name: Set enforcement mode by branch
+        id: set-mode
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$BRANCH" == "main" || "$BRANCH" == release/* ]]; then
+            echo "mode=block" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=warn" >> "$GITHUB_OUTPUT"
+          fi
+          echo "AICULTURE_ENFORCE_BLOCKING=${{ steps.set-mode.outputs.mode }}" >> "$GITHUB_ENV"
+
+      - name: Show enforcement mode
+        run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
+
+      - uses: actions/checkout@v3
+      - name: "设置Python"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: "安装依赖"
+        run: pip install -r requirements.txt
+      - name: "执行文化检查"
+        run: |
+          PYTHONPATH=. python -c "from aiculture.culture_enforcer import CultureEnforcer; result = CultureEnforcer('.').enforce_all(); print(f'质量评分: {result[\"score\"]}/100'); exit(1 if result['errors'] > 0 else 0)"
+      - name: "运行测试"
+        run: python -m pytest --cov=aiculture --cov-report=xml
+      - name: "上传覆盖率报告"
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml

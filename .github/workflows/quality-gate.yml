@@ -1,16 +1,15 @@
 name: 🚀 AICultureKit Quality Gate
-
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   schedule:
     # 每天凌晨2点运行完整检查
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
 
 env:
-  PYTHON_VERSION: '3.11'
+  PYTHON_VERSION: "3.11"
   COVERAGE_THRESHOLD: 30
 
 jobs:
@@ -21,33 +20,47 @@ jobs:
     timeout-minutes: 10
     
     steps:
-    - name: 📥 检出代码
-      uses: actions/checkout@v4
+      - name: Set enforcement mode by branch
+        id: set-mode
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$BRANCH" == "main" || "$BRANCH" == release/* ]]; then
+            echo "mode=block" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=warn" >> "$GITHUB_OUTPUT"
+          fi
+          echo "AICULTURE_ENFORCE_BLOCKING=${{ steps.set-mode.outputs.mode }}" >> "$GITHUB_ENV"
+
+      - name: Show enforcement mode
+        run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
+
+      - name: 📥 检出代码
+        uses: actions/checkout@v4
       
-    - name: 🐍 设置Python环境
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-        cache: 'pip'
+      - name: 🐍 设置Python环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
         
-    - name: 📦 安装依赖
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -r requirements-dev.txt
+      - name: 📦 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
         
-    - name: 🎨 代码格式化检查
-      run: |
-        black --check --diff .
-        isort --check-only --diff .
+      - name: 🎨 代码格式化检查
+        run: |
+          black --check --diff .
+          isort --check-only --diff .
         
-    - name: 🔍 代码质量检查
-      run: |
-        flake8 . || true  # 不阻塞，仅警告
+      - name: 🔍 代码质量检查
+        run: |
+          flake8 . || true  # 不阻塞，仅警告
         
-    - name: 🧪 快速测试
-      run: |
-        pytest tests/ -x --tb=short -q
+      - name: 🧪 快速测试
+        run: |
+          pytest tests/ -x --tb=short -q
 
   # 🔬 完整质量检查
   full-check:
@@ -57,49 +70,63 @@ jobs:
     timeout-minutes: 20
     
     steps:
-    - name: 📥 检出代码
-      uses: actions/checkout@v4
+      - name: Set enforcement mode by branch
+        id: set-mode
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$BRANCH" == "main" || "$BRANCH" == release/* ]]; then
+            echo "mode=block" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=warn" >> "$GITHUB_OUTPUT"
+          fi
+          echo "AICULTURE_ENFORCE_BLOCKING=${{ steps.set-mode.outputs.mode }}" >> "$GITHUB_ENV"
+
+      - name: Show enforcement mode
+        run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
+
+      - name: 📥 检出代码
+        uses: actions/checkout@v4
       
-    - name: 🐍 设置Python环境
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-        cache: 'pip'
+      - name: 🐍 设置Python环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
         
-    - name: 📦 安装依赖
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -r requirements-dev.txt
+      - name: 📦 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
         
-    - name: 🧪 运行完整测试套件
-      run: |
-        pytest --cov=aiculture --cov-report=xml --cov-report=term-missing
+      - name: 🧪 运行完整测试套件
+        run: |
+          pytest --cov=aiculture --cov-report=xml --cov-report=term-missing
         
-    - name: 📊 上传覆盖率报告
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        flags: unittests
-        name: codecov-umbrella
+      - name: 📊 上传覆盖率报告
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
         
-    - name: 🔧 类型检查
-      run: |
-        mypy aiculture --ignore-missing-imports || true
+      - name: 🔧 类型检查
+        run: |
+          mypy aiculture --ignore-missing-imports || true
         
-    - name: 🔒 安全检查
-      run: |
-        bandit -r aiculture -f json -o bandit-report.json || true
+      - name: 🔒 安全检查
+        run: |
+          bandit -r aiculture -f json -o bandit-report.json || true
         
-    - name: 📋 生成质量报告
-      run: |
-        python scripts/generate_quality_report.py
+      - name: 📋 生成质量报告
+        run: |
+          python scripts/generate_quality_report.py
         
-    - name: 📤 上传质量报告
-      uses: actions/upload-artifact@v3
-      with:
-        name: quality-report
-        path: quality-report.html
+      - name: 📤 上传质量报告
+        uses: actions/upload-artifact@v3
+        with:
+          name: quality-report
+          path: quality-report.html
 
   # 🌍 多环境测试
   multi-env-test:
@@ -118,24 +145,38 @@ jobs:
             python-version: '3.9'
     
     steps:
-    - name: 📥 检出代码
-      uses: actions/checkout@v4
+      - name: Set enforcement mode by branch
+        id: set-mode
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$BRANCH" == "main" || "$BRANCH" == release/* ]]; then
+            echo "mode=block" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=warn" >> "$GITHUB_OUTPUT"
+          fi
+          echo "AICULTURE_ENFORCE_BLOCKING=${{ steps.set-mode.outputs.mode }}" >> "$GITHUB_ENV"
+
+      - name: Show enforcement mode
+        run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
+
+      - name: 📥 检出代码
+        uses: actions/checkout@v4
       
-    - name: 🐍 设置Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-        cache: 'pip'
+      - name: 🐍 设置Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
         
-    - name: 📦 安装依赖
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest
+      - name: 📦 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
         
-    - name: 🧪 运行核心测试
-      run: |
-        pytest tests/test_core.py tests/test_culture_enforcer.py -v
+      - name: 🧪 运行核心测试
+        run: |
+          pytest tests/test_core.py tests/test_culture_enforcer.py -v
 
   # 🚀 自动修复和PR
   auto-fix:
@@ -144,35 +185,49 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
     
     steps:
-    - name: 📥 检出代码
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set enforcement mode by branch
+        id: set-mode
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$BRANCH" == "main" || "$BRANCH" == release/* ]]; then
+            echo "mode=block" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=warn" >> "$GITHUB_OUTPUT"
+          fi
+          echo "AICULTURE_ENFORCE_BLOCKING=${{ steps.set-mode.outputs.mode }}" >> "$GITHUB_ENV"
+
+      - name: Show enforcement mode
+        run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
+
+      - name: 📥 检出代码
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
         
-    - name: 🐍 设置Python环境
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
+      - name: 🐍 设置Python环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
         
-    - name: 📦 安装工具
-      run: |
-        pip install black isort autoflake
+      - name: 📦 安装工具
+        run: |
+          pip install black isort autoflake
         
-    - name: 🔧 自动修复代码
-      run: |
-        black .
-        isort .
-        autoflake --in-place --remove-all-unused-imports --recursive .
+      - name: 🔧 自动修复代码
+        run: |
+          black .
+          isort .
+          autoflake --in-place --remove-all-unused-imports --recursive .
         
-    - name: 📝 提交修复
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        if ! git diff --cached --quiet; then
-          git commit -m "🤖 自动修复代码格式和导入问题"
-          git push
-        fi
+      - name: 📝 提交修复
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m "🤖 自动修复代码格式和导入问题"
+            git push
+          fi
 
   # 📦 自动发布
   auto-release:
@@ -182,35 +237,49 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
-    - name: 📥 检出代码
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Set enforcement mode by branch
+        id: set-mode
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$BRANCH" == "main" || "$BRANCH" == release/* ]]; then
+            echo "mode=block" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=warn" >> "$GITHUB_OUTPUT"
+          fi
+          echo "AICULTURE_ENFORCE_BLOCKING=${{ steps.set-mode.outputs.mode }}" >> "$GITHUB_ENV"
 
-    - name: 🐍 设置Python环境
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
+      - name: Show enforcement mode
+        run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
 
-    - name: 📦 安装构建工具
-      run: |
-        pip install build twine
+      - name: 📥 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: 🏗️ 构建包
-      run: |
-        python -m build
+      - name: 🐍 设置Python环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: 🧪 检查包
-      run: |
-        twine check dist/*
+      - name: 📦 安装构建工具
+        run: |
+          pip install build twine
 
-    - name: 📤 发布到TestPyPI
-      if: contains(github.event.head_commit.message, '[release]')
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
-      run: |
-        twine upload --repository testpypi dist/*
+      - name: 🏗️ 构建包
+        run: |
+          python -m build
+
+      - name: 🧪 检查包
+        run: |
+          twine check dist/*
+
+      - name: 📤 发布到TestPyPI
+        if: contains(github.event.head_commit.message, '[release]')
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        run: |
+          twine upload --repository testpypi dist/*
 
   # 📊 质量趋势分析
   quality-trend:
@@ -219,27 +288,42 @@ jobs:
     if: github.event_name == 'schedule'
 
     steps:
-    - name: 📥 检出代码
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Set enforcement mode by branch
+        id: set-mode
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$BRANCH" == "main" || "$BRANCH" == release/* ]]; then
+            echo "mode=block" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=warn" >> "$GITHUB_OUTPUT"
+          fi
+          echo "AICULTURE_ENFORCE_BLOCKING=${{ steps.set-mode.outputs.mode }}" >> "$GITHUB_ENV"
 
-    - name: 🐍 设置Python环境
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
+      - name: Show enforcement mode
+        run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
 
-    - name: 📦 安装依赖
-      run: |
-        pip install -r requirements.txt
-        pip install -r requirements-dev.txt
+      - name: 📥 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: 📈 生成趋势报告
-      run: |
-        python scripts/generate_trend_report.py
+      - name: 🐍 设置Python环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: 📤 上传趋势报告
-      uses: actions/upload-artifact@v3
-      with:
-        name: quality-trend-report
-        path: trend-report.html
+      - name: 📦 安装依赖
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: 📈 生成趋势报告
+        run: |
+          python scripts/generate_trend_report.py
+
+      - name: 📤 上传趋势报告
+        uses: actions/upload-artifact@v3
+        with:
+          name: quality-trend-report
+          path: trend-report.html
+

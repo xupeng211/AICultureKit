@@ -298,6 +298,15 @@ pytest --cov
 
 > TL;DR：本地检查要“轻”，CI 门禁要“严”。小分支、小 PR、可回滚；覆盖率阈值按阶梯逐步提高（25% → 40% → 60% → 80%）。
 
+### 钩子与门控（Hooks & Gating）
+
+- 仓库已统一使用自定义钩子目录：`.githooks`（本地执行：`git config core.hooksPath .githooks`）
+- 本地仅运行轻量检查（black / ruff --fix / ruff-format / isort；pre-push 跑快速测试集）
+- 文化/AI 规则采用门控变量：`AICULTURE_ENFORCE_BLOCKING=warn|block|off`
+  - 默认：feature/chore 等开发分支 `warn`
+  - 主线：`main`、`release/*` 在 CI 中注入 `block`
+- CI 仍承担严格门禁（全量 Ruff、Bandit、detect-secrets、mypy、pytest --cov 阈值阶梯）
+
 ### 本地检查（轻量、可自动修复）
 
 ```bash

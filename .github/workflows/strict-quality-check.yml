@@ -18,6 +18,20 @@ jobs:
     timeout-minutes: 15
 
     steps:
+      - name: Set enforcement mode by branch
+        id: set-mode
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$BRANCH" == "main" || "$BRANCH" == release/* ]]; then
+            echo "mode=block" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=warn" >> "$GITHUB_OUTPUT"
+          fi
+          echo "AICULTURE_ENFORCE_BLOCKING=${{ steps.set-mode.outputs.mode }}" >> "$GITHUB_ENV"
+
+      - name: Show enforcement mode
+        run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
+
       - name: 📥 检出代码
         uses: actions/checkout@v4
 
@@ -108,6 +122,20 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
+      - name: Set enforcement mode by branch
+        id: set-mode
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$BRANCH" == "main" || "$BRANCH" == release/* ]]; then
+            echo "mode=block" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=warn" >> "$GITHUB_OUTPUT"
+          fi
+          echo "AICULTURE_ENFORCE_BLOCKING=${{ steps.set-mode.outputs.mode }}" >> "$GITHUB_ENV"
+
+      - name: Show enforcement mode
+        run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
+
       - name: 📥 检出代码
         uses: actions/checkout@v4
         with:
@@ -140,3 +168,4 @@ jobs:
             remaining=$(echo "${{ env.COVERAGE_THRESHOLD_TARGET }} - $coverage_value" | bc)
             echo "📊 距离目标还差 ${remaining}%"
           fi
+
