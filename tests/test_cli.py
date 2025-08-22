@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
 
-from aiculture.cli import check, create, culture, guide, main, setup
+from aiculture.cli import check, create, main
 
 
 class TestCLI:
@@ -89,48 +89,6 @@ class TestCLI:
         assert "测试异常" in result.output
 
     @patch("aiculture.cli.QualityTools")
-    @patch("aiculture.cli.CultureConfig")
-    def test_setup_command(self, mock_config_class, mock_tools_class) -> None:
-        """测试setup命令"""
-        # Mock QualityTools
-        mock_tools = MagicMock()
-        mock_tools_class.return_value = mock_tools
-        mock_tools.setup_pre_commit.return_value = True
-        mock_tools.setup_linting.return_value = True
-
-        # Mock CultureConfig
-        mock_config = MagicMock()
-        mock_config_class.return_value = mock_config
-
-        result = self.runner.invoke(setup, ["--path", self.temp_dir, "--language", "python"])
-
-        assert result.exit_code == 0
-        assert "正在为项目设置质量工具" in result.output
-        assert "pre-commit 设置成功" in result.output
-        assert "python 质量工具设置成功" in result.output
-        assert "项目设置完成" in result.output
-
-        # 验证方法调用
-        mock_tools.setup_pre_commit.assert_called_once()
-        mock_tools.setup_linting.assert_called_once_with("python")
-        mock_config.save_config.assert_called_once()
-
-    @patch("aiculture.cli.QualityTools")
-    def test_setup_command_failures(self, mock_tools_class) -> None:
-        """测试setup命令部分失败情况"""
-        # Mock QualityTools with failures
-        mock_tools = MagicMock()
-        mock_tools_class.return_value = mock_tools
-        mock_tools.setup_pre_commit.return_value = False
-        mock_tools.setup_linting.return_value = False
-
-        result = self.runner.invoke(setup, ["--path", self.temp_dir])
-
-        assert result.exit_code == 0
-        assert "pre-commit 设置失败" in result.output
-        assert "python 质量工具设置失败" in result.output
-
-    @patch("aiculture.cli.QualityTools")
     def test_check_command(self, mock_tools_class) -> None:
         """测试check命令"""
         # Mock QualityTools
@@ -169,74 +127,6 @@ class TestCLI:
         assert result.exit_code == 0
         assert "所有检查均通过" in result.output
 
-    @patch("aiculture.cli.CultureConfig")
-    def test_culture_command(self, mock_config_class) -> None:
-        """测试culture命令"""
-        # Mock CultureConfig
-        mock_config = MagicMock()
-        mock_config_class.return_value = mock_config
-        mock_config.get_principle.side_effect = lambda key: {
-            "principles": ["YAGNI", "KISS", "SOLID"],
-            "code_style": {"python": {"formatter": "black"}},
-            "ai_guidelines": {"context_sharing": True},
-        }.get(key)
-
-        result = self.runner.invoke(culture, ["--path", self.temp_dir])
-
-        assert result.exit_code == 0
-        assert "AI开发文化配置" in result.output
-        assert "开发原则:" in result.output
-        assert "YAGNI" in result.output
-        assert "代码风格:" in result.output
-        assert "AI协作指南:" in result.output
-
-    def test_guide_command_python(self) -> None:
-        """测试guide命令生成Python指南"""
-        with self.runner.isolated_filesystem():
-            result = self.runner.invoke(guide, ["--template", "python"])
-
-            assert result.exit_code == 0
-            assert "正在生成 python AI协作指南" in result.output
-            assert "AI协作指南已生成" in result.output
-
-            # 检查文件是否生成
-            guide_file = Path("AI_GUIDE.md")
-            assert guide_file.exists()
-            content = guide_file.read_text(encoding="utf-8")
-            assert "Python项目AI协作指南" in content
-            assert "YAGNI" in content
-
-    def test_guide_command_javascript(self) -> None:
-        """测试guide命令生成JavaScript指南"""
-        with self.runner.isolated_filesystem():
-            result = self.runner.invoke(guide, ["--template", "javascript"])
-
-            assert result.exit_code == 0
-            assert "正在生成 javascript AI协作指南" in result.output
-
-            # 检查文件内容
-            guide_file = Path("AI_GUIDE.md")
-            assert guide_file.exists()
-            content = guide_file.read_text(encoding="utf-8")
-            assert "JavaScript项目AI协作指南" in content
-            assert "ESLint" in content
-
-    def test_guide_command_full(self) -> None:
-        """测试guide命令生成完整指南"""
-        with self.runner.isolated_filesystem():
-            result = self.runner.invoke(guide, ["--template", "full"])
-
-            assert result.exit_code == 0
-            assert "正在生成 full AI协作指南" in result.output
-
-            # 检查文件内容
-            guide_file = Path("AI_GUIDE.md")
-            assert guide_file.exists()
-            content = guide_file.read_text(encoding="utf-8")
-            assert "AI协作开发指南" in content
-            assert "核心开发哲学" in content
-            assert "SOLID原则" in content
-
     def test_create_command_with_options(self) -> None:
         """测试create命令带选项"""
         with patch("aiculture.cli.ProjectTemplate") as mock_template_class:
@@ -264,22 +154,6 @@ class TestCLI:
                 target_path="/tmp",
                 template_type="javascript",
             )
-
-    def test_setup_command_javascript(self) -> None:
-        """测试setup命令支持JavaScript"""
-        with patch("aiculture.cli.QualityTools") as mock_tools_class:
-            with patch("aiculture.cli.CultureConfig") as mock_config_class:
-                mock_tools = MagicMock()
-                mock_tools_class.return_value = mock_tools
-                mock_tools.setup_pre_commit.return_value = True
-                mock_tools.setup_linting.return_value = True
-
-                result = self.runner.invoke(
-                    setup, ["--path", self.temp_dir, "--language", "javascript"]
-                )
-
-                assert result.exit_code == 0
-                mock_tools.setup_linting.assert_called_once_with("javascript")
 
     def test_check_command_with_fix(self) -> None:
         """测试check命令带修复选项"""

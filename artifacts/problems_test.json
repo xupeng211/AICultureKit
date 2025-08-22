@@ -1,0 +1,1940 @@
+{
+  "mode": "simple",
+  "fast": true,
+  "base": "origin/main",
+  "timestamp": "2025-08-21 16:12:31",
+  "tools": {
+    "ruff": {
+      "status": "success",
+      "issues": [
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 18,
+            "row": 183
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/accessibility_culture.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 21,
+                  "row": 183
+                },
+                "location": {
+                  "column": 13,
+                  "row": 183
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `lines`"
+          },
+          "location": {
+            "column": 13,
+            "row": 183
+          },
+          "message": "Local variable `lines` is assigned to but never used",
+          "noqa_row": 183,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 18,
+            "row": 98
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/ai_intelligent_fixer.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 21,
+                  "row": 98
+                },
+                "location": {
+                  "column": 9,
+                  "row": 98
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `file_path`"
+          },
+          "location": {
+            "column": 9,
+            "row": 98
+          },
+          "message": "Local variable `file_path` is assigned to but never used",
+          "noqa_row": 98,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 19,
+            "row": 99
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/ai_intelligent_fixer.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 22,
+                  "row": 99
+                },
+                "location": {
+                  "column": 9,
+                  "row": 99
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `suggestion`"
+          },
+          "location": {
+            "column": 9,
+            "row": 99
+          },
+          "message": "Local variable `suggestion` is assigned to but never used",
+          "noqa_row": 99,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 30,
+            "row": 333
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/ai_intelligent_fixer.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 33,
+                  "row": 333
+                },
+                "location": {
+                  "column": 21,
+                  "row": 333
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `json_data`"
+          },
+          "location": {
+            "column": 21,
+            "row": 333
+          },
+          "message": "Local variable `json_data` is assigned to but never used",
+          "noqa_row": 333,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 21,
+            "row": 394
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/alerting_rules.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 1,
+                  "row": 395
+                },
+                "location": {
+                  "column": 1,
+                  "row": 394
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `status_emoji`"
+          },
+          "location": {
+            "column": 9,
+            "row": 394
+          },
+          "message": "Local variable `status_emoji` is assigned to but never used",
+          "noqa_row": 394,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 23,
+            "row": 395
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/alerting_rules.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 26,
+                  "row": 395
+                },
+                "location": {
+                  "column": 9,
+                  "row": 395
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `severity_emoji`"
+          },
+          "location": {
+            "column": 9,
+            "row": 395
+          },
+          "message": "Local variable `severity_emoji` is assigned to but never used",
+          "noqa_row": 395,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 25,
+            "row": 9
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/auto_setup.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 9
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 9,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 55,
+            "row": 11
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/auto_setup.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 11
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 11,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 11,
+            "row": 9
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/culture_enforcer.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 9
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 9,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 12,
+            "row": 10
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/culture_enforcer.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 10
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 10,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 18,
+            "row": 11
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/culture_enforcer.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 11
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 11,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 34,
+            "row": 12
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/culture_enforcer.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 12
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 12,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 25,
+            "row": 13
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/culture_enforcer.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 13
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 13,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 30,
+            "row": 14
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/culture_enforcer.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 14
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 14,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 63,
+            "row": 16
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/culture_enforcer.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 16
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 16,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 55,
+            "row": 17
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/culture_enforcer.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 17
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 17,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 59,
+            "row": 18
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/culture_enforcer.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 18
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 18,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 56,
+            "row": 19
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/culture_enforcer.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 19
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 19,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 81,
+            "row": 20
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/culture_enforcer.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 20
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 20,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 19,
+            "row": 274
+          },
+          "filename": "/home/user/projects/AICultureKit/aiculture/culture_enforcer.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 22,
+                  "row": 274
+                },
+                "location": {
+                  "column": 13,
+                  "row": 274
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `result`"
+          },
+          "location": {
+            "column": 13,
+            "row": 274
+          },
+          "message": "Local variable `result` is assigned to but never used",
+          "noqa_row": 274,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 16,
+            "row": 18
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/culture_penetration_demo.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 18
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 18,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 12,
+            "row": 19
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/culture_penetration_demo.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 19
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 19,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 25,
+            "row": 20
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/culture_penetration_demo.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 20
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 20,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 55,
+            "row": 22
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/culture_penetration_demo.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 22
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 22,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 95,
+            "row": 25
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/culture_penetration_demo.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 25
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 25,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 10,
+            "row": 17
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/hardcode_example.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 17
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 17,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 23,
+            "row": 19
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/hardcode_example.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 19
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 19,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 16,
+            "row": 20
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/hardcode_example.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 20
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 20,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 16,
+            "row": 112
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/hardcode_example.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 19,
+                  "row": 112
+                },
+                "location": {
+                  "column": 5,
+                  "row": 112
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `time_window`"
+          },
+          "location": {
+            "column": 5,
+            "row": 112
+          },
+          "message": "Local variable `time_window` is assigned to but never used",
+          "noqa_row": 112,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 16,
+            "row": 128
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/hardcode_example.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 19,
+                  "row": 128
+                },
+                "location": {
+                  "column": 5,
+                  "row": 128
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `smtp_server`"
+          },
+          "location": {
+            "column": 5,
+            "row": 128
+          },
+          "message": "Local variable `smtp_server` is assigned to but never used",
+          "noqa_row": 128,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 14,
+            "row": 129
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/hardcode_example.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 17,
+                  "row": 129
+                },
+                "location": {
+                  "column": 5,
+                  "row": 129
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `smtp_port`"
+          },
+          "location": {
+            "column": 5,
+            "row": 129
+          },
+          "message": "Local variable `smtp_port` is assigned to but never used",
+          "noqa_row": 129,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 17,
+            "row": 130
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/hardcode_example.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 20,
+                  "row": 130
+                },
+                "location": {
+                  "column": 5,
+                  "row": 130
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `sender_email`"
+          },
+          "location": {
+            "column": 5,
+            "row": 130
+          },
+          "message": "Local variable `sender_email` is assigned to but never used",
+          "noqa_row": 130,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 20,
+            "row": 131
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/hardcode_example.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 23,
+                  "row": 131
+                },
+                "location": {
+                  "column": 5,
+                  "row": 131
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `sender_password`"
+          },
+          "location": {
+            "column": 5,
+            "row": 131
+          },
+          "message": "Local variable `sender_password` is assigned to but never used",
+          "noqa_row": 131,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 72,
+            "row": 19
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/real-world-scenarios/full-workflow-demo.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 19
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 19,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 40,
+            "row": 20
+          },
+          "filename": "/home/user/projects/AICultureKit/demo/real-world-scenarios/full-workflow-demo.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 20
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 20,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 16,
+            "row": 34
+          },
+          "filename": "/home/user/projects/AICultureKit/final_validation.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 19,
+                  "row": 34
+                },
+                "location": {
+                  "column": 9,
+                  "row": 34
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `catalog`"
+          },
+          "location": {
+            "column": 9,
+            "row": 34
+          },
+          "message": "Local variable `catalog` is assigned to but never used",
+          "noqa_row": 34,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 15,
+            "row": 45
+          },
+          "filename": "/home/user/projects/AICultureKit/final_validation.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 18,
+                  "row": 45
+                },
+                "location": {
+                  "column": 9,
+                  "row": 45
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `config`"
+          },
+          "location": {
+            "column": 9,
+            "row": 45
+          },
+          "message": "Local variable `config` is assigned to but never used",
+          "noqa_row": 45,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 11,
+            "row": 9
+          },
+          "filename": "/home/user/projects/AICultureKit/scripts/add_docstrings.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 9
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 9,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 25,
+            "row": 10
+          },
+          "filename": "/home/user/projects/AICultureKit/scripts/add_docstrings.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 10
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 10,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 24,
+            "row": 11
+          },
+          "filename": "/home/user/projects/AICultureKit/scripts/add_docstrings.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 11
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 11,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 11,
+            "row": 9
+          },
+          "filename": "/home/user/projects/AICultureKit/scripts/add_type_hints.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 9
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 9,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 25,
+            "row": 10
+          },
+          "filename": "/home/user/projects/AICultureKit/scripts/add_type_hints.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 10
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 10,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 24,
+            "row": 11
+          },
+          "filename": "/home/user/projects/AICultureKit/scripts/add_type_hints.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 11
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 11,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 58,
+            "row": 16
+          },
+          "filename": "/home/user/projects/AICultureKit/scripts/auto_fix_problems.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 16
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 16,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 59,
+            "row": 17
+          },
+          "filename": "/home/user/projects/AICultureKit/scripts/auto_fix_problems.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 17
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 17,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 23,
+            "row": 109
+          },
+          "filename": "/home/user/projects/AICultureKit/scripts/fix_code_quality_issues.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 26,
+                  "row": 109
+                },
+                "location": {
+                  "column": 9,
+                  "row": 109
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `original_lines`"
+          },
+          "location": {
+            "column": 9,
+            "row": 109
+          },
+          "message": "Local variable `original_lines` is assigned to but never used",
+          "noqa_row": 109,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "E722",
+          "end_location": {
+            "column": 19,
+            "row": 175
+          },
+          "filename": "/home/user/projects/AICultureKit/scripts/fix_security_issues.py",
+          "fix": null,
+          "location": {
+            "column": 13,
+            "row": 175
+          },
+          "message": "Do not use bare `except`",
+          "noqa_row": 175,
+          "url": "https://docs.astral.sh/ruff/rules/bare-except"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 22,
+            "row": 347
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_accessibility_culture.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 25,
+                  "row": 347
+                },
+                "location": {
+                  "column": 9,
+                  "row": 347
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `media_issues1`"
+          },
+          "location": {
+            "column": 9,
+            "row": 347
+          },
+          "message": "Local variable `media_issues1` is assigned to but never used",
+          "noqa_row": 347,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 22,
+            "row": 348
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_accessibility_culture.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 25,
+                  "row": 348
+                },
+                "location": {
+                  "column": 9,
+                  "row": 348
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `media_issues2`"
+          },
+          "location": {
+            "column": 9,
+            "row": 348
+          },
+          "message": "Local variable `media_issues2` is assigned to but never used",
+          "noqa_row": 348,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 62,
+            "row": 12
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_ai_behavior_comprehensive.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 12
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 12,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 75,
+            "row": 271
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_cli.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 75,
+                  "row": 271
+                },
+                "location": {
+                  "column": 54,
+                  "row": 271
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `mock_config_class`"
+          },
+          "location": {
+            "column": 58,
+            "row": 271
+          },
+          "message": "Local variable `mock_config_class` is assigned to but never used",
+          "noqa_row": 271,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 55,
+            "row": 12
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_culture_enforcer_comprehensive.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 12
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 12,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 65,
+            "row": 11
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_data_governance_comprehensive.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 11
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 11,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 25,
+            "row": 30
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_data_governance_comprehensive.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 1,
+                  "row": 31
+                },
+                "location": {
+                  "column": 1,
+                  "row": 30
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `test_content`"
+          },
+          "location": {
+            "column": 13,
+            "row": 30
+          },
+          "message": "Local variable `test_content` is assigned to but never used",
+          "noqa_row": 30,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "E712",
+          "end_location": {
+            "column": 46,
+            "row": 72
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_environment_checker.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "structure[\"README.md\"]",
+                "end_location": {
+                  "column": 46,
+                  "row": 72
+                },
+                "location": {
+                  "column": 16,
+                  "row": 72
+                }
+              }
+            ],
+            "message": "Replace with `structure[\"README.md\"]`"
+          },
+          "location": {
+            "column": 16,
+            "row": 72
+          },
+          "message": "Avoid equality comparisons to `True`; use `structure[\"README.md\"]:` for truth checks",
+          "noqa_row": 72,
+          "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+        },
+        {
+          "cell": null,
+          "code": "E712",
+          "end_location": {
+            "column": 53,
+            "row": 73
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_environment_checker.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "structure[\"requirements.txt\"]",
+                "end_location": {
+                  "column": 53,
+                  "row": 73
+                },
+                "location": {
+                  "column": 16,
+                  "row": 73
+                }
+              }
+            ],
+            "message": "Replace with `structure[\"requirements.txt\"]`"
+          },
+          "location": {
+            "column": 16,
+            "row": 73
+          },
+          "message": "Avoid equality comparisons to `True`; use `structure[\"requirements.txt\"]:` for truth checks",
+          "noqa_row": 73,
+          "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+        },
+        {
+          "cell": null,
+          "code": "E712",
+          "end_location": {
+            "column": 52,
+            "row": 77
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_environment_checker.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "not structure[\"pyproject.toml\"]",
+                "end_location": {
+                  "column": 52,
+                  "row": 77
+                },
+                "location": {
+                  "column": 16,
+                  "row": 77
+                }
+              }
+            ],
+            "message": "Replace with `not structure[\"pyproject.toml\"]`"
+          },
+          "location": {
+            "column": 16,
+            "row": 77
+          },
+          "message": "Avoid equality comparisons to `False`; use `not structure[\"pyproject.toml\"]:` for false checks",
+          "noqa_row": 77,
+          "url": "https://docs.astral.sh/ruff/rules/true-false-comparison"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 26,
+            "row": 283
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_performance_culture.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 29,
+                  "row": 283
+                },
+                "location": {
+                  "column": 13,
+                  "row": 283
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `cpu_benchmark`"
+          },
+          "location": {
+            "column": 13,
+            "row": 283
+          },
+          "message": "Local variable `cpu_benchmark` is assigned to but never used",
+          "noqa_row": 283,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 29,
+            "row": 284
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_performance_culture.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 32,
+                  "row": 284
+                },
+                "location": {
+                  "column": 13,
+                  "row": 284
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `memory_benchmark`"
+          },
+          "location": {
+            "column": 13,
+            "row": 284
+          },
+          "message": "Local variable `memory_benchmark` is assigned to but never used",
+          "noqa_row": 284,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "E402",
+          "end_location": {
+            "column": 59,
+            "row": 12
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/test_problem_aggregator_comprehensive.py",
+          "fix": null,
+          "location": {
+            "column": 1,
+            "row": 12
+          },
+          "message": "Module level import not at top of file",
+          "noqa_row": 12,
+          "url": "https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file"
+        },
+        {
+          "cell": null,
+          "code": "F401",
+          "end_location": {
+            "column": 36,
+            "row": 11
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/tools/test_agent_m2.py",
+          "fix": {
+            "applicability": "safe",
+            "edits": [
+              {
+                "content": "from unittest.mock import patch",
+                "end_location": {
+                  "column": 43,
+                  "row": 11
+                },
+                "location": {
+                  "column": 1,
+                  "row": 11
+                }
+              }
+            ],
+            "message": "Remove unused import: `unittest.mock.MagicMock`"
+          },
+          "location": {
+            "column": 27,
+            "row": 11
+          },
+          "message": "`unittest.mock.MagicMock` imported but unused",
+          "noqa_row": 11,
+          "url": "https://docs.astral.sh/ruff/rules/unused-import"
+        },
+        {
+          "cell": null,
+          "code": "F401",
+          "end_location": {
+            "column": 12,
+            "row": 7
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/tools/test_aggregator_simple.py",
+          "fix": {
+            "applicability": "safe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 1,
+                  "row": 8
+                },
+                "location": {
+                  "column": 1,
+                  "row": 7
+                }
+              }
+            ],
+            "message": "Remove unused import: `json`"
+          },
+          "location": {
+            "column": 8,
+            "row": 7
+          },
+          "message": "`json` imported but unused",
+          "noqa_row": 7,
+          "url": "https://docs.astral.sh/ruff/rules/unused-import"
+        },
+        {
+          "cell": null,
+          "code": "F401",
+          "end_location": {
+            "column": 18,
+            "row": 8
+          },
+          "filename": "/home/user/projects/AICultureKit/tests/tools/test_aggregator_simple.py",
+          "fix": {
+            "applicability": "safe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 1,
+                  "row": 9
+                },
+                "location": {
+                  "column": 1,
+                  "row": 8
+                }
+              }
+            ],
+            "message": "Remove unused import: `subprocess`"
+          },
+          "location": {
+            "column": 8,
+            "row": 8
+          },
+          "message": "`subprocess` imported but unused",
+          "noqa_row": 8,
+          "url": "https://docs.astral.sh/ruff/rules/unused-import"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 22,
+            "row": 151
+          },
+          "filename": "/home/user/projects/AICultureKit/tools/ai_fix_agent/strategies/security_codemods.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 25,
+                  "row": 151
+                },
+                "location": {
+                  "column": 9,
+                  "row": 151
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `original_line`"
+          },
+          "location": {
+            "column": 9,
+            "row": 151
+          },
+          "message": "Local variable `original_line` is assigned to but never used",
+          "noqa_row": 151,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        },
+        {
+          "cell": null,
+          "code": "F841",
+          "end_location": {
+            "column": 10,
+            "row": 660
+          },
+          "filename": "/home/user/projects/AICultureKit/tools/problem_aggregator/aggregator.py",
+          "fix": {
+            "applicability": "unsafe",
+            "edits": [
+              {
+                "content": "",
+                "end_location": {
+                  "column": 13,
+                  "row": 660
+                },
+                "location": {
+                  "column": 5,
+                  "row": 660
+                }
+              }
+            ],
+            "message": "Remove assignment to unused variable `tools`"
+          },
+          "location": {
+            "column": 5,
+            "row": 660
+          },
+          "message": "Local variable `tools` is assigned to but never used",
+          "noqa_row": 660,
+          "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+        }
+      ],
+      "count": 65,
+      "targets_scanned": 129
+    },
+    "bandit": {
+      "status": "success",
+      "data": {
+        "errors": [],
+        "generated_at": "2025-08-21T08:12:32Z",
+        "metrics": {
+          "_totals": {
+            "CONFIDENCE.HIGH": 13,
+            "CONFIDENCE.LOW": 0,
+            "CONFIDENCE.MEDIUM": 0,
+            "CONFIDENCE.UNDEFINED": 0,
+            "SEVERITY.HIGH": 0,
+            "SEVERITY.LOW": 13,
+            "SEVERITY.MEDIUM": 0,
+            "SEVERITY.UNDEFINED": 0,
+            "loc": 937,
+            "nosec": 0,
+            "skipped_tests": 0
+          },
+          "tools/ai_fix_agent/agent_m2.py": {
+            "CONFIDENCE.HIGH": 0,
+            "CONFIDENCE.LOW": 0,
+            "CONFIDENCE.MEDIUM": 0,
+            "CONFIDENCE.UNDEFINED": 0,
+            "SEVERITY.HIGH": 0,
+            "SEVERITY.LOW": 0,
+            "SEVERITY.MEDIUM": 0,
+            "SEVERITY.UNDEFINED": 0,
+            "loc": 240,
+            "nosec": 0,
+            "skipped_tests": 0
+          },
+          "tools/problem_aggregator/aggregator.py": {
+            "CONFIDENCE.HIGH": 13,
+            "CONFIDENCE.LOW": 0,
+            "CONFIDENCE.MEDIUM": 0,
+            "CONFIDENCE.UNDEFINED": 0,
+            "SEVERITY.HIGH": 0,
+            "SEVERITY.LOW": 13,
+            "SEVERITY.MEDIUM": 0,
+            "SEVERITY.UNDEFINED": 0,
+            "loc": 697,
+            "nosec": 0,
+            "skipped_tests": 0
+          }
+        },
+        "results": [
+          {
+            "code": "10 import re\n11 import subprocess\n12 import sys\n",
+            "col_offset": 0,
+            "end_col_offset": 17,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "Consider possible security implications associated with the subprocess module.",
+            "line_number": 11,
+            "line_range": [
+              11
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/blacklists/blacklist_imports.html#b404-import-subprocess",
+            "test_id": "B404",
+            "test_name": "blacklist"
+          },
+          {
+            "code": "64         cmd = [\"git\", \"diff\", \"--name-only\", \"--cached\", \"--diff-filter=ACMR\"]\n65         result = subprocess.run(\n66             cmd, cwd=project_root, capture_output=True, text=True, timeout=30\n67         )\n68 \n",
+            "col_offset": 17,
+            "end_col_offset": 9,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "subprocess call - check for execution of untrusted input.",
+            "line_number": 65,
+            "line_range": [
+              65,
+              66,
+              67
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/plugins/b603_subprocess_without_shell_equals_true.html",
+            "test_id": "B603",
+            "test_name": "subprocess_without_shell_equals_true"
+          },
+          {
+            "code": "105         # 检查 diff-cover 是否可用\n106         subprocess.run([\"diff-cover\", \"--version\"], capture_output=True, check=True)\n107 \n",
+            "col_offset": 8,
+            "end_col_offset": 84,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "Starting a process with a partial executable path",
+            "line_number": 106,
+            "line_range": [
+              106
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/plugins/b607_start_process_with_partial_path.html",
+            "test_id": "B607",
+            "test_name": "start_process_with_partial_path"
+          },
+          {
+            "code": "105         # 检查 diff-cover 是否可用\n106         subprocess.run([\"diff-cover\", \"--version\"], capture_output=True, check=True)\n107 \n",
+            "col_offset": 8,
+            "end_col_offset": 84,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "subprocess call - check for execution of untrusted input.",
+            "line_number": 106,
+            "line_range": [
+              106
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/plugins/b603_subprocess_without_shell_equals_true.html",
+            "test_id": "B603",
+            "test_name": "subprocess_without_shell_equals_true"
+          },
+          {
+            "code": "109         cmd = [\"diff-cover\", \"coverage.xml\", \"--compare-branch\", base, \"--fail-under=0\"]\n110         result = subprocess.run(\n111             cmd, cwd=project_root, capture_output=True, text=True, timeout=60\n112         )\n113 \n",
+            "col_offset": 17,
+            "end_col_offset": 9,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "subprocess call - check for execution of untrusted input.",
+            "line_number": 110,
+            "line_range": [
+              110,
+              111,
+              112
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/plugins/b603_subprocess_without_shell_equals_true.html",
+            "test_id": "B603",
+            "test_name": "subprocess_without_shell_equals_true"
+          },
+          {
+            "code": "197 \n198             result = subprocess.run(\n199                 cmd, cwd=self.project_root, capture_output=True, text=True, timeout=30\n200             )\n201 \n",
+            "col_offset": 21,
+            "end_col_offset": 13,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "subprocess call - check for execution of untrusted input.",
+            "line_number": 198,
+            "line_range": [
+              198,
+              199,
+              200
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/plugins/b603_subprocess_without_shell_equals_true.html",
+            "test_id": "B603",
+            "test_name": "subprocess_without_shell_equals_true"
+          },
+          {
+            "code": "498         \"base\": base,\n499         \"timestamp\": subprocess.run(\n500             [\"date\", \"+%Y-%m-%d %H:%M:%S\"], capture_output=True, text=True\n501         ).stdout.strip(),\n502         \"tools\": {},\n",
+            "col_offset": 21,
+            "end_col_offset": 9,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "Starting a process with a partial executable path",
+            "line_number": 499,
+            "line_range": [
+              499,
+              500,
+              501
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/plugins/b607_start_process_with_partial_path.html",
+            "test_id": "B607",
+            "test_name": "start_process_with_partial_path"
+          },
+          {
+            "code": "498         \"base\": base,\n499         \"timestamp\": subprocess.run(\n500             [\"date\", \"+%Y-%m-%d %H:%M:%S\"], capture_output=True, text=True\n501         ).stdout.strip(),\n502         \"tools\": {},\n",
+            "col_offset": 21,
+            "end_col_offset": 9,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "subprocess call - check for execution of untrusted input.",
+            "line_number": 499,
+            "line_range": [
+              499,
+              500,
+              501
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/plugins/b603_subprocess_without_shell_equals_true.html",
+            "test_id": "B603",
+            "test_name": "subprocess_without_shell_equals_true"
+          },
+          {
+            "code": "524 \n525         result = subprocess.run(\n526             cmd, cwd=project_path, capture_output=True, text=True, timeout=60\n527         )\n528         if result.returncode in [0, 1]:  # ruff 返回 0 或 1 都是正常的\n",
+            "col_offset": 17,
+            "end_col_offset": 9,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "subprocess call - check for execution of untrusted input.",
+            "line_number": 525,
+            "line_range": [
+              525,
+              526,
+              527
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/plugins/b603_subprocess_without_shell_equals_true.html",
+            "test_id": "B603",
+            "test_name": "subprocess_without_shell_equals_true"
+          },
+          {
+            "code": "550 \n551         result = subprocess.run(\n552             cmd, cwd=project_path, capture_output=True, text=True, timeout=60\n553         )\n554         if result.returncode in [0, 1]:  # bandit 返回 0 或 1 都是正常的\n",
+            "col_offset": 17,
+            "end_col_offset": 9,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "subprocess call - check for execution of untrusted input.",
+            "line_number": 551,
+            "line_range": [
+              551,
+              552,
+              553
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/plugins/b603_subprocess_without_shell_equals_true.html",
+            "test_id": "B603",
+            "test_name": "subprocess_without_shell_equals_true"
+          },
+          {
+            "code": "581 \n582         result = subprocess.run(\n583             cmd, cwd=project_path, capture_output=True, text=True, timeout=60\n584         )\n585         if result.returncode == 0:\n",
+            "col_offset": 17,
+            "end_col_offset": 9,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "subprocess call - check for execution of untrusted input.",
+            "line_number": 582,
+            "line_range": [
+              582,
+              583,
+              584
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/plugins/b603_subprocess_without_shell_equals_true.html",
+            "test_id": "B603",
+            "test_name": "subprocess_without_shell_equals_true"
+          },
+          {
+            "code": "607     try:\n608         result = subprocess.run(\n609             [\"pytest\", \"--version\"], capture_output=True, text=True, timeout=10\n610         )\n611         results[\"summary\"][\"pytest_available\"] = result.returncode == 0\n",
+            "col_offset": 17,
+            "end_col_offset": 9,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "Starting a process with a partial executable path",
+            "line_number": 608,
+            "line_range": [
+              608,
+              609,
+              610
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/plugins/b607_start_process_with_partial_path.html",
+            "test_id": "B607",
+            "test_name": "start_process_with_partial_path"
+          },
+          {
+            "code": "607     try:\n608         result = subprocess.run(\n609             [\"pytest\", \"--version\"], capture_output=True, text=True, timeout=10\n610         )\n611         results[\"summary\"][\"pytest_available\"] = result.returncode == 0\n",
+            "col_offset": 17,
+            "end_col_offset": 9,
+            "filename": "tools/problem_aggregator/aggregator.py",
+            "issue_confidence": "HIGH",
+            "issue_cwe": {
+              "id": 78,
+              "link": "https://cwe.mitre.org/data/definitions/78.html"
+            },
+            "issue_severity": "LOW",
+            "issue_text": "subprocess call - check for execution of untrusted input.",
+            "line_number": 608,
+            "line_range": [
+              608,
+              609,
+              610
+            ],
+            "more_info": "https://bandit.readthedocs.io/en/1.7.5/plugins/b603_subprocess_without_shell_equals_true.html",
+            "test_id": "B603",
+            "test_name": "subprocess_without_shell_equals_true"
+          }
+        ]
+      },
+      "count": 13,
+      "targets_scanned": "staged: 2"
+    },
+    "detect-secrets": {
+      "status": "success",
+      "data": {
+        "results": {}
+      },
+      "count": 0
+    },
+    "pytest": {
+      "status": "available",
+      "version": "pytest 8.0.2"
+    },
+    "coverage": {
+      "xml_exists": true,
+      "file_path": "coverage.xml"
+    }
+  },
+  "summary": {
+    "ruff_issues": 65,
+    "bandit_issues": 13,
+    "secrets_issues": 0,
+    "coverage_exists": true,
+    "pytest_available": true,
+    "diff_coverage": null,
+    "coverage_threshold": 80
+  }
+}
