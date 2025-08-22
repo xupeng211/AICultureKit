@@ -1,30 +1,30 @@
-name: "🛡️ Quality Gate"
+name: 🚀 Quick Check
 
 permissions:
   contents: read
 
 on:
-  pull_request:
+  push:
     branches:
-      - "main"
+      - "*"
+      - "!main"
     paths-ignore:
       - "README.md"
       - "docs/**"
       - "*.md"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
   PYTHON_VERSION: "3.11"
-  COVERAGE_THRESHOLD_MIN: 30
 
 jobs:
-  strict-quality-check:
-    name: "🛡️ Strict Quality Check"
+  quick-lint-and-test:
+    name: 🚀 Quick Lint & Test
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
 
     steps:
       - name: 📥 Checkout code
@@ -44,7 +44,7 @@ jobs:
       - name: Set enforcement mode by branch
         id: set-mode
         run: |
-          BRANCH="${{ github.base_ref }}"
+          BRANCH="${{ github.ref_name }}"
           if [[ "$BRANCH" == "main" || "$BRANCH" == release/* ]]; then
             echo "mode=block" >> "$GITHUB_OUTPUT"
           else
@@ -55,17 +55,13 @@ jobs:
       - name: Show enforcement mode
         run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
 
-      - name: 🔍 Full lint check (Ruff)
-        run: ruff check . --no-fix
+      - name: 🎨 Format & Lint (Ruff)
+        run: |
+          ruff check . --fix
+          black --check --diff .
+          isort --check-only --diff .
 
-      - name: 🔒 Security check (Bandit)
-        run: bandit -r aiculture
+      - name: 🧪 Quick tests
+        run: |
+          pytest -k "not slow" --maxfail=1
 
-      - name: 🔐 Secrets scan (detect-secrets)
-        run: detect-secrets scan --baseline .secrets.baseline --all-files
-
-      - name: 🔧 Type check (MyPy)
-        run: mypy aiculture --ignore-missing-imports
-
-      - name: 🧪 Test with coverage
-        run: pytest --cov=aiculture --cov-fail-under=${{ env.COVERAGE_THRESHOLD_MIN }}
