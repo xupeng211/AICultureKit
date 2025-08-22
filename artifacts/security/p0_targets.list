@@ -1,0 +1,5 @@
+./bandit-report.json
+./docs/security/P0_SECURITY_FIXES.md
+./tools/ai_fix_agent/strategies/security_codemods.py
+./tools/ai_fix_agent/strategies/security_fix.py
+./tools/problem_aggregator/adapters/security.py

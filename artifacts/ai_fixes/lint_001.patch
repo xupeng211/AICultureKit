@@ -1,0 +1,35 @@
+--- a/tools/ai_fix_agent/agent_m2.py	2025-08-21 16:11:22.634273117 +0800
++++ b/tools/ai_fix_agent/agent_m2.py	2025-08-21 16:11:22.634273117 +0800
+@@ -63,7 +63,9 @@
+         lint_result = create_lint_patches(staged_files)
+ 
+         if lint_result["patches"]:
+-            patch_files, deferred = self._save_patches(lint_result["patches"], output_path, "lint")
++            patch_files, deferred = self._save_patches(
++                lint_result["patches"], output_path, "lint"
++            )
+             results["patches_generated"].extend(patch_files)
+             results["total_patches"] += len(patch_files)
+             results["deferred_patches"] += deferred
+@@ -266,7 +268,9 @@
+ def main():
+     """主函数"""
+     parser = argparse.ArgumentParser(description="AI修复代理 - M2起步版")
+-    parser.add_argument("--out", dest="output_dir", default="artifacts/ai_fixes", help="输出目录")
++    parser.add_argument(
++        "--out", dest="output_dir", default="artifacts/ai_fixes", help="输出目录"
++    )
+     parser.add_argument(
+         "--max-lines-per-patch",
+         type=int,
+@@ -282,7 +286,9 @@
+ 
+     args = parser.parse_args()
+ 
+-    agent = AIFixAgentM2(max_lines_per_patch=args.max_lines_per_patch, max_patches=args.max_patches)
++    agent = AIFixAgentM2(
++        max_lines_per_patch=args.max_lines_per_patch, max_patches=args.max_patches
++    )
+     success = agent.run(args.output_dir)
+ 
+     sys.exit(0 if success else 1)

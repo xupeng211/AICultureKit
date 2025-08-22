@@ -1,0 +1,220 @@
+--- a/tools/problem_aggregator/aggregator.py	2025-08-21 16:11:23.054273121 +0800
++++ b/tools/problem_aggregator/aggregator.py	2025-08-21 16:11:23.054273121 +0800
+@@ -62,7 +62,9 @@
+     """获取已暂存的 Python 文件列表"""
+     try:
+         cmd = ["git", "diff", "--name-only", "--cached", "--diff-filter=ACMR"]
+-        result = subprocess.run(cmd, cwd=project_root, capture_output=True, text=True, timeout=30)
++        result = subprocess.run(
++            cmd, cwd=project_root, capture_output=True, text=True, timeout=30
++        )
+ 
+         if result.returncode == 0:
+             files = result.stdout.strip().splitlines()
+@@ -75,7 +77,9 @@
+ 
+ def read_coverage_threshold(project_root: str = ".") -> int:
+     """读取覆盖率阈值配置"""
+-    config_path = Path(project_root) / "tools" / "problem_aggregator" / "rulesets" / "culture.yml"
++    config_path = (
++        Path(project_root) / "tools" / "problem_aggregator" / "rulesets" / "culture.yml"
++    )
+     if not config_path.exists():
+         return 80  # 默认阈值
+ 
+@@ -83,7 +87,9 @@
+         with open(config_path, "r", encoding="utf-8") as f:
+             config = yaml.safe_load(f)
+             return int(
+-                config.get("culture", {}).get("coverage", {}).get("changed_lines_threshold", 80)
++                config.get("culture", {})
++                .get("coverage", {})
++                .get("changed_lines_threshold", 80)
+             )
+     except Exception:
+         return 80
+@@ -101,7 +107,9 @@
+ 
+         # 运行 diff-cover
+         cmd = ["diff-cover", "coverage.xml", "--compare-branch", base, "--fail-under=0"]
+-        result = subprocess.run(cmd, cwd=project_root, capture_output=True, text=True, timeout=60)
++        result = subprocess.run(
++            cmd, cwd=project_root, capture_output=True, text=True, timeout=60
++        )
+ 
+         if result.returncode != 0:
+             return None
+@@ -151,7 +159,11 @@
+         else:
+             # 尝试找到配置文件
+             possible_configs = [
+-                self.project_root / "tools" / "problem_aggregator" / "rulesets" / "culture.yml",
++                self.project_root
++                / "tools"
++                / "problem_aggregator"
++                / "rulesets"
++                / "culture.yml",
+                 self.project_root / ".aiculture" / "config.yml",
+                 self.project_root / "aiculture.yml",
+             ]
+@@ -266,8 +278,12 @@
+             if coverage_config.get("enable_diff_cover", True):
+                 diff_coverage_problems = self.diff_coverage_adapter.check_diff_coverage(
+                     base_branch=base,
+-                    changed_lines_threshold=coverage_config.get("changed_lines_threshold", 80.0),
+-                    new_files_threshold=coverage_config.get("new_files_threshold", 70.0),
++                    changed_lines_threshold=coverage_config.get(
++                        "changed_lines_threshold", 80.0
++                    ),
++                    new_files_threshold=coverage_config.get(
++                        "new_files_threshold", 70.0
++                    ),
+                 )
+                 all_problems.extend(diff_coverage_problems)
+                 print(f"     发现 {len(diff_coverage_problems)} 个增量覆盖率问题")
+@@ -339,7 +355,10 @@
+                                 )
+ 
+                 # 检查跳过的测试
+-                if culture_config.get("forbid_skipping_tests", True) and "test_" in file_path:
++                if (
++                    culture_config.get("forbid_skipping_tests", True)
++                    and "test_" in file_path
++                ):
+                     for i, line in enumerate(lines, 1):
+                         if "@pytest.mark.skip" in line or "@unittest.skip" in line:
+                             problems.append(
+@@ -503,7 +522,9 @@
+         else:
+             cmd = ["ruff", "check", "--output-format", "json", "."]
+ 
+-        result = subprocess.run(cmd, cwd=project_path, capture_output=True, text=True, timeout=60)
++        result = subprocess.run(
++            cmd, cwd=project_path, capture_output=True, text=True, timeout=60
++        )
+         if result.returncode in [0, 1]:  # ruff 返回 0 或 1 都是正常的
+             ruff_data = json.loads(result.stdout) if result.stdout.strip() else []
+             results["tools"]["ruff"] = {
+@@ -527,9 +548,13 @@
+         else:
+             cmd = ["bandit", "-q", "-r", ".", "-f", "json"]
+ 
+-        result = subprocess.run(cmd, cwd=project_path, capture_output=True, text=True, timeout=60)
++        result = subprocess.run(
++            cmd, cwd=project_path, capture_output=True, text=True, timeout=60
++        )
+         if result.returncode in [0, 1]:  # bandit 返回 0 或 1 都是正常的
+-            bandit_data = json.loads(result.stdout) if result.stdout.strip() else {"results": []}
++            bandit_data = (
++                json.loads(result.stdout) if result.stdout.strip() else {"results": []}
++            )
+             results["tools"]["bandit"] = {
+                 "status": "success",
+                 "data": bandit_data,
+@@ -537,9 +562,7 @@
+                 "targets_scanned": (
+                     f"staged: {len(staged_targets)}"
+                     if staged_targets
+-                    else f"filtered: {len(bandit_targets)}"
+-                    if bandit_targets
+-                    else "all"
++                    else f"filtered: {len(bandit_targets)}" if bandit_targets else "all"
+                 ),
+             }
+             results["summary"]["bandit_issues"] = len(bandit_data.get("results", []))
+@@ -556,10 +579,16 @@
+         else:
+             cmd = ["detect-secrets", "scan", "--all-files"]
+ 
+-        result = subprocess.run(cmd, cwd=project_path, capture_output=True, text=True, timeout=60)
++        result = subprocess.run(
++            cmd, cwd=project_path, capture_output=True, text=True, timeout=60
++        )
+         if result.returncode == 0:
+-            secrets_data = json.loads(result.stdout) if result.stdout.strip() else {"results": {}}
+-            secrets_count = sum(len(files) for files in secrets_data.get("results", {}).values())
++            secrets_data = (
++                json.loads(result.stdout) if result.stdout.strip() else {"results": {}}
++            )
++            secrets_count = sum(
++                len(files) for files in secrets_data.get("results", {}).values()
++            )
+             results["tools"]["detect-secrets"] = {
+                 "status": "success",
+                 "data": secrets_data,
+@@ -576,7 +605,9 @@
+ 
+     # 4) pytest 可用性检查
+     try:
+-        result = subprocess.run(["pytest", "--version"], capture_output=True, text=True, timeout=10)
++        result = subprocess.run(
++            ["pytest", "--version"], capture_output=True, text=True, timeout=10
++        )
+         results["summary"]["pytest_available"] = result.returncode == 0
+         results["tools"]["pytest"] = {
+             "status": "available" if result.returncode == 0 else "unavailable",
+@@ -603,10 +634,9 @@
+             "threshold": results["summary"]["coverage_threshold"],
+             "status": (
+                 "ok"
+-                if diff_cov is not None and diff_cov >= results["summary"]["coverage_threshold"]
+-                else "low"
+                 if diff_cov is not None
+-                else "unavailable"
++                and diff_cov >= results["summary"]["coverage_threshold"]
++                else "low" if diff_cov is not None else "unavailable"
+             ),
+         }
+ 
+@@ -685,12 +715,16 @@
+ 
+     if secrets_count > 0:
+         lines.append(f"### Potential Secrets ({secrets_count})")
+-        lines.append("Review detect-secrets output and update .secrets.baseline if needed.")
++        lines.append(
++            "Review detect-secrets output and update .secrets.baseline if needed."
++        )
+         lines.append("")
+ 
+     if not coverage_exists:
+         lines.append("### Missing Coverage Report")
+-        lines.append("Run `pytest --cov=. --cov-report=xml` to generate coverage report.")
++        lines.append(
++            "Run `pytest --cov=. --cov-report=xml` to generate coverage report."
++        )
+         lines.append("")
+ 
+     if not pytest_available:
+@@ -779,7 +813,9 @@
+         threshold = summary.get("coverage_threshold", 80)
+         if diff_cov is not None:
+             status = "✅" if diff_cov >= threshold else "⚠️"
+-            print(f"   Diff Coverage: {status} {diff_cov:.1f}% (threshold: {threshold}%)")
++            print(
++                f"   Diff Coverage: {status} {diff_cov:.1f}% (threshold: {threshold}%)"
++            )
+         elif args.fast:
+             print("   Diff Coverage: ⏩ 跳过 (fast mode)")
+         else:
+@@ -792,7 +828,9 @@
+     else:
+         # Full Mode: 完整分析 (原有逻辑)
+         aggregator = ProblemAggregator(config_path=args.config)
+-        result = aggregator.aggregate_problems(base=args.base, files=args.files, strict=args.strict)
++        result = aggregator.aggregate_problems(
++            base=args.base, files=args.files, strict=args.strict
++        )
+ 
+         # 输出JSON
+         if args.out:
+@@ -821,7 +859,9 @@
+         print(f"   信息: {summary['by_severity'].get('info', 0)} 个")
+ 
+         # 退出码
+-        if args.strict and (summary["blocking"] > 0 or summary["by_severity"].get("error", 0) > 0):
++        if args.strict and (
++            summary["blocking"] > 0 or summary["by_severity"].get("error", 0) > 0
++        ):
+             print("\n❌ 严格模式：发现阻塞性问题或错误")
+             sys.exit(1)
+         else:

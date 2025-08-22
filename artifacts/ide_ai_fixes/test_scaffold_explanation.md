@@ -1,0 +1,17 @@
+## 测试脚手架生成
+
+为 tools/problem_aggregator/adapters/diff_coverage.py 生成测试脚手架 (1 个类, 1 个函数)
+为 aiculture/ai_intelligent_fixer.py 生成测试脚手架 (1 个类, 1 个函数)
+为 tools/ai_fix_agent/strategies/test_scaffold.py 生成测试脚手架 (1 个类, 1 个函数)
+为 tools/ai_fix_agent/agent.py 生成测试脚手架 (1 个类, 1 个函数)
+为 tools/problem_aggregator/adapters/security.py 生成测试脚手架 (1 个类, 1 个函数)
+为 aiculture/problem_aggregator.py 生成测试脚手架 (1 个类, 1 个函数)
+为 aiculture/ai_test_optimizer.py 生成测试脚手架 (1 个类, 1 个函数)
+为 aiculture/ai_behavior_enforcer.py 生成测试脚手架 (3 个类, 1 个函数)
+为 tools/problem_aggregator/adapters/tests.py 生成测试脚手架 (1 个类, 1 个函数)
+为 tools/problem_aggregator/reporters.py 生成测试脚手架 (2 个类, 0 个函数)
+为 tools/problem_aggregator/adapters/lint.py 生成测试脚手架 (1 个类, 1 个函数)
+为 tools/ai_fix_agent/strategies/lint_fix.py 生成测试脚手架 (1 个类, 1 个函数)
+为 tools/problem_aggregator/aggregator.py 生成测试脚手架 (1 个类, 1 个函数)
+为 tools/ai_fix_agent/strategies/security_fix.py 生成测试脚手架 (1 个类, 1 个函数)
+为 aiculture/auto_problem_fixer.py 生成测试脚手架 (1 个类, 1 个函数)

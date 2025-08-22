@@ -1,0 +1,988 @@
+--- /dev/null
++++ b/tests/tools/problem_aggregator/adapters/test_diff_coverage.py
+@@ -0,0 +1,58 @@
++"""
++Tests for tools.problem_aggregator.adapters.diff_coverage
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from tools.problem_aggregator.adapters.diff_coverage import DiffCoverageAdapter, main
++
++class TestDiffCoverageAdapter:
++    """Tests for DiffCoverageAdapter class"""
++
++    def test_init(self):
++        """Test DiffCoverageAdapter initialization"""
++        instance = DiffCoverageAdapter()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_check_diff_coverage(self):
++        """Test DiffCoverageAdapter.check_diff_coverage method"""
++        instance = DiffCoverageAdapter()
++        result = instance.check_diff_coverage(base_branch=None, changed_lines_threshold=None, new_files_threshold=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_generate_coverage_improvement_guide(self):
++        """Test DiffCoverageAdapter.generate_coverage_improvement_guide method"""
++        instance = DiffCoverageAdapter()
++        result = instance.generate_coverage_improvement_guide(problems=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/aiculture/test_ai_intelligent_fixer.py
+@@ -0,0 +1,51 @@
++"""
++Tests for aiculture.ai_intelligent_fixer
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from aiculture.ai_intelligent_fixer import AIIntelligentFixer, main
++
++class TestAIIntelligentFixer:
++    """Tests for AIIntelligentFixer class"""
++
++    def test_init(self):
++        """Test AIIntelligentFixer initialization"""
++        instance = AIIntelligentFixer()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_analyze_and_fix_problems(self):
++        """Test AIIntelligentFixer.analyze_and_fix_problems method"""
++        instance = AIIntelligentFixer()
++        result = instance.analyze_and_fix_problems()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/tools/ai_fix_agent/strategies/test_test_scaffold.py
+@@ -0,0 +1,65 @@
++"""
++Tests for tools.ai_fix_agent.strategies.test_scaffold
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from tools.ai_fix_agent.strategies.test_scaffold import TestScaffoldStrategy, main
++
++class TestTestScaffoldStrategy:
++    """Tests for TestScaffoldStrategy class"""
++
++    def test_init(self):
++        """Test TestScaffoldStrategy initialization"""
++        instance = TestScaffoldStrategy()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_can_fix(self):
++        """Test TestScaffoldStrategy.can_fix method"""
++        instance = TestScaffoldStrategy()
++        result = instance.can_fix(problem=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_generate_fix(self):
++        """Test TestScaffoldStrategy.generate_fix method"""
++        instance = TestScaffoldStrategy()
++        result = instance.generate_fix(problems=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_generate_todo_list(self):
++        """Test TestScaffoldStrategy.generate_todo_list method"""
++        instance = TestScaffoldStrategy()
++        result = instance.generate_todo_list(problems=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/tools/ai_fix_agent/test_agent.py
+@@ -0,0 +1,51 @@
++"""
++Tests for tools.ai_fix_agent.agent
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from tools.ai_fix_agent.agent import AIFixAgent, main
++
++class TestAIFixAgent:
++    """Tests for AIFixAgent class"""
++
++    def test_init(self):
++        """Test AIFixAgent initialization"""
++        instance = AIFixAgent()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_generate_fixes(self):
++        """Test AIFixAgent.generate_fixes method"""
++        instance = AIFixAgent()
++        result = instance.generate_fixes(problems_file=None, output_dir=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/tools/problem_aggregator/adapters/test_security.py
+@@ -0,0 +1,58 @@
++"""
++Tests for tools.problem_aggregator.adapters.security
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from tools.problem_aggregator.adapters.security import SecurityAdapter, main
++
++class TestSecurityAdapter:
++    """Tests for SecurityAdapter class"""
++
++    def test_init(self):
++        """Test SecurityAdapter initialization"""
++        instance = SecurityAdapter()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_run_bandit(self):
++        """Test SecurityAdapter.run_bandit method"""
++        instance = SecurityAdapter()
++        result = instance.run_bandit(files=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_run_detect_secrets(self):
++        """Test SecurityAdapter.run_detect_secrets method"""
++        instance = SecurityAdapter()
++        result = instance.run_detect_secrets(files=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/aiculture/test_problem_aggregator.py
+@@ -0,0 +1,65 @@
++"""
++Tests for aiculture.problem_aggregator
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from aiculture.problem_aggregator import ProblemAggregator, main
++
++class TestProblemAggregator:
++    """Tests for ProblemAggregator class"""
++
++    def test_init(self):
++        """Test ProblemAggregator initialization"""
++        instance = ProblemAggregator()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_collect_all_problems(self):
++        """Test ProblemAggregator.collect_all_problems method"""
++        instance = ProblemAggregator()
++        result = instance.collect_all_problems()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_display_problem_summary(self):
++        """Test ProblemAggregator.display_problem_summary method"""
++        instance = ProblemAggregator()
++        result = instance.display_problem_summary(problems=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_save_problem_report(self):
++        """Test ProblemAggregator.save_problem_report method"""
++        instance = ProblemAggregator()
++        result = instance.save_problem_report(problems=None, output_file=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/aiculture/test_ai_test_optimizer.py
+@@ -0,0 +1,58 @@
++"""
++Tests for aiculture.ai_test_optimizer
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from aiculture.ai_test_optimizer import AITestOptimizer, main
++
++class TestAITestOptimizer:
++    """Tests for AITestOptimizer class"""
++
++    def test_init(self):
++        """Test AITestOptimizer initialization"""
++        instance = AITestOptimizer()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_should_trigger_ai_testing(self):
++        """Test AITestOptimizer.should_trigger_ai_testing method"""
++        instance = AITestOptimizer()
++        result = instance.should_trigger_ai_testing()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_ai_takeover_testing(self):
++        """Test AITestOptimizer.ai_takeover_testing method"""
++        instance = AITestOptimizer()
++        result = instance.ai_takeover_testing()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/aiculture/test_ai_behavior_enforcer.py
+@@ -0,0 +1,113 @@
++"""
++Tests for aiculture.ai_behavior_enforcer
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from aiculture.ai_behavior_enforcer import AIBehaviorViolation, AIBehaviorRule, AIBehaviorEnforcer, main
++
++class TestAIBehaviorViolation:
++    """Tests for AIBehaviorViolation class"""
++
++    def test_init(self):
++        """Test AIBehaviorViolation initialization"""
++        instance = AIBehaviorViolation()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++
++class TestAIBehaviorRule:
++    """Tests for AIBehaviorRule class"""
++
++    def test_init(self):
++        """Test AIBehaviorRule initialization"""
++        instance = AIBehaviorRule()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++
++class TestAIBehaviorEnforcer:
++    """Tests for AIBehaviorEnforcer class"""
++
++    def test_init(self):
++        """Test AIBehaviorEnforcer initialization"""
++        instance = AIBehaviorEnforcer()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_detect_hook_manipulation(self):
++        """Test AIBehaviorEnforcer.detect_hook_manipulation method"""
++        instance = AIBehaviorEnforcer()
++        result = instance.detect_hook_manipulation()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_detect_bypass_attempts(self):
++        """Test AIBehaviorEnforcer.detect_bypass_attempts method"""
++        instance = AIBehaviorEnforcer()
++        result = instance.detect_bypass_attempts()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_check_culture_compliance(self):
++        """Test AIBehaviorEnforcer.check_culture_compliance method"""
++        instance = AIBehaviorEnforcer()
++        result = instance.check_culture_compliance()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_record_violation(self):
++        """Test AIBehaviorEnforcer.record_violation method"""
++        instance = AIBehaviorEnforcer()
++        result = instance.record_violation(violation=None, context=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_enforce_ai_behavior(self):
++        """Test AIBehaviorEnforcer.enforce_ai_behavior method"""
++        instance = AIBehaviorEnforcer()
++        result = instance.enforce_ai_behavior()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_get_violation_history(self):
++        """Test AIBehaviorEnforcer.get_violation_history method"""
++        instance = AIBehaviorEnforcer()
++        result = instance.get_violation_history()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_generate_behavior_report(self):
++        """Test AIBehaviorEnforcer.generate_behavior_report method"""
++        instance = AIBehaviorEnforcer()
++        result = instance.generate_behavior_report()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/tools/problem_aggregator/adapters/test_tests.py
+@@ -0,0 +1,72 @@
++"""
++Tests for tools.problem_aggregator.adapters.tests
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from tools.problem_aggregator.adapters.tests import TestsAdapter, main
++
++class TestTestsAdapter:
++    """Tests for TestsAdapter class"""
++
++    def test_init(self):
++        """Test TestsAdapter initialization"""
++        instance = TestsAdapter()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_collect_tests(self):
++        """Test TestsAdapter.collect_tests method"""
++        instance = TestsAdapter()
++        result = instance.collect_tests()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_run_tests_quick(self):
++        """Test TestsAdapter.run_tests_quick method"""
++        instance = TestsAdapter()
++        result = instance.run_tests_quick()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_get_coverage_info(self):
++        """Test TestsAdapter.get_coverage_info method"""
++        instance = TestsAdapter()
++        result = instance.get_coverage_info(min_coverage=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_check_test_patterns(self):
++        """Test TestsAdapter.check_test_patterns method"""
++        instance = TestsAdapter()
++        result = instance.check_test_patterns()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/tools/problem_aggregator/test_reporters.py
+@@ -0,0 +1,48 @@
++"""
++Tests for tools.problem_aggregator.reporters
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from tools.problem_aggregator.reporters import MarkdownReporter, DashboardReporter
++
++class TestMarkdownReporter:
++    """Tests for MarkdownReporter class"""
++
++    def test_init(self):
++        """Test MarkdownReporter initialization"""
++        instance = MarkdownReporter()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_generate_report(self):
++        """Test MarkdownReporter.generate_report method"""
++        instance = MarkdownReporter()
++        result = instance.generate_report(result=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++class TestDashboardReporter:
++    """Tests for DashboardReporter class"""
++
++    def test_init(self):
++        """Test DashboardReporter initialization"""
++        instance = DashboardReporter()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_generate_dashboard(self):
++        """Test DashboardReporter.generate_dashboard method"""
++        instance = DashboardReporter()
++        result = instance.generate_dashboard(result=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/tools/problem_aggregator/adapters/test_lint.py
+@@ -0,0 +1,58 @@
++"""
++Tests for tools.problem_aggregator.adapters.lint
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from tools.problem_aggregator.adapters.lint import LintAdapter, main
++
++class TestLintAdapter:
++    """Tests for LintAdapter class"""
++
++    def test_init(self):
++        """Test LintAdapter initialization"""
++        instance = LintAdapter()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_run_ruff(self):
++        """Test LintAdapter.run_ruff method"""
++        instance = LintAdapter()
++        result = instance.run_ruff(files=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_run_flake8(self):
++        """Test LintAdapter.run_flake8 method"""
++        instance = LintAdapter()
++        result = instance.run_flake8(files=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/tools/ai_fix_agent/strategies/test_lint_fix.py
+@@ -0,0 +1,58 @@
++"""
++Tests for tools.ai_fix_agent.strategies.lint_fix
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from tools.ai_fix_agent.strategies.lint_fix import LintFixStrategy, main
++
++class TestLintFixStrategy:
++    """Tests for LintFixStrategy class"""
++
++    def test_init(self):
++        """Test LintFixStrategy initialization"""
++        instance = LintFixStrategy()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_can_fix(self):
++        """Test LintFixStrategy.can_fix method"""
++        instance = LintFixStrategy()
++        result = instance.can_fix(problem=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_generate_fix(self):
++        """Test LintFixStrategy.generate_fix method"""
++        instance = LintFixStrategy()
++        result = instance.generate_fix(problems=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/tools/problem_aggregator/test_aggregator.py
+@@ -0,0 +1,58 @@
++"""
++Tests for tools.problem_aggregator.aggregator
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from tools.problem_aggregator.aggregator import ProblemAggregator, main
++
++class TestProblemAggregator:
++    """Tests for ProblemAggregator class"""
++
++    def test_init(self):
++        """Test ProblemAggregator initialization"""
++        instance = ProblemAggregator()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_get_changed_files(self):
++        """Test ProblemAggregator.get_changed_files method"""
++        instance = ProblemAggregator()
++        result = instance.get_changed_files(base=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_aggregate_problems(self):
++        """Test ProblemAggregator.aggregate_problems method"""
++        instance = ProblemAggregator()
++        result = instance.aggregate_problems(base=None, files=None, strict=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/tools/ai_fix_agent/strategies/test_security_fix.py
+@@ -0,0 +1,65 @@
++"""
++Tests for tools.ai_fix_agent.strategies.security_fix
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from tools.ai_fix_agent.strategies.security_fix import SecurityFixStrategy, main
++
++class TestSecurityFixStrategy:
++    """Tests for SecurityFixStrategy class"""
++
++    def test_init(self):
++        """Test SecurityFixStrategy initialization"""
++        instance = SecurityFixStrategy()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_can_fix(self):
++        """Test SecurityFixStrategy.can_fix method"""
++        instance = SecurityFixStrategy()
++        result = instance.can_fix(problem=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_generate_fix(self):
++        """Test SecurityFixStrategy.generate_fix method"""
++        instance = SecurityFixStrategy()
++        result = instance.generate_fix(problems=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++    def test_generate_manual_guide(self):
++        """Test SecurityFixStrategy.generate_manual_guide method"""
++        instance = SecurityFixStrategy()
++        result = instance.generate_manual_guide(problems=None)
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
+
+--- /dev/null
++++ b/tests/aiculture/test_auto_problem_fixer.py
+@@ -0,0 +1,51 @@
++"""
++Tests for aiculture.auto_problem_fixer
++
++Generated test scaffold - please implement actual test logic
++"""
++
++import pytest
++from unittest.mock import Mock, patch
++
++from aiculture.auto_problem_fixer import AutoProblemFixer, main
++
++class TestAutoProblemFixer:
++    """Tests for AutoProblemFixer class"""
++
++    def test_init(self):
++        """Test AutoProblemFixer initialization"""
++        instance = AutoProblemFixer()
++        assert instance is not None
++        # TODO: Add specific initialization tests
++
++    def test_auto_fix_all_problems(self):
++        """Test AutoProblemFixer.auto_fix_all_problems method"""
++        instance = AutoProblemFixer()
++        result = instance.auto_fix_all_problems()
++        # TODO: Add assertions for expected behavior
++        # assert result == expected_value
++
++
++def test_main():
++    """Test main function"""
++    result = main()
++    # TODO: Add assertions for expected behavior
++    # assert result == expected_value
++
++def test_main_edge_cases():
++    """Test main edge cases"""
++    # TODO: Test with None values
++    # TODO: Test with empty values
++    # TODO: Test with invalid values
++    pass
++
++def test_main_errors():
++    """Test main error handling"""
++    # TODO: Test expected exceptions
++    # with pytest.raises(ValueError):
++    #     main(invalid_input)
++    pass
++
++# TODO: Add integration tests
++# TODO: Add edge case tests
++# TODO: Add error handling tests
