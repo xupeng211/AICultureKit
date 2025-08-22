@@ -349,6 +349,8 @@ CI 失败处理顺序：
 - 误脱敏：时间戳/commit id 被当电话 → 按 `.piiignore` 上下文放行
 - CI 覆盖率挂：先降低当前分支阈值一档并补测试，再回升
 
+---
+
 ## 📚 文档和资源
 
 - [开发文化详细说明](docs/DEV_CULTURE.md)
@@ -441,9 +443,7 @@ docs: 更新README文档
 感谢所有为AICultureKit做出贡献的开发者！
 
 <!-- 贡献者列表将自动更新 -->
-<a href="https://github.com/xupeng211/AICultureKit/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=xupeng211/AICultureKit" />
-</a>
+[![Contributors](https://contrib.rocks/image?repo=xupeng211/AICultureKit)](https://github.com/xupeng211/AICultureKit/graphs/contributors)
 
 ### 🏆 特别感谢
 
