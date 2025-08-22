@@ -127,7 +127,9 @@ class FileRepository:
             file_path = self.storage_path / f"{entity.id}.yaml"
 
             with open(file_path, 'w', encoding='utf-8') as f:
-                yaml.dump(entity.dict(), f, default_flow_style=False, allow_unicode=True)
+                yaml.dump(
+                    entity.dict(), f, default_flow_style=False, allow_unicode=True
+                )
 
             self.logger.info(f"成功保存实体: {entity.id}")
             return True

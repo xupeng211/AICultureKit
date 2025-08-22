@@ -7,9 +7,8 @@ from typing import Any
 """
 
 import ast
-import re
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Dict
 
 
 class DocstringAdder:
@@ -23,15 +22,15 @@ class DocstringAdder:
     def generate_function_docstring(self, func_node: ast.FunctionDef) -> str:
         """为函数生成文档字符串"""
         func_name = func_node.name
-        args = [arg.arg for arg in func_node.args.args if arg.arg != 'self']
+        args = [arg.arg for arg in func_node.args.args if arg.arg != "self"]
 
         # 基于函数名生成描述
-        if func_name.startswith('test_'):
+        if func_name.startswith("test_"):
             return f'"""测试 {func_name[5:].replace("_", " ")} 功能"""'
-        elif func_name.startswith('_'):
+        elif func_name.startswith("_"):
             return f'"""内部方法：{func_name[1:].replace("_", " ")}"""'
-        elif func_name in ['__init__', '__str__', '__repr__']:
-            return f'"""初始化方法"""' if func_name == '__init__' else f'"""字符串表示方法"""'
+        elif func_name in ["__init__", "__str__", "__repr__"]:
+            return '"""初始化方法"""' if func_name == "__init__" else '"""字符串表示方法"""'
         else:
             # 根据参数生成描述
             if args:
@@ -45,20 +44,20 @@ class DocstringAdder:
         class_name = class_node.name
 
         # 基于类名生成描述
-        if class_name.endswith('Test'):
+        if class_name.endswith("Test"):
             return f'"""测试 {class_name[:-4]} 类"""'
-        elif class_name.endswith('Manager'):
+        elif class_name.endswith("Manager"):
             return f'"""{class_name[:-7]} 管理器"""'
-        elif class_name.endswith('Checker'):
+        elif class_name.endswith("Checker"):
             return f'"""{class_name[:-7]} 检查器"""'
-        elif class_name.endswith('Config'):
+        elif class_name.endswith("Config"):
             return f'"""{class_name[:-6]} 配置类"""'
         else:
             return f'"""{class_name} 类"""'
 
     def add_docstring_to_node(self, content: str, node: ast.FunctionDef | ast.ClassDef) -> str:
         """为节点添加文档字符串"""
-        lines = content.split('\n')
+        lines = content.split("\n")
 
         # 找到函数/类定义行
         def_line = node.lineno - 1  # ast行号从1开始
@@ -80,16 +79,16 @@ class DocstringAdder:
             docstring = self.generate_class_docstring(node)
 
         # 插入文档字符串
-        docstring_line = ' ' * (indent + 4) + docstring
+        docstring_line = " " * (indent + 4) + docstring
         lines.insert(def_line + 1, docstring_line)
 
         self.added_count += 1
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
     def process_file(self, file_path: Path) -> bool:
         """处理单个文件"""
         try:
-            content = file_path.read_text(encoding='utf-8')
+            content = file_path.read_text(encoding="utf-8")
             tree = ast.parse(content)
 
             # 收集需要添加文档字符串的节点
@@ -112,7 +111,7 @@ class DocstringAdder:
                 modified_content = self.add_docstring_to_node(modified_content, node)
 
             # 写回文件
-            file_path.write_text(modified_content, encoding='utf-8')
+            file_path.write_text(modified_content, encoding="utf-8")
             return True
 
         except Exception as e:
@@ -126,13 +125,13 @@ class DocstringAdder:
         for py_file in self.project_path.rglob("*.py"):
             # 跳过虚拟环境和隐藏目录
             if any(
-                part.startswith('.') or part in ['venv', '__pycache__', 'build', 'dist']
+                part.startswith(".") or part in ["venv", "__pycache__", "build", "dist"]
                 for part in py_file.parts
             ):
                 continue
 
             # 跳过模板文件
-            if '{{' in str(py_file) or '}}' in str(py_file):
+            if "{{" in str(py_file) or "}}" in str(py_file):
                 continue
 
             stats["processed"] += 1
@@ -161,8 +160,8 @@ def main() -> Any:
     print(f"✏️  修改文件数: {stats['modified']}")
     print(f"📝 添加文档字符串数: {stats['added_docstrings']}")
 
-    if stats['added_docstrings'] > 0:
-        print(f"\n💡 建议运行以下命令格式化代码:")
+    if stats["added_docstrings"] > 0:
+        print("\n💡 建议运行以下命令格式化代码:")
         print("   black . && isort .")
 
 

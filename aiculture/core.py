@@ -12,7 +12,6 @@ from typing import Any, Dict, Optional
 import yaml
 from git import Repo
 from jinja2 import Environment, FileSystemLoader
-import re
 
 
 class CultureConfig:
@@ -42,7 +41,7 @@ class CultureConfig:
             Dict[str, Any]: 配置字典，如果文件不存在则返回默认配置
         """
         try:
-            with open(self.config_path, 'r', encoding='utf-8') as f:
+            with open(self.config_path, "r", encoding="utf-8") as f:
                 return yaml.safe_load(f)
         except FileNotFoundError:
             return self._default_config()
@@ -83,7 +82,7 @@ class CultureConfig:
 
     def save_config(self) -> None:
         """保存配置到文件"""
-        with open(self.config_path, 'w', encoding='utf-8') as f:
+        with open(self.config_path, "w", encoding="utf-8") as f:
             yaml.safe_dump(self.config, f, default_flow_style=False, allow_unicode=True)
 
     def get_principle(self, key: str) -> Any:
@@ -345,7 +344,7 @@ def test_import():
 
     def _get_ci_workflow_content(self) -> str:
         """获取CI工作流内容"""
-        return '''name: CI
+        return """name: CI
 
 on:
   push:
@@ -398,11 +397,11 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         file: ./coverage.xml
-'''
+"""
 
     def _get_cd_workflow_content(self) -> str:
         """获取CD工作流内容"""
-        return '''name: CD
+        return """name: CD
 
 on:
   push:
@@ -444,7 +443,7 @@ jobs:
         echo "Docker部署逻辑在这里实现"
         # docker build -t myapp:latest .
         # docker push myapp:latest
-'''
+"""
 
     def _init_git_repo(self, target: Path) -> None:
         """初始化git仓库"""
@@ -452,7 +451,7 @@ jobs:
             repo = Repo.init(str(target))
 
             # 创建.gitignore
-            gitignore_content = '''# Python
+            gitignore_content = """# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -503,7 +502,7 @@ htmlcov/
 
 # Secrets
 .secrets.baseline
-'''
+"""
             (target / ".gitignore").write_text(gitignore_content)
 
             # 添加所有文件并提交

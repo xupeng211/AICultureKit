@@ -10,7 +10,7 @@
 
 import re
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Dict
 
 
 def get_safe_field_replacements() -> Dict[str, str]:
@@ -20,69 +20,69 @@ def get_safe_field_replacements() -> Dict[str, str]:
     """
     return {
         # 种族相关 - 仅用于字段名替换示例
-        'race': 'demographic_category',
-        'ethnicity': 'demographic_info',
-        'nationality': 'country_info',
+        "race": "demographic_category",
+        "ethnicity": "demographic_info",
+        "nationality": "country_info",
         # 宗教相关 - 仅用于字段名替换示例
-        'religion': 'belief_system',
-        'faith': 'personal_belief',
+        "religion": "belief_system",
+        "faith": "personal_belief",
         # 健康相关 - 仅用于字段名替换示例
-        'health': 'wellness_info',
-        'medical': 'healthcare_data',
-        'diagnosis': 'medical_assessment',
-        'treatment': 'care_plan',
-        'medication': 'prescription_info',
+        "health": "wellness_info",
+        "medical": "healthcare_data",
+        "diagnosis": "medical_assessment",
+        "treatment": "care_plan",
+        "medication": "prescription_info",
         # 财务相关 - 仅用于字段名替换示例
-        'salary': 'compensation_info',
-        'income': 'earnings_data',
-        'bank': 'financial_institution',
-        'account': 'account_info',
-        'credit': 'credit_info',
-        'debit': 'payment_info',
-        'payment': 'transaction_info',
+        "salary": "compensation_info",
+        "income": "earnings_data",
+        "bank": "financial_institution",
+        "account": "account_info",
+        "credit": "credit_info",
+        "debit": "payment_info",
+        "payment": "transaction_info",
         # 个人信息
-        'first_name': 'given_name',
-        'last_name': 'family_name',
-        'full_name': 'complete_name',
-        'surname': 'family_name',
-        'given_name': 'first_name_field',
+        "first_name": "given_name",
+        "last_name": "family_name",
+        "full_name": "complete_name",
+        "surname": "family_name",
+        "given_name": "first_name_field",
         # 地址信息
-        'address': 'location_info',
-        'street': 'street_info',
-        'city': 'city_info',
-        'state': 'region_info',
-        'zip': 'postal_code',
-        'postal': 'postal_info',
-        'country': 'country_code',
+        "address": "location_info",
+        "street": "street_info",
+        "city": "city_info",
+        "state": "region_info",
+        "zip": "postal_code",
+        "postal": "postal_info",
+        "country": "country_code",
         # 生日相关
-        'birth': 'birth_info',
-        'dob': 'date_of_birth',
-        'date_of_birth': 'birth_date',
-        'birthday': 'birth_anniversary',
+        "birth": "birth_info",
+        "dob": "date_of_birth",
+        "date_of_birth": "birth_date",
+        "birthday": "birth_anniversary",
         # 性别相关
-        'gender': 'gender_identity',
-        'sex': 'biological_sex',
+        "gender": "gender_identity",
+        "sex": "biological_sex",
         # 密码相关
-        'password': 'auth_credential',
-        'passwd': 'auth_password',
-        'pwd': 'password_field',
-        'secret': 'confidential_data',
-        'token': 'auth_token',
-        'key': 'access_key',
+        "password": "auth_credential",
+        "passwd": "auth_password",
+        "pwd": "password_field",
+        "secret": "confidential_data",
+        "token": "auth_token",
+        "key": "access_key",
     }
 
 
 def fix_sensitive_field_names(file_path: Path) -> bool:
     """修复文件中的敏感字段名"""
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
         replacements = get_safe_field_replacements()
 
         # 只在演示文件和测试文件中进行替换
-        if not any(part in str(file_path) for part in ['demo', 'test', 'example']):
+        if not any(part in str(file_path) for part in ["demo", "test", "example"]):
             return False
 
         # 应用替换规则
@@ -96,14 +96,14 @@ def fix_sensitive_field_names(file_path: Path) -> bool:
                 # 只替换明显的字段名，不替换描述性文本
                 if any(
                     indicator in old_string.lower()
-                    for indicator in ['field', 'column', 'data', 'info']
+                    for indicator in ["field", "column", "data", "info"]
                 ):
                     new_string = old_string.replace(sensitive_term, safe_term)
                     content = content.replace(old_string, new_string)
 
         # 如果有变化，写回文件
         if content != original_content:
-            with open(file_path, 'w', encoding='utf-8') as f:
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(content)
             return True
 
@@ -123,37 +123,37 @@ def add_data_privacy_comments():
         Path("demo/culture_penetration_demo.py"),
     ]
 
-    privacy_comment = '''
+    privacy_comment = """
 # 🔒 数据隐私声明 / Data Privacy Notice:
 # 本演示代码中的所有敏感字段名和数据都是虚构的示例，仅用于展示功能。
 # 在实际项目中，请遵循数据隐私法规（如GDPR、CCPA等）处理敏感信息。
 # All sensitive field names and data in this demo are fictional examples for demonstration only.
 # In real projects, please comply with data privacy regulations (GDPR, CCPA, etc.) when handling sensitive information.
-'''
+"""
 
     for demo_file in demo_files:
         if demo_file.exists():
             try:
-                with open(demo_file, 'r', encoding='utf-8') as f:
+                with open(demo_file, "r", encoding="utf-8") as f:
                     content = f.read()
 
                 # 如果文件中没有隐私声明，添加它
                 if "数据隐私声明" not in content and "Data Privacy Notice" not in content:
-                    lines = content.split('\n')
+                    lines = content.split("\n")
 
                     # 找到合适的插入位置（在导入语句之后）
                     insert_pos = 0
                     for i, line in enumerate(lines):
-                        if line.strip().startswith(('import ', 'from ')):
+                        if line.strip().startswith(("import ", "from ")):
                             insert_pos = i + 1
-                        elif line.strip() and not line.startswith('#') and insert_pos > 0:
+                        elif line.strip() and not line.startswith("#") and insert_pos > 0:
                             break
 
                     # 插入隐私声明
                     lines.insert(insert_pos, privacy_comment)
 
-                    with open(demo_file, 'w', encoding='utf-8') as f:
-                        f.write('\n'.join(lines))
+                    with open(demo_file, "w", encoding="utf-8") as f:
+                        f.write("\n".join(lines))
 
                     print(f"✅ 为 {demo_file} 添加了数据隐私声明")
 
@@ -228,13 +228,13 @@ def create_data_privacy_guidelines():
 def process_user_data(user_consent=True):
     if not user_consent:
         raise ValueError("User consent required")
-    
+
     # 使用环境变量
     db_password = os.getenv("DB_PASSWORD")
-    
+
     # 数据脱敏
     masked_email = mask_email(user_email)
-    
+
     return process_data(masked_email)
 
 # ❌ 避免的做法

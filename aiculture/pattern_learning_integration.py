@@ -114,7 +114,7 @@ class PatternLearningIntegrator:
                 pattern_key = pattern.pattern_name
                 if pattern_key not in all_patterns:
                     all_patterns[pattern_key] = {}
-                all_patterns[pattern_key]['python'] = pattern.pattern_value
+                all_patterns[pattern_key]["python"] = pattern.pattern_value
 
         # 添加其他语言模式
         for lang_name, metrics in multi_lang_analysis.items():
@@ -213,8 +213,8 @@ class PatternLearningIntegrator:
         if python_learning:
             # 从Python学习结果中获取复杂度信息
             for pattern in python_learning.patterns:
-                if pattern.pattern_type == 'complexity':
-                    complexity_values['python'] = pattern.pattern_value
+                if pattern.pattern_type == "complexity":
+                    complexity_values["python"] = pattern.pattern_value
 
         for lang_name, metrics in multi_lang_analysis.items():
             complexity_values[lang_name] = metrics.avg_complexity
@@ -223,7 +223,7 @@ class PatternLearningIntegrator:
             consistency = self._calculate_pattern_consistency(complexity_values)
             patterns.append(
                 CrossLanguagePattern(
-                    pattern_name='complexity_consistency',
+                    pattern_name="complexity_consistency",
                     languages=list(complexity_values.keys()),
                     pattern_values=complexity_values,
                     consistency_score=consistency,
@@ -242,7 +242,7 @@ class PatternLearningIntegrator:
             consistency = self._calculate_pattern_consistency(function_size_values)
             patterns.append(
                 CrossLanguagePattern(
-                    pattern_name='function_size_consistency',
+                    pattern_name="function_size_consistency",
                     languages=list(function_size_values.keys()),
                     pattern_values=function_size_values,
                     consistency_score=consistency,
@@ -305,20 +305,20 @@ class PatternLearningIntegrator:
             maturity_scores.append(lang_score)
 
         if not maturity_scores:
-            return 'beginner'
+            return "beginner"
 
         avg_score = sum(maturity_scores) / len(maturity_scores)
 
         if avg_score >= 0.8:
-            return 'expert'
+            return "expert"
         elif avg_score >= 0.6:
-            return 'intermediate'
+            return "intermediate"
         else:
-            return 'beginner'
+            return "beginner"
 
     def _maturity_to_score(self, maturity: str) -> float:
         """将成熟度等级转换为分数"""
-        mapping = {'beginner': 0.3, 'intermediate': 0.6, 'expert': 0.9}
+        mapping = {"beginner": 0.3, "intermediate": 0.6, "expert": 0.9}
         return mapping.get(maturity, 0.3)
 
     def _calculate_language_maturity_score(self, metrics: LanguageMetrics) -> float:
@@ -359,7 +359,7 @@ class PatternLearningIntegrator:
         overall_maturity: str,
     ) -> float:
         """计算统一的严格度"""
-        base_strictness = {'beginner': 0.6, 'intermediate': 0.75, 'expert': 0.9}
+        base_strictness = {"beginner": 0.6, "intermediate": 0.75, "expert": 0.9}
 
         strictness = base_strictness.get(overall_maturity, 0.7)
 
@@ -370,7 +370,7 @@ class PatternLearningIntegrator:
             # 计算命名一致性
             naming_styles = []
             for metrics in multi_lang_analysis.values():
-                naming_patterns = [p for p in metrics.patterns if 'naming' in p.pattern_name]
+                naming_patterns = [p for p in metrics.patterns if "naming" in p.pattern_name]
                 if naming_patterns:
                     naming_styles.extend([p.pattern_value for p in naming_patterns])
 
@@ -403,33 +403,33 @@ class PatternLearningIntegrator:
             # 基于语言特定模式生成规则
             for pattern in metrics.patterns:
                 if pattern.confidence > 0.7:
-                    if pattern.pattern_type == 'naming':
-                        rules[f'enforce_{pattern.pattern_name}'] = {
-                            'enabled': True,
-                            'style': pattern.pattern_value,
-                            'severity': 'warning',
+                    if pattern.pattern_type == "naming":
+                        rules[f"enforce_{pattern.pattern_name}"] = {
+                            "enabled": True,
+                            "style": pattern.pattern_value,
+                            "severity": "warning",
                         }
-                    elif pattern.pattern_type == 'style':
-                        rules[f'style_{pattern.pattern_name}'] = {
-                            'enabled': True,
-                            'preference': pattern.pattern_value,
-                            'severity': 'info',
+                    elif pattern.pattern_type == "style":
+                        rules[f"style_{pattern.pattern_name}"] = {
+                            "enabled": True,
+                            "preference": pattern.pattern_value,
+                            "severity": "info",
                         }
 
             # 基于复杂度生成规则
             if metrics.avg_complexity > 0:
-                rules['complexity_threshold'] = {
-                    'enabled': True,
-                    'max_complexity': max(5, int(metrics.avg_complexity * 1.2)),
-                    'severity': 'warning',
+                rules["complexity_threshold"] = {
+                    "enabled": True,
+                    "max_complexity": max(5, int(metrics.avg_complexity * 1.2)),
+                    "severity": "warning",
                 }
 
             # 基于函数大小生成规则
             if metrics.avg_function_size > 0:
-                rules['function_length_threshold'] = {
-                    'enabled': True,
-                    'max_lines': max(20, int(metrics.avg_function_size * 1.5)),
-                    'severity': 'info',
+                rules["function_length_threshold"] = {
+                    "enabled": True,
+                    "max_lines": max(20, int(metrics.avg_function_size * 1.5)),
+                    "severity": "info",
                 }
 
             language_rules[lang_name] = rules
@@ -525,7 +525,7 @@ class PatternLearningIntegrator:
 
         # 基于复杂度的建议
         complexity_pattern = next(
-            (p for p in cross_patterns if p.pattern_name == 'complexity_consistency'),
+            (p for p in cross_patterns if p.pattern_name == "complexity_consistency"),
             None,
         )
         if complexity_pattern and complexity_pattern.consistency_score < 0.6:
@@ -533,9 +533,9 @@ class PatternLearningIntegrator:
 
         # 基于语言特定特征的建议
         for lang_name, metrics in multi_lang_analysis.items():
-            if lang_name == 'javascript':
+            if lang_name == "javascript":
                 # JavaScript特定建议
-                ts_patterns = [p for p in metrics.patterns if 'typescript' in p.pattern_name]
+                ts_patterns = [p for p in metrics.patterns if "typescript" in p.pattern_name]
                 if ts_patterns and any(p.pattern_value < 0.5 for p in ts_patterns):
                     recommendations.append("📝 考虑增加TypeScript使用比例，提升类型安全性")
 
@@ -557,14 +557,14 @@ class PatternLearningIntegrator:
 
 def save_integrated_learning_result(result: IntegratedLearningResult, project_path: Path) -> None:
     """保存集成学习结果"""
-    result_file = project_path / '.aiculture' / 'integrated_learning_result.json'
+    result_file = project_path / ".aiculture" / "integrated_learning_result.json"
     result_file.parent.mkdir(parents=True, exist_ok=True)
 
     try:
         # 转换为可序列化的格式
         serializable_result = asdict(result)
 
-        with open(result_file, 'w', encoding='utf-8') as f:
+        with open(result_file, "w", encoding="utf-8") as f:
             json.dump(serializable_result, f, indent=2, default=str)
     except (IOError, TypeError):
         pass
@@ -574,11 +574,11 @@ def load_integrated_learning_result(
     project_path: Path,
 ) -> Optional[IntegratedLearningResult]:
     """加载集成学习结果"""
-    result_file = project_path / '.aiculture' / 'integrated_learning_result.json'
+    result_file = project_path / ".aiculture" / "integrated_learning_result.json"
 
     try:
         if result_file.exists():
-            with open(result_file, 'r', encoding='utf-8') as f:
+            with open(result_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 # 这里需要复杂的反序列化逻辑，简化处理
                 return data  # 返回字典格式

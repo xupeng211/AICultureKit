@@ -4,16 +4,17 @@
 
 import tempfile
 from pathlib import Path
+
 import pytest
 
 from aiculture.data_governance_culture import (
+    DataField,
     DataGovernanceManager,
     DataPrivacyScanner,
-    DataQualityValidator,
-    GDPRComplianceChecker,
-    DataSensitivityLevel,
-    DataField,
     DataQualityRule,
+    DataQualityValidator,
+    DataSensitivityLevel,
+    GDPRComplianceChecker,
 )
 
 
@@ -94,15 +95,15 @@ class TestDataPrivacyScanner:
         """测试文件扫描"""
         # 创建测试文件
         test_file = self.temp_dir / "test_data.py"
-        with open(test_file, 'w') as f:
+        with open(test_file, "w") as f:
             f.write(
-                '''
+                """
 user_data = {
     "email": "demo@placeholder.local",
     "phone": "+1-XXX-XXX-XXXX",
     "ssn": "XXX-XX-XXXX"
 }
-'''
+"""
             )
 
         findings = self.scanner.scan_file(test_file)
@@ -235,7 +236,11 @@ class TestDataQualityValidator:
                 {"pattern": r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"},
             ),
             DataQualityRule(
-                "age_range", "Age range", "range", "age", {"min_value": 0, "max_value": 150}
+                "age_range",
+                "Age range",
+                "range",
+                "age",
+                {"min_value": 0, "max_value": 150},
             ),
         ]
 
@@ -309,7 +314,7 @@ class TestGDPRComplianceChecker:
         # 有保留策略的代码
         with_retention = """
         DATA_RETENTION_DAYS = 365
-        
+
         def cleanup_old_data():
             cutoff_date = datetime.now() - timedelta(days=DATA_RETENTION_DAYS)
             delete_data_before(cutoff_date)
@@ -334,17 +339,17 @@ class TestGDPRComplianceChecker:
         def register_user(email, name, phone, user_consent=True):
             if not user_consent:
                 raise ValueError("GDPR consent required")
-            
+
             user_data = {
                 "email": email,
                 "name": name,
                 "phone": phone,
                 "created_at": datetime.now()
             }
-            
+
             # 数据保留策略
             DATA_RETENTION_DAYS = 730
-            
+
             return save_user(user_data)
         """
 
@@ -385,15 +390,15 @@ class TestDataGovernanceManager:
         """测试项目隐私扫描"""
         # 创建测试文件
         test_file = self.temp_dir / "user_data.py"
-        with open(test_file, 'w') as f:
+        with open(test_file, "w") as f:
             f.write(
-                '''
+                """
 user_info = {
     "email": "demo@placeholder.local",
     "phone": "+1-XXX-XXX-XXXX",
     "ssn": "XXX-XX-XXXX"
 }
-'''
+"""
             )
 
         # 扫描项目
@@ -429,19 +434,19 @@ user_info = {
         """测试综合治理报告"""
         # 创建测试文件
         test_file = self.temp_dir / "data_service.py"
-        with open(test_file, 'w') as f:
+        with open(test_file, "w") as f:
             f.write(
-                '''
+                """
 def process_user_data(email, name, consent=True):
     if not consent:
         raise ValueError("User consent required")
-    
+
     return {
         "email": email,
         "name": name,
         "processed_at": datetime.now()
     }
-'''
+"""
             )
 
         # 生成综合报告
@@ -471,7 +476,7 @@ class TestDataGovernanceCultureIntegration:
 
             # 创建包含各种数据问题的测试文件
             test_file = temp_dir / "user_service.py"
-            with open(test_file, 'w') as f:
+            with open(test_file, "w") as f:
                 f.write(
                     '''
 class UserService:
@@ -479,11 +484,11 @@ class UserService:
     def create_user(self, email, name, phone, ssn, consent=True):
         if not consent:
             raise ValueError("GDPR consent required")
-        
+
         # 数据验证
         if not email or "@" not in email:
             raise ValueError("Invalid email")
-        
+
         user_data = {
             "email": email,
             "name": name,
@@ -491,10 +496,10 @@ class UserService:
             "ssn": ssn,  # 高敏感数据
             "created_at": datetime.now()
         }
-        
+
         # 数据保留策略
         DATA_RETENTION_DAYS = 365
-        
+
         return self.save_user(user_data)
 '''
                 )

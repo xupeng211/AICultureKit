@@ -5,10 +5,10 @@
 
 import json
 import time
-from dataclasses import dataclass, asdict
-from pathlib import Path
-from typing import Dict, List, Optional, Any
+from dataclasses import asdict, dataclass
 from enum import Enum
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 from .i18n import _
 
@@ -111,16 +111,16 @@ class DataCatalog:
         """加载数据目录"""
         try:
             if self.catalog_file.exists():
-                with open(self.catalog_file, 'r', encoding='utf-8') as f:
+                with open(self.catalog_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                    for asset_data in data.get('assets', []):
+                    for asset_data in data.get("assets", []):
                         asset = self._dict_to_asset(asset_data)
                         self.assets[asset.id] = asset
 
             if self.lineage_file.exists():
-                with open(self.lineage_file, 'r', encoding='utf-8') as f:
+                with open(self.lineage_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                    for lineage_data in data.get('lineages', []):
+                    for lineage_data in data.get("lineages", []):
                         lineage = DataLineage(**lineage_data)
                         self.lineages.append(lineage)
 
@@ -130,19 +130,19 @@ class DataCatalog:
     def _dict_to_asset(self, data: Dict[str, Any]) -> DataAsset:
         """将字典转换为数据资产对象"""
         # 处理枚举类型
-        data['asset_type'] = DataAssetType(data['asset_type'])
-        data['classification'] = DataClassification(data['classification'])
-        data['format'] = DataFormat(data['format'])
+        data["asset_type"] = DataAssetType(data["asset_type"])
+        data["classification"] = DataClassification(data["classification"])
+        data["format"] = DataFormat(data["format"])
 
         # 处理质量指标
-        if data.get('quality_metrics'):
-            data['quality_metrics'] = DataQualityMetrics(**data['quality_metrics'])
+        if data.get("quality_metrics"):
+            data["quality_metrics"] = DataQualityMetrics(**data["quality_metrics"])
 
         # 处理血缘
         lineages = []
-        for lineage_data in data.get('lineage', []):
+        for lineage_data in data.get("lineage", []):
             lineages.append(DataLineage(**lineage_data))
-        data['lineage'] = lineages
+        data["lineage"] = lineages
 
         return DataAsset(**data)
 
@@ -151,9 +151,9 @@ class DataCatalog:
         data = asdict(asset)
 
         # 处理枚举类型
-        data['asset_type'] = asset.asset_type.value
-        data['classification'] = asset.classification.value
-        data['format'] = asset.format.value
+        data["asset_type"] = asset.asset_type.value
+        data["classification"] = asset.classification.value
+        data["format"] = asset.format.value
 
         return data
 
@@ -379,7 +379,7 @@ class DataCatalog:
                 "updated_at": time.time(),
             }
 
-            with open(self.catalog_file, 'w', encoding='utf-8') as f:
+            with open(self.catalog_file, "w", encoding="utf-8") as f:
                 json.dump(catalog_data, f, ensure_ascii=False, indent=2)
 
             # 保存血缘
@@ -388,7 +388,7 @@ class DataCatalog:
                 "updated_at": time.time(),
             }
 
-            with open(self.lineage_file, 'w', encoding='utf-8') as f:
+            with open(self.lineage_file, "w", encoding="utf-8") as f:
                 json.dump(lineage_data, f, ensure_ascii=False, indent=2)
 
         except Exception as e:

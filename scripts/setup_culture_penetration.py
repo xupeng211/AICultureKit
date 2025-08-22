@@ -4,10 +4,9 @@
 自动配置文化渗透系统，确保开发文化在项目中彻底执行
 """
 
-import os
 import json
+import os
 from pathlib import Path
-import subprocess
 
 
 def setup_git_hooks(project_path: Path) -> None:
@@ -17,7 +16,7 @@ def setup_git_hooks(project_path: Path) -> None:
 
     # Pre-commit钩子
     pre_commit_hook = hooks_dir / "pre-commit"
-    pre_commit_content = '''#!/bin/bash
+    pre_commit_content = """#!/bin/bash
 # AICultureKit Pre-commit Hook
 echo "🔍 执行文化检查..."
 
@@ -51,9 +50,9 @@ if [ $exit_code -ne 0 ]; then
 fi
 
 echo "✅ 文化检查通过"
-'''
+"""
 
-    with open(pre_commit_hook, 'w') as f:
+    with open(pre_commit_hook, "w") as f:
         f.write(pre_commit_content)
 
     # 设置执行权限
@@ -62,7 +61,7 @@ echo "✅ 文化检查通过"
 
     # Pre-push钩子
     pre_push_hook = hooks_dir / "pre-push"
-    pre_push_content = '''#!/bin/bash
+    pre_push_content = """#!/bin/bash
 # AICultureKit Pre-push Hook
 echo "🔍 执行推送前文化检查..."
 
@@ -94,9 +93,9 @@ if result['score'] < 70:
 
 print('✅ 推送检查通过')
 "
-'''
+"""
 
-    with open(pre_push_hook, 'w') as f:
+    with open(pre_push_hook, "w") as f:
         f.write(pre_push_content)
 
     os.chmod(pre_push_hook, 0o755)
@@ -148,7 +147,7 @@ def setup_vscode_integration(project_path: Path) -> None:
         ],
     }
 
-    with open(vscode_dir / "tasks.json", 'w') as f:
+    with open(vscode_dir / "tasks.json", "w") as f:
         json.dump(tasks_json, f, indent=2)
 
     # 设置设置
@@ -163,7 +162,7 @@ def setup_vscode_integration(project_path: Path) -> None:
         "python.testing.pytestArgs": ["--cov=aiculture", "--cov-report=html"],
     }
 
-    with open(vscode_dir / "settings.json", 'w') as f:
+    with open(vscode_dir / "settings.json", "w") as f:
         json.dump(settings_json, f, indent=2)
 
     print(f"✅ 已设置 VSCode 集成: {vscode_dir}")
@@ -211,7 +210,7 @@ def setup_github_actions(project_path: Path) -> None:
 
     import yaml
 
-    with open(workflows_dir / "culture-check.yml", 'w') as f:
+    with open(workflows_dir / "culture-check.yml", "w") as f:
         yaml.dump(culture_check_workflow, f, default_flow_style=False)
 
     print(f"✅ 已设置 GitHub Actions: {workflows_dir / 'culture-check.yml'}")
@@ -227,7 +226,15 @@ def setup_culture_config(project_path: Path) -> None:
         "real_time_monitoring": {
             "enabled": True,
             "interval": 5,
-            "monitored_extensions": [".py", ".js", ".ts", ".jsx", ".tsx", ".html", ".css"],
+            "monitored_extensions": [
+                ".py",
+                ".js",
+                ".ts",
+                ".jsx",
+                ".tsx",
+                ".html",
+                ".css",
+            ],
             "excluded_paths": ["venv", "__pycache__", "node_modules", ".git"],
         },
         "quality_gates": {
@@ -245,16 +252,25 @@ def setup_culture_config(project_path: Path) -> None:
             },
             "release_gate": {
                 "enabled": True,
-                "blocking_rules": ["security", "testing", "documentation", "performance"],
+                "blocking_rules": [
+                    "security",
+                    "testing",
+                    "documentation",
+                    "performance",
+                ],
                 "critical_threshold": 0,
                 "warning_threshold": 0,
             },
         },
-        "auto_fix": {"enabled": True, "safe_fixes_only": True, "backup_before_fix": True},
+        "auto_fix": {
+            "enabled": True,
+            "safe_fixes_only": True,
+            "backup_before_fix": True,
+        },
         "notifications": {"console": True, "file": True, "webhook": False},
     }
 
-    with open(config_dir / "penetration_config.json", 'w') as f:
+    with open(config_dir / "penetration_config.json", "w") as f:
         json.dump(penetration_config, f, indent=2, ensure_ascii=False)
 
     print(f"✅ 已设置文化渗透配置: {config_dir / 'penetration_config.json'}")
@@ -266,7 +282,7 @@ def setup_culture_dashboard(project_path: Path) -> None:
     dashboard_dir.mkdir(parents=True, exist_ok=True)
 
     # 创建简单的HTML仪表板
-    dashboard_html = '''<!DOCTYPE html>
+    dashboard_html = """<!DOCTYPE html>
 <html>
 <head>
     <title>AICultureKit 文化仪表板</title>
@@ -282,31 +298,31 @@ def setup_culture_dashboard(project_path: Path) -> None:
 </head>
 <body>
     <h1>🏆 AICultureKit 文化仪表板</h1>
-    
+
     <div class="metric">
         <h3>📊 质量评分</h3>
         <div class="score" id="quality-score">--</div>
     </div>
-    
+
     <div class="metric">
         <h3>🧪 测试覆盖率</h3>
         <div class="score" id="test-coverage">--</div>
     </div>
-    
+
     <div class="metric">
         <h3>🔒 安全问题</h3>
         <div class="score" id="security-issues">--</div>
     </div>
-    
+
     <div class="metric">
         <h3>📝 文档完整性</h3>
         <div class="score" id="doc-completeness">--</div>
     </div>
-    
+
     <script>
         // 这里可以添加JavaScript来动态更新指标
         // 实际项目中可以通过API获取实时数据
-        
+
         function updateMetrics() {
             // 模拟数据更新
             document.getElementById('quality-score').textContent = '85/100';
@@ -314,17 +330,17 @@ def setup_culture_dashboard(project_path: Path) -> None:
             document.getElementById('security-issues').textContent = '3';
             document.getElementById('doc-completeness').textContent = '78%';
         }
-        
+
         // 页面加载时更新一次
         updateMetrics();
-        
+
         // 每30秒更新一次
         setInterval(updateMetrics, 30000);
     </script>
 </body>
-</html>'''
+</html>"""
 
-    with open(dashboard_dir / "index.html", 'w') as f:
+    with open(dashboard_dir / "index.html", "w") as f:
         f.write(dashboard_html)
 
     print(f"✅ 已设置文化仪表板: {dashboard_dir / 'index.html'}")
@@ -373,7 +389,7 @@ def main():
             "   1. 启动实时监控: python -c \"from aiculture.culture_penetration_system import AIDevCultureAssistant; from pathlib import Path; assistant = AIDevCultureAssistant(Path('.')); assistant.start_assistance()\""
         )
         print("   2. 查看仪表板: open .aiculture/dashboard/index.html")
-        print("   3. 测试Git钩子: git add . && git commit -m \"test culture check\"")
+        print('   3. 测试Git钩子: git add . && git commit -m "test culture check"')
 
         print("\n💡 现在你的项目将自动执行文化检查，确保开发文化彻底渗透！")
 

@@ -61,20 +61,20 @@ class AutoTestGenerator:
         '''
 
         if args:
-            test_code += f'''
+            test_code += f"""
         # 测试正常情况
         # result = {func_name}({", ".join(f"test_{arg}" for arg in args)})
         # assert result is not None
-        '''
+        """
         else:
-            test_code += f'''
+            test_code += f"""
         # result = {func_name}()
         # assert result is not None
-        '''
+        """
 
-        test_code += '''
+        test_code += """
         pass  # 移除此行并添加实际测试
-'''
+"""
 
         # 生成边界测试
         test_code += f'''
@@ -85,24 +85,24 @@ class AutoTestGenerator:
 
         if args:
             test_code += (
-                '''
+                """
         # 测试空值
         # with pytest.raises(ValueError):
-        #     result = '''
+        #     result = """
                 + func_name
-                + '''(None)
+                + """(None)
 
         # 测试无效输入
         # with pytest.raises(TypeError):
-        #     result = '''
+        #     result = """
                 + func_name
-                + '''("invalid")
-        '''
+                + """("invalid")
+        """
             )
 
-        test_code += '''
+        test_code += """
         pass  # 移除此行并添加实际测试
-'''
+"""
 
         return test_code
 
@@ -148,14 +148,14 @@ class Test{class_name}:
     def generate_test_file(self, py_file: Path) -> str:
         """为Python文件生成完整的测试文件"""
         try:
-            content = py_file.read_text(encoding='utf-8')
+            content = py_file.read_text(encoding="utf-8")
             tree = ast.parse(content)
         except Exception as e:
             print(f"❌ 无法解析文件 {py_file}: {e}")
             return ""
 
         module_name = (
-            str(py_file.relative_to(self.project_path)).replace('/', '.').replace('.py', '')
+            str(py_file.relative_to(self.project_path)).replace("/", ".").replace(".py", "")
         )
 
         # 生成测试文件头部
@@ -249,7 +249,7 @@ class TestModule:
             test_content = self.generate_test_file(py_file)
             if test_content:
                 test_file.parent.mkdir(parents=True, exist_ok=True)
-                test_file.write_text(test_content, encoding='utf-8')
+                test_file.write_text(test_content, encoding="utf-8")
                 generated_count += 1
                 self.generated_tests.append(str(test_file))
                 print(f"✅ 生成测试文件: {test_file}")

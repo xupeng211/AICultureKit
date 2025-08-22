@@ -2,8 +2,6 @@
 测试aiculture.ai_culture_principles模块
 """
 
-import pytest
-
 from aiculture.ai_culture_principles import (
     AICulturePrinciples,
     DevelopmentPrinciple,
@@ -41,7 +39,7 @@ class TestAICulturePrinciples:
     def test_ai_culture_principles_creation(self) -> None:
         """测试AI文化原则管理器创建"""
         principles = AICulturePrinciples()
-        assert hasattr(principles, 'principles')
+        assert hasattr(principles, "principles")
         assert isinstance(principles.principles, dict)
         assert len(principles.principles) > 0
 
@@ -99,14 +97,14 @@ class TestAICulturePrinciples:
         principles = AICulturePrinciples()
 
         for principle in principles.principles.values():
-            assert hasattr(principle, 'name')
-            assert hasattr(principle, 'category')
-            assert hasattr(principle, 'description')
-            assert hasattr(principle, 'rules')
-            assert hasattr(principle, 'ai_instructions')
-            assert hasattr(principle, 'enforcement_level')
-            assert hasattr(principle, 'tools')
-            assert hasattr(principle, 'examples')
+            assert hasattr(principle, "name")
+            assert hasattr(principle, "category")
+            assert hasattr(principle, "description")
+            assert hasattr(principle, "rules")
+            assert hasattr(principle, "ai_instructions")
+            assert hasattr(principle, "enforcement_level")
+            assert hasattr(principle, "tools")
+            assert hasattr(principle, "examples")
 
             # 验证字段类型
             assert isinstance(principle.name, str)

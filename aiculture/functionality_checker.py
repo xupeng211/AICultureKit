@@ -107,14 +107,14 @@ class FunctionalityChecker:
                 continue
 
             try:
-                content = py_file.read_text(encoding='utf-8')
+                content = py_file.read_text(encoding="utf-8")
                 self._check_file_references_in_code(py_file, content)
             except (UnicodeDecodeError, PermissionError):
                 continue
 
     def _check_file_references_in_code(self, py_file: Path, content: str) -> None:
         """检查代码中的文件引用"""
-        lines = content.split('\n')
+        lines = content.split("\n")
 
         # 检查路径字符串
         path_patterns = [
@@ -132,7 +132,7 @@ class FunctionalityChecker:
     def _validate_file_reference(self, source_file: Path, file_ref: str, line_num: int) -> None:
         """验证文件引用是否存在"""
         # 跳过明显的示例和变量
-        if any(skip in file_ref.lower() for skip in ['example', 'demo', 'test', 'temp', '$', '{']):
+        if any(skip in file_ref.lower() for skip in ["example", "demo", "test", "temp", "$", "{"]):
             return
 
         # 构建可能的文件路径
@@ -174,7 +174,7 @@ class FunctionalityChecker:
             return
 
         try:
-            content = cli_file.read_text(encoding='utf-8')
+            content = cli_file.read_text(encoding="utf-8")
             self._analyze_cli_commands(cli_file, content)
         except Exception as e:
             self._add_violation(
@@ -209,12 +209,12 @@ class FunctionalityChecker:
         """检查函数是否为click命令"""
         for decorator in node.decorator_list:
             if isinstance(decorator, ast.Attribute):
-                if getattr(decorator.attr, '', '') in ['command', 'group']:
+                if getattr(decorator.attr, "", "") in ["command", "group"]:
                     return True
             elif isinstance(decorator, ast.Call):
-                if hasattr(decorator.func, 'attr') and decorator.func.attr in [
-                    'command',
-                    'group',
+                if hasattr(decorator.func, "attr") and decorator.func.attr in [
+                    "command",
+                    "group",
                 ]:
                     return True
         return False
@@ -279,7 +279,7 @@ class FunctionalityChecker:
     def _check_config_class_consistency(self, config_file: Path) -> None:
         """检查配置类的方法签名与实际使用的一致性"""
         try:
-            content = config_file.read_text(encoding='utf-8')
+            content = config_file.read_text(encoding="utf-8")
             tree = ast.parse(content)
 
             # 查找配置类
@@ -298,9 +298,9 @@ class FunctionalityChecker:
             if isinstance(method, ast.FunctionDef):
                 # 检查方法是否有明确的返回类型注解
                 if method.returns is None and method.name not in [
-                    '__init__',
-                    '__str__',
-                    '__repr__',
+                    "__init__",
+                    "__str__",
+                    "__repr__",
                 ]:
                     self._add_violation(
                         category="配置一致性",
@@ -353,12 +353,12 @@ class FunctionalityChecker:
 
         # 检查基本文件
         required_files = {
-            'python': ['pyproject.toml', 'requirements.txt', 'README.md'],
-            'javascript': ['package.json', 'README.md'],
-            'default': ['README.md'],
+            "python": ["pyproject.toml", "requirements.txt", "README.md"],
+            "javascript": ["package.json", "README.md"],
+            "default": ["README.md"],
         }
 
-        expected_files = required_files.get(template_name, required_files['default'])
+        expected_files = required_files.get(template_name, required_files["default"])
 
         for required_file in expected_files:
             file_path = template_dir / required_file
@@ -461,14 +461,14 @@ class FunctionalityChecker:
             content = req_file.read_text()
             lines = [
                 line.strip()
-                for line in content.split('\n')
-                if line.strip() and not line.startswith('#')
+                for line in content.split("\n")
+                if line.strip() and not line.startswith("#")
             ]
 
             for line in lines:
-                if '==' not in line and '>=' not in line and line.count('.') > 0:
+                if "==" not in line and ">=" not in line and line.count(".") > 0:
                     # 检查是否为有效的包名格式
-                    if not re.match(r'^[a-zA-Z][a-zA-Z0-9_-]*$', line.split()[0]):
+                    if not re.match(r"^[a-zA-Z][a-zA-Z0-9_-]*$", line.split()[0]):
                         self._add_violation(
                             category="依赖可用性",
                             severity="warning",
@@ -492,13 +492,13 @@ class FunctionalityChecker:
     def _should_skip_file(self, file_path: Path) -> bool:
         """判断是否应该跳过检查的文件"""
         skip_patterns = [
-            '__pycache__',
-            '.git',
-            '.venv',
-            'venv',
-            '.pytest_cache',
-            'node_modules',
-            '.aiculture/cache',
+            "__pycache__",
+            ".git",
+            ".venv",
+            "venv",
+            ".pytest_cache",
+            "node_modules",
+            ".aiculture/cache",
         ]
 
         file_str = str(file_path)
@@ -507,9 +507,9 @@ class FunctionalityChecker:
     def generate_report(self) -> Dict[str, Any]:
         """生成功能完整性检查报告"""
         total_violations = len(self.violations)
-        critical_count = len([v for v in self.violations if v.severity == 'critical'])
-        warning_count = len([v for v in self.violations if v.severity == 'warning'])
-        info_count = len([v for v in self.violations if v.severity == 'info'])
+        critical_count = len([v for v in self.violations if v.severity == "critical"])
+        warning_count = len([v for v in self.violations if v.severity == "warning"])
+        info_count = len([v for v in self.violations if v.severity == "info"])
 
         # 按分类统计
         categories = {}
@@ -518,12 +518,12 @@ class FunctionalityChecker:
                 categories[violation.category] = []
             categories[violation.category].append(
                 {
-                    'severity': violation.severity,
-                    'message': violation.message,
-                    'file_path': violation.file_path,
-                    'line_number': violation.line_number,
-                    'suggestion': violation.suggestion,
-                    'impact': violation.impact,
+                    "severity": violation.severity,
+                    "message": violation.message,
+                    "file_path": violation.file_path,
+                    "line_number": violation.line_number,
+                    "suggestion": violation.suggestion,
+                    "impact": violation.impact,
                 }
             )
 
@@ -533,22 +533,22 @@ class FunctionalityChecker:
         )
 
         return {
-            'summary': {
-                'total_violations': total_violations,
-                'critical': critical_count,
-                'warning': warning_count,
-                'info': info_count,
-                'functionality_score': functionality_score,
+            "summary": {
+                "total_violations": total_violations,
+                "critical": critical_count,
+                "warning": warning_count,
+                "info": info_count,
+                "functionality_score": functionality_score,
             },
-            'categories': categories,
-            'critical_issues': [
+            "categories": categories,
+            "critical_issues": [
                 {
-                    'category': v.category,
-                    'message': v.message,
-                    'impact': v.impact,
-                    'suggestion': v.suggestion,
+                    "category": v.category,
+                    "message": v.message,
+                    "impact": v.impact,
+                    "suggestion": v.suggestion,
                 }
                 for v in self.violations
-                if v.severity == 'critical'
+                if v.severity == "critical"
             ],
         }

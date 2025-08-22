@@ -1,0 +1,67 @@
+# AICultureKit 团队文化/门禁规则配置
+culture:
+  # 禁止跳过测试
+  forbid_skipping_tests: true
+
+  # 禁止禁用钩子
+  forbid_disabling_hooks: true
+
+  # 提交信息约定
+  commit_message_convention: "type(scope): subject"
+
+  # 新增公共函数需要测试
+  require_test_for_new_public_funcs: true
+
+  # 禁止print调试进入主分支
+  forbid_debug_prints: true
+
+  # 禁止TODO/FIXME进入主分支
+  forbid_todo_fixme: false
+
+  # 最小测试覆盖率要求
+  min_test_coverage: 80.0
+
+  # 增量覆盖率配置
+  coverage:
+    changed_lines_threshold: 80 # 变更行覆盖率要求
+    new_files_threshold: 70 # 新文件覆盖率要求
+    enable_diff_cover: true # 启用增量覆盖率检查
+
+  # 禁止的文件模式
+  forbidden_patterns:
+    - "*.pyc"
+    - "__pycache__/"
+    - ".DS_Store"
+    - "*.log"
+
+  # 必需的文件头
+  required_file_headers:
+    python: |
+      """
+      Module docstring required
+      """
+
+# 质量门槛
+quality:
+  # 最大圈复杂度
+  max_complexity: 10
+
+  # 最大函数长度
+  max_function_length: 50
+
+  # 最大文件长度
+  max_file_length: 500
+
+  # 禁用的linter规则（如果需要）
+  disabled_rules: []
+
+# 安全规则
+security:
+  # 禁止硬编码密码
+  forbid_hardcoded_passwords: true
+
+  # 禁止硬编码API密钥
+  forbid_hardcoded_api_keys: true
+
+  # 禁止不安全的随机数生成
+  forbid_weak_random: true

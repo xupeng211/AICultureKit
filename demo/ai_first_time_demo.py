@@ -25,9 +25,9 @@ def simulate_ai_assistant_entry() -> None:
 
     result = run_command("python -m aiculture.cli infrastructure-check --path .")
 
-    if result['success']:
+    if result["success"]:
         print("\n✅ 基础设施检查完成")
-        analyze_infrastructure_result(result['output'])
+        analyze_infrastructure_result(result["output"])
     else:
         print(f"\n❌ 基础设施检查失败: {result['error']}")
         return False
@@ -38,7 +38,7 @@ def simulate_ai_assistant_entry() -> None:
 
     result = run_command("python -m aiculture.cli environment-status --path .")
 
-    if result['success']:
+    if result["success"]:
         print("\n✅ 环境状态检查完成")
     else:
         print(f"\n❌ 环境检查失败: {result['error']}")
@@ -101,9 +101,9 @@ def analyze_infrastructure_result(output: str) -> None:
 def check_virtual_environment() -> bool:
     """检查是否在虚拟环境中"""
     return (
-        hasattr(sys, 'real_prefix')
-        or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
-        or os.environ.get('VIRTUAL_ENV') is not None
+        hasattr(sys, "real_prefix")
+        or (hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix)
+        or os.environ.get("VIRTUAL_ENV") is not None
     )
 
 
@@ -112,14 +112,14 @@ def run_command(command: str) -> dict:
     try:
         result = subprocess.run(command.split(), capture_output=True, text=True, timeout=30)
         return {
-            'success': result.returncode == 0,
-            'output': result.stdout,
-            'error': result.stderr,
+            "success": result.returncode == 0,
+            "output": result.stdout,
+            "error": result.stderr,
         }
     except subprocess.TimeoutExpired:
-        return {'success': False, 'error': '命令执行超时'}
+        return {"success": False, "error": "命令执行超时"}
     except Exception as e:
-        return {'success': False, 'error': str(e)}
+        return {"success": False, "error": str(e)}
 
 
 def demonstrate_ai_culture_principles() -> None:

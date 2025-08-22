@@ -110,10 +110,10 @@ class InfrastructureChecker:
             )
 
         # 检查虚拟环境目录是否在.gitignore中
-        gitignore_path = self.project_path / '.gitignore'
+        gitignore_path = self.project_path / ".gitignore"
         if gitignore_path.exists():
             gitignore_content = gitignore_path.read_text()
-            venv_patterns = ['.venv', 'venv/', 'env/', 'ENV/']
+            venv_patterns = [".venv", "venv/", "env/", "ENV/"]
             if not any(pattern in gitignore_content for pattern in venv_patterns):
                 self._add_violation(
                     category="环境隔离",
@@ -125,7 +125,7 @@ class InfrastructureChecker:
                 )
 
         # 检查环境设置脚本
-        setup_scripts = ['setup_environment.sh', 'setup.sh', 'bootstrap.sh']
+        setup_scripts = ["setup_environment.sh", "setup.sh", "bootstrap.sh"]
         if not any((self.project_path / script).exists() for script in setup_scripts):
             self._add_violation(
                 category="环境隔离",
@@ -137,7 +137,7 @@ class InfrastructureChecker:
 
     def _check_python_version_file(self) -> None:
         """检查.python-version文件"""
-        python_version_file = self.project_path / '.python-version'
+        python_version_file = self.project_path / ".python-version"
         if not python_version_file.exists():
             self._add_violation(
                 category="版本一致性",
@@ -149,15 +149,15 @@ class InfrastructureChecker:
 
     def _check_pyproject_python_version(self) -> None:
         """检查pyproject.toml中的Python版本要求"""
-        pyproject_path = self.project_path / 'pyproject.toml'
+        pyproject_path = self.project_path / "pyproject.toml"
         if pyproject_path.exists():
             content = pyproject_path.read_text()
-            if 'requires-python' in content:
+            if "requires-python" in content:
                 # 提取Python版本要求
                 match = re.search(r'requires-python\s*=\s*["\']([^"\']+)["\']', content)
                 if match:
                     version_requirement = match.group(1)
-                    if '>=' in version_requirement and version_requirement.count('.') < 2:
+                    if ">=" in version_requirement and version_requirement.count(".") < 2:
                         self._add_violation(
                             category="版本一致性",
                             severity="warning",
@@ -169,11 +169,11 @@ class InfrastructureChecker:
 
     def _check_cicd_python_version(self) -> None:
         """检查CI/CD配置中的Python版本"""
-        github_workflow_dir = self.project_path / '.github' / 'workflows'
+        github_workflow_dir = self.project_path / ".github" / "workflows"
         if github_workflow_dir.exists():
-            for workflow_file in github_workflow_dir.glob('*.yml'):
+            for workflow_file in github_workflow_dir.glob("*.yml"):
                 content = workflow_file.read_text()
-                if 'python-version' in content or 'PYTHON_VERSION' in content:
+                if "python-version" in content or "PYTHON_VERSION" in content:
                     # 简单检查是否使用了不同的Python版本
                     current_python = f"{sys.version_info.major}.{sys.version_info.minor}"
                     if current_python not in content:
@@ -196,18 +196,18 @@ class InfrastructureChecker:
 
     def _check_dependency_management(self) -> None:
         """检查依赖管理配置"""
-        requirements_txt = self.project_path / 'requirements.txt'
+        requirements_txt = self.project_path / "requirements.txt"
 
         if requirements_txt.exists():
             content = requirements_txt.read_text()
-            lines = [line.strip() for line in content.split('\n') if line.strip()]
+            lines = [line.strip() for line in content.split("\n") if line.strip()]
 
             # 检查是否使用版本范围而非精确版本
             loose_versions = []
             for line in lines:
-                if line.startswith('#') or line.startswith('-'):
+                if line.startswith("#") or line.startswith("-"):
                     continue
-                if '>=' in line and '==' not in line:
+                if ">=" in line and "==" not in line:
                     loose_versions.append(line)
 
             if loose_versions:
@@ -222,10 +222,10 @@ class InfrastructureChecker:
 
         # 检查是否有锁定文件
         lock_files = [
-            'requirements.lock',
-            'requirements.freeze',
-            'Pipfile.lock',
-            'poetry.lock',
+            "requirements.lock",
+            "requirements.freeze",
+            "Pipfile.lock",
+            "poetry.lock",
         ]
         has_lock_file = any((self.project_path / f).exists() for f in lock_files)
 
@@ -239,10 +239,10 @@ class InfrastructureChecker:
             )
 
         # 检查是否有开发依赖分离
-        dev_files = ['requirements-dev.txt', 'requirements/dev.txt', 'pyproject.toml']
+        dev_files = ["requirements-dev.txt", "requirements/dev.txt", "pyproject.toml"]
         has_dev_deps = any((self.project_path / f).exists() for f in dev_files[:2])
 
-        if not has_dev_deps and not (self.project_path / 'pyproject.toml').exists():
+        if not has_dev_deps and not (self.project_path / "pyproject.toml").exists():
             self._add_violation(
                 category="依赖管理",
                 severity="info",
@@ -254,8 +254,8 @@ class InfrastructureChecker:
     def _check_security_vulnerabilities(self) -> None:
         """检查安全漏洞"""
         # 检查是否有安全扫描配置
-        security_tools = ['bandit', 'safety', 'pip-audit']
-        pyproject_path = self.project_path / 'pyproject.toml'
+        security_tools = ["bandit", "safety", "pip-audit"]
+        pyproject_path = self.project_path / "pyproject.toml"
 
         if pyproject_path.exists():
             content = pyproject_path.read_text()
@@ -275,7 +275,7 @@ class InfrastructureChecker:
     def _check_configuration_management(self) -> None:
         """检查配置管理"""
         # 检查.env.example文件
-        env_example = self.project_path / '.env.example'
+        env_example = self.project_path / ".env.example"
         if not env_example.exists():
             self._add_violation(
                 category="配置管理",
@@ -286,10 +286,10 @@ class InfrastructureChecker:
             )
 
         # 检查.env文件是否在.gitignore中
-        gitignore_path = self.project_path / '.gitignore'
+        gitignore_path = self.project_path / ".gitignore"
         if gitignore_path.exists():
             gitignore_content = gitignore_path.read_text()
-            if '.env' not in gitignore_content:
+            if ".env" not in gitignore_content:
                 self._add_violation(
                     category="配置管理",
                     severity="critical",
@@ -302,19 +302,19 @@ class InfrastructureChecker:
     def _check_environment_variables(self) -> None:
         """检查环境变量使用"""
         # 扫描代码中的硬编码问题
-        python_files = list(self.project_path.rglob('*.py'))
+        python_files = list(self.project_path.rglob("*.py"))
 
         for py_file in python_files:
             if (
-                py_file.name.startswith('.')
-                or 'venv' in str(py_file)
-                or '__pycache__' in str(py_file)
+                py_file.name.startswith(".")
+                or "venv" in str(py_file)
+                or "__pycache__" in str(py_file)
             ):
                 continue
 
             try:
-                content = py_file.read_text(encoding='utf-8')
-                lines = content.split('\n')
+                content = py_file.read_text(encoding="utf-8")
+                lines = content.split("\n")
 
                 for i, line in enumerate(lines, 1):
                     # 检查可能的硬编码密码、API密钥等
@@ -346,9 +346,9 @@ class InfrastructureChecker:
         """检查基础设施即代码配置"""
         # 检查Dockerfile
         dockerfile_paths = [
-            self.project_path / 'Dockerfile',
-            self.project_path / 'Dockerfile.dev',
-            self.project_path / 'docker' / 'Dockerfile',
+            self.project_path / "Dockerfile",
+            self.project_path / "Dockerfile.dev",
+            self.project_path / "docker" / "Dockerfile",
         ]
 
         has_dockerfile = any(path.exists() for path in dockerfile_paths)
@@ -363,9 +363,9 @@ class InfrastructureChecker:
 
         # 检查docker-compose.yml
         compose_files = [
-            self.project_path / 'docker-compose.yml',
-            self.project_path / 'docker-compose.yaml',
-            self.project_path / 'docker-compose.dev.yml',
+            self.project_path / "docker-compose.yml",
+            self.project_path / "docker-compose.yaml",
+            self.project_path / "docker-compose.dev.yml",
         ]
 
         has_compose = any(path.exists() for path in compose_files)
@@ -380,13 +380,13 @@ class InfrastructureChecker:
 
     def _check_ci_cd_configuration(self) -> None:
         """检查CI/CD配置"""
-        github_actions = self.project_path / '.github' / 'workflows'
-        gitlab_ci = self.project_path / '.gitlab-ci.yml'
-        jenkins_file = self.project_path / 'Jenkinsfile'
+        github_actions = self.project_path / ".github" / "workflows"
+        gitlab_ci = self.project_path / ".gitlab-ci.yml"
+        jenkins_file = self.project_path / "Jenkinsfile"
 
         has_ci_cd = (
             github_actions.exists()
-            and any(github_actions.glob('*.yml'))
+            and any(github_actions.glob("*.yml"))
             or gitlab_ci.exists()
             or jenkins_file.exists()
         )
@@ -404,21 +404,21 @@ class InfrastructureChecker:
 
     def _check_cross_platform_compatibility(self) -> None:
         """检查跨平台兼容性"""
-        python_files = list(self.project_path.rglob('*.py'))
+        python_files = list(self.project_path.rglob("*.py"))
 
         for py_file in python_files:
-            if py_file.name.startswith('.') or 'venv' in str(py_file):
+            if py_file.name.startswith(".") or "venv" in str(py_file):
                 continue
 
             try:
-                content = py_file.read_text(encoding='utf-8')
+                content = py_file.read_text(encoding="utf-8")
 
                 # 检查硬编码路径分隔符
-                if '\\\\' in content or content.count('/') > content.count('os.path') * 3:
+                if "\\\\" in content or content.count("/") > content.count("os.path") * 3:
                     # 简单的启发式检查
-                    lines = content.split('\n')
+                    lines = content.split("\n")
                     for i, line in enumerate(lines, 1):
-                        if re.search(r'["\'][A-Za-z]:[\\\/]', line) or line.count('\\\\') > 0:
+                        if re.search(r'["\'][A-Za-z]:[\\\/]', line) or line.count("\\\\") > 0:
                             self._add_violation(
                                 category="跨平台兼容性",
                                 severity="warning",
@@ -436,11 +436,11 @@ class InfrastructureChecker:
     def _check_build_reproducibility(self) -> None:
         """检查构建可重现性"""
         # 检查是否锁定了构建工具版本
-        pyproject_path = self.project_path / 'pyproject.toml'
+        pyproject_path = self.project_path / "pyproject.toml"
         if pyproject_path.exists():
             content = pyproject_path.read_text()
-            if 'build-system' in content:
-                if not re.search(r'requires.*=.*\d+\.\d+', content):
+            if "build-system" in content:
+                if not re.search(r"requires.*=.*\d+\.\d+", content):
                     self._add_violation(
                         category="构建可重现性",
                         severity="warning",
@@ -455,7 +455,7 @@ class InfrastructureChecker:
     def _check_development_tools(self) -> None:
         """检查开发工具配置"""
         # 检查.editorconfig
-        editorconfig = self.project_path / '.editorconfig'
+        editorconfig = self.project_path / ".editorconfig"
         if not editorconfig.exists():
             self._add_violation(
                 category="开发工具",
@@ -466,7 +466,7 @@ class InfrastructureChecker:
             )
 
         # 检查IDE配置
-        vscode_dir = self.project_path / '.vscode'
+        vscode_dir = self.project_path / ".vscode"
         if not vscode_dir.exists():
             self._add_violation(
                 category="开发工具",
@@ -477,7 +477,7 @@ class InfrastructureChecker:
             )
 
         # 检查pre-commit配置
-        precommit_config = self.project_path / '.pre-commit-config.yaml'
+        precommit_config = self.project_path / ".pre-commit-config.yaml"
         if not precommit_config.exists():
             self._add_violation(
                 category="开发工具",
@@ -492,9 +492,9 @@ class InfrastructureChecker:
     def _is_in_virtual_env(self) -> bool:
         """检查是否在虚拟环境中"""
         return (
-            hasattr(sys, 'real_prefix')
-            or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
-            or os.environ.get('VIRTUAL_ENV') is not None
+            hasattr(sys, "real_prefix")
+            or (hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix)
+            or os.environ.get("VIRTUAL_ENV") is not None
         )
 
     def get_violations_by_severity(self, severity: str) -> List[InfrastructureViolation]:
@@ -512,9 +512,9 @@ class InfrastructureChecker:
     def generate_report(self) -> Dict[str, Any]:
         """生成检查报告"""
         total_violations = len(self.violations)
-        critical_count = len(self.get_violations_by_severity('critical'))
-        warning_count = len(self.get_violations_by_severity('warning'))
-        info_count = len(self.get_violations_by_severity('info'))
+        critical_count = len(self.get_violations_by_severity("critical"))
+        warning_count = len(self.get_violations_by_severity("warning"))
+        info_count = len(self.get_violations_by_severity("info"))
         auto_fixable_count = len(self.get_auto_fixable_violations())
 
         categories = {}
@@ -523,25 +523,25 @@ class InfrastructureChecker:
                 categories[violation.category] = []
             categories[violation.category].append(
                 {
-                    'severity': violation.severity,
-                    'message': violation.message,
-                    'file_path': violation.file_path,
-                    'line_number': violation.line_number,
-                    'suggestion': violation.suggestion,
-                    'auto_fixable': violation.auto_fixable,
+                    "severity": violation.severity,
+                    "message": violation.message,
+                    "file_path": violation.file_path,
+                    "line_number": violation.line_number,
+                    "suggestion": violation.suggestion,
+                    "auto_fixable": violation.auto_fixable,
                 }
             )
 
         return {
-            'summary': {
-                'total_violations': total_violations,
-                'critical': critical_count,
-                'warning': warning_count,
-                'info': info_count,
-                'auto_fixable': auto_fixable_count,
+            "summary": {
+                "total_violations": total_violations,
+                "critical": critical_count,
+                "warning": warning_count,
+                "info": info_count,
+                "auto_fixable": auto_fixable_count,
             },
-            'categories': categories,
-            'infrastructure_score': max(
+            "categories": categories,
+            "infrastructure_score": max(
                 0, 100 - (critical_count * 20 + warning_count * 10 + info_count * 2)
             ),
         }

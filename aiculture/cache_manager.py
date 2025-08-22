@@ -33,13 +33,13 @@ class SmartCacheManager:
     def __init__(self, project_path: Path, cache_dir: Optional[Path] = None) -> None:
         """初始化缓存管理器"""
         self.project_path = project_path
-        self.cache_dir = cache_dir or project_path / '.aiculture' / 'cache'
+        self.cache_dir = cache_dir or project_path / ".aiculture" / "cache"
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
         # 缓存文件路径
-        self.culture_cache_file = self.cache_dir / 'culture_check.json'
-        self.dependency_cache_file = self.cache_dir / 'dependencies.json'
-        self.security_cache_file = self.cache_dir / 'security.json'
+        self.culture_cache_file = self.cache_dir / "culture_check.json"
+        self.dependency_cache_file = self.cache_dir / "dependencies.json"
+        self.security_cache_file = self.cache_dir / "security.json"
 
         # 内存缓存
         self._memory_cache: Dict[str, CacheEntry] = {}
@@ -52,9 +52,9 @@ class SmartCacheManager:
     def get_file_hash(self, file_path: Path) -> str:
         """计算文件内容哈希"""
         try:
-            with open(file_path, 'rb') as f:
+            with open(file_path, "rb") as f:
                 content = f.read()
-            return hashlib.md5(content).hexdigest()
+            return hashlib.sha256(content).hexdigest()  # P0 Security Fix: MD5 -> SHA256
         except (OSError, IOError):
             return ""
 
@@ -100,7 +100,7 @@ class SmartCacheManager:
         """从磁盘加载缓存"""
         try:
             if self.culture_cache_file.exists():
-                with open(self.culture_cache_file, 'r', encoding='utf-8') as f:
+                with open(self.culture_cache_file, "r", encoding="utf-8") as f:
                     cache_data = json.load(f)
 
                 # 转换为CacheEntry对象
@@ -133,7 +133,7 @@ class SmartCacheManager:
                 cache_data[file_key] = asdict(cache_entry)
 
             # 保存到文件
-            with open(self.culture_cache_file, 'w', encoding='utf-8') as f:
+            with open(self.culture_cache_file, "w", encoding="utf-8") as f:
                 json.dump(cache_data, f, indent=2)
 
         except (OSError, IOError):
@@ -149,7 +149,7 @@ class SmartCacheManager:
             return set(self.project_path.rglob("*.py"))
 
         for file_path in self.project_path.rglob("*.py"):
-            if any(part.startswith('.') for part in file_path.parts):
+            if any(part.startswith(".") for part in file_path.parts):
                 continue
 
             try:
@@ -186,11 +186,11 @@ class SmartCacheManager:
             cache_size = self.culture_cache_file.stat().st_size
 
         return {
-            'total_files': total_files,
-            'cached_files': cached_files,
-            'cache_hit_ratio': cached_files / total_files if total_files > 0 else 0,
-            'cache_size_bytes': cache_size,
-            'cache_dir': str(self.cache_dir),
+            "total_files": total_files,
+            "cached_files": cached_files,
+            "cache_hit_ratio": cached_files / total_files if total_files > 0 else 0,
+            "cache_size_bytes": cache_size,
+            "cache_dir": str(self.cache_dir),
         }
 
 
@@ -201,13 +201,13 @@ class IncrementalChecker:
         """初始化增量检查器"""
         self.project_path = project_path
         self.cache_manager = SmartCacheManager(project_path)
-        self.last_check_file = project_path / '.aiculture' / 'last_check.txt'
+        self.last_check_file = project_path / ".aiculture" / "last_check.txt"
 
     def get_last_check_timestamp(self) -> Optional[float]:
         """获取上次检查的时间戳"""
         try:
             if self.last_check_file.exists():
-                with open(self.last_check_file, 'r') as f:
+                with open(self.last_check_file, "r") as f:
                     return float(f.read().strip())
         except (ValueError, OSError):
             pass
@@ -217,7 +217,7 @@ class IncrementalChecker:
         """更新最后检查时间戳"""
         try:
             self.last_check_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(self.last_check_file, 'w') as f:
+            with open(self.last_check_file, "w") as f:
                 f.write(str(time.time()))
         except OSError:
             pass

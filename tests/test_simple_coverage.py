@@ -5,12 +5,11 @@
 
 import tempfile
 from pathlib import Path
-import pytest
 
-from aiculture.i18n import _, set_locale, get_current_locale
 from aiculture.data_catalog import DataCatalog
-from aiculture.monitoring_config import MonitoringConfigManager
 from aiculture.data_governance_culture import DataGovernanceManager
+from aiculture.i18n import _, get_current_locale, set_locale
+from aiculture.monitoring_config import MonitoringConfigManager
 
 
 class TestInternationalization:
@@ -19,43 +18,43 @@ class TestInternationalization:
     def test_locale_switching(self):
         """测试语言切换"""
         # 测试英文
-        set_locale('en')
-        welcome_en = _('welcome')
-        assert welcome_en == 'Welcome'
-        assert get_current_locale() == 'en'
+        set_locale("en")
+        welcome_en = _("welcome")
+        assert welcome_en == "Welcome"
+        assert get_current_locale() == "en"
 
         # 测试中文
-        set_locale('zh')
-        welcome_zh = _('welcome')
-        assert welcome_zh == '欢迎'
-        assert get_current_locale() == 'zh'
+        set_locale("zh")
+        welcome_zh = _("welcome")
+        assert welcome_zh == "欢迎"
+        assert get_current_locale() == "zh"
 
     def test_missing_translation(self):
         """测试缺失翻译"""
-        set_locale('en')
-        missing = _('non_existent_key')
-        assert missing == 'non_existent_key'
+        set_locale("en")
+        missing = _("non_existent_key")
+        assert missing == "non_existent_key"
 
     def test_parameterized_translation(self):
         """测试参数化翻译"""
-        set_locale('en')
-        score_msg = _('quality_score', score=85)
-        assert '85' in score_msg
-        assert 'Quality score' in score_msg
+        set_locale("en")
+        score_msg = _("quality_score", score=85)
+        assert "85" in score_msg
+        assert "Quality score" in score_msg
 
-        set_locale('zh')
-        score_msg_zh = _('quality_score', score=85)
-        assert '85' in score_msg_zh
+        set_locale("zh")
+        score_msg_zh = _("quality_score", score=85)
+        assert "85" in score_msg_zh
 
     def test_violations_translation(self):
         """测试违规信息翻译"""
-        set_locale('en')
-        violations_msg = _('violations_found', count=3)
-        assert '3' in violations_msg
+        set_locale("en")
+        violations_msg = _("violations_found", count=3)
+        assert "3" in violations_msg
 
-        set_locale('zh')
-        violations_msg_zh = _('violations_found', count=3)
-        assert '3' in violations_msg_zh
+        set_locale("zh")
+        violations_msg_zh = _("violations_found", count=3)
+        assert "3" in violations_msg_zh
 
 
 class TestDataCatalog:
@@ -69,8 +68,8 @@ class TestDataCatalog:
     def test_catalog_initialization(self):
         """测试目录初始化"""
         assert self.catalog.catalog_dir == self.temp_dir
-        assert hasattr(self.catalog, 'assets')
-        assert hasattr(self.catalog, 'lineages')
+        assert hasattr(self.catalog, "assets")
+        assert hasattr(self.catalog, "lineages")
         assert isinstance(self.catalog.assets, dict)
         assert isinstance(self.catalog.lineages, list)
 
@@ -79,11 +78,11 @@ class TestDataCatalog:
         report = self.catalog.generate_catalog_report()
 
         assert isinstance(report, dict)
-        assert 'total_assets' in report
-        assert 'by_type' in report
-        assert 'by_classification' in report
-        assert 'by_owner' in report
-        assert 'generated_at' in report
+        assert "total_assets" in report
+        assert "by_type" in report
+        assert "by_classification" in report
+        assert "by_owner" in report
+        assert "generated_at" in report
 
     def test_catalog_persistence(self):
         """测试目录持久化"""
@@ -108,26 +107,26 @@ class TestMonitoringConfig:
     def test_manager_initialization(self):
         """测试管理器初始化"""
         assert self.manager.config_dir == self.temp_dir
-        assert hasattr(self.manager, 'metrics')
+        assert hasattr(self.manager, "metrics")
 
     def test_prometheus_config_generation(self):
         """测试Prometheus配置生成"""
         config = self.manager.generate_prometheus_config()
 
         assert isinstance(config, dict)
-        assert 'global' in config
-        assert 'scrape_configs' in config
-        assert 'scrape_interval' in config['global']
+        assert "global" in config
+        assert "scrape_configs" in config
+        assert "scrape_interval" in config["global"]
 
     def test_config_file_creation(self):
         """测试配置文件创建"""
         config = self.manager.generate_prometheus_config()
-        config_file = self.manager.config_dir / "prometheus.yml"
+        self.manager.config_dir / "prometheus.yml"
 
         # 验证配置结构
-        assert 'global' in config
-        assert 'scrape_configs' in config
-        assert isinstance(config['scrape_configs'], list)
+        assert "global" in config
+        assert "scrape_configs" in config
+        assert isinstance(config["scrape_configs"], list)
 
 
 class TestDataGovernance:
@@ -141,26 +140,26 @@ class TestDataGovernance:
     def test_manager_initialization(self):
         """测试管理器初始化"""
         assert self.manager.config_dir == self.temp_dir / ".aiculture" / "data_governance"
-        assert hasattr(self.manager, 'data_inventory')
+        assert hasattr(self.manager, "data_inventory")
 
     def test_privacy_scanning(self):
         """测试隐私扫描"""
         scan_result = self.manager.scan_project_for_privacy_issues()
 
         assert isinstance(scan_result, dict)
-        assert 'total_findings' in scan_result
-        assert 'by_severity' in scan_result
-        assert 'summary' in scan_result
+        assert "total_findings" in scan_result
+        assert "by_severity" in scan_result
+        assert "summary" in scan_result
 
     def test_privacy_scanner_initialization(self):
         """测试隐私扫描器初始化"""
         from aiculture.data_governance_culture import DataPrivacyScanner
 
         scanner = DataPrivacyScanner()
-        assert hasattr(scanner, 'pii_patterns')
-        assert hasattr(scanner, 'sensitive_field_patterns')
-        assert 'email' in scanner.pii_patterns
-        assert 'phone' in scanner.pii_patterns
+        assert hasattr(scanner, "pii_patterns")
+        assert hasattr(scanner, "sensitive_field_patterns")
+        assert "email" in scanner.pii_patterns
+        assert "phone" in scanner.pii_patterns
 
     def test_placeholder_data_detection(self):
         """测试占位符数据检测"""
@@ -169,13 +168,13 @@ class TestDataGovernance:
         scanner = DataPrivacyScanner()
 
         # 测试邮箱占位符
-        assert scanner._is_placeholder_data('email', 'demo@placeholder.local')
-        assert scanner._is_placeholder_data('email', 'test@example.com')
-        assert not scanner._is_placeholder_data('email', 'user@company-placeholder.com')
+        assert scanner._is_placeholder_data("email", "demo@placeholder.local")
+        assert scanner._is_placeholder_data("email", "test@example.com")
+        assert not scanner._is_placeholder_data("email", "user@company-placeholder.com")
 
         # 测试IP地址占位符
-        assert scanner._is_placeholder_data('ip_address', '192.168.1.xxx')
-        assert scanner._is_placeholder_data('ip_address', '10.0.0.xxx')  # xxx是占位符
+        assert scanner._is_placeholder_data("ip_address", "192.168.1.xxx")
+        assert scanner._is_placeholder_data("ip_address", "10.0.0.xxx")  # xxx是占位符
 
 
 class TestUtilityFunctions:
@@ -203,15 +202,15 @@ class TestUtilityFunctions:
         import json
 
         test_data = {
-            'name': 'test_project',
-            'version': '1.0.0',
-            'features': ['i18n', 'monitoring', 'governance'],
+            "name": "test_project",
+            "version": "1.0.0",
+            "features": ["i18n", "monitoring", "governance"],
         }
 
         # 测试序列化
         json_str = json.dumps(test_data)
         assert isinstance(json_str, str)
-        assert 'test_project' in json_str
+        assert "test_project" in json_str
 
         # 测试反序列化
         parsed_data = json.loads(json_str)
@@ -230,39 +229,39 @@ class TestUtilityFunctions:
 
     def test_list_operations(self):
         """测试列表操作"""
-        test_list = ['monitoring', 'governance', 'i18n', 'accessibility']
+        test_list = ["monitoring", "governance", "i18n", "accessibility"]
 
         # 测试基本操作
         assert len(test_list) == 4
-        assert 'monitoring' in test_list
-        assert test_list[0] == 'monitoring'
+        assert "monitoring" in test_list
+        assert test_list[0] == "monitoring"
 
         # 测试排序
         sorted_list = sorted(test_list)
-        assert sorted_list[0] == 'accessibility'
+        assert sorted_list[0] == "accessibility"
 
         # 测试过滤
-        filtered_list = [item for item in test_list if 'i' in item]
-        assert 'monitoring' in filtered_list
-        assert 'i18n' in filtered_list
+        filtered_list = [item for item in test_list if "i" in item]
+        assert "monitoring" in filtered_list
+        assert "i18n" in filtered_list
 
     def test_dict_operations(self):
         """测试字典操作"""
         test_dict = {
-            'total_assets': 10,
-            'by_type': {'table': 5, 'api': 3, 'file': 2},
-            'by_classification': {'public': 4, 'internal': 6},
+            "total_assets": 10,
+            "by_type": {"table": 5, "api": 3, "file": 2},
+            "by_classification": {"public": 4, "internal": 6},
         }
 
         # 测试基本操作
-        assert test_dict['total_assets'] == 10
-        assert 'by_type' in test_dict
-        assert len(test_dict['by_type']) == 3
+        assert test_dict["total_assets"] == 10
+        assert "by_type" in test_dict
+        assert len(test_dict["by_type"]) == 3
 
         # 测试更新
-        test_dict.update({'new_field': 'new_value'})
-        assert 'new_field' in test_dict
-        assert test_dict['new_field'] == 'new_value'
+        test_dict.update({"new_field": "new_value"})
+        assert "new_field" in test_dict
+        assert test_dict["new_field"] == "new_value"
 
 
 class TestErrorHandling:
@@ -275,7 +274,7 @@ class TestErrorHandling:
 
         # 测试安全的文件读取
         try:
-            content = non_existent_path.read_text()
+            non_existent_path.read_text()
             assert False, "Should have raised an exception"
         except FileNotFoundError:
             assert True  # 期望的异常
@@ -283,9 +282,9 @@ class TestErrorHandling:
     def test_invalid_locale(self):
         """测试无效语言设置"""
         # 设置无效语言应该回退到默认语言
-        set_locale('invalid_locale')
+        set_locale("invalid_locale")
         current = get_current_locale()
-        assert current == 'invalid_locale'  # 实际行为：保持设置的语言
+        assert current == "invalid_locale"  # 实际行为：保持设置的语言
 
     def test_empty_data_structures(self):
         """测试空数据结构"""

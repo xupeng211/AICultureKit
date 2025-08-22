@@ -27,7 +27,7 @@ class TestCultureEnforcer:
     def test_culture_enforcer_creation(self) -> None:
         """测试CultureEnforcer创建"""
         assert self.enforcer.project_path == self.temp_path
-        assert hasattr(self.enforcer, 'violations')
+        assert hasattr(self.enforcer, "violations")
         assert isinstance(self.enforcer.violations, list)
 
     def test_culture_enforcer_with_string_path(self) -> None:
@@ -159,7 +159,7 @@ class TestCultureEnforcer:
         assert isinstance(report, dict)
         assert report["score"] < 100  # 空项目不应该得满分
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_check_code_quality_tools(self, mock_run) -> None:
         """测试代码质量工具检查"""
         # Mock subprocess.run to simulate tool execution

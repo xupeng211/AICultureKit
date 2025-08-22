@@ -1,0 +1,73 @@
+{
+  "problems": [
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "warning",
+      "file": "test_ai_fix.py",
+      "line": 5,
+      "column": 8,
+      "code": "F401",
+      "message": "`os` imported but unused",
+      "fix_suggestion": "删除未使用的导入",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "warning",
+      "file": "test_ai_fix.py",
+      "line": 6,
+      "column": 8,
+      "code": "F401",
+      "message": "`sys` imported but unused",
+      "fix_suggestion": "删除未使用的导入",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "warning",
+      "file": "test_ai_fix.py",
+      "line": 7,
+      "column": 8,
+      "code": "F401",
+      "message": "`json` imported but unused",
+      "fix_suggestion": "删除未使用的导入",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "warning",
+      "file": "test_ai_fix.py",
+      "line": 8,
+      "column": 8,
+      "code": "F401",
+      "message": "`re` imported but unused",
+      "fix_suggestion": "删除未使用的导入",
+      "blocking": false
+    },
+    {
+      "tool": "ruff",
+      "type": "lint",
+      "severity": "warning",
+      "file": "test_ai_fix.py",
+      "line": 13,
+      "column": 5,
+      "code": "F841",
+      "message": "Local variable `unused_var` is assigned to but never used",
+      "fix_suggestion": "删除未使用的变量或添加下划线前缀",
+      "blocking": false
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "blocking": 0,
+    "by_severity": {
+      "error": 0,
+      "warning": 5,
+      "info": 0
+    }
+  }
+}

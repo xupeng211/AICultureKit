@@ -52,7 +52,7 @@ class CICDGuardian:
         """加载配置"""
         config_file = self.project_path / "aiculture.yaml"
         if config_file.exists():
-            with open(config_file, 'r', encoding='utf-8') as f:
+            with open(config_file, "r", encoding="utf-8") as f:
                 return yaml.safe_load(f)
         return {}
 
@@ -92,7 +92,7 @@ class CICDGuardian:
         # 检查Dockerfile基础镜像
         dockerfile = self.project_path / "Dockerfile"
         if dockerfile.exists():
-            with open(dockerfile, 'r') as f:
+            with open(dockerfile, "r") as f:
                 content = f.read()
 
             # 检查基础镜像版本固定
@@ -141,15 +141,15 @@ class CICDGuardian:
         # 检查requirements.txt
         req_file = self.project_path / "requirements.txt"
         if req_file.exists():
-            with open(req_file, 'r') as f:
+            with open(req_file, "r") as f:
                 content = f.read()
 
             # 检查版本固定
-            lines = content.strip().split('\n')
+            lines = content.strip().split("\n")
             unpinned = []
             for line in lines:
-                if line.strip() and not line.startswith('#'):
-                    if '>=' in line or '~=' in line or '^' in line:
+                if line.strip() and not line.startswith("#"):
+                    if ">=" in line or "~=" in line or "^" in line:
                         unpinned.append(line.strip())
 
             if unpinned:
@@ -254,10 +254,10 @@ class CICDGuardian:
 
         # 检查内存使用
         try:
-            with open('/proc/meminfo', 'r') as f:
+            with open("/proc/meminfo", "r") as f:
                 meminfo = f.read()
             mem_available = (
-                int([line for line in meminfo.split('\n') if 'MemAvailable' in line][0].split()[1])
+                int([line for line in meminfo.split("\n") if "MemAvailable" in line][0].split()[1])
                 // 1024
             )
 
@@ -297,13 +297,13 @@ class CICDGuardian:
         ci_config = self.project_path / ".github" / "workflows"
         if ci_config.exists():
             for workflow_file in ci_config.glob("*.yml"):
-                with open(workflow_file, 'r') as f:
+                with open(workflow_file, "r") as f:
                     workflow = yaml.safe_load(f)
 
                 # 检查超时设置
-                jobs = workflow.get('jobs', {})
+                jobs = workflow.get("jobs", {})
                 for job_name, job_config in jobs.items():
-                    if 'timeout-minutes' not in job_config:
+                    if "timeout-minutes" not in job_config:
                         self.risks.append(
                             BuildRisk(
                                 category="configuration",
@@ -351,7 +351,7 @@ class CICDGuardian:
                 continue
 
             try:
-                with open(py_file, 'r', encoding='utf-8') as f:
+                with open(py_file, "r", encoding="utf-8") as f:
                     content = f.read()
 
                 for pattern in secret_patterns:
@@ -468,14 +468,14 @@ class CICDGuardian:
         if not dockerfile.exists():
             return False
 
-        with open(dockerfile, 'r') as f:
+        with open(dockerfile, "r") as f:
             content = f.read()
 
         # 替换latest标签
         content = content.replace("FROM python:latest", "FROM python:3.10-slim")
         content = content.replace("FROM ubuntu:latest", "FROM ubuntu:22.04")
 
-        with open(dockerfile, 'w') as f:
+        with open(dockerfile, "w") as f:
             f.write(content)
 
         return True
@@ -534,7 +534,7 @@ dist/
 """
 
         dockerignore = self.project_path / ".dockerignore"
-        with open(dockerignore, 'w') as f:
+        with open(dockerignore, "w") as f:
             f.write(dockerignore_content)
 
         return True
@@ -548,11 +548,14 @@ dist/
         # 生成锁定版本
         try:
             result = subprocess.run(
-                ["pip", "freeze"], capture_output=True, text=True, timeout=MINUTES_PER_HOUR
+                ["pip", "freeze"],
+                capture_output=True,
+                text=True,
+                timeout=MINUTES_PER_HOUR,
             )
             if result.returncode == 0:
                 lock_file = self.project_path / "requirements.lock"
-                with open(lock_file, 'w') as f:
+                with open(lock_file, "w") as f:
                     f.write(result.stdout)
                 return True
         except subprocess.TimeoutExpired:
@@ -568,17 +571,17 @@ dist/
 
         modified = False
         for workflow_file in workflows_dir.glob("*.yml"):
-            with open(workflow_file, 'r') as f:
+            with open(workflow_file, "r") as f:
                 workflow = yaml.safe_load(f)
 
-            jobs = workflow.get('jobs', {})
+            jobs = workflow.get("jobs", {})
             for job_name, job_config in jobs.items():
-                if 'timeout-minutes' not in job_config:
-                    job_config['timeout-minutes'] = 30
+                if "timeout-minutes" not in job_config:
+                    job_config["timeout-minutes"] = 30
                     modified = True
 
             if modified:
-                with open(workflow_file, 'w') as f:
+                with open(workflow_file, "w") as f:
                     yaml.dump(workflow, f, default_flow_style=False)
 
         return modified

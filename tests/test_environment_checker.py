@@ -45,7 +45,7 @@ class TestEnvironmentChecker:
         # 路径可能为None或字符串
         assert path is None or isinstance(path, str)
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_get_python_info(self, mock_run) -> None:
         """测试获取Python信息"""
         # Mock subprocess.run for python --version
@@ -76,7 +76,7 @@ class TestEnvironmentChecker:
         assert "pyproject.toml" in structure
         assert structure["pyproject.toml"] == False
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_check_required_dependencies(self, mock_run) -> None:
         """测试检查必需依赖"""
         # 创建requirements.txt
@@ -92,7 +92,7 @@ class TestEnvironmentChecker:
         assert isinstance(deps_ok, bool)
         assert isinstance(missing, list)
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_check_development_dependencies(self, mock_run) -> None:
         """测试检查开发依赖"""
         # 创建requirements-dev.txt
@@ -114,7 +114,7 @@ class TestEnvironmentChecker:
         result = self.checker.check_aiculture_installation()
         assert isinstance(result, bool)
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_get_installed_packages_count(self, mock_run) -> None:
         """测试获取已安装包数量"""
         # Mock pip list output
@@ -126,7 +126,7 @@ class TestEnvironmentChecker:
         assert isinstance(count, int)
         assert count >= 0
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_check_git_status(self, mock_run) -> None:
         """测试检查Git状态"""
         # Mock git commands
@@ -150,24 +150,17 @@ class TestEnvironmentChecker:
 
     def test_generate_environment_report(self) -> None:
         """测试生成环境报告"""
-        with patch.object(self.checker, 'get_python_info') as mock_python, patch.object(
-            self.checker, 'check_required_dependencies'
-        ) as mock_req, patch.object(
-            self.checker, 'check_development_dependencies'
-        ) as mock_dev, patch.object(
-            self.checker, 'check_virtual_env'
-        ) as mock_venv, patch.object(
-            self.checker, 'get_virtual_env_path'
-        ) as mock_venv_path, patch.object(
-            self.checker, 'check_aiculture_installation'
-        ) as mock_ai, patch.object(
-            self.checker, 'check_project_structure'
-        ) as mock_struct, patch.object(
-            self.checker, 'get_installed_packages_count'
-        ) as mock_count, patch.object(
-            self.checker, 'check_git_status'
-        ) as mock_git:
-
+        with (
+            patch.object(self.checker, "get_python_info") as mock_python,
+            patch.object(self.checker, "check_required_dependencies") as mock_req,
+            patch.object(self.checker, "check_development_dependencies") as mock_dev,
+            patch.object(self.checker, "check_virtual_env") as mock_venv,
+            patch.object(self.checker, "get_virtual_env_path") as mock_venv_path,
+            patch.object(self.checker, "check_aiculture_installation") as mock_ai,
+            patch.object(self.checker, "check_project_structure") as mock_struct,
+            patch.object(self.checker, "get_installed_packages_count") as mock_count,
+            patch.object(self.checker, "check_git_status") as mock_git,
+        ):
             # Setup mocks
             mock_python.return_value = {
                 "version": "3.9.0",
@@ -196,7 +189,7 @@ class TestEnvironmentChecker:
 
     def test_suggest_fixes(self) -> None:
         """测试建议修复措施"""
-        with patch.object(self.checker, 'generate_environment_report') as mock_report:
+        with patch.object(self.checker, "generate_environment_report") as mock_report:
             # Mock a report with some issues
             mock_report.return_value = {
                 "virtual_environment": {"is_active": False},

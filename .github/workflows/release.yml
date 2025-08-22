@@ -1,0 +1,160 @@
+name: 🚀 Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+    
+    steps:
+    - name: 📥 Checkout
+      uses: actions/checkout@v4
+
+    - name: 🐍 Setup Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+
+    - name: 🧪 Run tests
+      run: |
+        python -m pytest --cov=aiculture --cov-report=xml
+
+    - name: 📊 Upload coverage
+      if: matrix.python-version == '3.11'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 🐍 Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: 📦 Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+
+    - name: 🏗️ Build package
+      run: |
+        python -m build
+
+    - name: 🔍 Check package
+      run: |
+        python -m twine check dist/*
+
+    - name: 📤 Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist
+        path: dist/
+
+  release:
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 📥 Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: dist
+        path: dist/
+
+    - name: 📝 Generate changelog
+      id: changelog
+      run: |
+        # 获取最新的两个标签
+        CURRENT_TAG=${GITHUB_REF#refs/tags/}
+        PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
+        
+        echo "current_tag=$CURRENT_TAG" >> $GITHUB_OUTPUT
+        echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+        
+        # 生成变更日志
+        if [ -n "$PREVIOUS_TAG" ]; then
+          echo "## 🎉 What's Changed" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          git log --pretty=format:"- %s (%h)" $PREVIOUS_TAG..$CURRENT_TAG >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/$PREVIOUS_TAG...$CURRENT_TAG" >> CHANGELOG.md
+        else
+          echo "## 🎉 Initial Release" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "This is the first release of AICultureKit!" >> CHANGELOG.md
+        fi
+
+    - name: 🏷️ Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.changelog.outputs.current_tag }}
+        name: Release ${{ steps.changelog.outputs.current_tag }}
+        body_path: CHANGELOG.md
+        files: |
+          dist/*.tar.gz
+          dist/*.whl
+        draft: false
+        prerelease: ${{ contains(steps.changelog.outputs.current_tag, 'alpha') || contains(steps.changelog.outputs.current_tag, 'beta') || contains(steps.changelog.outputs.current_tag, 'rc') }}
+
+    - name: 📦 Publish to PyPI
+      if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'alpha') && !contains(github.ref, 'beta')
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        python -m twine upload dist/*
+
+  notify:
+    needs: [release]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: 📢 Notify success
+      if: needs.release.result == 'success'
+      run: |
+        echo "🎉 Release successful!"
+        echo "Version: ${GITHUB_REF#refs/tags/}"
+        echo "Check the release at: https://github.com/${{ github.repository }}/releases"
+
+    - name: 📢 Notify failure
+      if: needs.release.result == 'failure'
+      run: |
+        echo "❌ Release failed!"
+        echo "Please check the logs and try again."

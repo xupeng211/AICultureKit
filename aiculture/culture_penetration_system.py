@@ -76,13 +76,13 @@ class RealTimeCultureMonitor:
 
         # 监控的文件扩展名
         self.monitored_extensions = {
-            '.py',
-            '.js',
-            '.ts',
-            '.jsx',
-            '.tsx',
-            '.html',
-            '.css',
+            ".py",
+            ".js",
+            ".ts",
+            ".jsx",
+            ".tsx",
+            ".html",
+            ".css",
         }
 
         # 文件修改时间缓存
@@ -142,7 +142,7 @@ class RealTimeCultureMonitor:
 
             # 跳过隐藏目录和虚拟环境
             if any(
-                part.startswith('.') or part in ['venv', '__pycache__', 'node_modules']
+                part.startswith(".") or part in ["venv", "__pycache__", "node_modules"]
                 for part in file_path.parts
             ):
                 continue
@@ -176,10 +176,10 @@ class RealTimeCultureMonitor:
         violations = []
 
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
-            lines = content.split('\n')
+            lines = content.split("\n")
 
             # 检查各种文化违规
             violations.extend(self._check_test_culture(file_path, content, lines))
@@ -199,7 +199,7 @@ class RealTimeCultureMonitor:
         violations = []
 
         # 如果是新的Python模块，检查是否有对应的测试文件
-        if file_path.suffix == '.py' and not str(file_path).startswith('test_'):
+        if file_path.suffix == ".py" and not str(file_path).startswith("test_"):
             test_file = file_path.parent / f"test_{file_path.name}"
             tests_dir_file = file_path.parent / "tests" / f"test_{file_path.name}"
 
@@ -225,7 +225,7 @@ class RealTimeCultureMonitor:
         """检查文档文化"""
         violations = []
 
-        if file_path.suffix == '.py':
+        if file_path.suffix == ".py":
             # 检查类和函数是否有文档字符串
             import ast
 
@@ -290,12 +290,12 @@ class RealTimeCultureMonitor:
         violations = []
 
         # 检查函数长度
-        if file_path.suffix == '.py':
+        if file_path.suffix == ".py":
             try:
                 tree = ast.parse(content)
                 for node in ast.walk(tree):
                     if isinstance(node, ast.FunctionDef):
-                        if hasattr(node, 'end_lineno') and node.end_lineno:
+                        if hasattr(node, "end_lineno") and node.end_lineno:
                             func_lines = node.end_lineno - node.lineno + 1
                             if func_lines > 50:
                                 violations.append(
@@ -443,7 +443,7 @@ class AIDevCultureAssistant:
             CultureViolationSeverity.INFO: "🔵",
         }
 
-        emoji = severity_emoji.get(violation.severity, "❓")
+        severity_emoji.get(violation.severity, "❓")
 
         print(
             """
@@ -478,7 +478,7 @@ class AIDevCultureAssistant:
         from .culture_enforcer import CultureEnforcer
 
         enforcer = CultureEnforcer(str(self.project_path))
-        result = enforcer.enforce_all()
+        enforcer.enforce_all()
 
         # 转换为违规对象
         violations = []
