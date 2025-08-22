@@ -7,7 +7,7 @@ import logging
 import os
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any
 
 import mysql.connector
 import requests
@@ -161,7 +161,7 @@ class ExternalApiService:
         """
         self.config = config
 
-    def call_user_api(self, user_id: str) -> Dict[str, Any]:
+    def call_user_api(self, user_id: str) -> dict[str, Any]:
         """调用用户API
 
         Args:
@@ -192,7 +192,7 @@ class ExternalApiService:
 class FileService:
     """文件服务类"""
 
-    def __init__(self, log_directory: Optional[str] = None) -> None:
+    def __init__(self, log_directory: str | None = None) -> None:
         """初始化文件服务
 
         Args:

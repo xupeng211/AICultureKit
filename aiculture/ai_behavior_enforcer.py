@@ -14,7 +14,7 @@ import time
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from .culture_enforcer import CultureEnforcer
 from .error_handling import get_logger
@@ -95,7 +95,7 @@ class AIBehaviorEnforcer:
             ),
         ]
 
-    def detect_hook_manipulation(self) -> List[AIBehaviorViolation]:
+    def detect_hook_manipulation(self) -> list[AIBehaviorViolation]:
         """检测Git钩子操作"""
         violations = []
 
@@ -110,7 +110,7 @@ class AIBehaviorEnforcer:
 
         return violations
 
-    def detect_bypass_attempts(self) -> List[AIBehaviorViolation]:
+    def detect_bypass_attempts(self) -> list[AIBehaviorViolation]:
         """检测绕过质量门禁的尝试"""
         violations = []
 
@@ -141,7 +141,7 @@ class AIBehaviorEnforcer:
 
         return violations
 
-    def check_culture_compliance(self) -> Dict[str, Any]:
+    def check_culture_compliance(self) -> dict[str, Any]:
         """检查文化合规性并提供详细问题信息 - 收集所有问题"""
         try:
             enforcer = CultureEnforcer(str(self.project_path))
@@ -201,7 +201,7 @@ class AIBehaviorEnforcer:
             self.logger.error(f"文化合规检查失败: {e}")
             return {"compliant": False, "error": str(e)}
 
-    def record_violation(self, violation: AIBehaviorViolation, context: Dict[str, Any] = None):
+    def record_violation(self, violation: AIBehaviorViolation, context: dict[str, Any] = None):
         """记录AI行为违规"""
         violation_record = {
             "timestamp": time.time(),
@@ -215,7 +215,7 @@ class AIBehaviorEnforcer:
         violations = []
         if self.violation_log.exists():
             try:
-                with open(self.violation_log, "r", encoding="utf-8") as f:
+                with open(self.violation_log, encoding="utf-8") as f:
                     violations = json.load(f)
             except Exception:
                 violations = []
@@ -245,7 +245,7 @@ class AIBehaviorEnforcer:
             message="检测到未知的AI行为违规",
         )
 
-    def enforce_ai_behavior(self) -> Dict[str, Any]:
+    def enforce_ai_behavior(self) -> dict[str, Any]:
         """强制执行AI行为规范"""
         self.logger.info("开始AI行为规范检查...")
 
@@ -367,19 +367,19 @@ class AIBehaviorEnforcer:
         for step in steps:
             print(f"   {step}")
 
-    def get_violation_history(self) -> List[Dict[str, Any]]:
+    def get_violation_history(self) -> list[dict[str, Any]]:
         """获取违规历史"""
         if not self.violation_log.exists():
             return []
 
         try:
-            with open(self.violation_log, "r", encoding="utf-8") as f:
+            with open(self.violation_log, encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
             self.logger.error(f"读取违规历史失败: {e}")
             return []
 
-    def generate_behavior_report(self) -> Dict[str, Any]:
+    def generate_behavior_report(self) -> dict[str, Any]:
         """生成AI行为报告"""
         violations = self.get_violation_history()
 

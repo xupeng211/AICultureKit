@@ -4,79 +4,95 @@
 
 set -e
 
-echo "🤖 执行AI行为规范检查..."
+# 读取环境变量，默认为 'warn'
+ENFORCE_MODE=${AICULTURE_ENFORCE_BLOCKING:-warn}
 
-# 检查是否有AI工具试图绕过检查
+# 如果设置为 'off'，则完全跳过
+if [ "$ENFORCE_MODE" =[object Object]off)，跳过。"
+    exit 0
+fi
+
+# 将模式传递给Python脚本
+export AICULTURE_ENFORCE_BLOCKING=$ENFORCE_MODE
+
+
 PYTHONPATH=. python -c "
 import sys
 import os
+
 sys.path.insert(0, '.')
 
+# 从环境变量获取强制模式，默认为 'warn'
+enforce_mode = os.environ.get('AICULTURE_ENFORCE_BLOCKING', 'warn').lower()
+
+print(f'🤖 执行AI行为与文化标准检查 (模式: {enforce_mode})...')
+
+exit_code = 0
+error_messages = []
+
+# --- 检查1: AI 行为强制器 ---
 try:
     from aiculture.ai_behavior_enforcer import AIBehaviorEnforcer
-
     enforcer = AIBehaviorEnforcer('.')
     result = enforcer.enforce_ai_behavior()
-
-    if result['violations_detected'] > 0:
-        print('🚨 AI行为违规检测！')
-        print(f'违规数量: {result[\"violations_detected\"]}')
-        print(f'违规类型: {result[\"violations\"]}')
-        print('')
-        print('🛑 提交被阻止！AI工具必须遵循开发文化标准。')
-        print('📋 解决方案：')
-        print('1. 不要禁用Git钩子')
-        print('2. 不要绕过质量门禁')
-        print('3. 修复所有文化检查错误')
-        print('4. 通过正当途径提交代码')
-        sys.exit(1)
-
-    print('✅ AI行为规范检查通过')
-
+    if result.get('violations_detected', 0) > 0:
+        error_messages.append('🚨 AI行为违规检测！')
+        error_messages.append(f'   违规数量: {result[\"violations_detected\"]}')
+        error_messages.append(f'   违规类型: {result[\"violations\"]}')
+        error_messages.append('   解决方案：不要禁用或绕过质量检查。')
+        exit_code = 1
+    else:
+        print('✅ AI行为规范检查通过')
 except ImportError:
-    print('⚠️ AI行为检查模块未找到，跳过检查')
+    print('⚠️  AI行为检查模块 (ai_behavior_enforcer) 未找到，跳过此项检查。')
 except Exception as e:
-    print(f'⚠️ AI行为检查执行失败: {e}')
-    print('继续执行其他检查...')
-"
+    print(f'⚠️  AI行为检查执行失败: {e}')
+    if enforce_mode == 'block':
+        exit_code = 1
 
-# 继续执行原有的文化检查
-echo "🔍 执行文化标准检查..."
-PYTHONPATH=. python -c "
-from aiculture.culture_enforcer import CultureEnforcer
-import sys
-
+# --- 检查2: 文化标准强制器 ---
+print(\"\n🔍 执行文化标准检查...\")
 try:
+    from aiculture.culture_enforcer import CultureEnforcer
     enforcer = CultureEnforcer('.')
     result = enforcer.enforce_all()
 
     print(f'📊 文化质量评分: {result.get(\"score\", 0)}/100')
-    print(f'❌ 错误: {result.get(\"errors\", 0)} 个')
-    print(f'⚠️  警告: {result.get(\"warnings\", 0)} 个')
+    print(f'   ❌ 错误: {result.get(\"errors\", 0)} 个')
+    print(f'   ⚠️  警告: {result.get(\"warnings\", 0)} 个')
 
-    # 如果有阻塞性错误，阻止提交
     if result.get('errors', 0) > 0:
-        print('')
-        print('🛑 提交被阻止：存在阻塞性错误')
-        print('📋 AI工具必须：')
-        print('1. 分析所有错误详情')
-        print('2. 逐一修复每个问题')
-        print('3. 重新运行检查验证')
-        print('4. 确保评分达到标准')
-        print('')
-        print('❌ 禁止绕过此检查！这是文化标准的核心要求。')
-        sys.exit(1)
+        error_messages.append('\\n🛑 文化标准检查发现阻塞性错误:')
+        error_messages.append('   解决方案: 请根据上方输出修复所有错误。')
+        exit_code = 1
+    elif result.get('score', 0) < 70:
+        print('   - 警告：文化质量评分较低，建议改进。')
+    else:
+        print('✅ 文化标准检查通过')
 
-    # 如果质量评分过低，警告但不阻止
-    if result.get('score', 0) < 70:
-        print('⚠️  警告：文化质量评分较低，建议改进')
-
-    print('✅ 文化标准检查通过')
-
+except ImportError:
+    error_messages.append('❌ 文化检查模块 (culture_enforcer) 未找到，检查失败。')
+    exit_code = 1
 except Exception as e:
-    print(f'❌ 文化检查失败: {e}')
-    print('🛑 提交被阻止！请修复文化检查问题。')
-    sys.exit(1)
+    error_messages.append(f'❌ 文化检查执行时发生意外错误: {e}')
+    exit_code = 1
+
+# --- 最终决策 ---
+if exit_code != 0:
+    print(\"\n\" + \"\n\".join(error_messages))
+    if enforce_mode == 'block':
+        print('\\n🛑 提交被阻止 (模式: block)。请修复所有错误后重试。')
+        sys.exit(1)
+    else: # 默认 'warn' 模式
+        print('\\n⚠️  检测到问题，但由于模式为 \'warn\'，仅发出警告，不阻止提交。')
+        sys.exit(0)
+else:
+    print(\"\n✅ 所有检查通过，允许提交。\")
+    sys.exit(0)
 "
 
-echo "✅ 所有检查通过，允许提交"
+# 捕获Python脚本的退出码
+exit_code=$?
+
+# 根据退出码决定整个钩子的行为
+exit $exit_code

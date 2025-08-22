@@ -6,7 +6,6 @@
 import json
 import os
 from pathlib import Path
-from typing import Dict
 
 
 class I18nManager:
@@ -17,7 +16,7 @@ class I18nManager:
         self.locale_dir = locale_dir or Path(__file__).parent / "locales"
         self.default_locale = default_locale
         self.current_locale = default_locale
-        self.translations: Dict[str, Dict[str, str]] = {}
+        self.translations: dict[str, dict[str, str]] = {}
 
         # 确保locale目录存在
         self.locale_dir.mkdir(exist_ok=True)
@@ -30,7 +29,7 @@ class I18nManager:
         for locale_file in self.locale_dir.glob("*.json"):
             locale = locale_file.stem
             try:
-                with open(locale_file, "r", encoding="utf-8") as f:
+                with open(locale_file, encoding="utf-8") as f:
                     self.translations[locale] = json.load(f)
             except Exception as e:
                 print(f"Warning: Failed to load locale {locale}: {e}")

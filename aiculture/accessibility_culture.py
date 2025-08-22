@@ -15,7 +15,7 @@ import time
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any
 
 
 class AccessibilityLevel(Enum):
@@ -172,12 +172,12 @@ class AccessibilityChecker:
             },
         }
 
-    def check_html_file(self, file_path: Path) -> List[AccessibilityIssue]:
+    def check_html_file(self, file_path: Path) -> list[AccessibilityIssue]:
         """检查HTML文件的可访问性"""
         issues = []
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             lines = content.split("\n")
@@ -211,12 +211,12 @@ class AccessibilityChecker:
 
         return issues
 
-    def check_jsx_file(self, file_path: Path) -> List[AccessibilityIssue]:
+    def check_jsx_file(self, file_path: Path) -> list[AccessibilityIssue]:
         """检查JSX文件的可访问性"""
         issues = []
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # 检查JSX规则
@@ -245,7 +245,7 @@ class AccessibilityChecker:
 
         return issues
 
-    def _check_heading_hierarchy(self, content: str, file_path: str) -> List[AccessibilityIssue]:
+    def _check_heading_hierarchy(self, content: str, file_path: str) -> list[AccessibilityIssue]:
         """检查标题层级结构"""
         issues = []
         heading_pattern = r"<h([1-6])[^>]*>"
@@ -326,7 +326,7 @@ class InternationalizationChecker:
 
     def _check_hardcoded_text_in_line(
         self, line: str, line_num: int, file_path: Path
-    ) -> List[I18nIssue]:
+    ) -> list[I18nIssue]:
         """检查单行中的硬编码文本"""
         issues = []
 
@@ -352,7 +352,7 @@ class InternationalizationChecker:
 
     def _check_datetime_format_in_line(
         self, line: str, line_num: int, file_path: Path
-    ) -> List[I18nIssue]:
+    ) -> list[I18nIssue]:
         """检查单行中的日期时间格式"""
         issues = []
 
@@ -372,12 +372,12 @@ class InternationalizationChecker:
 
         return issues
 
-    def check_file(self, file_path: Path) -> List[I18nIssue]:
+    def check_file(self, file_path: Path) -> list[I18nIssue]:
         """检查文件的国际化问题"""
         issues = []
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             lines = content.split("\n")
@@ -401,7 +401,7 @@ class InternationalizationChecker:
 
         return issues
 
-    def _collect_translation_keys(self, obj: Dict[str, Any], prefix: str = "") -> Set[str]:
+    def _collect_translation_keys(self, obj: dict[str, Any], prefix: str = "") -> set[str]:
         """收集翻译键"""
         keys = set()
         if isinstance(obj, dict):
@@ -412,7 +412,7 @@ class InternationalizationChecker:
                     keys.update(self._collect_translation_keys(value, full_key))
         return keys
 
-    def _load_translation_files(self, locale_dir: Path) -> Tuple[Dict[str, Dict], Set[str]]:
+    def _load_translation_files(self, locale_dir: Path) -> tuple[dict[str, dict], set[str]]:
         """加载所有翻译文件"""
         translation_files = {}
         base_keys = set()
@@ -420,7 +420,7 @@ class InternationalizationChecker:
         for json_file in locale_dir.glob("*.json"):
             locale = json_file.stem
             try:
-                with open(json_file, "r", encoding="utf-8") as f:
+                with open(json_file, encoding="utf-8") as f:
                     translations = json.load(f)
                     translation_files[locale] = translations
 
@@ -434,8 +434,8 @@ class InternationalizationChecker:
         return translation_files, base_keys
 
     def _find_missing_translations(
-        self, translation_files: Dict[str, Dict], base_keys: Set[str]
-    ) -> Dict[str, List[str]]:
+        self, translation_files: dict[str, dict], base_keys: set[str]
+    ) -> dict[str, list[str]]:
         """查找缺失的翻译"""
         missing_translations = {}
 
@@ -450,10 +450,10 @@ class InternationalizationChecker:
 
     def _calculate_completeness_rates(
         self,
-        translation_files: Dict[str, Dict],
-        base_keys: Set[str],
-        missing_translations: Dict[str, List[str]],
-    ) -> Dict[str, float]:
+        translation_files: dict[str, dict],
+        base_keys: set[str],
+        missing_translations: dict[str, list[str]],
+    ) -> dict[str, float]:
         """计算完整性比率"""
         return {
             locale: (len(base_keys) - len(missing_translations.get(locale, [])))
@@ -462,7 +462,7 @@ class InternationalizationChecker:
             for locale in translation_files.keys()
         }
 
-    def check_translation_completeness(self, locale_dir: Path) -> Dict[str, Any]:
+    def check_translation_completeness(self, locale_dir: Path) -> dict[str, Any]:
         """检查翻译完整性"""
         if not locale_dir.exists():
             return {"error": "本地化目录不存在"}
@@ -518,12 +518,12 @@ class ResponsiveDesignChecker:
             },
         }
 
-    def check_css_file(self, file_path: Path) -> List[ResponsiveIssue]:
+    def check_css_file(self, file_path: Path) -> list[ResponsiveIssue]:
         """检查CSS文件的响应式设计"""
         issues = []
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             for rule_id, rule in self.css_rules.items():
@@ -553,12 +553,12 @@ class ResponsiveDesignChecker:
 
         return issues
 
-    def check_html_file(self, file_path: Path) -> List[ResponsiveIssue]:
+    def check_html_file(self, file_path: Path) -> list[ResponsiveIssue]:
         """检查HTML文件的响应式设计"""
         issues = []
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # 检查viewport meta标签
@@ -590,7 +590,7 @@ class AccessibilityCultureManager:
         self.i18n_checker = InternationalizationChecker()
         self.responsive_checker = ResponsiveDesignChecker()
 
-    def scan_project_accessibility(self) -> Dict[str, Any]:
+    def scan_project_accessibility(self) -> dict[str, Any]:
         """扫描项目可访问性"""
         all_issues = []
         file_count = 0
@@ -630,7 +630,7 @@ class AccessibilityCultureManager:
             "recommendations": self._generate_accessibility_recommendations(all_issues),
         }
 
-    def scan_project_i18n(self) -> Dict[str, Any]:
+    def scan_project_i18n(self) -> dict[str, Any]:
         """扫描项目国际化"""
         all_issues = []
         file_count = 0
@@ -666,7 +666,7 @@ class AccessibilityCultureManager:
             ),
         }
 
-    def scan_project_responsive(self) -> Dict[str, Any]:
+    def scan_project_responsive(self) -> dict[str, Any]:
         """扫描项目响应式设计"""
         all_issues = []
         file_count = 0
@@ -700,7 +700,7 @@ class AccessibilityCultureManager:
             "recommendations": self._generate_responsive_recommendations(all_issues),
         }
 
-    def generate_comprehensive_report(self) -> Dict[str, Any]:
+    def generate_comprehensive_report(self) -> dict[str, Any]:
         """生成综合可访问性报告"""
         accessibility_scan = self.scan_project_accessibility()
         i18n_scan = self.scan_project_i18n()
@@ -742,7 +742,7 @@ class AccessibilityCultureManager:
             for part in file_path.parts
         )
 
-    def _calculate_wcag_compliance(self, issues: List[AccessibilityIssue]) -> Dict[str, Any]:
+    def _calculate_wcag_compliance(self, issues: list[AccessibilityIssue]) -> dict[str, Any]:
         """计算WCAG合规性"""
         level_counts = {level.value: 0 for level in AccessibilityLevel}
 
@@ -762,8 +762,8 @@ class AccessibilityCultureManager:
         }
 
     def _generate_accessibility_recommendations(
-        self, issues: List[AccessibilityIssue]
-    ) -> List[str]:
+        self, issues: list[AccessibilityIssue]
+    ) -> list[str]:
         """生成可访问性建议"""
         recommendations = []
 
@@ -782,8 +782,8 @@ class AccessibilityCultureManager:
         return recommendations
 
     def _generate_i18n_recommendations(
-        self, issues: List[I18nIssue], translation_data: Dict[str, Any]
-    ) -> List[str]:
+        self, issues: list[I18nIssue], translation_data: dict[str, Any]
+    ) -> list[str]:
         """生成国际化建议"""
         recommendations = []
 
@@ -798,7 +798,7 @@ class AccessibilityCultureManager:
 
         return recommendations
 
-    def _generate_responsive_recommendations(self, issues: List[ResponsiveIssue]) -> List[str]:
+    def _generate_responsive_recommendations(self, issues: list[ResponsiveIssue]) -> list[str]:
         """生成响应式设计建议"""
         recommendations = []
 

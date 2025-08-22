@@ -8,7 +8,7 @@ import time
 from dataclasses import asdict, dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .i18n import _
 
@@ -53,7 +53,7 @@ class DataLineage:
     target_asset: str
     transformation: str
     created_at: float
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 
 @dataclass
@@ -81,13 +81,13 @@ class DataAsset:
     owner: str
     steward: str
     location: str
-    schema: Dict[str, Any]
-    tags: List[str]
-    quality_metrics: Optional[DataQualityMetrics]
-    lineage: List[DataLineage]
+    schema: dict[str, Any]
+    tags: list[str]
+    quality_metrics: DataQualityMetrics | None
+    lineage: list[DataLineage]
     created_at: float
     updated_at: float
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 
 class DataCatalog:
@@ -103,22 +103,22 @@ class DataCatalog:
         catalog_dir.mkdir(parents=True, exist_ok=True)
 
         # 加载现有数据
-        self.assets: Dict[str, DataAsset] = {}
-        self.lineages: List[DataLineage] = []
+        self.assets: dict[str, DataAsset] = {}
+        self.lineages: list[DataLineage] = []
         self._load_catalog()
 
     def _load_catalog(self) -> None:
         """加载数据目录"""
         try:
             if self.catalog_file.exists():
-                with open(self.catalog_file, "r", encoding="utf-8") as f:
+                with open(self.catalog_file, encoding="utf-8") as f:
                     data = json.load(f)
                     for asset_data in data.get("assets", []):
                         asset = self._dict_to_asset(asset_data)
                         self.assets[asset.id] = asset
 
             if self.lineage_file.exists():
-                with open(self.lineage_file, "r", encoding="utf-8") as f:
+                with open(self.lineage_file, encoding="utf-8") as f:
                     data = json.load(f)
                     for lineage_data in data.get("lineages", []):
                         lineage = DataLineage(**lineage_data)
@@ -127,7 +127,7 @@ class DataCatalog:
         except Exception as e:
             print(f"Warning: Failed to load data catalog: {e}")
 
-    def _dict_to_asset(self, data: Dict[str, Any]) -> DataAsset:
+    def _dict_to_asset(self, data: dict[str, Any]) -> DataAsset:
         """将字典转换为数据资产对象"""
         # 处理枚举类型
         data["asset_type"] = DataAssetType(data["asset_type"])
@@ -146,7 +146,7 @@ class DataCatalog:
 
         return DataAsset(**data)
 
-    def _asset_to_dict(self, asset: DataAsset) -> Dict[str, Any]:
+    def _asset_to_dict(self, asset: DataAsset) -> dict[str, Any]:
         """将数据资产对象转换为字典"""
         data = asdict(asset)
 
@@ -163,7 +163,7 @@ class DataCatalog:
         self.assets[asset.id] = asset
         self._save_catalog()
 
-    def update_asset(self, asset_id: str, updates: Dict[str, Any]) -> bool:
+    def update_asset(self, asset_id: str, updates: dict[str, Any]) -> bool:
         """更新数据资产"""
         if asset_id not in self.assets:
             return False
@@ -194,7 +194,7 @@ class DataCatalog:
         self._save_catalog()
         return True
 
-    def get_asset(self, asset_id: str) -> Optional[DataAsset]:
+    def get_asset(self, asset_id: str) -> DataAsset | None:
         """获取数据资产"""
         return self.assets.get(asset_id)
 
@@ -203,8 +203,8 @@ class DataCatalog:
         query: str = None,
         asset_type: DataAssetType = None,
         classification: DataClassification = None,
-        tags: List[str] = None,
-    ) -> List[DataAsset]:
+        tags: list[str] = None,
+    ) -> list[DataAsset]:
         """搜索数据资产"""
         results = list(self.assets.values())
 
@@ -233,7 +233,7 @@ class DataCatalog:
         source_asset: str,
         target_asset: str,
         transformation: str,
-        metadata: Dict[str, Any] = None,
+        metadata: dict[str, Any] = None,
     ) -> None:
         """添加数据血缘"""
         lineage = DataLineage(
@@ -254,7 +254,7 @@ class DataCatalog:
 
         self._save_catalog()
 
-    def get_lineage(self, asset_id: str, direction: str = "both") -> List[DataLineage]:
+    def get_lineage(self, asset_id: str, direction: str = "both") -> list[DataLineage]:
         """获取数据血缘"""
         lineages = []
 
@@ -282,7 +282,7 @@ class DataCatalog:
         self._save_catalog()
         return True
 
-    def get_quality_report(self) -> Dict[str, Any]:
+    def get_quality_report(self) -> dict[str, Any]:
         """获取数据质量报告"""
         total_assets = len(self.assets)
         assets_with_metrics = sum(
@@ -337,7 +337,7 @@ class DataCatalog:
             },
         }
 
-    def generate_catalog_report(self) -> Dict[str, Any]:
+    def generate_catalog_report(self) -> dict[str, Any]:
         """生成数据目录报告"""
         # 按类型统计
         type_counts = {}

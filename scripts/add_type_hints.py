@@ -8,7 +8,6 @@ from typing import Any
 
 import ast
 from pathlib import Path
-from typing import Dict
 
 
 class TypeHintAdder:
@@ -189,7 +188,7 @@ class TypeHintAdder:
             print(f"处理文件 {file_path} 时出错: {e}")
             return False
 
-    def process_all_files(self) -> Dict[str, int]:
+    def process_all_files(self) -> dict[str, int]:
         """处理所有Python文件"""
         stats = {"processed": 0, "modified": 0, "added_annotations": 0}
 

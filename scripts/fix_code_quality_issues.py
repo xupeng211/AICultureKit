@@ -10,7 +10,7 @@ from pathlib import Path
 def fix_empty_except_blocks(file_path: Path) -> bool:
     """修复空的异常处理块"""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
@@ -45,7 +45,7 @@ def fix_empty_except_blocks(file_path: Path) -> bool:
 def fix_magic_numbers(file_path: Path) -> bool:
     """修复魔法数字"""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
@@ -103,7 +103,7 @@ def fix_magic_numbers(file_path: Path) -> bool:
 def fix_long_lines(file_path: Path) -> bool:
     """修复过长的行"""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             lines = f.readlines()
 
         original_lines = lines[:]
@@ -144,7 +144,7 @@ def fix_long_lines(file_path: Path) -> bool:
 def fix_todo_comments(file_path: Path) -> bool:
     """改进TODO注释"""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
@@ -175,7 +175,7 @@ def fix_todo_comments(file_path: Path) -> bool:
 def add_missing_docstrings(file_path: Path) -> bool:
     """为缺少文档字符串的函数和类添加基本文档"""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         original_content = content

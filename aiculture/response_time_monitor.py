@@ -14,10 +14,11 @@ import queue
 import statistics
 import threading
 import time
+from collections.abc import Callable
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 import requests
 
@@ -34,7 +35,7 @@ class ResponseTimeRecord:
     response_time: float  # 响应时间(毫秒)
     timestamp: float
     status: str = "success"  # success, error, timeout
-    details: Dict[str, Any] = field(default_factory=dict)
+    details: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -57,8 +58,8 @@ class ResponseTimeMonitor:
         self.config_file = project_path / ".aiculture" / "response_time_config.json"
         self.records_file = project_path / ".aiculture" / "response_time_records.json"
 
-        self.thresholds: Dict[str, ResponseTimeThreshold] = {}
-        self.records: List[ResponseTimeRecord] = []
+        self.thresholds: dict[str, ResponseTimeThreshold] = {}
+        self.records: list[ResponseTimeRecord] = []
         self.record_queue = queue.Queue()
         self.monitoring = False
         self.monitor_thread = None
@@ -71,7 +72,7 @@ class ResponseTimeMonitor:
         """加载配置"""
         if self.config_file.exists():
             try:
-                with open(self.config_file, "r", encoding="utf-8") as f:
+                with open(self.config_file, encoding="utf-8") as f:
                     data = json.load(f)
                     for name, threshold_data in data.get("thresholds", {}).items():
                         self.thresholds[name] = ResponseTimeThreshold(**threshold_data)
@@ -116,7 +117,7 @@ class ResponseTimeMonitor:
         """加载历史记录"""
         if self.records_file.exists():
             try:
-                with open(self.records_file, "r", encoding="utf-8") as f:
+                with open(self.records_file, encoding="utf-8") as f:
                     data = json.load(f)
                     self.records = [
                         ResponseTimeRecord(**record) for record in data[-1000:]
@@ -271,7 +272,7 @@ class ResponseTimeMonitor:
         )
         self._save_config()
 
-    def get_statistics(self, name: Optional[str] = None, hours: int = 24) -> Dict[str, Any]:
+    def get_statistics(self, name: str | None = None, hours: int = 24) -> dict[str, Any]:
         """获取统计信息"""
         cutoff_time = time.time() - (hours * SECONDS_PER_HOUR)
 
@@ -303,13 +304,13 @@ class ResponseTimeMonitor:
             / len(filtered_records),
         }
 
-    def _percentile(self, data: List[float], percentile: int) -> float:
+    def _percentile(self, data: list[float], percentile: int) -> float:
         """计算百分位数"""
         sorted_data = sorted(data)
         index = int(len(sorted_data) * percentile / 100)
         return sorted_data[min(index, len(sorted_data) - 1)]
 
-    def get_trend_analysis(self, name: Optional[str] = None, hours: int = 24) -> Dict[str, Any]:
+    def get_trend_analysis(self, name: str | None = None, hours: int = 24) -> dict[str, Any]:
         """获取趋势分析"""
         cutoff_time = time.time() - (hours * SECONDS_PER_HOUR)
 

@@ -10,7 +10,6 @@ import platform
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 
 class EnvironmentChecker:
@@ -45,7 +44,7 @@ class EnvironmentChecker:
         )
 
     @staticmethod
-    def get_virtual_env_path() -> Optional[str]:
+    def get_virtual_env_path() -> str | None:
         """获取虚拟环境路径
 
         Returns:
@@ -54,7 +53,7 @@ class EnvironmentChecker:
         return os.environ.get("VIRTUAL_ENV") or os.environ.get("CONDA_PREFIX")
 
     @staticmethod
-    def get_python_info() -> Dict[str, str]:
+    def get_python_info() -> dict[str, str]:
         """获取Python环境信息
 
         Returns:
@@ -76,7 +75,7 @@ class EnvironmentChecker:
             "base_prefix": getattr(sys, "base_prefix", sys.prefix),
         }
 
-    def check_required_dependencies(self) -> Tuple[bool, List[str]]:
+    def check_required_dependencies(self) -> tuple[bool, list[str]]:
         """检查必需的依赖是否已安装
 
         Returns:
@@ -94,7 +93,7 @@ class EnvironmentChecker:
 
         return len(missing_packages) == 0, missing_packages
 
-    def check_development_dependencies(self) -> Tuple[bool, List[str]]:
+    def check_development_dependencies(self) -> tuple[bool, list[str]]:
         """检查开发依赖是否已安装
 
         Returns:
@@ -125,7 +124,7 @@ class EnvironmentChecker:
         except ImportError:
             return False
 
-    def check_project_structure(self) -> Dict[str, bool]:
+    def check_project_structure(self) -> dict[str, bool]:
         """检查项目结构完整性
 
         Returns:
@@ -159,7 +158,7 @@ class EnvironmentChecker:
         except (subprocess.CalledProcessError, FileNotFoundError):
             return 0
 
-    def check_git_status(self) -> Dict[str, any]:
+    def check_git_status(self) -> dict[str, any]:
         """检查Git仓库状态
 
         Returns:
@@ -220,7 +219,7 @@ class EnvironmentChecker:
 
         return git_info
 
-    def generate_environment_report(self) -> Dict[str, any]:
+    def generate_environment_report(self) -> dict[str, any]:
         """生成完整的环境报告
 
         Returns:
@@ -332,7 +331,7 @@ class EnvironmentChecker:
 
         print("=" * 50)
 
-    def suggest_fixes(self) -> List[str]:
+    def suggest_fixes(self) -> list[str]:
         """建议修复措施
 
         Returns:

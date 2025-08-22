@@ -54,7 +54,7 @@ def get_comprehensive_replacements():
 def clean_file_thoroughly(file_path: Path) -> bool:
     """彻底清理文件中的敏感信息"""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         original_content = content

@@ -13,7 +13,7 @@ import time
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import yaml
 
@@ -47,8 +47,8 @@ class AlertRule:
     condition: str  # 告警条件表达式
     threshold: float
     duration: str = "5m"  # 持续时间
-    labels: Dict[str, str] = field(default_factory=dict)
-    annotations: Dict[str, str] = field(default_factory=dict)
+    labels: dict[str, str] = field(default_factory=dict)
+    annotations: dict[str, str] = field(default_factory=dict)
     enabled: bool = True
 
 
@@ -61,9 +61,9 @@ class Alert:
     status: AlertStatus
     message: str
     timestamp: float
-    labels: Dict[str, str] = field(default_factory=dict)
-    annotations: Dict[str, str] = field(default_factory=dict)
-    resolved_at: Optional[float] = None
+    labels: dict[str, str] = field(default_factory=dict)
+    annotations: dict[str, str] = field(default_factory=dict)
+    resolved_at: float | None = None
 
 
 @dataclass
@@ -72,9 +72,9 @@ class NotificationChannel:
 
     name: str
     type: str  # email, slack, webhook, sms
-    config: Dict[str, Any]
+    config: dict[str, Any]
     enabled: bool = True
-    severity_filter: List[AlertSeverity] = field(default_factory=lambda: list(AlertSeverity))
+    severity_filter: list[AlertSeverity] = field(default_factory=lambda: list(AlertSeverity))
 
 
 class AlertingRulesManager:
@@ -86,10 +86,10 @@ class AlertingRulesManager:
         self.config_dir = project_path / ".aiculture" / "alerting"
         self.config_dir.mkdir(parents=True, exist_ok=True)
 
-        self.rules: Dict[str, AlertRule] = {}
-        self.channels: Dict[str, NotificationChannel] = {}
-        self.active_alerts: Dict[str, Alert] = {}
-        self.alert_history: List[Alert] = []
+        self.rules: dict[str, AlertRule] = {}
+        self.channels: dict[str, NotificationChannel] = {}
+        self.active_alerts: dict[str, Alert] = {}
+        self.alert_history: list[Alert] = []
 
         self._load_default_rules()
         self._load_config()
@@ -222,7 +222,7 @@ class AlertingRulesManager:
         config_file = self.config_dir / "alerting_config.yaml"
         if config_file.exists():
             try:
-                with open(config_file, "r", encoding="utf-8") as f:
+                with open(config_file, encoding="utf-8") as f:
                     config = yaml.safe_load(f)
 
                 # 加载自定义规则
@@ -287,7 +287,7 @@ class AlertingRulesManager:
         self.channels[channel.name] = channel
         self._save_config()
 
-    def evaluate_rules(self, metrics: Dict[str, float]) -> List[Alert]:
+    def evaluate_rules(self, metrics: dict[str, float]) -> list[Alert]:
         """评估告警规则"""
         new_alerts = []
 
@@ -330,7 +330,7 @@ class AlertingRulesManager:
 
         return new_alerts
 
-    def _evaluate_condition(self, rule: AlertRule, metrics: Dict[str, float]) -> bool:
+    def _evaluate_condition(self, rule: AlertRule, metrics: dict[str, float]) -> bool:
         """评估告警条件"""
         # 这是一个简化的实现，实际应该支持更复杂的表达式
         condition = rule.condition
@@ -355,7 +355,7 @@ class AlertingRulesManager:
 
         return False
 
-    def _format_message(self, rule: AlertRule, metrics: Dict[str, float]) -> str:
+    def _format_message(self, rule: AlertRule, metrics: dict[str, float]) -> str:
         """格式化告警消息"""
         message = rule.annotations.get("description", rule.description)
 
@@ -418,11 +418,11 @@ class AlertingRulesManager:
         """发送Webhook通知（占位符实现）"""
         print(f"🔗 发送Webhook通知到 {channel.config.get('url', '')}: {alert.message}")
 
-    def get_active_alerts(self) -> List[Alert]:
+    def get_active_alerts(self) -> list[Alert]:
         """获取活跃告警"""
         return list(self.active_alerts.values())
 
-    def get_alert_history(self, hours: int = 24) -> List[Alert]:
+    def get_alert_history(self, hours: int = 24) -> list[Alert]:
         """获取告警历史"""
         cutoff_time = time.time() - (hours * SECONDS_PER_HOUR)
         return [alert for alert in self.alert_history if alert.timestamp >= cutoff_time]
@@ -465,7 +465,7 @@ class AlertingRulesManager:
         else:
             return "up == 0"  # 默认表达式
 
-    def validate_rules(self) -> Dict[str, List[str]]:
+    def validate_rules(self) -> dict[str, list[str]]:
         """验证告警规则"""
         validation_results = {}
 

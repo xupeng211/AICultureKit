@@ -12,7 +12,7 @@ import json
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .ai_learning_system import AILearningEngine, LearningResult
 from .multi_language_analyzer import LanguageMetrics, MultiLanguageManager
@@ -23,8 +23,8 @@ class CrossLanguagePattern:
     """跨语言模式"""
 
     pattern_name: str
-    languages: List[str]
-    pattern_values: Dict[str, Any]
+    languages: list[str]
+    pattern_values: dict[str, Any]
     consistency_score: float
     recommendation: str
 
@@ -33,13 +33,13 @@ class CrossLanguagePattern:
 class IntegratedLearningResult:
     """集成学习结果"""
 
-    python_learning: Optional[LearningResult]
-    multi_language_analysis: Dict[str, LanguageMetrics]
-    cross_language_patterns: List[CrossLanguagePattern]
-    unified_recommendations: List[str]
+    python_learning: LearningResult | None
+    multi_language_analysis: dict[str, LanguageMetrics]
+    cross_language_patterns: list[CrossLanguagePattern]
+    unified_recommendations: list[str]
     overall_maturity: str
     recommended_strictness: float
-    language_specific_rules: Dict[str, Dict[str, Any]]
+    language_specific_rules: dict[str, dict[str, Any]]
     generated_at: float
 
 
@@ -99,9 +99,9 @@ class PatternLearningIntegrator:
 
     def _analyze_cross_language_patterns(
         self,
-        python_learning: Optional[LearningResult],
-        multi_lang_analysis: Dict[str, LanguageMetrics],
-    ) -> List[CrossLanguagePattern]:
+        python_learning: LearningResult | None,
+        multi_lang_analysis: dict[str, LanguageMetrics],
+    ) -> list[CrossLanguagePattern]:
         """分析跨语言模式"""
         patterns = []
 
@@ -149,7 +149,7 @@ class PatternLearningIntegrator:
 
         return patterns
 
-    def _calculate_pattern_consistency(self, language_values: Dict[str, Any]) -> float:
+    def _calculate_pattern_consistency(self, language_values: dict[str, Any]) -> float:
         """计算模式一致性分数"""
         if len(language_values) <= 1:
             return 1.0
@@ -189,7 +189,7 @@ class PatternLearningIntegrator:
     def _generate_pattern_recommendation(
         self,
         pattern_name: str,
-        language_values: Dict[str, Any],
+        language_values: dict[str, Any],
         consistency_score: float,
     ) -> str:
         """生成模式建议"""
@@ -202,9 +202,9 @@ class PatternLearningIntegrator:
 
     def _analyze_special_cross_patterns(
         self,
-        python_learning: Optional[LearningResult],
-        multi_lang_analysis: Dict[str, LanguageMetrics],
-    ) -> List[CrossLanguagePattern]:
+        python_learning: LearningResult | None,
+        multi_lang_analysis: dict[str, LanguageMetrics],
+    ) -> list[CrossLanguagePattern]:
         """分析特殊的跨语言模式"""
         patterns = []
 
@@ -255,7 +255,7 @@ class PatternLearningIntegrator:
         return patterns
 
     def _generate_complexity_recommendation(
-        self, complexity_values: Dict[str, float], consistency: float
+        self, complexity_values: dict[str, float], consistency: float
     ) -> str:
         """生成复杂度建议"""
         avg_complexity = sum(complexity_values.values()) / len(complexity_values)
@@ -271,7 +271,7 @@ class PatternLearningIntegrator:
             return f"❌ 复杂度不一致：{max_lang[0]}({max_lang[1]:.1f}) vs {min_lang[0]}({min_lang[1]:.1f})，需要平衡各语言的实现复杂度"
 
     def _generate_function_size_recommendation(
-        self, size_values: Dict[str, float], consistency: float
+        self, size_values: dict[str, float], consistency: float
     ) -> str:
         """生成函数大小建议"""
         avg_size = sum(size_values.values()) / len(size_values)
@@ -288,8 +288,8 @@ class PatternLearningIntegrator:
 
     def _assess_overall_maturity(
         self,
-        python_learning: Optional[LearningResult],
-        multi_lang_analysis: Dict[str, LanguageMetrics],
+        python_learning: LearningResult | None,
+        multi_lang_analysis: dict[str, LanguageMetrics],
     ) -> str:
         """评估整体项目成熟度"""
         maturity_scores = []
@@ -354,8 +354,8 @@ class PatternLearningIntegrator:
 
     def _calculate_unified_strictness(
         self,
-        python_learning: Optional[LearningResult],
-        multi_lang_analysis: Dict[str, LanguageMetrics],
+        python_learning: LearningResult | None,
+        multi_lang_analysis: dict[str, LanguageMetrics],
         overall_maturity: str,
     ) -> float:
         """计算统一的严格度"""
@@ -391,9 +391,9 @@ class PatternLearningIntegrator:
 
     def _generate_language_specific_rules(
         self,
-        multi_lang_analysis: Dict[str, LanguageMetrics],
-        cross_patterns: List[CrossLanguagePattern],
-    ) -> Dict[str, Dict[str, Any]]:
+        multi_lang_analysis: dict[str, LanguageMetrics],
+        cross_patterns: list[CrossLanguagePattern],
+    ) -> dict[str, dict[str, Any]]:
         """生成语言特定的规则"""
         language_rules = {}
 
@@ -436,7 +436,7 @@ class PatternLearningIntegrator:
 
         return language_rules
 
-    def _generate_python_recommendations(self, python_learning: LearningResult) -> List[str]:
+    def _generate_python_recommendations(self, python_learning: LearningResult) -> list[str]:
         """生成Python相关建议"""
         recommendations = []
 
@@ -455,8 +455,8 @@ class PatternLearningIntegrator:
         return recommendations
 
     def _generate_multilang_recommendations(
-        self, multi_lang_analysis: Dict[str, LanguageMetrics]
-    ) -> List[str]:
+        self, multi_lang_analysis: dict[str, LanguageMetrics]
+    ) -> list[str]:
         """生成多语言相关建议"""
         recommendations = []
         total_languages = len(multi_lang_analysis)
@@ -483,8 +483,8 @@ class PatternLearningIntegrator:
         return recommendations
 
     def _generate_cross_pattern_recommendations(
-        self, cross_patterns: List[CrossLanguagePattern]
-    ) -> List[str]:
+        self, cross_patterns: list[CrossLanguagePattern]
+    ) -> list[str]:
         """生成跨语言模式建议"""
         recommendations = []
 
@@ -506,10 +506,10 @@ class PatternLearningIntegrator:
 
     def _generate_unified_recommendations(
         self,
-        python_learning: Optional[LearningResult],
-        multi_lang_analysis: Dict[str, LanguageMetrics],
-        cross_patterns: List[CrossLanguagePattern],
-    ) -> List[str]:
+        python_learning: LearningResult | None,
+        multi_lang_analysis: dict[str, LanguageMetrics],
+        cross_patterns: list[CrossLanguagePattern],
+    ) -> list[str]:
         """生成统一建议"""
         recommendations = []
 
@@ -566,23 +566,23 @@ def save_integrated_learning_result(result: IntegratedLearningResult, project_pa
 
         with open(result_file, "w", encoding="utf-8") as f:
             json.dump(serializable_result, f, indent=2, default=str)
-    except (IOError, TypeError):
+    except (OSError, TypeError):
         pass
 
 
 def load_integrated_learning_result(
     project_path: Path,
-) -> Optional[IntegratedLearningResult]:
+) -> IntegratedLearningResult | None:
     """加载集成学习结果"""
     result_file = project_path / ".aiculture" / "integrated_learning_result.json"
 
     try:
         if result_file.exists():
-            with open(result_file, "r", encoding="utf-8") as f:
+            with open(result_file, encoding="utf-8") as f:
                 data = json.load(f)
                 # 这里需要复杂的反序列化逻辑，简化处理
                 return data  # 返回字典格式
-    except (json.JSONDecodeError, IOError):
+    except (OSError, json.JSONDecodeError):
         pass
 
     return None

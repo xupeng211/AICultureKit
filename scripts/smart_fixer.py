@@ -7,7 +7,7 @@ AICultureKit 智能代码修复器
 import re
 import subprocess
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 
 class SmartCodeFixer:
@@ -181,7 +181,7 @@ class Test{py_file.stem.title().replace('_', '')}:
 
         return False
 
-    def run_all_fixes(self) -> Dict[str, Any]:
+    def run_all_fixes(self) -> dict[str, Any]:
         """运行所有修复"""
         print("🚀 开始智能代码修复...")
 

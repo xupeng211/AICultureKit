@@ -13,7 +13,7 @@ from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 
 class LogLevel(Enum):
@@ -30,13 +30,13 @@ class LogLevel(Enum):
 class LogContext:
     """日志上下文"""
 
-    trace_id: Optional[str] = None
-    span_id: Optional[str] = None
-    user_id: Optional[str] = None
-    request_id: Optional[str] = None
-    operation: Optional[str] = None
-    component: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    trace_id: str | None = None
+    span_id: str | None = None
+    user_id: str | None = None
+    request_id: str | None = None
+    operation: str | None = None
+    component: str | None = None
+    metadata: dict[str, Any] | None = None
 
 
 @dataclass
@@ -49,8 +49,8 @@ class LogEntry:
     service: str
     version: str
     context: LogContext
-    error: Optional[Dict[str, Any]] = None
-    performance: Optional[Dict[str, Any]] = None
+    error: dict[str, Any] | None = None
+    performance: dict[str, Any] | None = None
 
 
 class AICultureLogger:
@@ -61,7 +61,7 @@ class AICultureLogger:
         name: str,
         service: str = "aiculture",
         version: str = "1.0.0",
-        output_file: Optional[Path] = None,
+        output_file: Path | None = None,
         structured: bool = True,
         level: LogLevel = LogLevel.INFO,
     ):
@@ -117,7 +117,7 @@ class AICultureLogger:
         self.context.data = LogContext()
 
     def _create_log_entry(
-        self, level: LogLevel, message: str, error: Optional[Exception] = None, **kwargs
+        self, level: LogLevel, message: str, error: Exception | None = None, **kwargs
     ) -> LogEntry:
         """创建日志条目"""
         context = self._get_context()
@@ -160,9 +160,7 @@ class AICultureLogger:
             performance=performance_dict,
         )
 
-    def _log(
-        self, level: LogLevel, message: str, error: Optional[Exception] = None, **kwargs
-    ) -> None:
+    def _log(self, level: LogLevel, message: str, error: Exception | None = None, **kwargs) -> None:
         """记录日志"""
         if self.structured:
             entry = self._create_log_entry(level, message, error, **kwargs)
@@ -199,11 +197,11 @@ class AICultureLogger:
         """警告日志"""
         self._log(LogLevel.WARNING, message, **kwargs)
 
-    def error(self, message: str, error: Optional[Exception] = None, **kwargs) -> None:
+    def error(self, message: str, error: Exception | None = None, **kwargs) -> None:
         """错误日志"""
         self._log(LogLevel.ERROR, message, error=error, **kwargs)
 
-    def critical(self, message: str, error: Optional[Exception] = None, **kwargs) -> None:
+    def critical(self, message: str, error: Exception | None = None, **kwargs) -> None:
         """严重错误日志"""
         self._log(LogLevel.CRITICAL, message, error=error, **kwargs)
 
@@ -240,7 +238,7 @@ class AICultureLogger:
 
 
 # 全局日志器实例
-_loggers: Dict[str, AICultureLogger] = {}
+_loggers: dict[str, AICultureLogger] = {}
 _default_config = {
     "service": "aiculture",
     "version": "1.0.0",
@@ -252,7 +250,7 @@ _default_config = {
 def setup_logging(
     service: str = "aiculture",
     version: str = "1.0.0",
-    output_file: Optional[Union[str, Path]] = None,
+    output_file: str | Path | None = None,
     structured: bool = True,
     level: LogLevel = LogLevel.INFO,
 ) -> None:
@@ -292,11 +290,11 @@ def warning(message: str, **kwargs) -> None:
     get_logger("aiculture").warning(message, **kwargs)
 
 
-def error(message: str, error: Optional[Exception] = None, **kwargs) -> None:
+def error(message: str, error: Exception | None = None, **kwargs) -> None:
     """全局错误日志"""
     get_logger("aiculture").error(message, error=error, **kwargs)
 
 
-def critical(message: str, error: Optional[Exception] = None, **kwargs) -> None:
+def critical(message: str, error: Exception | None = None, **kwargs) -> None:
     """全局严重错误日志"""
     get_logger("aiculture").critical(message, error=error, **kwargs)

@@ -3,13 +3,13 @@ Problem reporters for generating human-readable reports
 """
 
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 
 
 class MarkdownReporter:
     """Markdown格式报告生成器"""
 
-    def generate_report(self, result: Dict[str, Any]) -> str:
+    def generate_report(self, result: dict[str, Any]) -> str:
         """生成Markdown报告"""
 
         lines = []
@@ -161,7 +161,7 @@ class MarkdownReporter:
 
         return "\n".join(lines)
 
-    def _format_problems(self, problems: List[Dict[str, Any]]) -> List[str]:
+    def _format_problems(self, problems: list[dict[str, Any]]) -> list[str]:
         """格式化问题列表"""
         lines = []
 
@@ -201,7 +201,7 @@ class MarkdownReporter:
 
         return lines
 
-    def _get_tool_statistics(self, problems: List[Dict[str, Any]]) -> Dict[str, Dict[str, int]]:
+    def _get_tool_statistics(self, problems: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
         """获取按工具的统计信息"""
         stats = {}
 
@@ -216,7 +216,7 @@ class MarkdownReporter:
 
         return stats
 
-    def _get_file_statistics(self, problems: List[Dict[str, Any]]) -> Dict[str, int]:
+    def _get_file_statistics(self, problems: list[dict[str, Any]]) -> dict[str, int]:
         """获取按文件的统计信息"""
         stats = {}
 
@@ -231,7 +231,7 @@ class MarkdownReporter:
 class DashboardReporter:
     """看板式报告生成器"""
 
-    def generate_dashboard(self, result: Dict[str, Any]) -> str:
+    def generate_dashboard(self, result: dict[str, Any]) -> str:
         """生成汇总看板"""
 
         lines = []
@@ -302,7 +302,7 @@ class DashboardReporter:
 
         return "\n".join(lines)
 
-    def _get_file_risk_heatmap(self, problems: List[Dict[str, Any]]) -> Dict[str, int]:
+    def _get_file_risk_heatmap(self, problems: list[dict[str, Any]]) -> dict[str, int]:
         """计算文件风险热力图"""
         risk_scores = {}
 

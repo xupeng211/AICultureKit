@@ -10,7 +10,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 
 class AICultureKitIDE:
@@ -23,7 +23,7 @@ class AICultureKitIDE:
 
     def run_full_workflow(
         self, base: str = "origin/main", auto_apply: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """运行完整的一键工作流"""
 
         print("🚀 AICultureKit IDE 一键工作流启动")
@@ -97,7 +97,7 @@ class AICultureKitIDE:
 
         return workflow_result
 
-    def _run_problem_aggregator(self, base: str) -> Dict[str, Any]:
+    def _run_problem_aggregator(self, base: str) -> dict[str, Any]:
         """运行问题聚合器"""
 
         try:
@@ -121,7 +121,7 @@ class AICultureKitIDE:
                 # 读取问题数量
                 problems_file = self.artifacts_dir / "ide_problems.json"
                 if problems_file.exists():
-                    with open(problems_file, "r", encoding="utf-8") as f:
+                    with open(problems_file, encoding="utf-8") as f:
                         data = json.load(f)
                     total_problems = data.get("summary", {}).get("total", 0)
                 else:
@@ -145,7 +145,7 @@ class AICultureKitIDE:
         except Exception as e:
             return {"step": "problem_aggregation", "success": False, "error": str(e)}
 
-    def _run_ai_fix_agent(self) -> Dict[str, Any]:
+    def _run_ai_fix_agent(self) -> dict[str, Any]:
         """运行AI修复代理"""
 
         try:
@@ -193,7 +193,7 @@ class AICultureKitIDE:
         except Exception as e:
             return {"step": "ai_fix_generation", "success": False, "error": str(e)}
 
-    def _apply_patches(self) -> Dict[str, Any]:
+    def _apply_patches(self) -> dict[str, Any]:
         """应用AI生成的补丁"""
 
         try:
@@ -232,7 +232,7 @@ class AICultureKitIDE:
         except Exception as e:
             return {"step": "patch_application", "success": False, "error": str(e)}
 
-    def _verify_fixes(self, base: str) -> Dict[str, Any]:
+    def _verify_fixes(self, base: str) -> dict[str, Any]:
         """验证修复效果"""
 
         try:
@@ -256,7 +256,7 @@ class AICultureKitIDE:
                 # 读取修复后的问题数量
                 problems_file = self.artifacts_dir / "ide_post_fix_problems.json"
                 if problems_file.exists():
-                    with open(problems_file, "r", encoding="utf-8") as f:
+                    with open(problems_file, encoding="utf-8") as f:
                         data = json.load(f)
                     total_problems = data.get("summary", {}).get("total", 0)
                 else:
@@ -279,7 +279,7 @@ class AICultureKitIDE:
         except Exception as e:
             return {"step": "fix_verification", "success": False, "error": str(e)}
 
-    def _generate_workflow_summary(self, workflow_result: Dict[str, Any]) -> None:
+    def _generate_workflow_summary(self, workflow_result: dict[str, Any]) -> None:
         """生成工作流摘要"""
 
         summary_file = self.artifacts_dir / "ide_workflow_summary.md"

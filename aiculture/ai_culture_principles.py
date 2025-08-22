@@ -7,7 +7,7 @@ AI开发文化原则配置和管理模块
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import yaml
 
@@ -36,11 +36,11 @@ class DevelopmentPrinciple:
     name: str
     category: PrincipleCategory
     description: str
-    rules: List[str]
-    ai_instructions: List[str]  # 给AI的具体指令
+    rules: list[str]
+    ai_instructions: list[str]  # 给AI的具体指令
     enforcement_level: str = "strict"  # strict, warning, optional
-    tools: List[str] = field(default_factory=list)
-    examples: Dict[str, str] = field(default_factory=dict)
+    tools: list[str] = field(default_factory=list)
+    examples: dict[str, str] = field(default_factory=dict)
 
 
 class AICulturePrinciples:
@@ -50,7 +50,7 @@ class AICulturePrinciples:
         """内部方法： init"""
         self.principles = self._load_all_principles()
 
-    def _load_all_principles(self) -> Dict[str, DevelopmentPrinciple]:
+    def _load_all_principles(self) -> dict[str, DevelopmentPrinciple]:
         """加载所有开发原则"""
         principles = {}
 
@@ -366,15 +366,15 @@ class AICulturePrinciples:
 
         return principles
 
-    def get_principle(self, name: str) -> Optional[DevelopmentPrinciple]:
+    def get_principle(self, name: str) -> DevelopmentPrinciple | None:
         """获取指定原则"""
         return self.principles.get(name)
 
-    def get_by_category(self, category: PrincipleCategory) -> List[DevelopmentPrinciple]:
+    def get_by_category(self, category: PrincipleCategory) -> list[DevelopmentPrinciple]:
         """按分类获取原则"""
         return [p for p in self.principles.values() if p.category == category]
 
-    def get_ai_instructions(self) -> Dict[str, List[str]]:
+    def get_ai_instructions(self) -> dict[str, list[str]]:
         """获取所有AI指令"""
         return {name: principle.ai_instructions for name, principle in self.principles.items()}
 
@@ -396,7 +396,7 @@ class AICulturePrinciples:
         with open(file_path, "w", encoding="utf-8") as f:
             yaml.dump(data, f, default_flow_style=False, allow_unicode=True)
 
-    def validate_project(self, project_path: str) -> Dict[str, Any]:
+    def validate_project(self, project_path: str) -> dict[str, Any]:
         """验证项目是否遵循原则"""
         violations = []
         recommendations = []

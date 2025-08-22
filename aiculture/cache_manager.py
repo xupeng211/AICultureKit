@@ -7,7 +7,7 @@ import json
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional, Set
+from typing import Any
 
 # 常量定义
 HOURS_PER_DAY = 24
@@ -30,7 +30,7 @@ class CacheEntry:
 class SmartCacheManager:
     """智能缓存管理器"""
 
-    def __init__(self, project_path: Path, cache_dir: Optional[Path] = None) -> None:
+    def __init__(self, project_path: Path, cache_dir: Path | None = None) -> None:
         """初始化缓存管理器"""
         self.project_path = project_path
         self.cache_dir = cache_dir or project_path / ".aiculture" / "cache"
@@ -42,10 +42,10 @@ class SmartCacheManager:
         self.security_cache_file = self.cache_dir / "security.json"
 
         # 内存缓存
-        self._memory_cache: Dict[str, CacheEntry] = {}
+        self._memory_cache: dict[str, CacheEntry] = {}
 
     @property
-    def cache_data(self) -> Dict[str, CacheEntry]:
+    def cache_data(self) -> dict[str, CacheEntry]:
         """获取缓存数据"""
         return self._memory_cache
 
@@ -55,7 +55,7 @@ class SmartCacheManager:
             with open(file_path, "rb") as f:
                 content = f.read()
             return hashlib.md5(content).hexdigest()
-        except (OSError, IOError):
+        except OSError:
             return ""
 
     def is_file_cached(self, file_path: Path) -> bool:
@@ -74,7 +74,7 @@ class SmartCacheManager:
 
         return False
 
-    def get_cached_violations(self, file_path: Path) -> Optional[list]:
+    def get_cached_violations(self, file_path: Path) -> list | None:
         """获取缓存的违规记录"""
         file_key = str(file_path.relative_to(self.project_path))
 
@@ -100,7 +100,7 @@ class SmartCacheManager:
         """从磁盘加载缓存"""
         try:
             if self.culture_cache_file.exists():
-                with open(self.culture_cache_file, "r", encoding="utf-8") as f:
+                with open(self.culture_cache_file, encoding="utf-8") as f:
                     cache_data = json.load(f)
 
                 # 转换为CacheEntry对象
@@ -136,11 +136,11 @@ class SmartCacheManager:
             with open(self.culture_cache_file, "w", encoding="utf-8") as f:
                 json.dump(cache_data, f, indent=2)
 
-        except (OSError, IOError):
+        except OSError:
             # 保存失败，忽略
             pass
 
-    def get_changed_files(self, since_timestamp: Optional[float] = None) -> Set[Path]:
+    def get_changed_files(self, since_timestamp: float | None = None) -> set[Path]:
         """获取自指定时间戳以来发生变化的文件"""
         changed_files = set()
 
@@ -176,7 +176,7 @@ class SmartCacheManager:
                 except OSError:
                     pass
 
-    def get_cache_stats(self) -> Dict[str, Any]:
+    def get_cache_stats(self) -> dict[str, Any]:
         """获取缓存统计信息"""
         total_files = len(list(self.project_path.rglob("*.py")))
         cached_files = len(self._memory_cache)
@@ -203,11 +203,11 @@ class IncrementalChecker:
         self.cache_manager = SmartCacheManager(project_path)
         self.last_check_file = project_path / ".aiculture" / "last_check.txt"
 
-    def get_last_check_timestamp(self) -> Optional[float]:
+    def get_last_check_timestamp(self) -> float | None:
         """获取上次检查的时间戳"""
         try:
             if self.last_check_file.exists():
-                with open(self.last_check_file, "r") as f:
+                with open(self.last_check_file) as f:
                     return float(f.read().strip())
         except (ValueError, OSError):
             pass
@@ -222,7 +222,7 @@ class IncrementalChecker:
         except OSError:
             pass
 
-    def get_files_to_check(self) -> Set[Path]:
+    def get_files_to_check(self) -> set[Path]:
         """获取需要检查的文件列表"""
         last_check = self.get_last_check_timestamp()
 

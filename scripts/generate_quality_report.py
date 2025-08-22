@@ -27,7 +27,7 @@ def get_test_results() -> None:
     run_command(cmd)
 
     try:
-        with open("test-report.json", "r") as f:
+        with open("test-report.json") as f:
             data = json.load(f)
         return {
             "total": data.get("summary", {}).get("total", 0),
@@ -45,7 +45,7 @@ def get_coverage_info() -> None:
     run_command(cmd)
 
     try:
-        with open("coverage.json", "r") as f:
+        with open("coverage.json") as f:
             data = json.load(f)
         return {
             "percent": data.get("totals", {}).get("percent_covered", 0),

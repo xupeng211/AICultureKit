@@ -11,7 +11,7 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -21,9 +21,9 @@ class InfrastructureViolation:
     category: str
     severity: str  # "critical", "warning", "info"
     message: str
-    file_path: Optional[str] = None
-    line_number: Optional[int] = None
-    suggestion: Optional[str] = None
+    file_path: str | None = None
+    line_number: int | None = None
+    suggestion: str | None = None
     auto_fixable: bool = False
 
 
@@ -37,9 +37,9 @@ class InfrastructureChecker:
             project_path: 项目根目录路径
         """
         self.project_path = Path(project_path)
-        self.violations: List[InfrastructureViolation] = []
+        self.violations: list[InfrastructureViolation] = []
 
-    def check_all_infrastructure(self) -> List[InfrastructureViolation]:
+    def check_all_infrastructure(self) -> list[InfrastructureViolation]:
         """执行所有基础设施检查
 
         Returns:
@@ -77,9 +77,9 @@ class InfrastructureChecker:
         category: str,
         severity: str,
         message: str,
-        file_path: Optional[str] = None,
-        line_number: Optional[int] = None,
-        suggestion: Optional[str] = None,
+        file_path: str | None = None,
+        line_number: int | None = None,
+        suggestion: str | None = None,
         auto_fixable: bool = False,
     ) -> None:
         """添加违规记录"""
@@ -497,19 +497,19 @@ class InfrastructureChecker:
             or os.environ.get("VIRTUAL_ENV") is not None
         )
 
-    def get_violations_by_severity(self, severity: str) -> List[InfrastructureViolation]:
+    def get_violations_by_severity(self, severity: str) -> list[InfrastructureViolation]:
         """按严重程度获取违规"""
         return [v for v in self.violations if v.severity == severity]
 
-    def get_violations_by_category(self, category: str) -> List[InfrastructureViolation]:
+    def get_violations_by_category(self, category: str) -> list[InfrastructureViolation]:
         """按分类获取违规"""
         return [v for v in self.violations if v.category == category]
 
-    def get_auto_fixable_violations(self) -> List[InfrastructureViolation]:
+    def get_auto_fixable_violations(self) -> list[InfrastructureViolation]:
         """获取可自动修复的违规"""
         return [v for v in self.violations if v.auto_fixable]
 
-    def generate_report(self) -> Dict[str, Any]:
+    def generate_report(self) -> dict[str, Any]:
         """生成检查报告"""
         total_violations = len(self.violations)
         critical_count = len(self.get_violations_by_severity("critical"))

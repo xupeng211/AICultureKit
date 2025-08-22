@@ -8,7 +8,7 @@ AI智能修复器
 import re
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from .error_handling import get_logger
 from .problem_aggregator import ProblemAggregator
@@ -23,7 +23,7 @@ class AIIntelligentFixer:
         self.fixed_issues = []
         self.failed_fixes = []
 
-    def analyze_and_fix_problems(self) -> Dict[str, Any]:
+    def analyze_and_fix_problems(self) -> dict[str, Any]:
         """AI分析问题并生成修复方案"""
         self.logger.info("启动AI智能修复系统...")
 
@@ -58,7 +58,7 @@ class AIIntelligentFixer:
         self._display_ai_fix_report(fix_report)
         return fix_report
 
-    def _ai_analyze_and_fix_category(self, category: str, issues: List[Dict[str, Any]]):
+    def _ai_analyze_and_fix_category(self, category: str, issues: list[dict[str, Any]]):
         """AI分析特定类别的问题并生成修复方案"""
         for i, issue in enumerate(issues, 1):
             print(f"  🔍 分析问题 {i}: {issue['description']}")
@@ -92,7 +92,7 @@ class AIIntelligentFixer:
                     {"problem": issue["description"], "reason": analysis["reason"]}
                 )
 
-    def _ai_analyze_problem(self, issue: Dict[str, Any]) -> Dict[str, Any]:
+    def _ai_analyze_problem(self, issue: dict[str, Any]) -> dict[str, Any]:
         """AI分析单个问题并生成修复策略 - 增加置信度评估"""
         description = issue["description"]
         file_path = issue.get("file_path")
@@ -128,7 +128,7 @@ class AIIntelligentFixer:
 
         return analysis
 
-    def _assess_fix_confidence(self, issue: Dict[str, Any]) -> float:
+    def _assess_fix_confidence(self, issue: dict[str, Any]) -> float:
         """AI评估修复成功的置信度"""
         description = issue["description"]
 
@@ -152,7 +152,7 @@ class AIIntelligentFixer:
             # 未知问题类型
             return 0.30  # 30%置信度
 
-    def _assess_fix_risk(self, issue: Dict[str, Any]) -> str:
+    def _assess_fix_risk(self, issue: dict[str, Any]) -> str:
         """AI评估修复风险等级"""
         description = issue["description"]
         file_path = issue.get("file_path", "")
@@ -167,7 +167,7 @@ class AIIntelligentFixer:
         else:
             return "medium"  # 默认中等风险
 
-    def _analyze_privacy_issue(self, issue: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_privacy_issue(self, issue: dict[str, Any]) -> dict[str, Any]:
         """AI分析隐私问题"""
         description = issue["description"]
 
@@ -188,7 +188,7 @@ class AIIntelligentFixer:
                 "files_to_modify": [],
             }
 
-    def _analyze_code_quality_issue(self, issue: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_code_quality_issue(self, issue: dict[str, Any]) -> dict[str, Any]:
         """AI分析代码质量问题"""
         return {
             "fixable": True,
@@ -197,7 +197,7 @@ class AIIntelligentFixer:
             "files_to_modify": list(self.project_path.rglob("*.py")),
         }
 
-    def _analyze_test_coverage_issue(self, issue: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_test_coverage_issue(self, issue: dict[str, Any]) -> dict[str, Any]:
         """AI分析测试覆盖率问题"""
         return {
             "fixable": True,
@@ -206,7 +206,7 @@ class AIIntelligentFixer:
             "files_to_modify": [],
         }
 
-    def _analyze_i18n_issue(self, issue: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_i18n_issue(self, issue: dict[str, Any]) -> dict[str, Any]:
         """AI分析国际化问题"""
         return {
             "fixable": True,
@@ -215,7 +215,7 @@ class AIIntelligentFixer:
             "files_to_modify": [],
         }
 
-    def _execute_ai_fix(self, issue: Dict[str, Any], analysis: Dict[str, Any]) -> bool:
+    def _execute_ai_fix(self, issue: dict[str, Any], analysis: dict[str, Any]) -> bool:
         """执行AI生成的修复方案"""
         method = analysis.get("method")
 
@@ -281,7 +281,7 @@ class AIIntelligentFixer:
                     continue
 
                 try:
-                    with open(file_path, "r", encoding="utf-8") as f:
+                    with open(file_path, encoding="utf-8") as f:
                         content = f.read()
 
                     original_content = content
@@ -323,7 +323,7 @@ class AIIntelligentFixer:
 
             try:
                 # 先验证JSON格式
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 # 尝试解析JSON以确保格式正确
@@ -382,7 +382,7 @@ class AIIntelligentFixer:
 
         return fixed_files > 0
 
-    def _is_real_sensitive_info(self, match: str, config: Dict[str, Any]) -> bool:
+    def _is_real_sensitive_info(self, match: str, config: dict[str, Any]) -> bool:
         """AI智能判断是否为真实敏感信息"""
         match_lower = match.lower()
 
@@ -598,7 +598,7 @@ PRIVACY_PROTECTION_RULES = {
 
         return False
 
-    def _find_files_with_privacy_issues(self) -> List[str]:
+    def _find_files_with_privacy_issues(self) -> list[str]:
         """找到包含隐私问题的文件"""
         files_with_issues = []
 
@@ -608,7 +608,7 @@ PRIVACY_PROTECTION_RULES = {
                     continue
 
                 try:
-                    with open(file_path, "r", encoding="utf-8") as f:
+                    with open(file_path, encoding="utf-8") as f:
                         content = f.read()
 
                     # 简单检查是否包含敏感信息
@@ -636,7 +636,7 @@ PRIVACY_PROTECTION_RULES = {
 
         return any(pattern in str(file_path) for pattern in skip_patterns)
 
-    def _display_ai_fix_report(self, report: Dict[str, Any]):
+    def _display_ai_fix_report(self, report: dict[str, Any]):
         """显示AI修复报告"""
         print("\n" + "=" * 80)
         print("🤖 AI智能修复完成报告")

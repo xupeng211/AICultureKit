@@ -11,7 +11,6 @@ import json
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List
 
 from .accessibility_culture import AccessibilityCultureManager
 from .ai_culture_principles import AICulturePrinciples
@@ -39,7 +38,7 @@ class CultureEnforcer:
         """内部方法： init"""
         self.project_path = Path(project_path)
         self.principles = AICulturePrinciples()
-        self.violations: List[Violation] = []
+        self.violations: list[Violation] = []
 
         # 初始化新的文化模块
         self.performance_manager = PerformanceBenchmarkManager(self.project_path)
@@ -48,7 +47,7 @@ class CultureEnforcer:
         self.data_governance = DataGovernanceManager(self.project_path)
         self.accessibility_manager = AccessibilityCultureManager(self.project_path)
 
-    def enforce_all(self) -> Dict[str, Any]:
+    def enforce_all(self) -> dict[str, Any]:
         """执行所有原则检查"""
         self.violations.clear()
 
@@ -125,7 +124,7 @@ class CultureEnforcer:
                 continue
 
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 # 检查SOLID原则
@@ -304,7 +303,7 @@ class CultureEnforcer:
         readme_path = self.project_path / "README.md"
 
         if readme_path.exists():
-            with open(readme_path, "r", encoding="utf-8") as f:
+            with open(readme_path, encoding="utf-8") as f:
                 content = f.read()
 
             required_sections = [
@@ -336,7 +335,7 @@ class CultureEnforcer:
                     )
                 )
 
-    def _generate_report(self) -> Dict[str, Any]:
+    def _generate_report(self) -> dict[str, Any]:
         """生成检查报告"""
         errors = [v for v in self.violations if v.severity == "error"]
         warnings = [v for v in self.violations if v.severity == "warning"]
@@ -370,7 +369,7 @@ class CultureEnforcer:
             ],
         }
 
-    def generate_fix_suggestions(self) -> List[str]:
+    def generate_fix_suggestions(self) -> list[str]:
         """生成修复建议"""
         suggestions = []
 
@@ -436,7 +435,7 @@ class CultureEnforcer:
                     suggestion=f"创建 {required_file} 文件",
                 )
 
-    def _generate_report(self) -> Dict[str, Any]:
+    def _generate_report(self) -> dict[str, Any]:
         """生成报告"""
         error_count = sum(1 for v in self.violations if v.severity == "error")
         warning_count = sum(1 for v in self.violations if v.severity == "warning")
@@ -618,7 +617,7 @@ class CultureEnforcer:
             print(f"可访问性检查错误: {e}")
 
 
-def enforce_culture_in_project(project_path: str = ".") -> Dict[str, Any]:
+def enforce_culture_in_project(project_path: str = ".") -> dict[str, Any]:
     """在项目中强制执行文化原则"""
     enforcer = CultureEnforcer(project_path)
     return enforcer.enforce_all()

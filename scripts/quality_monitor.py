@@ -10,7 +10,7 @@ import subprocess
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 
 class QualityMonitor:
@@ -72,7 +72,7 @@ class QualityMonitor:
         except Exception as e:
             return False, str(e)
 
-    def collect_metrics(self) -> Dict[str, Any]:
+    def collect_metrics(self) -> dict[str, Any]:
         """收集当前的质量指标"""
         metrics = {
             "timestamp": datetime.now().isoformat(),
@@ -98,7 +98,7 @@ class QualityMonitor:
         )
         if success and Path("temp_test_report.json").exists():
             try:
-                with open("temp_test_report.json", "r") as f:
+                with open("temp_test_report.json") as f:
                     test_data = json.load(f)
                 metrics["test_count"] = test_data.get("summary", {}).get("total", 0)
                 metrics["test_passed"] = test_data.get("summary", {}).get("passed", 0)
@@ -111,7 +111,7 @@ class QualityMonitor:
         )
         if success and Path("coverage.json").exists():
             try:
-                with open("coverage.json", "r") as f:
+                with open("coverage.json") as f:
                     cov_data = json.load(f)
                 metrics["coverage_percent"] = cov_data.get("totals", {}).get("percent_covered", 0)
             except Exception:
@@ -142,7 +142,7 @@ class QualityMonitor:
 
         return metrics
 
-    def calculate_quality_score(self, metrics: Dict[str, Any]) -> int:
+    def calculate_quality_score(self, metrics: dict[str, Any]) -> int:
         """计算质量分数"""
         score = 100
 
@@ -160,7 +160,7 @@ class QualityMonitor:
 
         return max(0, int(score))
 
-    def save_metrics(self, metrics: Dict[str, Any]) -> None:
+    def save_metrics(self, metrics: dict[str, Any]) -> None:
         """保存指标到数据库"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -189,7 +189,7 @@ class QualityMonitor:
         conn.commit()
         conn.close()
 
-    def check_quality_alerts(self, current_metrics: Dict[str, Any]) -> None:
+    def check_quality_alerts(self, current_metrics: dict[str, Any]) -> None:
         """检查质量警报"""
         alerts = []
 
@@ -207,7 +207,7 @@ class QualityMonitor:
 
         rows = cursor.fetchall()
         if len(rows) >= 2:
-            prev_metrics = dict(zip([col[0] for col in cursor.description], rows[1]))
+            prev_metrics = dict(zip([col[0] for col in cursor.description], rows[1], strict=False))
 
             # 检查质量下降
             if current_metrics["quality_score"] < prev_metrics["quality_score"] - 5:
@@ -302,8 +302,8 @@ class QualityMonitor:
             return "📊 暂无历史数据"
 
         # 计算趋势
-        latest = dict(zip(columns, rows[0]))
-        oldest = dict(zip(columns, rows[-1]))
+        latest = dict(zip(columns, rows[0], strict=False))
+        oldest = dict(zip(columns, rows[-1], strict=False))
 
         report = f"""
 📊 AICultureKit 质量趋势报告 (最近{days}天)
@@ -326,7 +326,7 @@ class QualityMonitor:
         conn.close()
         return report
 
-    def monitor_once(self) -> Dict[str, Any]:
+    def monitor_once(self) -> dict[str, Any]:
         """执行一次监控"""
         print("🔍 收集质量指标...")
         metrics = self.collect_metrics()

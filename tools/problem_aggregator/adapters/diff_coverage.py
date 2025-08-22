@@ -6,7 +6,7 @@ import json
 import subprocess
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class DiffCoverageAdapter:
@@ -20,7 +20,7 @@ class DiffCoverageAdapter:
         base_branch: str = "origin/main",
         changed_lines_threshold: float = 80.0,
         new_files_threshold: float = 70.0,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """检查增量覆盖率"""
 
         problems = []
@@ -52,7 +52,7 @@ class DiffCoverageAdapter:
 
         return problems
 
-    def _generate_coverage_report(self) -> Optional[Path]:
+    def _generate_coverage_report(self) -> Path | None:
         """生成覆盖率XML报告"""
 
         try:
@@ -94,7 +94,7 @@ class DiffCoverageAdapter:
 
     def _run_diff_cover(
         self, coverage_xml: Path, base_branch: str, threshold: float
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """运行diff-cover检查"""
 
         problems = []
@@ -124,7 +124,7 @@ class DiffCoverageAdapter:
             json_report = self.project_root / "diff_coverage_report.json"
             if json_report.exists():
                 try:
-                    with open(json_report, "r", encoding="utf-8") as f:
+                    with open(json_report, encoding="utf-8") as f:
                         report_data = json.load(f)
                     problems.extend(self._parse_diff_cover_json(report_data, threshold))
                 except Exception as e:
@@ -155,7 +155,7 @@ class DiffCoverageAdapter:
 
     def _parse_diff_cover_output(
         self, stdout: str, stderr: str, threshold: float
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """解析diff-cover文本输出"""
 
         problems = []
@@ -212,8 +212,8 @@ class DiffCoverageAdapter:
         return problems
 
     def _parse_diff_cover_json(
-        self, report_data: Dict[str, Any], threshold: float
-    ) -> List[Dict[str, Any]]:
+        self, report_data: dict[str, Any], threshold: float
+    ) -> list[dict[str, Any]]:
         """解析diff-cover JSON报告"""
 
         problems = []
@@ -277,7 +277,7 @@ class DiffCoverageAdapter:
 
     def _check_new_files_coverage(
         self, coverage_xml: Path, base_branch: str, threshold: float
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """检查新文件的覆盖率"""
 
         problems = []
@@ -331,7 +331,7 @@ class DiffCoverageAdapter:
 
         return problems
 
-    def _get_new_files(self, base_branch: str) -> List[str]:
+    def _get_new_files(self, base_branch: str) -> list[str]:
         """获取相对于基准分支的新增文件"""
 
         try:
@@ -348,7 +348,7 @@ class DiffCoverageAdapter:
         except Exception:
             return []
 
-    def _get_file_coverage_from_xml(self, root: ET.Element, file_path: str) -> Optional[float]:
+    def _get_file_coverage_from_xml(self, root: ET.Element, file_path: str) -> float | None:
         """从XML中获取文件覆盖率"""
 
         try:
@@ -367,7 +367,7 @@ class DiffCoverageAdapter:
         except Exception:
             return None
 
-    def generate_coverage_improvement_guide(self, problems: List[Dict[str, Any]]) -> str:
+    def generate_coverage_improvement_guide(self, problems: list[dict[str, Any]]) -> str:
         """生成覆盖率改进指南"""
 
         guide = []

@@ -7,7 +7,7 @@ AI修复代理 - M2起步版
 import argparse
 import sys
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from .strategies.lint_autofix import create_lint_patches
 from .strategies.security_codemods import create_security_patches
@@ -20,7 +20,7 @@ class AIFixAgent:
     def __init__(self):
         pass
 
-    def run_staged_files_mode(self, output_dir: str) -> Dict[str, Any]:
+    def run_staged_files_mode(self, output_dir: str) -> dict[str, Any]:
         """运行已暂存文件模式（M2起步版）"""
 
         print("🚀 AI修复代理启动 (M2起步版)")

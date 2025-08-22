@@ -10,7 +10,7 @@ import ast
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -20,10 +20,10 @@ class FunctionalityViolation:
     category: str
     severity: str  # "critical", "warning", "info"
     message: str
-    file_path: Optional[str] = None
-    line_number: Optional[int] = None
-    suggestion: Optional[str] = None
-    impact: Optional[str] = None  # 对用户的影响
+    file_path: str | None = None
+    line_number: int | None = None
+    suggestion: str | None = None
+    impact: str | None = None  # 对用户的影响
 
 
 class FunctionalityChecker:
@@ -36,9 +36,9 @@ class FunctionalityChecker:
             project_path: 项目根目录路径
         """
         self.project_path = Path(project_path)
-        self.violations: List[FunctionalityViolation] = []
+        self.violations: list[FunctionalityViolation] = []
 
-    def check_all_functionality(self) -> List[FunctionalityViolation]:
+    def check_all_functionality(self) -> list[FunctionalityViolation]:
         """执行所有功能完整性检查
 
         Returns:
@@ -76,10 +76,10 @@ class FunctionalityChecker:
         category: str,
         severity: str,
         message: str,
-        file_path: Optional[str] = None,
-        line_number: Optional[int] = None,
-        suggestion: Optional[str] = None,
-        impact: Optional[str] = None,
+        file_path: str | None = None,
+        line_number: int | None = None,
+        suggestion: str | None = None,
+        impact: str | None = None,
     ) -> None:
         """添加违规记录"""
         self.violations.append(
@@ -504,7 +504,7 @@ class FunctionalityChecker:
         file_str = str(file_path)
         return any(pattern in file_str for pattern in skip_patterns)
 
-    def generate_report(self) -> Dict[str, Any]:
+    def generate_report(self) -> dict[str, Any]:
         """生成功能完整性检查报告"""
         total_violations = len(self.violations)
         critical_count = len([v for v in self.violations if v.severity == "critical"])

@@ -7,7 +7,7 @@ AICultureKit 核心功能模块
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 import yaml
 from git import Repo
@@ -25,7 +25,7 @@ class CultureConfig:
         config (Dict[str, Any]): 加载的配置数据
     """
 
-    def __init__(self, config_path: Optional[str] = None) -> None:
+    def __init__(self, config_path: str | None = None) -> None:
         """初始化文化配置管理器
 
         Args:
@@ -34,19 +34,19 @@ class CultureConfig:
         self.config_path = config_path or "aiculture.yaml"
         self.config = self._load_config()
 
-    def _load_config(self) -> Dict[str, Any]:
+    def _load_config(self) -> dict[str, Any]:
         """加载文化配置
 
         Returns:
             Dict[str, Any]: 配置字典，如果文件不存在则返回默认配置
         """
         try:
-            with open(self.config_path, "r", encoding="utf-8") as f:
+            with open(self.config_path, encoding="utf-8") as f:
                 return yaml.safe_load(f)
         except FileNotFoundError:
             return self._default_config()
 
-    def _default_config(self) -> Dict[str, Any]:
+    def _default_config(self) -> dict[str, Any]:
         """默认文化配置"""
         return {
             "culture": {
@@ -165,7 +165,7 @@ exclude =
         # 这里可以扩展JavaScript相关配置
         return True
 
-    def run_quality_check(self) -> Dict[str, bool]:
+    def run_quality_check(self) -> dict[str, bool]:
         """运行质量检查"""
         results = {}
 

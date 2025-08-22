@@ -11,7 +11,7 @@ import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -23,7 +23,7 @@ class LanguagePattern:
     pattern_name: str  # 模式名称
     pattern_value: Any  # 模式值
     confidence: float  # 置信度
-    examples: List[str]  # 示例代码
+    examples: list[str]  # 示例代码
 
 
 @dataclass
@@ -37,7 +37,7 @@ class LanguageMetrics:
     avg_complexity: float
     naming_consistency: float
     style_consistency: float
-    patterns: List[LanguagePattern]
+    patterns: list[LanguagePattern]
 
 
 class LanguageAnalyzer(ABC):
@@ -46,10 +46,10 @@ class LanguageAnalyzer(ABC):
     def __init__(self, project_path: Path) -> None:
         """初始化语言分析器"""
         self.project_path = project_path
-        self.patterns: List[LanguagePattern] = []
+        self.patterns: list[LanguagePattern] = []
 
     @abstractmethod
-    def get_file_extensions(self) -> List[str]:
+    def get_file_extensions(self) -> list[str]:
         """获取支持的文件扩展名"""
 
     @abstractmethod
@@ -57,11 +57,11 @@ class LanguageAnalyzer(ABC):
         """获取语言名称"""
 
     @abstractmethod
-    def analyze_file(self, file_path: Path) -> Dict[str, Any]:
+    def analyze_file(self, file_path: Path) -> dict[str, Any]:
         """分析单个文件"""
 
     @abstractmethod
-    def extract_patterns(self, file_analysis: List[Dict[str, Any]]) -> List[LanguagePattern]:
+    def extract_patterns(self, file_analysis: list[dict[str, Any]]) -> list[LanguagePattern]:
         """从文件分析结果中提取模式"""
 
     def analyze_project(self) -> LanguageMetrics:
@@ -114,7 +114,7 @@ class LanguageAnalyzer(ABC):
 
         return any(pattern in str(file_path) for pattern in skip_patterns)
 
-    def _aggregate_analysis(self, file_analyses: List[Dict[str, Any]]) -> LanguageMetrics:
+    def _aggregate_analysis(self, file_analyses: list[dict[str, Any]]) -> LanguageMetrics:
         """聚合多个文件的分析结果"""
         total_lines = sum(analysis.get("line_count", 0) for analysis in file_analyses)
         total_functions = sum(analysis.get("function_count", 0) for analysis in file_analyses)
@@ -149,7 +149,7 @@ class LanguageAnalyzer(ABC):
             patterns=patterns,
         )
 
-    def _calculate_naming_consistency(self, file_analyses: List[Dict[str, Any]]) -> float:
+    def _calculate_naming_consistency(self, file_analyses: list[dict[str, Any]]) -> float:
         """计算命名一致性"""
         # 这是一个通用实现，子类可以重写
         all_names = []
@@ -171,7 +171,7 @@ class LanguageAnalyzer(ABC):
 
         return max_style_count / total if total > 0 else 0.0
 
-    def _calculate_style_consistency(self, file_analyses: List[Dict[str, Any]]) -> float:
+    def _calculate_style_consistency(self, file_analyses: list[dict[str, Any]]) -> float:
         """计算风格一致性"""
         # 这是一个通用实现，子类可以重写
         if not file_analyses:
@@ -211,7 +211,7 @@ class LanguageAnalyzer(ABC):
 class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
     """JavaScript/TypeScript代码分析器"""
 
-    def get_file_extensions(self) -> List[str]:
+    def get_file_extensions(self) -> list[str]:
         """获取支持的文件扩展名"""
         return [".js", ".jsx", ".ts", ".tsx"]
 
@@ -219,10 +219,10 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
         """获取语言名称"""
         return "JavaScript/TypeScript"
 
-    def analyze_file(self, file_path: Path) -> Dict[str, Any]:
+    def analyze_file(self, file_path: Path) -> dict[str, Any]:
         """分析单个JavaScript/TypeScript文件"""
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             analysis = {
@@ -255,7 +255,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
             return analysis
 
-        except (UnicodeDecodeError, IOError):
+        except (OSError, UnicodeDecodeError):
             return {}
 
     def _detect_indent_style(self, content: str) -> str:
@@ -292,7 +292,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
         return "es6" if es6_imports > require_imports else "commonjs"
 
-    def _detect_language_features(self, content: str, file_extension: str) -> Dict[str, bool]:
+    def _detect_language_features(self, content: str, file_extension: str) -> dict[str, bool]:
         """检测语言特性使用情况"""
         features = {
             "typescript": file_extension in [".ts", ".tsx"],
@@ -319,7 +319,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
         return features
 
-    def _extract_functions(self, content: str) -> List[Dict[str, Any]]:
+    def _extract_functions(self, content: str) -> list[dict[str, Any]]:
         """提取函数信息"""
         functions = []
 
@@ -356,7 +356,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
         return functions
 
-    def _extract_variables(self, content: str) -> List[str]:
+    def _extract_variables(self, content: str) -> list[str]:
         """提取变量名"""
         variables = []
 
@@ -374,7 +374,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
         return list(set(variables))  # 去重
 
-    def _extract_classes(self, content: str) -> List[str]:
+    def _extract_classes(self, content: str) -> list[str]:
         """提取类名"""
         classes = []
 
@@ -385,7 +385,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
         return classes
 
-    def _estimate_function_size(self, content: str, start_pos: int, lines: List[str]) -> int:
+    def _estimate_function_size(self, content: str, start_pos: int, lines: list[str]) -> int:
         """估算函数大小（行数）"""
         # 简单实现：从函数开始位置向下查找匹配的大括号
         brace_count = 0
@@ -431,7 +431,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
         return complexity
 
-    def extract_patterns(self, file_analyses: List[Dict[str, Any]]) -> List[LanguagePattern]:
+    def extract_patterns(self, file_analyses: list[dict[str, Any]]) -> list[LanguagePattern]:
         """从文件分析结果中提取JavaScript/TypeScript模式"""
         patterns = []
 
@@ -539,7 +539,7 @@ class JavaScriptTypeScriptAnalyzer(LanguageAnalyzer):
 
         return patterns
 
-    def _detect_naming_pattern(self, names: List[str]) -> Optional[Dict[str, Any]]:
+    def _detect_naming_pattern(self, names: list[str]) -> dict[str, Any] | None:
         """检测命名模式"""
         if not names:
             return None
@@ -617,7 +617,7 @@ class MultiLanguageManager:
             # 'go': GoAnalyzer(project_path),
         }
 
-    def analyze_all_languages(self) -> Dict[str, LanguageMetrics]:
+    def analyze_all_languages(self) -> dict[str, LanguageMetrics]:
         """分析项目中所有支持的语言"""
         results = {}
 
@@ -633,7 +633,7 @@ class MultiLanguageManager:
 
         return results
 
-    def get_project_language_summary(self) -> Dict[str, Any]:
+    def get_project_language_summary(self) -> dict[str, Any]:
         """获取项目语言使用总结"""
         language_metrics = self.analyze_all_languages()
 
@@ -663,7 +663,7 @@ class MultiLanguageManager:
 
         return summary
 
-    def get_cross_language_patterns(self) -> List[Dict[str, Any]]:
+    def get_cross_language_patterns(self) -> list[dict[str, Any]]:
         """获取跨语言的模式对比"""
         language_metrics = self.analyze_all_languages()
         cross_patterns = []
@@ -706,7 +706,7 @@ class MultiLanguageManager:
         return cross_patterns
 
 
-def save_multi_language_analysis(analysis_result: Dict[str, Any], project_path: Path) -> None:
+def save_multi_language_analysis(analysis_result: dict[str, Any], project_path: Path) -> None:
     """保存多语言分析结果"""
     result_file = project_path / ".aiculture" / "multi_language_analysis.json"
     result_file.parent.mkdir(parents=True, exist_ok=True)
@@ -742,19 +742,19 @@ def save_multi_language_analysis(analysis_result: Dict[str, Any], project_path: 
         with open(result_file, "w", encoding="utf-8") as f:
             json.dump(serializable_result, f, indent=2, default=str)
 
-    except (IOError, TypeError):
+    except (OSError, TypeError):
         pass  # 保存失败时忽略
 
 
-def load_multi_language_analysis(project_path: Path) -> Optional[Dict[str, Any]]:
+def load_multi_language_analysis(project_path: Path) -> dict[str, Any] | None:
     """加载多语言分析结果"""
     result_file = project_path / ".aiculture" / "multi_language_analysis.json"
 
     try:
         if result_file.exists():
-            with open(result_file, "r", encoding="utf-8") as f:
+            with open(result_file, encoding="utf-8") as f:
                 return json.load(f)
-    except (json.JSONDecodeError, IOError):
+    except (OSError, json.JSONDecodeError):
         pass
 
     return None

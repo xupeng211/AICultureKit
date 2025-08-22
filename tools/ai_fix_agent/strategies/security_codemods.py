@@ -4,7 +4,7 @@
 """
 
 import re
-from typing import Any, Dict, List
+from typing import Any
 
 from ..utils import create_patch
 
@@ -60,7 +60,7 @@ class SecurityCodeModStrategy:
         """判断是否可以修复该文件"""
         return file_path.endswith(".py") and content.strip()
 
-    def analyze_file(self, file_path: str, content: str) -> List[Dict[str, Any]]:
+    def analyze_file(self, file_path: str, content: str) -> list[dict[str, Any]]:
         """分析文件中的安全问题"""
 
         issues = []
@@ -87,7 +87,7 @@ class SecurityCodeModStrategy:
 
         return issues
 
-    def fix_file(self, file_path: str, content: str) -> Dict[str, Any]:
+    def fix_file(self, file_path: str, content: str) -> dict[str, Any]:
         """修复单个文件的安全问题"""
 
         result = {
@@ -135,7 +135,7 @@ class SecurityCodeModStrategy:
 
         return result
 
-    def _apply_fix(self, content: str, issue: Dict[str, Any]) -> Dict[str, Any]:
+    def _apply_fix(self, content: str, issue: dict[str, Any]) -> dict[str, Any]:
         """应用具体的安全修复"""
 
         lines = content.split("\n")
@@ -162,8 +162,8 @@ class SecurityCodeModStrategy:
             return self._add_security_todo(content, lines, line_idx, issue)
 
     def _fix_hashlib_md5(
-        self, content: str, lines: List[str], line_idx: int, issue: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, content: str, lines: list[str], line_idx: int, issue: dict[str, Any]
+    ) -> dict[str, Any]:
         """修复hashlib.md5使用"""
 
         if issue["confidence"] == "high":
@@ -180,8 +180,8 @@ class SecurityCodeModStrategy:
             return self._add_security_todo(content, lines, line_idx, issue)
 
     def _fix_requests_verify(
-        self, content: str, lines: List[str], line_idx: int, issue: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, content: str, lines: list[str], line_idx: int, issue: dict[str, Any]
+    ) -> dict[str, Any]:
         """修复requests verify=False"""
 
         if issue["confidence"] == "high":
@@ -198,16 +198,16 @@ class SecurityCodeModStrategy:
             return self._add_security_todo(content, lines, line_idx, issue)
 
     def _fix_subprocess_shell(
-        self, content: str, lines: List[str], line_idx: int, issue: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, content: str, lines: list[str], line_idx: int, issue: dict[str, Any]
+    ) -> dict[str, Any]:
         """修复subprocess shell=True"""
 
         # subprocess shell=True比较复杂，通常需要手工处理
         return self._add_security_todo(content, lines, line_idx, issue)
 
     def _add_security_todo(
-        self, content: str, lines: List[str], line_idx: int, issue: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, content: str, lines: list[str], line_idx: int, issue: dict[str, Any]
+    ) -> dict[str, Any]:
         """添加安全TODO注释"""
 
         todo_comment = f"# TODO: SECURITY - {issue['description']}"
@@ -221,7 +221,7 @@ class SecurityCodeModStrategy:
             "todo": f"第{issue['line_num']}行: 添加安全TODO - {issue['description']}",
         }
 
-    def generate_patches(self, files: List[str]) -> List[Dict[str, Any]]:
+    def generate_patches(self, files: list[str]) -> list[dict[str, Any]]:
         """为文件列表生成安全修复补丁"""
 
         from ..utils import get_file_content
@@ -258,7 +258,7 @@ class SecurityCodeModStrategy:
 
         return patches
 
-    def create_changelog_entry(self, patches: List[Dict[str, Any]]) -> str:
+    def create_changelog_entry(self, patches: list[dict[str, Any]]) -> str:
         """创建变更日志条目"""
 
         if not patches:
@@ -301,7 +301,7 @@ class SecurityCodeModStrategy:
         return "\n".join(lines)
 
 
-def create_security_patches(files: List[str]) -> Dict[str, Any]:
+def create_security_patches(files: list[str]) -> dict[str, Any]:
     """创建安全修复补丁的便捷函数"""
 
     strategy = SecurityCodeModStrategy()

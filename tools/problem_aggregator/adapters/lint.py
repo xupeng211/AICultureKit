@@ -5,7 +5,7 @@ Lint adapter for ruff/flake8
 import json
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 class LintAdapter:
@@ -14,7 +14,7 @@ class LintAdapter:
     def __init__(self, project_root: str = "."):
         self.project_root = Path(project_root)
 
-    def run_ruff(self, files: List[str] = None) -> List[Dict[str, Any]]:
+    def run_ruff(self, files: list[str] = None) -> list[dict[str, Any]]:
         """运行ruff检查"""
         problems = []
 
@@ -80,7 +80,7 @@ class LintAdapter:
 
         return problems
 
-    def run_flake8(self, files: List[str] = None) -> List[Dict[str, Any]]:
+    def run_flake8(self, files: list[str] = None) -> list[dict[str, Any]]:
         """运行flake8检查（备用）"""
         problems = []
 
@@ -140,7 +140,7 @@ class LintAdapter:
         else:
             return "info"
 
-    def _get_ruff_fix_suggestion(self, issue: Dict[str, Any]) -> str:
+    def _get_ruff_fix_suggestion(self, issue: dict[str, Any]) -> str:
         """获取ruff修复建议"""
         code = issue.get("code", "")
         message = issue.get("message", "")

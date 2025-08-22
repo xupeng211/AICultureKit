@@ -8,7 +8,7 @@ import time
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 import requests
 import yaml
@@ -44,19 +44,19 @@ class CICDGuardian:
     def __init__(self, project_path: str = ".") -> None:
         """内部方法： init"""
         self.project_path = Path(project_path)
-        self.risks: List[BuildRisk] = []
+        self.risks: list[BuildRisk] = []
         self.docker_client = None
         self.config = self._load_config()
 
-    def _load_config(self) -> Dict:
+    def _load_config(self) -> dict:
         """加载配置"""
         config_file = self.project_path / "aiculture.yaml"
         if config_file.exists():
-            with open(config_file, "r", encoding="utf-8") as f:
+            with open(config_file, encoding="utf-8") as f:
                 return yaml.safe_load(f)
         return {}
 
-    def comprehensive_health_check(self) -> Dict[str, Any]:
+    def comprehensive_health_check(self) -> dict[str, Any]:
         """全面健康检查"""
         print("🔍 开始CI/CD构建健康检查...")
 
@@ -92,7 +92,7 @@ class CICDGuardian:
         # 检查Dockerfile基础镜像
         dockerfile = self.project_path / "Dockerfile"
         if dockerfile.exists():
-            with open(dockerfile, "r") as f:
+            with open(dockerfile) as f:
                 content = f.read()
 
             # 检查基础镜像版本固定
@@ -141,7 +141,7 @@ class CICDGuardian:
         # 检查requirements.txt
         req_file = self.project_path / "requirements.txt"
         if req_file.exists():
-            with open(req_file, "r") as f:
+            with open(req_file) as f:
                 content = f.read()
 
             # 检查版本固定
@@ -254,7 +254,7 @@ class CICDGuardian:
 
         # 检查内存使用
         try:
-            with open("/proc/meminfo", "r") as f:
+            with open("/proc/meminfo") as f:
                 meminfo = f.read()
             mem_available = (
                 int([line for line in meminfo.split("\n") if "MemAvailable" in line][0].split()[1])
@@ -297,7 +297,7 @@ class CICDGuardian:
         ci_config = self.project_path / ".github" / "workflows"
         if ci_config.exists():
             for workflow_file in ci_config.glob("*.yml"):
-                with open(workflow_file, "r") as f:
+                with open(workflow_file) as f:
                     workflow = yaml.safe_load(f)
 
                 # 检查超时设置
@@ -351,7 +351,7 @@ class CICDGuardian:
                 continue
 
             try:
-                with open(py_file, "r", encoding="utf-8") as f:
+                with open(py_file, encoding="utf-8") as f:
                     content = f.read()
 
                 for pattern in secret_patterns:
@@ -370,7 +370,7 @@ class CICDGuardian:
             except Exception:
                 continue
 
-    def _generate_report(self) -> Dict[str, Any]:
+    def _generate_report(self) -> dict[str, Any]:
         """生成检查报告"""
         critical_risks = [r for r in self.risks if r.risk_level == RiskLevel.CRITICAL]
         high_risks = [r for r in self.risks if r.risk_level == RiskLevel.HIGH]
@@ -420,7 +420,7 @@ class CICDGuardian:
         else:
             return "🔥 风险极高，禁止部署，需要全面修复"
 
-    def auto_fix_issues(self) -> Dict[str, Any]:
+    def auto_fix_issues(self) -> dict[str, Any]:
         """自动修复问题"""
         print("🔧 开始自动修复问题...")
 
@@ -468,7 +468,7 @@ class CICDGuardian:
         if not dockerfile.exists():
             return False
 
-        with open(dockerfile, "r") as f:
+        with open(dockerfile) as f:
             content = f.read()
 
         # 替换latest标签
@@ -571,7 +571,7 @@ dist/
 
         modified = False
         for workflow_file in workflows_dir.glob("*.yml"):
-            with open(workflow_file, "r") as f:
+            with open(workflow_file) as f:
                 workflow = yaml.safe_load(f)
 
             jobs = workflow.get("jobs", {})
@@ -596,13 +596,13 @@ dist/
             return False
 
 
-def run_cicd_health_check(project_path: str = ".") -> Dict[str, Any]:
+def run_cicd_health_check(project_path: str = ".") -> dict[str, Any]:
     """运行CI/CD健康检查"""
     guardian = CICDGuardian(project_path)
     return guardian.comprehensive_health_check()
 
 
-def auto_fix_cicd_issues(project_path: str = ".") -> Dict[str, Any]:
+def auto_fix_cicd_issues(project_path: str = ".") -> dict[str, Any]:
     """自动修复CI/CD问题"""
     guardian = CICDGuardian(project_path)
     guardian.comprehensive_health_check()

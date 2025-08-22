@@ -19,7 +19,7 @@ import time
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class DataSensitivityLevel(Enum):
@@ -50,13 +50,13 @@ class DataField:
     name: str
     data_type: str
     sensitivity_level: DataSensitivityLevel
-    categories: List[DataCategory]
+    categories: list[DataCategory]
     description: str = ""
     source: str = ""
-    transformations: List[str] = field(default_factory=list)
-    retention_period: Optional[str] = None
+    transformations: list[str] = field(default_factory=list)
+    retention_period: str | None = None
     encryption_required: bool = False
-    anonymization_method: Optional[str] = None
+    anonymization_method: str | None = None
 
 
 @dataclass
@@ -66,7 +66,7 @@ class DataQualityRule:
     name: str
     field_name: str
     rule_type: str  # not_null, unique, range, pattern, custom
-    parameters: Dict[str, Any]
+    parameters: dict[str, Any]
     severity: str = "error"  # error, warning, info
     description: str = ""
 
@@ -79,7 +79,7 @@ class DataLineageNode:
     name: str
     type: str  # table, view, file, api, transformation
     location: str
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -90,7 +90,7 @@ class DataLineageEdge:
     target_id: str
     transformation: str
     timestamp: float
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 class DataPrivacyScanner:
@@ -194,12 +194,12 @@ class DataPrivacyScanner:
 
         return False
 
-    def scan_code_for_pii(self, file_path: Path) -> List[Dict[str, Any]]:
+    def scan_code_for_pii(self, file_path: Path) -> list[dict[str, Any]]:
         """扫描代码中的个人信息"""
         findings = []
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             lines = content.split("\n")
@@ -257,7 +257,7 @@ class DataPrivacyScanner:
 
         return findings
 
-    def scan_database_schema(self, schema_info: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def scan_database_schema(self, schema_info: dict[str, Any]) -> list[dict[str, Any]]:
         """扫描数据库模式中的敏感信息"""
         findings = []
 
@@ -291,13 +291,13 @@ class DataQualityValidator:
 
     def __init__(self):
         """__init__函数"""
-        self.rules: List[DataQualityRule] = []
+        self.rules: list[DataQualityRule] = []
 
     def add_rule(self, rule: DataQualityRule) -> None:
         """添加质量规则"""
         self.rules.append(rule)
 
-    def validate_data(self, data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def validate_data(self, data: list[dict[str, Any]]) -> dict[str, Any]:
         """验证数据质量"""
         results = {
             "total_records": len(data),
@@ -327,7 +327,7 @@ class DataQualityValidator:
 
         return results
 
-    def _validate_rule(self, rule: DataQualityRule, data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _validate_rule(self, rule: DataQualityRule, data: list[dict[str, Any]]) -> dict[str, Any]:
         """验证单个规则"""
         rule_result = {
             "rule_name": rule.name,
@@ -399,8 +399,8 @@ class DataLineageTracker:
 
     def __init__(self):
         """__init__函数"""
-        self.nodes: Dict[str, DataLineageNode] = {}
-        self.edges: List[DataLineageEdge] = []
+        self.nodes: dict[str, DataLineageNode] = {}
+        self.edges: list[DataLineageEdge] = []
 
     def add_node(self, node: DataLineageNode) -> None:
         """添加血缘节点"""
@@ -423,7 +423,7 @@ class DataLineageTracker:
         )
         self.add_edge(edge)
 
-    def get_upstream_lineage(self, node_id: str, max_depth: int = 10) -> Dict[str, Any]:
+    def get_upstream_lineage(self, node_id: str, max_depth: int = 10) -> dict[str, Any]:
         """获取上游血缘"""
         visited = set()
         lineage = {"nodes": {}, "edges": []}
@@ -447,7 +447,7 @@ class DataLineageTracker:
         traverse_upstream(node_id, 0)
         return lineage
 
-    def get_downstream_lineage(self, node_id: str, max_depth: int = 10) -> Dict[str, Any]:
+    def get_downstream_lineage(self, node_id: str, max_depth: int = 10) -> dict[str, Any]:
         """获取下游血缘"""
         visited = set()
         lineage = {"nodes": {}, "edges": []}
@@ -471,7 +471,7 @@ class DataLineageTracker:
         traverse_downstream(node_id, 0)
         return lineage
 
-    def get_impact_analysis(self, node_id: str) -> Dict[str, Any]:
+    def get_impact_analysis(self, node_id: str) -> dict[str, Any]:
         """获取影响分析"""
         downstream = self.get_downstream_lineage(node_id)
 
@@ -568,7 +568,7 @@ class GDPRComplianceChecker:
             "rights": "支持数据主体权利",
         }
 
-    def check_compliance(self, data_inventory: List[DataField]) -> Dict[str, Any]:
+    def check_compliance(self, data_inventory: list[DataField]) -> dict[str, Any]:
         """检查GDPR合规性"""
         compliance_report = {
             "overall_score": 0,
@@ -612,7 +612,7 @@ class GDPRComplianceChecker:
 
         return compliance_report
 
-    def _check_data_minimization(self, fields: List[DataField]) -> Dict[str, Any]:
+    def _check_data_minimization(self, fields: list[DataField]) -> dict[str, Any]:
         """检查数据最小化原则"""
         result = {"score": 100, "violations": [], "recommendations": []}
 
@@ -634,7 +634,7 @@ class GDPRComplianceChecker:
 
         return result
 
-    def _check_storage_limitation(self, fields: List[DataField]) -> Dict[str, Any]:
+    def _check_storage_limitation(self, fields: list[DataField]) -> dict[str, Any]:
         """检查存储限制原则"""
         result = {"score": 100, "violations": [], "recommendations": []}
 
@@ -649,7 +649,7 @@ class GDPRComplianceChecker:
 
         return result
 
-    def _check_security_measures(self, fields: List[DataField]) -> Dict[str, Any]:
+    def _check_security_measures(self, fields: list[DataField]) -> dict[str, Any]:
         """检查安全措施"""
         result = {"score": 100, "violations": [], "recommendations": []}
 
@@ -675,7 +675,7 @@ class GDPRComplianceChecker:
 
         return result
 
-    def _check_data_accuracy(self, fields: List[DataField]) -> Dict[str, Any]:
+    def _check_data_accuracy(self, fields: list[DataField]) -> dict[str, Any]:
         """检查数据准确性"""
         result = {"score": 100, "violations": [], "recommendations": []}
 
@@ -708,7 +708,7 @@ class DataGovernanceManager:
         self.lineage_tracker = DataLineageTracker()
         self.gdpr_checker = GDPRComplianceChecker()
 
-        self.data_inventory: List[DataField] = []
+        self.data_inventory: list[DataField] = []
         self._load_data_inventory()
 
     def _load_data_inventory(self) -> None:
@@ -716,7 +716,7 @@ class DataGovernanceManager:
         inventory_file = self.config_dir / "data_inventory.json"
         if inventory_file.exists():
             try:
-                with open(inventory_file, "r", encoding="utf-8") as f:
+                with open(inventory_file, encoding="utf-8") as f:
                     data = json.load(f)
                     for field_data in data:
                         field = DataField(
@@ -758,7 +758,7 @@ class DataGovernanceManager:
         with open(inventory_file, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
-    def scan_project_for_privacy_issues(self) -> Dict[str, Any]:
+    def scan_project_for_privacy_issues(self) -> dict[str, Any]:
         """扫描项目中的隐私问题"""
         all_findings = []
 
@@ -795,7 +795,7 @@ class DataGovernanceManager:
             },
         }
 
-    def generate_compliance_report(self) -> Dict[str, Any]:
+    def generate_compliance_report(self) -> dict[str, Any]:
         """生成合规报告"""
         privacy_scan = self.scan_project_for_privacy_issues()
         gdpr_compliance = self.gdpr_checker.check_compliance(self.data_inventory)

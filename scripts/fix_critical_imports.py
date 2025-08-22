@@ -9,7 +9,7 @@ from pathlib import Path
 def fix_imports_in_file(file_path: Path) -> bool:
     """修复单个文件中的导入问题"""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
@@ -97,7 +97,7 @@ def fix_specific_files():
     cli_file = Path("aiculture/cli.py")
     if cli_file.exists():
         try:
-            with open(cli_file, "r", encoding="utf-8") as f:
+            with open(cli_file, encoding="utf-8") as f:
                 content = f.read()
 
             # 添加缺失的导入
@@ -142,7 +142,7 @@ def fix_specific_files():
     enforcer_file = Path("aiculture/culture_enforcer.py")
     if enforcer_file.exists():
         try:
-            with open(enforcer_file, "r", encoding="utf-8") as f:
+            with open(enforcer_file, encoding="utf-8") as f:
                 content = f.read()
 
             if "json." in content and "import json" not in content:
@@ -165,7 +165,7 @@ def fix_specific_files():
     penetration_file = Path("aiculture/culture_penetration_system.py")
     if penetration_file.exists():
         try:
-            with open(penetration_file, "r", encoding="utf-8") as f:
+            with open(penetration_file, encoding="utf-8") as f:
                 content = f.read()
 
             if "ast." in content and "import ast" not in content:
@@ -192,7 +192,7 @@ def remove_trailing_whitespace():
     fixed_count = 0
     for file_path in python_files:
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # 移除行尾空白

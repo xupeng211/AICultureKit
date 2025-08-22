@@ -276,7 +276,7 @@ def scan(path: str) -> None:
                 try:
                     import yaml
 
-                    with open(config_file, "r", encoding="utf-8") as f:
+                    with open(config_file, encoding="utf-8") as f:
                         config = yaml.safe_load(f)
 
                     description = config.get("description", "无描述")

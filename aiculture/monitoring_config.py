@@ -6,7 +6,7 @@
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import yaml
 
@@ -20,10 +20,10 @@ class MetricConfig:
     name: str
     description: str
     metric_type: str  # counter, gauge, histogram, summary
-    labels: List[str]
+    labels: list[str]
     help_text: str
     unit: str = ""
-    buckets: Optional[List[float]] = None  # for histogram
+    buckets: list[float] | None = None  # for histogram
 
 
 @dataclass
@@ -35,8 +35,8 @@ class AlertRule:
     expression: str
     duration: str
     severity: str  # critical, warning, info
-    labels: Dict[str, str]
-    annotations: Dict[str, str]
+    labels: dict[str, str]
+    annotations: dict[str, str]
 
 
 @dataclass
@@ -45,9 +45,9 @@ class DashboardPanel:
 
     title: str
     panel_type: str  # graph, stat, table, heatmap
-    targets: List[Dict[str, Any]]
-    grid_pos: Dict[str, int]
-    options: Dict[str, Any]
+    targets: list[dict[str, Any]]
+    grid_pos: dict[str, int]
+    options: dict[str, Any]
 
 
 @dataclass
@@ -56,9 +56,9 @@ class Dashboard:
 
     title: str
     description: str
-    tags: List[str]
-    panels: List[DashboardPanel]
-    time_range: Dict[str, str]
+    tags: list[str]
+    panels: list[DashboardPanel]
+    time_range: dict[str, str]
     refresh: str
 
 
@@ -81,9 +81,9 @@ class MonitoringConfigManager:
         (self.grafana_config / "datasources").mkdir(exist_ok=True)
 
         # 默认配置
-        self.metrics: List[MetricConfig] = []
-        self.alert_rules: List[AlertRule] = []
-        self.dashboards: List[Dashboard] = []
+        self.metrics: list[MetricConfig] = []
+        self.alert_rules: list[AlertRule] = []
+        self.dashboards: list[Dashboard] = []
 
     def add_metric(self, metric: MetricConfig) -> None:
         """添加指标配置"""
@@ -98,8 +98,8 @@ class MonitoringConfigManager:
         self.dashboards.append(dashboard)
 
     def generate_prometheus_config(
-        self, scrape_configs: List[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        self, scrape_configs: list[dict[str, Any]] = None
+    ) -> dict[str, Any]:
         """生成Prometheus配置"""
         default_scrape_configs = [
             {
@@ -119,7 +119,7 @@ class MonitoringConfigManager:
 
         return config
 
-    def generate_alert_rules(self) -> Dict[str, Any]:
+    def generate_alert_rules(self) -> dict[str, Any]:
         """生成告警规则"""
         groups = []
 
@@ -141,7 +141,7 @@ class MonitoringConfigManager:
 
     def generate_grafana_datasource(
         self, prometheus_url: str = "http://localhost:9090"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """生成Grafana数据源配置"""
         return {
             "apiVersion": 1,
@@ -157,7 +157,7 @@ class MonitoringConfigManager:
             ],
         }
 
-    def generate_culture_dashboard(self) -> Dict[str, Any]:
+    def generate_culture_dashboard(self) -> dict[str, Any]:
         """生成文化监控仪表板"""
         panels = [
             {
@@ -296,7 +296,7 @@ class MonitoringConfigManager:
 
         return dashboard
 
-    def generate_alertmanager_config(self) -> Dict[str, Any]:
+    def generate_alertmanager_config(self) -> dict[str, Any]:
         """生成Alertmanager配置"""
         return {
             "global": {

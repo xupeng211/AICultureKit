@@ -4,7 +4,7 @@
 
 import ast
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 
 class TestScaffoldStrategy:
@@ -13,7 +13,7 @@ class TestScaffoldStrategy:
     def __init__(self, project_root: str = "."):
         self.project_root = Path(project_root)
 
-    def can_fix(self, problem: Dict[str, Any]) -> bool:
+    def can_fix(self, problem: dict[str, Any]) -> bool:
         """判断是否可以生成测试脚手架"""
         return problem.get("type") in [
             "test_coverage",
@@ -22,7 +22,7 @@ class TestScaffoldStrategy:
             "new_file_coverage",
         ]
 
-    def generate_fix(self, problems: List[Dict[str, Any]]) -> Tuple[str, str, float]:
+    def generate_fix(self, problems: list[dict[str, Any]]) -> tuple[str, str, float]:
         """
         生成测试脚手架
 
@@ -63,7 +63,7 @@ class TestScaffoldStrategy:
 
         return patch_content, explanation, confidence
 
-    def _generate_test_file(self, file_path: str) -> Tuple[str, str]:
+    def _generate_test_file(self, file_path: str) -> tuple[str, str]:
         """为指定文件生成测试脚手架"""
 
         full_path = self.project_root / file_path
@@ -71,7 +71,7 @@ class TestScaffoldStrategy:
             return "", f"文件不存在: {file_path}"
 
         try:
-            with open(full_path, "r", encoding="utf-8") as f:
+            with open(full_path, encoding="utf-8") as f:
                 content = f.read()
         except Exception as e:
             return "", f"读取文件失败: {e}"
@@ -96,7 +96,7 @@ class TestScaffoldStrategy:
 
         return test_content, explanation
 
-    def _extract_testable_items(self, tree: ast.AST) -> Tuple[List[Dict], List[Dict]]:
+    def _extract_testable_items(self, tree: ast.AST) -> tuple[list[dict], list[dict]]:
         """提取可测试的类和函数"""
 
         classes = []
@@ -157,7 +157,7 @@ class TestScaffoldStrategy:
         return "Any"
 
     def _generate_test_content(
-        self, file_path: str, classes: List[Dict], functions: List[Dict]
+        self, file_path: str, classes: list[dict], functions: list[dict]
     ) -> str:
         """生成测试文件内容"""
 
@@ -209,7 +209,7 @@ class TestScaffoldStrategy:
 
         return "\n".join(lines)
 
-    def _generate_class_tests(self, class_info: Dict) -> List[str]:
+    def _generate_class_tests(self, class_info: dict) -> list[str]:
         """生成类测试"""
 
         lines = []
@@ -249,7 +249,7 @@ class TestScaffoldStrategy:
 
         return lines
 
-    def _generate_function_tests(self, func_info: Dict) -> List[str]:
+    def _generate_function_tests(self, func_info: dict) -> list[str]:
         """生成函数测试"""
 
         lines = []
@@ -289,7 +289,7 @@ class TestScaffoldStrategy:
 
         return lines
 
-    def _generate_test_creation_patch(self, test_files: List[Tuple[str, str]]) -> str:
+    def _generate_test_creation_patch(self, test_files: list[tuple[str, str]]) -> str:
         """生成创建测试文件的patch"""
 
         patches = []
@@ -325,7 +325,7 @@ class TestScaffoldStrategy:
 
         return str(test_path)
 
-    def generate_todo_list(self, problems: List[Dict[str, Any]]) -> str:
+    def generate_todo_list(self, problems: list[dict[str, Any]]) -> str:
         """生成测试TODO清单"""
 
         todos = []

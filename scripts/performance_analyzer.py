@@ -6,7 +6,7 @@
 
 import ast
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 class PerformanceAnalyzer:
@@ -17,7 +17,7 @@ class PerformanceAnalyzer:
         self.project_path = project_path or Path.cwd()
         self.issues = []
 
-    def analyze_file(self, file_path: Path) -> List[Dict[str, Any]]:
+    def analyze_file(self, file_path: Path) -> list[dict[str, Any]]:
         """分析单个文件的性能问题"""
         try:
             content = file_path.read_text(encoding="utf-8")
@@ -47,7 +47,7 @@ class PerformanceAnalyzer:
                 }
             ]
 
-    def check_large_functions(self, tree: ast.AST, file_path: Path) -> List[Dict[str, Any]]:
+    def check_large_functions(self, tree: ast.AST, file_path: Path) -> list[dict[str, Any]]:
         """检查过大的函数"""
         issues = []
 
@@ -71,7 +71,7 @@ class PerformanceAnalyzer:
 
         return issues
 
-    def check_nested_loops(self, tree: ast.AST, file_path: Path) -> List[Dict[str, Any]]:
+    def check_nested_loops(self, tree: ast.AST, file_path: Path) -> list[dict[str, Any]]:
         """检查嵌套循环"""
         issues = []
 
@@ -98,8 +98,8 @@ class PerformanceAnalyzer:
         return issues
 
     def check_string_concatenation(
-        self, tree: ast.AST, file_path: Path, lines: List[str]
-    ) -> List[Dict[str, Any]]:
+        self, tree: ast.AST, file_path: Path, lines: list[str]
+    ) -> list[dict[str, Any]]:
         """检查字符串拼接性能问题"""
         issues = []
 
@@ -136,8 +136,8 @@ class PerformanceAnalyzer:
         return issues
 
     def check_inefficient_patterns(
-        self, tree: ast.AST, file_path: Path, lines: List[str]
-    ) -> List[Dict[str, Any]]:
+        self, tree: ast.AST, file_path: Path, lines: list[str]
+    ) -> list[dict[str, Any]]:
         """检查低效的代码模式"""
         issues = []
 
@@ -172,7 +172,7 @@ class PerformanceAnalyzer:
 
         return issues
 
-    def check_file_size(self, file_path: Path, lines: List[str]) -> List[Dict[str, Any]]:
+    def check_file_size(self, file_path: Path, lines: list[str]) -> list[dict[str, Any]]:
         """检查文件大小"""
         issues = []
         line_count = len(lines)
@@ -191,7 +191,7 @@ class PerformanceAnalyzer:
 
         return issues
 
-    def analyze_all_files(self) -> Dict[str, Any]:
+    def analyze_all_files(self) -> dict[str, Any]:
         """分析所有Python文件"""
         all_issues = []
         stats = {"files_analyzed": 0, "issues_found": 0}
@@ -224,7 +224,7 @@ class PerformanceAnalyzer:
 
         return {"stats": stats, "issues": all_issues, "by_severity": by_severity}
 
-    def generate_report(self, analysis_result: Dict[str, Any]) -> str:
+    def generate_report(self, analysis_result: dict[str, Any]) -> str:
         """生成性能分析报告"""
         stats = analysis_result["stats"]
         by_severity = analysis_result["by_severity"]

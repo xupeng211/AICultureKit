@@ -5,7 +5,7 @@ Lint自动修复策略
 
 import tempfile
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from ..utils import create_patch, get_file_content, run_command
 
@@ -21,7 +21,7 @@ class LintAutoFixStrategy:
         """判断是否可以修复该文件"""
         return file_path.endswith(".py") and content.strip()
 
-    def fix_file(self, file_path: str, content: str) -> Dict[str, Any]:
+    def fix_file(self, file_path: str, content: str) -> dict[str, Any]:
         """修复单个文件的lint问题"""
 
         result = {
@@ -79,19 +79,19 @@ class LintAutoFixStrategy:
 
         return result
 
-    def _run_isort(self, file_path: str) -> Dict[str, Any]:
+    def _run_isort(self, file_path: str) -> dict[str, Any]:
         """运行isort"""
         return run_command(["isort", file_path])
 
-    def _run_black(self, file_path: str) -> Dict[str, Any]:
+    def _run_black(self, file_path: str) -> dict[str, Any]:
         """运行black"""
         return run_command(["black", file_path])
 
-    def _run_ruff_fix(self, file_path: str) -> Dict[str, Any]:
+    def _run_ruff_fix(self, file_path: str) -> dict[str, Any]:
         """运行ruff --fix"""
         return run_command(["ruff", "check", "--fix", file_path])
 
-    def generate_patches(self, files: List[str]) -> List[Dict[str, Any]]:
+    def generate_patches(self, files: list[str]) -> list[dict[str, Any]]:
         """为文件列表生成lint修复补丁"""
 
         patches = []
@@ -127,7 +127,7 @@ class LintAutoFixStrategy:
 
         return patches
 
-    def create_changelog_entry(self, patches: List[Dict[str, Any]]) -> str:
+    def create_changelog_entry(self, patches: list[dict[str, Any]]) -> str:
         """创建变更日志条目"""
 
         if not patches:
@@ -164,7 +164,7 @@ class LintAutoFixStrategy:
         return "\n".join(lines)
 
 
-def create_lint_patches(files: List[str]) -> Dict[str, Any]:
+def create_lint_patches(files: list[str]) -> dict[str, Any]:
     """创建lint修复补丁的便捷函数"""
 
     strategy = LintAutoFixStrategy()

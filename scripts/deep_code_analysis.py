@@ -8,7 +8,7 @@ import re
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 @dataclass
@@ -31,7 +31,7 @@ class DeepCodeAnalyzer:
         self.issues = []
         self.metrics = defaultdict(int)
 
-    def analyze_project(self, project_path: Path) -> Dict[str, Any]:
+    def analyze_project(self, project_path: Path) -> dict[str, Any]:
         """分析整个项目"""
         print("🔍 开始深度代码质量分析...")
 
@@ -53,7 +53,7 @@ class DeepCodeAnalyzer:
     def _analyze_file(self, file_path: Path):
         """分析单个文件"""
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # 解析AST
@@ -144,7 +144,7 @@ class DeepCodeAnalyzer:
                         )
                     )
 
-    def _check_function_complexity(self, file_path: Path, node: ast.FunctionDef, lines: List[str]):
+    def _check_function_complexity(self, file_path: Path, node: ast.FunctionDef, lines: list[str]):
         """检查函数复杂度"""
         # 计算圈复杂度
         complexity = self._calculate_cyclomatic_complexity(node)
@@ -188,7 +188,7 @@ class DeepCodeAnalyzer:
                 )
             )
 
-    def _check_class_design(self, file_path: Path, node: ast.ClassDef, lines: List[str]):
+    def _check_class_design(self, file_path: Path, node: ast.ClassDef, lines: list[str]):
         """检查类设计"""
         # 计算类的方法数量
         methods = [n for n in node.body if isinstance(n, ast.FunctionDef)]
@@ -218,7 +218,7 @@ class DeepCodeAnalyzer:
                 )
             )
 
-    def _check_exception_handling(self, file_path: Path, node: ast.ExceptHandler, lines: List[str]):
+    def _check_exception_handling(self, file_path: Path, node: ast.ExceptHandler, lines: list[str]):
         """检查异常处理"""
         # 检查裸露的except
         if node.type is None:
@@ -246,7 +246,7 @@ class DeepCodeAnalyzer:
                 )
             )
 
-    def _check_magic_numbers(self, file_path: Path, node: ast.Num, lines: List[str]):
+    def _check_magic_numbers(self, file_path: Path, node: ast.Num, lines: list[str]):
         """检查魔法数字"""
         # 跳过常见的数字
         common_numbers = {0, 1, 2, -1, 100, 1000}
@@ -278,7 +278,7 @@ class DeepCodeAnalyzer:
 
         return complexity
 
-    def _generate_report(self) -> Dict[str, Any]:
+    def _generate_report(self) -> dict[str, Any]:
         """生成分析报告"""
         # 按严重程度分组
         by_severity = defaultdict(list)

@@ -8,7 +8,9 @@ repos:
     rev: v0.6.5
     hooks:
       - id: ruff
-        args: [--fix, --select, E, F, I, UP, B]
+        args:
+          - --fix
+          - --select=E,F,I,UP,B
         exclude: ^(aiculture/templates/|templates/|examples/|scaffolds/).*
       - id: ruff-format
         exclude: ^(aiculture/templates/|templates/|examples/|scaffolds/).*

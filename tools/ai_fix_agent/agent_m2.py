@@ -8,7 +8,7 @@ import argparse
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from .strategies.lint_autofix import create_lint_patches
 from .strategies.security_codemods import create_security_patches
@@ -21,7 +21,7 @@ class AIFixAgentM2:
     def __init__(self):
         pass
 
-    def run_staged_files_mode(self, output_dir: str) -> Dict[str, Any]:
+    def run_staged_files_mode(self, output_dir: str) -> dict[str, Any]:
         """运行已暂存文件模式（M2起步版）"""
 
         print("🚀 AI修复代理启动 (M2起步版)")
@@ -90,8 +90,8 @@ class AIFixAgentM2:
         return results
 
     def _save_patches(
-        self, patches: List[Dict[str, Any]], output_path: Path, prefix: str
-    ) -> List[str]:
+        self, patches: list[dict[str, Any]], output_path: Path, prefix: str
+    ) -> list[str]:
         """保存补丁文件"""
 
         patch_files = []
@@ -112,7 +112,7 @@ class AIFixAgentM2:
 
         return patch_files
 
-    def _create_changelog(self, changelog_entries: List[str], changelog_path: Path) -> None:
+    def _create_changelog(self, changelog_entries: list[str], changelog_path: Path) -> None:
         """创建变更日志"""
 
         lines = [
@@ -164,7 +164,7 @@ class AIFixAgentM2:
 
         changelog_path.write_text("\n".join(lines), encoding="utf-8")
 
-    def _create_apply_script(self, patch_files: List[str], script_path: Path) -> None:
+    def _create_apply_script(self, patch_files: list[str], script_path: Path) -> None:
         """创建应用脚本"""
 
         lines = [

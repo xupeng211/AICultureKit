@@ -10,7 +10,7 @@ import ast
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from .error_handling import get_logger
 
@@ -25,7 +25,7 @@ class AITestOptimizer:
         self.generated_tests = []
         self.optimization_results = []
 
-    def should_trigger_ai_testing(self) -> Dict[str, Any]:
+    def should_trigger_ai_testing(self) -> dict[str, Any]:
         """判断是否应该触发AI测试机制"""
         print("🔍 检查是否需要触发AI智能测试...")
 
@@ -54,7 +54,7 @@ class AITestOptimizer:
 
         return trigger_info
 
-    def ai_takeover_testing(self) -> Dict[str, Any]:
+    def ai_takeover_testing(self) -> dict[str, Any]:
         """AI接手测试工作，进行全方面测试和优化"""
         print("\n🤖 AI接手测试工作，开始全方面优化...")
 
@@ -97,7 +97,7 @@ class AITestOptimizer:
             results["error"] = str(e)
             return results
 
-    def _get_current_coverage(self) -> Dict[str, Any]:
+    def _get_current_coverage(self) -> dict[str, Any]:
         """获取当前测试覆盖率"""
         try:
             # 运行pytest获取覆盖率
@@ -146,7 +146,7 @@ class AITestOptimizer:
             self.logger.warning(f"获取覆盖率失败: {e}")
             return {"coverage": 22.2, "missing_files": [], "low_coverage_files": []}
 
-    def _ai_analyze_project(self) -> Dict[str, Any]:
+    def _ai_analyze_project(self) -> dict[str, Any]:
         """AI智能分析项目结构"""
         print("  🔍 分析Python模块和类...")
 
@@ -164,7 +164,7 @@ class AITestOptimizer:
                 continue
 
             try:
-                with open(py_file, "r", encoding="utf-8") as f:
+                with open(py_file, encoding="utf-8") as f:
                     content = f.read()
 
                 # 解析AST
@@ -191,7 +191,7 @@ class AITestOptimizer:
         )
         return analysis
 
-    def _ai_generate_comprehensive_tests(self) -> Dict[str, Any]:
+    def _ai_generate_comprehensive_tests(self) -> dict[str, Any]:
         """AI智能生成全面的测试用例"""
         print("  🧪 生成核心功能测试...")
 
@@ -222,7 +222,7 @@ class AITestOptimizer:
         print(f"  ✅ 生成了 {len(generation_results['tests_created'])} 个测试文件")
         return generation_results
 
-    def _generate_culture_enforcer_tests(self) -> Dict[str, Any]:
+    def _generate_culture_enforcer_tests(self) -> dict[str, Any]:
         """生成文化执行器测试"""
         test_content = '''"""AI生成的文化执行器全面测试"""
 import unittest
@@ -304,7 +304,7 @@ if __name__ == "__main__":
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _generate_problem_aggregator_tests(self) -> Dict[str, Any]:
+    def _generate_problem_aggregator_tests(self) -> dict[str, Any]:
         """生成问题聚合器测试"""
         test_content = '''"""AI生成的问题聚合器全面测试"""
 import unittest
@@ -384,7 +384,7 @@ if __name__ == "__main__":
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _generate_ai_behavior_tests(self) -> Dict[str, Any]:
+    def _generate_ai_behavior_tests(self) -> dict[str, Any]:
         """生成AI行为测试"""
         test_content = '''"""AI生成的AI行为系统全面测试"""
 import unittest
@@ -452,7 +452,7 @@ if __name__ == "__main__":
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _generate_data_governance_tests(self) -> Dict[str, Any]:
+    def _generate_data_governance_tests(self) -> dict[str, Any]:
         """生成数据治理测试"""
         test_content = '''"""AI生成的数据治理全面测试"""
 import unittest
@@ -514,7 +514,7 @@ if __name__ == "__main__":
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _generate_integration_tests(self) -> Dict[str, Any]:
+    def _generate_integration_tests(self) -> dict[str, Any]:
         """生成集成测试"""
         test_content = '''"""AI生成的系统集成全面测试"""
 import unittest
@@ -584,7 +584,7 @@ if __name__ == "__main__":
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _ai_comprehensive_optimization(self) -> Dict[str, Any]:
+    def _ai_comprehensive_optimization(self) -> dict[str, Any]:
         """AI全方面优化"""
         print("  ⚡ 执行代码质量优化...")
 
@@ -622,7 +622,7 @@ if __name__ == "__main__":
 
         return optimization_results
 
-    def _ai_validate_results(self) -> Dict[str, Any]:
+    def _ai_validate_results(self) -> dict[str, Any]:
         """AI验证优化结果"""
         print("  ✅ 验证优化效果...")
 
@@ -674,7 +674,7 @@ if __name__ == "__main__":
 
         return any(pattern in str(file_path) for pattern in skip_patterns)
 
-    def _display_ai_takeover_report(self, results: Dict[str, Any]):
+    def _display_ai_takeover_report(self, results: dict[str, Any]):
         """显示AI接手报告"""
         print("\n" + "=" * 80)
         print("🤖 AI智能测试接手完成报告")

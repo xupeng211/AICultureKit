@@ -8,7 +8,7 @@ import threading
 import time
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .exceptions import AICultureError, get_error_severity
 from .logging_system import get_logger
@@ -20,9 +20,9 @@ class ErrorMetrics:
 
     total_errors: int = 0
     error_rate: float = 0.0  # 错误率（每分钟）
-    errors_by_type: Dict[str, int] = field(default_factory=dict)
-    errors_by_severity: Dict[str, int] = field(default_factory=dict)
-    recent_errors: List[Dict[str, Any]] = field(default_factory=list)
+    errors_by_type: dict[str, int] = field(default_factory=dict)
+    errors_by_severity: dict[str, int] = field(default_factory=dict)
+    recent_errors: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass
@@ -34,7 +34,7 @@ class PerformanceMetrics:
     p95_response_time: float = 0.0
     p99_response_time: float = 0.0
     operations_per_second: float = 0.0
-    slow_operations: List[Dict[str, Any]] = field(default_factory=list)
+    slow_operations: list[dict[str, Any]] = field(default_factory=list)
 
 
 class ErrorMonitor:
@@ -60,8 +60,8 @@ class ErrorMonitor:
     def record_error(
         self,
         error: Exception,
-        operation: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None,
+        operation: str | None = None,
+        context: dict[str, Any] | None = None,
     ) -> None:
         """记录错误"""
         with self._lock:
@@ -159,7 +159,7 @@ class PerformanceTracker:
         operation: str,
         duration_ms: float,
         status: str = "success",
-        context: Optional[Dict[str, Any]] = None,
+        context: dict[str, Any] | None = None,
     ) -> None:
         """记录操作性能"""
         with self._lock:
@@ -244,8 +244,8 @@ class MonitoringManager:
     """监控管理器"""
 
     def __init__(self):
-        self.error_monitors: Dict[str, ErrorMonitor] = {}
-        self.performance_trackers: Dict[str, PerformanceTracker] = {}
+        self.error_monitors: dict[str, ErrorMonitor] = {}
+        self.performance_trackers: dict[str, PerformanceTracker] = {}
         self.logger = get_logger("monitoring_manager")
 
     def get_error_monitor(self, name: str = "default") -> ErrorMonitor:
@@ -260,7 +260,7 @@ class MonitoringManager:
             self.performance_trackers[name] = PerformanceTracker(name)
         return self.performance_trackers[name]
 
-    def get_overall_metrics(self) -> Dict[str, Any]:
+    def get_overall_metrics(self) -> dict[str, Any]:
         """获取整体指标"""
         metrics = {"error_metrics": {}, "performance_metrics": {}}
 
@@ -274,7 +274,7 @@ class MonitoringManager:
 
         return metrics
 
-    def check_health(self) -> Dict[str, Any]:
+    def check_health(self) -> dict[str, Any]:
         """健康检查"""
         health_status = {
             "status": "healthy",

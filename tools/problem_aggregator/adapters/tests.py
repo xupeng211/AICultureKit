@@ -5,7 +5,7 @@ Tests and coverage adapter for pytest
 import subprocess
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 class TestsAdapter:
@@ -14,7 +14,7 @@ class TestsAdapter:
     def __init__(self, project_root: str = "."):
         self.project_root = Path(project_root)
 
-    def collect_tests(self) -> List[Dict[str, Any]]:
+    def collect_tests(self) -> list[dict[str, Any]]:
         """收集测试信息"""
         problems = []
 
@@ -93,7 +93,7 @@ class TestsAdapter:
 
         return problems
 
-    def run_tests_quick(self) -> List[Dict[str, Any]]:
+    def run_tests_quick(self) -> list[dict[str, Any]]:
         """快速运行测试（仅检查是否能运行）"""
         problems = []
 
@@ -150,7 +150,7 @@ class TestsAdapter:
 
         return problems
 
-    def get_coverage_info(self, min_coverage: float = 80.0) -> List[Dict[str, Any]]:
+    def get_coverage_info(self, min_coverage: float = 80.0) -> list[dict[str, Any]]:
         """获取测试覆盖率信息"""
         problems = []
 
@@ -308,7 +308,7 @@ class TestsAdapter:
 
         return problems
 
-    def check_test_patterns(self) -> List[Dict[str, Any]]:
+    def check_test_patterns(self) -> list[dict[str, Any]]:
         """检查测试模式和约定"""
         problems = []
 

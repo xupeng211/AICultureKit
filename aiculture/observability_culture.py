@@ -19,7 +19,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 
 class LogLevel(Enum):
@@ -50,16 +50,16 @@ class StructuredLogEntry:
     message: str
     service: str
     version: str
-    trace_id: Optional[str] = None
-    span_id: Optional[str] = None
-    user_id: Optional[str] = None
-    request_id: Optional[str] = None
-    component: Optional[str] = None
-    operation: Optional[str] = None
-    duration_ms: Optional[float] = None
-    status: Optional[str] = None
-    error: Optional[str] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    trace_id: str | None = None
+    span_id: str | None = None
+    user_id: str | None = None
+    request_id: str | None = None
+    component: str | None = None
+    operation: str | None = None
+    duration_ms: float | None = None
+    status: str | None = None
+    error: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -68,9 +68,9 @@ class Metric:
 
     name: str
     type: MetricType
-    value: Union[int, float]
+    value: int | float
     timestamp: float
-    labels: Dict[str, str] = field(default_factory=dict)
+    labels: dict[str, str] = field(default_factory=dict)
     help_text: str = ""
 
 
@@ -80,14 +80,14 @@ class Span:
 
     trace_id: str
     span_id: str
-    parent_span_id: Optional[str]
+    parent_span_id: str | None
     operation_name: str
     start_time: float
-    end_time: Optional[float] = None
-    duration_ms: Optional[float] = None
+    end_time: float | None = None
+    duration_ms: float | None = None
     status: str = "ok"  # ok, error, timeout
-    tags: Dict[str, Any] = field(default_factory=dict)
-    logs: List[Dict[str, Any]] = field(default_factory=list)
+    tags: dict[str, Any] = field(default_factory=dict)
+    logs: list[dict[str, Any]] = field(default_factory=list)
 
 
 class StructuredLogger:
@@ -97,7 +97,7 @@ class StructuredLogger:
         self,
         service_name: str,
         version: str = "1.0.0",
-        output_file: Optional[Path] = None,
+        output_file: Path | None = None,
     ):
         self.service_name = service_name
         self.version = version
@@ -119,7 +119,7 @@ class StructuredLogger:
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
 
-    def _get_context(self) -> Dict[str, Any]:
+    def _get_context(self) -> dict[str, Any]:
         """获取当前上下文"""
         return getattr(self.context, "data", {})
 
@@ -236,16 +236,16 @@ class MetricsCollector:
     def __init__(self, service_name: str):
         """__init__函数"""
         self.service_name = service_name
-        self.metrics: List[Metric] = []
-        self.counters: Dict[str, float] = {}
-        self.gauges: Dict[str, float] = {}
+        self.metrics: list[Metric] = []
+        self.counters: dict[str, float] = {}
+        self.gauges: dict[str, float] = {}
         self.lock = threading.Lock()
 
     def counter(
         self,
         name: str,
         value: float = 1,
-        labels: Optional[Dict[str, str]] = None,
+        labels: dict[str, str] | None = None,
         help_text: str = "",
     ) -> None:
         """计数器指标"""
@@ -267,7 +267,7 @@ class MetricsCollector:
         self,
         name: str,
         value: float,
-        labels: Optional[Dict[str, str]] = None,
+        labels: dict[str, str] | None = None,
         help_text: str = "",
     ) -> None:
         """仪表盘指标"""
@@ -289,7 +289,7 @@ class MetricsCollector:
         self,
         name: str,
         value: float,
-        labels: Optional[Dict[str, str]] = None,
+        labels: dict[str, str] | None = None,
         help_text: str = "",
     ) -> None:
         """直方图指标"""
@@ -304,7 +304,7 @@ class MetricsCollector:
         with self.lock:
             self.metrics.append(metric)
 
-    def get_metrics(self, format: str = "json") -> Union[str, List[Dict]]:
+    def get_metrics(self, format: str = "json") -> str | list[dict]:
         """获取指标数据"""
         with self.lock:
             if format == "json":
@@ -352,10 +352,10 @@ class DistributedTracer:
     def __init__(self, service_name: str):
         """__init__函数"""
         self.service_name = service_name
-        self.spans: Dict[str, Span] = {}
+        self.spans: dict[str, Span] = {}
         self.active_spans = threading.local()
 
-    def start_span(self, operation_name: str, parent_span_id: Optional[str] = None) -> Span:
+    def start_span(self, operation_name: str, parent_span_id: str | None = None) -> Span:
         """开始一个新的Span"""
         trace_id = getattr(self.active_spans, "trace_id", None)
         if not trace_id:
@@ -405,11 +405,11 @@ class DistributedTracer:
             self.finish_span(span, "error", error=str(e))
             raise
 
-    def get_trace(self, trace_id: str) -> List[Span]:
+    def get_trace(self, trace_id: str) -> list[Span]:
         """获取完整的追踪链"""
         return [span for span in self.spans.values() if span.trace_id == trace_id]
 
-    def export_traces(self, format: str = "json") -> Union[str, List[Dict]]:
+    def export_traces(self, format: str = "json") -> str | list[dict]:
         """导出追踪数据"""
         if format == "json":
             return [asdict(span) for span in self.spans.values()]
@@ -418,7 +418,7 @@ class DistributedTracer:
         else:
             return list(self.spans.values())
 
-    def _format_jaeger(self) -> Dict[str, Any]:
+    def _format_jaeger(self) -> dict[str, Any]:
         """格式化为Jaeger格式"""
         traces = {}
         for span in self.spans.values():
@@ -447,7 +447,7 @@ class ObservabilityManager:
         self,
         service_name: str,
         version: str = "1.0.0",
-        output_dir: Optional[Path] = None,
+        output_dir: Path | None = None,
     ):
         self.service_name = service_name
         self.version = version
@@ -499,7 +499,7 @@ class ObservabilityManager:
             finally:
                 self.logger.clear_context()
 
-    def export_observability_data(self) -> Dict[str, Any]:
+    def export_observability_data(self) -> dict[str, Any]:
         """导出所有可观测性数据"""
         return {
             "service": self.service_name,
@@ -509,7 +509,7 @@ class ObservabilityManager:
             "traces": self.tracer.export_traces(),
         }
 
-    def generate_dashboard_config(self) -> Dict[str, Any]:
+    def generate_dashboard_config(self) -> dict[str, Any]:
         """生成仪表板配置"""
         return {
             "dashboard": {

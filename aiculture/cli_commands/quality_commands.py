@@ -175,7 +175,7 @@ def metrics(path: str) -> None:
 
         for py_file in python_files:
             try:
-                with open(py_file, "r", encoding="utf-8") as f:
+                with open(py_file, encoding="utf-8") as f:
                     lines = f.readlines()
                     total_lines += len(lines)
 

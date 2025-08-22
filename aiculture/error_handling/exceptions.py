@@ -4,7 +4,7 @@
 定义项目中使用的所有自定义异常类，提供清晰的错误分类和处理。
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 
 class AICultureError(Exception):
@@ -13,9 +13,9 @@ class AICultureError(Exception):
     def __init__(
         self,
         message: str,
-        error_code: Optional[str] = None,
-        details: Optional[Dict[str, Any]] = None,
-        cause: Optional[Exception] = None,
+        error_code: str | None = None,
+        details: dict[str, Any] | None = None,
+        cause: Exception | None = None,
     ):
         super().__init__(message)
         self.message = message
@@ -23,7 +23,7 @@ class AICultureError(Exception):
         self.details = details or {}
         self.cause = cause
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """转换为字典格式"""
         return {
             "error_type": self.__class__.__name__,
@@ -40,8 +40,8 @@ class ConfigurationError(AICultureError):
     def __init__(
         self,
         message: str,
-        config_file: Optional[str] = None,
-        config_key: Optional[str] = None,
+        config_file: str | None = None,
+        config_key: str | None = None,
         **kwargs,
     ):
         details = kwargs.get("details", {})
@@ -59,9 +59,9 @@ class ValidationError(AICultureError):
     def __init__(
         self,
         message: str,
-        field: Optional[str] = None,
-        value: Optional[Any] = None,
-        expected_type: Optional[str] = None,
+        field: str | None = None,
+        value: Any | None = None,
+        expected_type: str | None = None,
         **kwargs,
     ):
         details = kwargs.get("details", {})
@@ -81,9 +81,9 @@ class ProcessingError(AICultureError):
     def __init__(
         self,
         message: str,
-        operation: Optional[str] = None,
-        file_path: Optional[str] = None,
-        line_number: Optional[int] = None,
+        operation: str | None = None,
+        file_path: str | None = None,
+        line_number: int | None = None,
         **kwargs,
     ):
         details = kwargs.get("details", {})
@@ -103,8 +103,8 @@ class ResourceError(AICultureError):
     def __init__(
         self,
         message: str,
-        resource_type: Optional[str] = None,
-        resource_path: Optional[str] = None,
+        resource_type: str | None = None,
+        resource_path: str | None = None,
         **kwargs,
     ):
         details = kwargs.get("details", {})
@@ -122,9 +122,9 @@ class IntegrationError(AICultureError):
     def __init__(
         self,
         message: str,
-        service: Optional[str] = None,
-        endpoint: Optional[str] = None,
-        status_code: Optional[int] = None,
+        service: str | None = None,
+        endpoint: str | None = None,
+        status_code: int | None = None,
         **kwargs,
     ):
         details = kwargs.get("details", {})
@@ -144,8 +144,8 @@ class SecurityError(AICultureError):
     def __init__(
         self,
         message: str,
-        security_issue: Optional[str] = None,
-        severity: Optional[str] = None,
+        security_issue: str | None = None,
+        severity: str | None = None,
         **kwargs,
     ):
         details = kwargs.get("details", {})
@@ -163,9 +163,9 @@ class PerformanceError(AICultureError):
     def __init__(
         self,
         message: str,
-        operation: Optional[str] = None,
-        duration_ms: Optional[float] = None,
-        threshold_ms: Optional[float] = None,
+        operation: str | None = None,
+        duration_ms: float | None = None,
+        threshold_ms: float | None = None,
         **kwargs,
     ):
         details = kwargs.get("details", {})
@@ -185,10 +185,10 @@ class CultureViolationError(AICultureError):
     def __init__(
         self,
         message: str,
-        principle: Optional[str] = None,
-        severity: Optional[str] = None,
-        file_path: Optional[str] = None,
-        line_number: Optional[int] = None,
+        principle: str | None = None,
+        severity: str | None = None,
+        file_path: str | None = None,
+        line_number: int | None = None,
         **kwargs,
     ):
         details = kwargs.get("details", {})
@@ -210,8 +210,8 @@ class QualityGateError(AICultureError):
     def __init__(
         self,
         message: str,
-        gate_name: Optional[str] = None,
-        failed_checks: Optional[list] = None,
+        gate_name: str | None = None,
+        failed_checks: list | None = None,
         **kwargs,
     ):
         details = kwargs.get("details", {})

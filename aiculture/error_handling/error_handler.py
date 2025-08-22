@@ -6,9 +6,10 @@
 
 import functools
 import time
+from collections.abc import Callable
 from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, List, Optional, Type
+from typing import Any
 
 from .exceptions import get_error_severity, is_retryable_error
 from .logging_system import get_logger
@@ -23,14 +24,14 @@ class RetryConfig:
     max_delay: float = 60.0  # 最大延迟（秒）
     exponential_base: float = 2.0  # 指数退避基数
     jitter: bool = True  # 是否添加随机抖动
-    retryable_exceptions: Optional[List[Type[Exception]]] = None
+    retryable_exceptions: list[type[Exception]] | None = None
 
 
 @dataclass
 class FallbackConfig:
     """降级配置"""
 
-    fallback_function: Optional[Callable] = None
+    fallback_function: Callable | None = None
     fallback_value: Any = None
     use_cache: bool = True
     cache_ttl: int = 300  # 缓存TTL（秒）
@@ -42,9 +43,9 @@ class ErrorHandler:
     def __init__(self, name: str = "default"):
         self.name = name
         self.logger = get_logger(f"error_handler.{name}")
-        self._error_stats: Dict[str, int] = {}
-        self._cache: Dict[str, Any] = {}
-        self._cache_timestamps: Dict[str, float] = {}
+        self._error_stats: dict[str, int] = {}
+        self._cache: dict[str, Any] = {}
+        self._cache_timestamps: dict[str, float] = {}
 
     def _should_retry(self, error: Exception, retry_config: RetryConfig) -> bool:
         """判断是否应该重试"""
@@ -78,7 +79,7 @@ class ErrorHandler:
         key_data = f"{func.__name__}:{str(args)}:{str(sorted(kwargs.items()))}"
         return hashlib.md5(key_data.encode()).hexdigest()
 
-    def _get_cached_result(self, cache_key: str, ttl: int) -> Optional[Any]:
+    def _get_cached_result(self, cache_key: str, ttl: int) -> Any | None:
         """获取缓存结果"""
         if cache_key not in self._cache:
             return None
@@ -104,8 +105,8 @@ class ErrorHandler:
 
     def with_retry(
         self,
-        retry_config: Optional[RetryConfig] = None,
-        fallback_config: Optional[FallbackConfig] = None,
+        retry_config: RetryConfig | None = None,
+        fallback_config: FallbackConfig | None = None,
     ):
         """重试装饰器"""
         if retry_config is None:
@@ -126,7 +127,7 @@ class ErrorHandler:
         args: tuple,
         kwargs: dict,
         retry_config: RetryConfig,
-        fallback_config: Optional[FallbackConfig] = None,
+        fallback_config: FallbackConfig | None = None,
     ) -> Any:
         """执行函数并处理重试"""
         last_error = None
@@ -217,7 +218,7 @@ class ErrorHandler:
             )
             raise original_error
 
-    def get_error_stats(self) -> Dict[str, int]:
+    def get_error_stats(self) -> dict[str, int]:
         """获取错误统计"""
         return self._error_stats.copy()
 
@@ -231,9 +232,9 @@ _default_handler = ErrorHandler("default")
 
 
 def with_error_handling(
-    retry_config: Optional[RetryConfig] = None,
-    fallback_config: Optional[FallbackConfig] = None,
-    handler: Optional[ErrorHandler] = None,
+    retry_config: RetryConfig | None = None,
+    fallback_config: FallbackConfig | None = None,
+    handler: ErrorHandler | None = None,
 ):
     """错误处理装饰器"""
     if handler is None:
@@ -245,9 +246,9 @@ def with_error_handling(
 @contextmanager
 def handle_errors(
     operation_name: str,
-    retry_config: Optional[RetryConfig] = None,
-    fallback_config: Optional[FallbackConfig] = None,
-    handler: Optional[ErrorHandler] = None,
+    retry_config: RetryConfig | None = None,
+    fallback_config: FallbackConfig | None = None,
+    handler: ErrorHandler | None = None,
 ):
     """错误处理上下文管理器"""
     if handler is None:

@@ -1,6 +1,5 @@
 """AI生成的文化执行器全面测试"""
 
-import os
 import sys
 import tempfile
 import unittest

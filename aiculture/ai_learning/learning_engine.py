@@ -8,7 +8,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from .code_analyzer import CodeAnalyzer
 from .pattern_types import (
@@ -77,7 +77,7 @@ class LearningEngine:
         self.logger.info(f"✅ 学习完成，发现 {len(patterns)} 个模式")
         return result
 
-    def _extract_patterns(self, project_info: Dict[str, Any]) -> List[ProjectPattern]:
+    def _extract_patterns(self, project_info: dict[str, Any]) -> list[ProjectPattern]:
         """从项目信息中提取模式"""
         all_patterns = []
 
@@ -117,7 +117,7 @@ class LearningEngine:
 
         return filtered_patterns
 
-    def _assess_project_maturity(self, project_info: Dict[str, Any]) -> str:
+    def _assess_project_maturity(self, project_info: dict[str, Any]) -> str:
         """评估项目成熟度"""
         score = 0
         max_score = 0
@@ -187,7 +187,7 @@ class LearningEngine:
         return "beginner"
 
     def _calculate_recommended_strictness(
-        self, maturity: str, patterns: List[ProjectPattern]
+        self, maturity: str, patterns: list[ProjectPattern]
     ) -> float:
         """计算推荐的严格度"""
         base_strictness = {"beginner": 0.3, "intermediate": 0.6, "expert": 0.8}
@@ -204,8 +204,8 @@ class LearningEngine:
         return min(max(strictness, 0.1), 1.0)
 
     def _generate_custom_rules(
-        self, patterns: List[ProjectPattern], project_info: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, patterns: list[ProjectPattern], project_info: dict[str, Any]
+    ) -> dict[str, Any]:
         """生成自定义规则"""
         rules = {"flake8": {}, "mypy": {}, "pylint": {}, "black": {}, "isort": {}}
 
@@ -243,7 +243,7 @@ class LearningEngine:
 
         return rules
 
-    def _analyze_team_preferences(self, project_info: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_team_preferences(self, project_info: dict[str, Any]) -> dict[str, Any]:
         """分析团队偏好"""
         preferences = {}
 
@@ -321,7 +321,7 @@ class LearningEngine:
 
             self.logger.info(f"✅ 学习结果已保存到: {result_file}")
 
-        except IOError as e:
+        except OSError as e:
             self.logger.error(f"❌ 保存学习结果失败: {e}")
 
     def load_learning_result(self) -> LearningResult:
@@ -332,7 +332,7 @@ class LearningEngine:
             raise FileNotFoundError("学习结果文件不存在")
 
         try:
-            with open(result_file, "r", encoding="utf-8") as f:
+            with open(result_file, encoding="utf-8") as f:
                 data = json.load(f)
 
             # 重建ProjectPattern对象
@@ -359,5 +359,5 @@ class LearningEngine:
 
             return result
 
-        except (IOError, json.JSONDecodeError, KeyError) as e:
+        except (OSError, json.JSONDecodeError, KeyError) as e:
             raise ValueError(f"加载学习结果失败: {e}")

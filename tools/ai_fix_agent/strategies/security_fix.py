@@ -4,7 +4,7 @@
 
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 
 class SecurityFixStrategy:
@@ -13,7 +13,7 @@ class SecurityFixStrategy:
     def __init__(self, project_root: str = "."):
         self.project_root = Path(project_root)
 
-    def can_fix(self, problem: Dict[str, Any]) -> bool:
+    def can_fix(self, problem: dict[str, Any]) -> bool:
         """判断是否可以修复此问题"""
         if problem.get("tool") not in ["bandit", "detect-secrets"]:
             return False
@@ -30,7 +30,7 @@ class SecurityFixStrategy:
 
         return False
 
-    def generate_fix(self, problems: List[Dict[str, Any]]) -> Tuple[str, str, float]:
+    def generate_fix(self, problems: list[dict[str, Any]]) -> tuple[str, str, float]:
         """
         生成安全修复补丁
 
@@ -83,8 +83,8 @@ class SecurityFixStrategy:
         return patch_content, explanation, avg_confidence
 
     def _fix_file_problems(
-        self, file_path: str, problems: List[Dict[str, Any]]
-    ) -> Tuple[str, str, float]:
+        self, file_path: str, problems: list[dict[str, Any]]
+    ) -> tuple[str, str, float]:
         """修复单个文件的安全问题"""
 
         full_path = self.project_root / file_path
@@ -92,7 +92,7 @@ class SecurityFixStrategy:
             return "", f"文件不存在: {file_path}", 0.0
 
         try:
-            with open(full_path, "r", encoding="utf-8") as f:
+            with open(full_path, encoding="utf-8") as f:
                 original_content = f.read()
         except Exception as e:
             return "", f"读取文件失败: {e}", 0.0
@@ -120,9 +120,7 @@ class SecurityFixStrategy:
 
         return patch_content, explanation, confidence
 
-    def _apply_security_fix(
-        self, content: str, problem: Dict[str, Any]
-    ) -> Optional[Tuple[str, str]]:
+    def _apply_security_fix(self, content: str, problem: dict[str, Any]) -> tuple[str, str] | None:
         """应用单个安全修复"""
 
         if problem.get("tool") != "bandit":
@@ -257,7 +255,7 @@ class SecurityFixStrategy:
 
         return "\n".join(patch_lines)
 
-    def generate_manual_guide(self, problems: List[Dict[str, Any]]) -> str:
+    def generate_manual_guide(self, problems: list[dict[str, Any]]) -> str:
         """为无法自动修复的问题生成手工修复指南"""
 
         guides = []
@@ -286,7 +284,7 @@ class SecurityFixStrategy:
 
         return "\n".join(guides)
 
-    def _generate_secrets_guide(self, problems: List[Dict[str, Any]]) -> str:
+    def _generate_secrets_guide(self, problems: list[dict[str, Any]]) -> str:
         """生成密钥问题修复指南"""
 
         guide = ["## 🔑 密钥泄漏修复指南\n"]
@@ -321,7 +319,7 @@ class SecurityFixStrategy:
 
         return "\n".join(guide)
 
-    def _generate_bandit_guide(self, test_id: str, problems: List[Dict[str, Any]]) -> str:
+    def _generate_bandit_guide(self, test_id: str, problems: list[dict[str, Any]]) -> str:
         """生成bandit问题修复指南"""
 
         guide = [f"## 🛡️ {test_id} 安全问题修复指南\n"]

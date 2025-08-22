@@ -10,7 +10,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import yaml
 
@@ -23,7 +23,7 @@ from .adapters.tests import TestsAdapter
 class ProblemAggregator:
     """问题聚合器主类"""
 
-    def __init__(self, project_root: str = ".", config_path: Optional[str] = None):
+    def __init__(self, project_root: str = ".", config_path: str | None = None):
         self.project_root = Path(project_root)
         self.config = self._load_config(config_path)
 
@@ -33,7 +33,7 @@ class ProblemAggregator:
         self.tests_adapter = TestsAdapter(str(self.project_root))
         self.diff_coverage_adapter = DiffCoverageAdapter(str(self.project_root))
 
-    def _load_config(self, config_path: Optional[str] = None) -> Dict[str, Any]:
+    def _load_config(self, config_path: str | None = None) -> dict[str, Any]:
         """加载配置文件"""
         default_config = {
             "culture": {
@@ -67,7 +67,7 @@ class ProblemAggregator:
 
         if config_file and config_file.exists():
             try:
-                with open(config_file, "r", encoding="utf-8") as f:
+                with open(config_file, encoding="utf-8") as f:
                     loaded_config = yaml.safe_load(f)
                     # 合并配置
                     default_config.update(loaded_config)
@@ -76,7 +76,7 @@ class ProblemAggregator:
 
         return default_config
 
-    def get_changed_files(self, base: str = "HEAD") -> List[str]:
+    def get_changed_files(self, base: str = "HEAD") -> list[str]:
         """获取变更的文件列表"""
         try:
             if base == "HEAD":
@@ -106,9 +106,9 @@ class ProblemAggregator:
     def aggregate_problems(
         self,
         base: str = "HEAD",
-        files: Optional[List[str]] = None,
+        files: list[str] | None = None,
         strict: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """聚合所有问题"""
 
         print("🔍 开始聚合问题检查...")
@@ -201,7 +201,7 @@ class ProblemAggregator:
 
         return result
 
-    def _check_culture_rules(self, files: List[str]) -> List[Dict[str, Any]]:
+    def _check_culture_rules(self, files: list[str]) -> list[dict[str, Any]]:
         """检查自定义文化规则"""
         problems = []
         culture_config = self.config.get("culture", {})
@@ -217,7 +217,7 @@ class ProblemAggregator:
                 continue
 
             try:
-                with open(full_path, "r", encoding="utf-8") as f:
+                with open(full_path, encoding="utf-8") as f:
                     content = f.read()
 
                 lines = content.split("\n")
@@ -315,7 +315,7 @@ class ProblemAggregator:
 
         return in_string
 
-    def _categorize_problems(self, problems: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _categorize_problems(self, problems: list[dict[str, Any]]) -> dict[str, Any]:
         """分类和统计问题"""
         categories = {
             "security": [],

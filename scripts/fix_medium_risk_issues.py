@@ -10,10 +10,9 @@
 
 import re
 from pathlib import Path
-from typing import Dict
 
 
-def get_safe_field_replacements() -> Dict[str, str]:
+def get_safe_field_replacements() -> dict[str, str]:
     """获取敏感字段的安全替换
 
     注意：以下字段名称仅用于演示和替换映射，不包含真实敏感数据
@@ -75,7 +74,7 @@ def get_safe_field_replacements() -> Dict[str, str]:
 def fix_sensitive_field_names(file_path: Path) -> bool:
     """修复文件中的敏感字段名"""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
@@ -134,7 +133,7 @@ def add_data_privacy_comments():
     for demo_file in demo_files:
         if demo_file.exists():
             try:
-                with open(demo_file, "r", encoding="utf-8") as f:
+                with open(demo_file, encoding="utf-8") as f:
                     content = f.read()
 
                 # 如果文件中没有隐私声明，添加它

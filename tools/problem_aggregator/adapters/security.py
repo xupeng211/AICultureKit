@@ -5,7 +5,7 @@ Security adapter for bandit and detect-secrets
 import json
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 class SecurityAdapter:
@@ -14,7 +14,7 @@ class SecurityAdapter:
     def __init__(self, project_root: str = "."):
         self.project_root = Path(project_root)
 
-    def run_bandit(self, files: List[str] = None) -> List[Dict[str, Any]]:
+    def run_bandit(self, files: list[str] = None) -> list[dict[str, Any]]:
         """运行bandit安全检查"""
         problems = []
 
@@ -99,7 +99,7 @@ class SecurityAdapter:
 
         return problems
 
-    def run_detect_secrets(self, files: List[str] = None) -> List[Dict[str, Any]]:
+    def run_detect_secrets(self, files: list[str] = None) -> list[dict[str, Any]]:
         """运行detect-secrets检查"""
         problems = []
 
@@ -176,7 +176,7 @@ class SecurityAdapter:
         mapping = {"HIGH": "error", "MEDIUM": "warning", "LOW": "info"}
         return mapping.get(severity.upper(), "warning")
 
-    def _get_bandit_fix_suggestion(self, issue: Dict[str, Any]) -> str:
+    def _get_bandit_fix_suggestion(self, issue: dict[str, Any]) -> str:
         """获取bandit修复建议"""
         test_id = issue.get("test_id", "")
 
@@ -242,7 +242,7 @@ class SecurityAdapter:
 
         return suggestions.get(test_id, f"参考bandit文档修复安全问题: {test_id}")
 
-    def _is_blocking_security_issue(self, issue: Dict[str, Any]) -> bool:
+    def _is_blocking_security_issue(self, issue: dict[str, Any]) -> bool:
         """判断是否为阻塞性安全问题"""
         severity = issue.get("issue_severity", "LOW")
         confidence = issue.get("issue_confidence", "LOW")

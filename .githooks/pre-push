@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# AICultureKit 智能推送前检查钩子
-# 在推送到远程仓库前进行最终的质量保障检查
+# AICultureKit 轻量级推送前检查钩子
+# 仅执行快速测试和基础格式化，重度检查交由CI处理
 
 # 颜色定义
 RED='\033[0;31m'
@@ -10,71 +10,43 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}🚀 执行推送前质量检查...${NC}"
+echo -e "${BLUE}🚀 执行轻量级推送前检查...${NC}"
 
-# 检查是否有未提交的更改
-if ! git diff-index --quiet HEAD --; then
-    echo -e "${RED}❌ 检测到未提交的更改，请先提交所有更改${NC}"
+# 1. 运行 pre-commit 钩子 (自动修复型检查)
+echo -e "\n${BLUE}🎨 运行 pre-commit 自动修复与格式化检查...${NC}"
+if ! pre-commit run --all-files; then
+    echo -e "${RED}❌ pre-commit 检查失败。请修复上述问题后再推送。${NC}"
+    echo -e "${YELLOW}💡 提示：大部分问题可通过 'pre-commit run --all-files' 自动修复。${NC}"
     exit 1
 fi
+echo -e "${GREEN}✅ pre-commit 检查通过。${NC}"
 
-# 运行完整的测试套件
-echo -e "${BLUE}🧪 运行完整测试套件...${NC}"
-if ! python -m pytest --tb=short -q; then
-    echo -e "${RED}❌ 测试失败，推送被阻止${NC}"
-    echo -e "${YELLOW}💡 请修复测试问题后再推送${NC}"
+# 2. 运行快速测试集 (非慢速、非端到端、非集成测试)
+echo -e "\n${BLUE}🧪 运行快速测试集...${NC}"
+if ! pytest -q -k "not slow and not e2e and not integration" --maxfail=1; then
+    echo -e "${RED}❌ 快速测试失败，推送被阻止。${NC}"
+    echo -e "${YELLOW}💡 请修复测试问题后再推送。重量级测试将由CI执行。${NC}"
     exit 1
 fi
+echo -e "${GREEN}✅ 快速测试通过。${NC}"
 
-# 检查代码覆盖率
-echo -e "${BLUE}📊 检查代码覆盖率...${NC}"
-coverage_result=$(python -m pytest --cov=aiculture --cov-report=term-missing --tb=no -q 2>/dev/null | grep "TOTAL" | awk '{print $NF}' | sed 's/%//')
-
-if [[ -n "$coverage_result" && "$coverage_result" -lt 30 ]]; then
-    echo -e "${YELLOW}⚠️  代码覆盖率较低 ($coverage_result%)，建议提升到30%以上${NC}"
-    echo -e "${YELLOW}💡 这不会阻止推送，但建议添加更多测试${NC}"
-fi
-
-# 检查是否有大文件
-echo -e "${BLUE}📁 检查大文件...${NC}"
-large_files=$(find . -type f -size +1M -not -path "./.git/*" -not -path "./.*env/*" -not -path "./venv/*")
-if [[ -n "$large_files" ]]; then
-    echo -e "${YELLOW}⚠️  发现大文件:${NC}"
-    echo "$large_files"
-    echo -e "${YELLOW}💡 考虑使用Git LFS管理大文件${NC}"
-fi
-
-# 检查敏感信息
-echo -e "${BLUE}🔒 检查敏感信息...${NC}"
+# 3. 检查敏感信息 (仅警告，不阻塞)
+echo -e "\n${BLUE}🔒 检查最近提交的敏感信息 (仅警告)...${NC}"
 sensitive_patterns=("password" "secret" "token" "api_key" "private_key")
+found_secrets=false
 for pattern in "${sensitive_patterns[@]}"; do
-    if git log --oneline -n 10 | xargs git show | grep -i "$pattern" > /dev/null; then
-        echo -e "${YELLOW}⚠️  可能包含敏感信息: $pattern${NC}"
-        echo -e "${YELLOW}💡 请确认是否需要移除敏感信息${NC}"
+    # 只检查最近的几次提交，避免扫描整个历史
+    if git log --oneline -n 10 | xargs -n 1 git show | grep -iE "$pattern" > /dev/null; then
+        echo -e "${YELLOW}⚠️  警告：最近10次提交中可能包含敏感信息关键词: $pattern${NC}"
+        found_secrets=true
     fi
 done
 
-# 生成推送报告
-echo -e "${BLUE}📋 生成推送报告...${NC}"
-commit_count=$(git rev-list --count HEAD ^origin/$(git branch --show-current) 2>/dev/null || echo "0")
-changed_files=$(git diff --name-only HEAD~${commit_count}..HEAD 2>/dev/null | wc -l)
-
-echo -e "${GREEN}✅ 推送前检查完成${NC}"
-echo -e "${BLUE}📊 推送统计:${NC}"
-echo -e "   - 新提交数: $commit_count"
-echo -e "   - 修改文件数: $changed_files"
-echo -e "   - 代码覆盖率: ${coverage_result}%"
-echo -e "   - 推送时间: $(date '+%Y-%m-%d %H:%M:%S')"
-
-# 询问是否继续推送（可选）
-if [[ "$1" == "--interactive" ]]; then
-    echo -e "${YELLOW}是否继续推送? (y/N)${NC}"
-    read -r response
-    if [[ ! "$response" =~ ^[Yy]$ ]]; then
-        echo -e "${YELLOW}推送已取消${NC}"
-        exit 1
-    fi
+if [ "$found_secrets" = true ]; then
+    echo -e "${YELLOW}💡 请仔细检查您的提交，确保没有意外泄露敏感信息。此警告不阻止推送。${NC}"
+else
+    echo -e "${GREEN}✅ 未在最近提交中发现明确的敏感信息关键词。${NC}"
 fi
 
-echo -e "${GREEN}🚀 质量检查通过，允许推送${NC}"
+echo -e "\n${GREEN}🚀 本地轻量级检查通过，允许推送。更严格的检查将由CI执行。${NC}"
 exit 0

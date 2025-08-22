@@ -8,7 +8,7 @@
 import json
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from .ai_behavior_enforcer import AIBehaviorEnforcer
 from .culture_enforcer import CultureEnforcer
@@ -22,7 +22,7 @@ class ProblemAggregator:
         self.project_path = Path(project_path)
         self.logger = get_logger("problem_aggregator")
 
-    def collect_all_problems(self) -> Dict[str, Any]:
+    def collect_all_problems(self) -> dict[str, Any]:
         """收集项目中的所有问题"""
         self.logger.info("开始收集所有问题...")
 
@@ -117,7 +117,7 @@ class ProblemAggregator:
 
         return all_problems
 
-    def _generate_fix_priority(self, problems: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _generate_fix_priority(self, problems: dict[str, Any]) -> list[dict[str, Any]]:
         """生成修复优先级列表"""
         priority_list = []
 
@@ -207,7 +207,7 @@ class ProblemAggregator:
 
         return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
-    def display_problem_summary(self, problems: Dict[str, Any]) -> None:
+    def display_problem_summary(self, problems: dict[str, Any]) -> None:
         """显示问题汇总"""
         print("\n" + "=" * 80)
         print("🔍 项目问题完整汇总报告")
@@ -285,7 +285,7 @@ class ProblemAggregator:
 
         print("=" * 80)
 
-    def save_problem_report(self, problems: Dict[str, Any], output_file: str = None) -> str:
+    def save_problem_report(self, problems: dict[str, Any], output_file: str = None) -> str:
         """保存问题报告到文件"""
         if output_file is None:
             output_file = (

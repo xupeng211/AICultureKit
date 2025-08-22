@@ -12,7 +12,7 @@ AI学习系统 - 智能分析项目特征并生成个性化开发文化规则。
 
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .ai_learning import CodeAnalyzer, LearningEngine, LearningResult, ProjectPattern
 
@@ -23,11 +23,11 @@ class ProjectAnalyzer:
     def __init__(self, project_path: Path) -> None:
         """初始化项目分析器"""
         self.project_path = project_path
-        self.patterns: List[ProjectPattern] = []
+        self.patterns: list[ProjectPattern] = []
         self.logger = logging.getLogger(__name__)
         self._analyzer = CodeAnalyzer(project_path)
 
-    def analyze_project(self) -> Dict[str, Any]:
+    def analyze_project(self) -> dict[str, Any]:
         """分析整个项目，返回项目特征"""
         return self._analyzer.analyze_project()
 
@@ -68,7 +68,7 @@ class AdaptiveStrictnessManager:
         return learning_result.recommended_strictness
 
     def adjust_strictness_based_on_feedback(
-        self, current_strictness: float, feedback: Dict[str, Any]
+        self, current_strictness: float, feedback: dict[str, Any]
     ) -> float:
         """根据反馈调整严格度"""
         # 简化实现
@@ -85,7 +85,7 @@ def save_learning_result(learning_result: LearningResult, project_path: Path) ->
     engine.save_learning_result(learning_result)
 
 
-def load_learning_result(project_path: Path) -> Optional[LearningResult]:
+def load_learning_result(project_path: Path) -> LearningResult | None:
     """从文件加载学习结果"""
     try:
         engine = LearningEngine(project_path)

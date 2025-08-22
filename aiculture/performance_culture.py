@@ -13,9 +13,10 @@ import json
 import threading
 import time
 import tracemalloc
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List
+from typing import Any
 
 import psutil
 
@@ -44,7 +45,7 @@ class PerformanceResult:
     is_regression: bool
     regression_factor: float
     timestamp: float = field(default_factory=time.time)
-    details: Dict[str, Any] = field(default_factory=dict)
+    details: dict[str, Any] = field(default_factory=dict)
 
 
 class PerformanceProfiler:
@@ -106,7 +107,7 @@ class PerformanceBenchmarkManager:
         self.project_path = project_path
         self.benchmarks_file = project_path / ".aiculture" / "performance_benchmarks.json"
         self.results_file = project_path / ".aiculture" / "performance_results.json"
-        self.benchmarks: Dict[str, PerformanceBenchmark] = {}
+        self.benchmarks: dict[str, PerformanceBenchmark] = {}
         self.profiler = PerformanceProfiler()
         self._load_benchmarks()
 
@@ -114,7 +115,7 @@ class PerformanceBenchmarkManager:
         """加载性能基准数据"""
         if self.benchmarks_file.exists():
             try:
-                with open(self.benchmarks_file, "r", encoding="utf-8") as f:
+                with open(self.benchmarks_file, encoding="utf-8") as f:
                     data = json.load(f)
                     for name, benchmark_data in data.items():
                         self.benchmarks[name] = PerformanceBenchmark(**benchmark_data)
@@ -211,7 +212,7 @@ class PerformanceBenchmarkManager:
         results = []
         if self.results_file.exists():
             try:
-                with open(self.results_file, "r", encoding="utf-8") as f:
+                with open(self.results_file, encoding="utf-8") as f:
                     results = json.load(f)
             except Exception:
                 results = []
@@ -235,12 +236,12 @@ class PerformanceBenchmarkManager:
         with open(self.results_file, "w", encoding="utf-8") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
 
-    def get_performance_report(self) -> Dict[str, Any]:
+    def get_performance_report(self) -> dict[str, Any]:
         """获取性能报告"""
         if not self.results_file.exists():
             return {"benchmarks": 0, "regressions": 0, "results": []}
 
-        with open(self.results_file, "r", encoding="utf-8") as f:
+        with open(self.results_file, encoding="utf-8") as f:
             results = json.load(f)
 
         regressions = [r for r in results if r.get("is_regression", False)]
@@ -313,7 +314,7 @@ class MemoryLeakDetector:
                 print(f"内存监控错误: {e}")
                 time.sleep(interval)
 
-    def detect_leaks(self) -> Dict[str, Any]:
+    def detect_leaks(self) -> dict[str, Any]:
         """检测内存泄漏"""
         if len(self.snapshots) < 10:
             return {
@@ -352,7 +353,7 @@ class MemoryLeakDetector:
             "snapshots_analyzed": len(recent_snapshots),
         }
 
-    def _calculate_trend(self, values: List[float]) -> float:
+    def _calculate_trend(self, values: list[float]) -> float:
         """计算趋势（简单线性回归斜率）"""
         if len(values) < 2:
             return 0

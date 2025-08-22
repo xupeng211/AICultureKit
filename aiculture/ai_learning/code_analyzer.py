@@ -7,7 +7,7 @@ AI学习系统 - 代码分析器
 import ast
 from collections import Counter
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from .pattern_types import (
     DocumentationPatternAnalyzer,
@@ -43,7 +43,7 @@ class CodeAnalyzer:
             "dist",
         }
 
-    def analyze_project(self) -> Dict[str, Any]:
+    def analyze_project(self) -> dict[str, Any]:
         """分析整个项目"""
         analysis_result = {
             "structure": self._analyze_structure(),
@@ -70,7 +70,7 @@ class CodeAnalyzer:
 
         return False
 
-    def _get_python_files(self) -> List[Path]:
+    def _get_python_files(self) -> list[Path]:
         """获取所有Python文件"""
         python_files = []
 
@@ -80,7 +80,7 @@ class CodeAnalyzer:
 
         return python_files
 
-    def _analyze_structure(self) -> Dict[str, Any]:
+    def _analyze_structure(self) -> dict[str, Any]:
         """分析项目结构"""
         structure_data = {
             "directories": [],
@@ -107,7 +107,7 @@ class CodeAnalyzer:
 
         return structure_data
 
-    def _analyze_naming(self) -> Dict[str, Any]:
+    def _analyze_naming(self) -> dict[str, Any]:
         """分析命名模式"""
         naming_data = {
             "function_names": [],
@@ -120,7 +120,7 @@ class CodeAnalyzer:
 
         for file_path in python_files:
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 tree = ast.parse(content)
@@ -146,7 +146,7 @@ class CodeAnalyzer:
 
         return naming_data
 
-    def _analyze_style(self) -> Dict[str, Any]:
+    def _analyze_style(self) -> dict[str, Any]:
         """分析代码风格"""
         style_data = {
             "quote_usage": {"single": 0, "double": 0},
@@ -159,7 +159,7 @@ class CodeAnalyzer:
 
         for file_path in python_files:
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     lines = f.readlines()
 
                 for line in lines:
@@ -190,7 +190,7 @@ class CodeAnalyzer:
 
         return style_data
 
-    def _analyze_documentation(self) -> Dict[str, Any]:
+    def _analyze_documentation(self) -> dict[str, Any]:
         """分析文档模式"""
         doc_data = {
             "docstring_style": Counter(),
@@ -205,7 +205,7 @@ class CodeAnalyzer:
 
         for file_path in python_files:
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 tree = ast.parse(content)
@@ -243,7 +243,7 @@ class CodeAnalyzer:
 
         return doc_data
 
-    def _analyze_complexity(self) -> Dict[str, Any]:
+    def _analyze_complexity(self) -> dict[str, Any]:
         """分析代码复杂度"""
         complexity_data = {
             "function_complexities": [],
@@ -256,7 +256,7 @@ class CodeAnalyzer:
 
         for file_path in python_files:
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 tree = ast.parse(content)
@@ -303,7 +303,7 @@ class CodeAnalyzer:
 
         return complexity
 
-    def _analyze_imports(self) -> Dict[str, Any]:
+    def _analyze_imports(self) -> dict[str, Any]:
         """分析导入模式"""
         import_data = {
             "import_types": Counter(),
@@ -317,7 +317,7 @@ class CodeAnalyzer:
 
         for file_path in python_files:
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 tree = ast.parse(content)
@@ -351,7 +351,7 @@ class CodeAnalyzer:
 
         return import_data
 
-    def _analyze_testing(self) -> Dict[str, Any]:
+    def _analyze_testing(self) -> dict[str, Any]:
         """分析测试模式"""
         testing_data = {
             "test_files": 0,
@@ -365,7 +365,7 @@ class CodeAnalyzer:
 
         for file_path in python_files:
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 # 检查是否为测试文件

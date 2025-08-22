@@ -13,10 +13,11 @@ import ast
 import json
 import threading
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 
 class CultureViolationSeverity(Enum):
@@ -47,7 +48,7 @@ class CultureViolation:
     line_number: int
     suggestion: str
     auto_fixable: bool = False
-    fix_command: Optional[str] = None
+    fix_command: str | None = None
     timestamp: float = field(default_factory=time.time)
 
 
@@ -57,7 +58,7 @@ class CultureGate:
 
     name: str
     description: str
-    blocking_rules: List[str]
+    blocking_rules: list[str]
     critical_threshold: int  # 严重违规的最大允许数量
     warning_threshold: int  # 警告违规的最大允许数量
     enabled: bool = True
@@ -71,8 +72,8 @@ class RealTimeCultureMonitor:
         self.project_path = project_path
         self.monitoring = False
         self.monitor_thread = None
-        self.violations: List[CultureViolation] = []
-        self.callbacks: List[Callable] = []
+        self.violations: list[CultureViolation] = []
+        self.callbacks: list[Callable] = []
 
         # 监控的文件扩展名
         self.monitored_extensions = {
@@ -129,7 +130,7 @@ class RealTimeCultureMonitor:
                 print(f"监控错误: {e}")
                 time.sleep(interval)
 
-    def _detect_file_changes(self) -> List[Path]:
+    def _detect_file_changes(self) -> list[Path]:
         """检测文件变更"""
         changed_files = []
 
@@ -161,7 +162,7 @@ class RealTimeCultureMonitor:
 
         return changed_files
 
-    def _check_changed_files(self, files: List[Path]) -> List[CultureViolation]:
+    def _check_changed_files(self, files: list[Path]) -> list[CultureViolation]:
         """检查变更文件的文化违规"""
         violations = []
 
@@ -171,12 +172,12 @@ class RealTimeCultureMonitor:
 
         return violations
 
-    def _check_single_file(self, file_path: Path) -> List[CultureViolation]:
+    def _check_single_file(self, file_path: Path) -> list[CultureViolation]:
         """检查单个文件"""
         violations = []
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             lines = content.split("\n")
@@ -193,8 +194,8 @@ class RealTimeCultureMonitor:
         return violations
 
     def _check_test_culture(
-        self, file_path: Path, content: str, lines: List[str]
-    ) -> List[CultureViolation]:
+        self, file_path: Path, content: str, lines: list[str]
+    ) -> list[CultureViolation]:
         """检查测试文化"""
         violations = []
 
@@ -220,8 +221,8 @@ class RealTimeCultureMonitor:
         return violations
 
     def _check_documentation_culture(
-        self, file_path: Path, content: str, lines: List[str]
-    ) -> List[CultureViolation]:
+        self, file_path: Path, content: str, lines: list[str]
+    ) -> list[CultureViolation]:
         """检查文档文化"""
         violations = []
 
@@ -252,8 +253,8 @@ class RealTimeCultureMonitor:
         return violations
 
     def _check_security_culture(
-        self, file_path: Path, content: str, lines: List[str]
-    ) -> List[CultureViolation]:
+        self, file_path: Path, content: str, lines: list[str]
+    ) -> list[CultureViolation]:
         """检查安全文化"""
         violations = []
 
@@ -284,8 +285,8 @@ class RealTimeCultureMonitor:
         return violations
 
     def _check_code_quality_culture(
-        self, file_path: Path, content: str, lines: List[str]
-    ) -> List[CultureViolation]:
+        self, file_path: Path, content: str, lines: list[str]
+    ) -> list[CultureViolation]:
         """检查代码质量文化"""
         violations = []
 
@@ -334,7 +335,7 @@ class CultureQualityGate:
         self.project_path = project_path
         self.gates = self._initialize_gates()
 
-    def _initialize_gates(self) -> Dict[str, CultureGate]:
+    def _initialize_gates(self) -> dict[str, CultureGate]:
         """初始化质量门禁"""
         return {
             "commit_gate": CultureGate(
@@ -360,7 +361,7 @@ class CultureQualityGate:
             ),
         }
 
-    def check_gate(self, gate_name: str, violations: List[CultureViolation]) -> Dict[str, Any]:
+    def check_gate(self, gate_name: str, violations: list[CultureViolation]) -> dict[str, Any]:
         """检查质量门禁"""
         if gate_name not in self.gates:
             return {
@@ -508,7 +509,7 @@ class AIDevCultureAssistant:
             print(f"💡 建议: {gate_result.get('suggestion', '修复违规后重试')}")
             return False
 
-    def generate_culture_report(self) -> Dict[str, Any]:
+    def generate_culture_report(self) -> dict[str, Any]:
         """生成文化报告"""
         violations = self.culture_monitor.violations
 
@@ -535,7 +536,7 @@ class AIDevCultureAssistant:
             "recommendations": self._generate_recommendations(violations),
         }
 
-    def _generate_recommendations(self, violations: List[CultureViolation]) -> List[str]:
+    def _generate_recommendations(self, violations: list[CultureViolation]) -> list[str]:
         """生成改进建议"""
         recommendations = []
 

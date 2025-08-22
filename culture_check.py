@@ -6,7 +6,7 @@
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Any
 
 # 添加项目路径
 sys.path.insert(0, str(Path(__file__).parent))
@@ -141,7 +141,7 @@ def check_monitoring_config():
         return False
 
 
-def run_all_checks() -> Dict[str, Any]:
+def run_all_checks() -> dict[str, Any]:
     """运行所有检查项目"""
     checks = {}
 
@@ -182,7 +182,7 @@ def run_all_checks() -> Dict[str, Any]:
     return checks
 
 
-def calculate_coverage_score(coverage: int) -> Tuple[int, str]:
+def calculate_coverage_score(coverage: int) -> tuple[int, str]:
     """计算测试覆盖率评分"""
     if coverage >= 80:
         return 30, "优秀"
@@ -194,7 +194,7 @@ def calculate_coverage_score(coverage: int) -> Tuple[int, str]:
         return 0, "不足"
 
 
-def calculate_quality_score(flake8_errors: int) -> Tuple[int, str]:
+def calculate_quality_score(flake8_errors: int) -> tuple[int, str]:
     """计算代码质量评分"""
     if flake8_errors == 0:
         return 25, "优秀"
@@ -206,7 +206,7 @@ def calculate_quality_score(flake8_errors: int) -> Tuple[int, str]:
         return 0, "不足"
 
 
-def calculate_security_score(high_risk: int, medium_risk: int) -> Tuple[int, str]:
+def calculate_security_score(high_risk: int, medium_risk: int) -> tuple[int, str]:
     """计算安全性评分"""
     if high_risk == 0 and medium_risk <= 5:
         return 20, "优秀"
@@ -218,7 +218,7 @@ def calculate_security_score(high_risk: int, medium_risk: int) -> Tuple[int, str
         return 0, "不足"
 
 
-def calculate_functional_score(checks: Dict[str, Any]) -> Tuple[int, str]:
+def calculate_functional_score(checks: dict[str, Any]) -> tuple[int, str]:
     """计算功能完整性评分"""
     functional_score = 0
     if checks["i18n"]:
@@ -238,7 +238,7 @@ def calculate_functional_score(checks: Dict[str, Any]) -> Tuple[int, str]:
         return functional_score, "不足"
 
 
-def calculate_scores(checks: Dict[str, Any]) -> Tuple[int, Dict[str, str]]:
+def calculate_scores(checks: dict[str, Any]) -> tuple[int, dict[str, str]]:
     """计算各项评分"""
     score = 0
     status_info = {}
@@ -267,7 +267,7 @@ def calculate_scores(checks: Dict[str, Any]) -> Tuple[int, Dict[str, str]]:
     return score, status_info
 
 
-def print_evaluation_results(checks: Dict[str, Any], score: int, status_info: Dict[str, str]):
+def print_evaluation_results(checks: dict[str, Any], score: int, status_info: dict[str, str]):
     """打印评估结果"""
     print()
     print("📊 综合评估结果:")
@@ -332,7 +332,7 @@ def print_security_suggestions(high_risk: int, medium_risk: int):
         print("   • 逐步清理中等风险安全问题")
 
 
-def print_functionality_suggestions(checks: Dict[str, Any]):
+def print_functionality_suggestions(checks: dict[str, Any]):
     """打印功能相关建议"""
     if not checks["i18n"]:
         print("   • 修复国际化功能问题")
@@ -348,7 +348,7 @@ def print_congratulations(coverage: int, flake8_errors: int, high_risk: int):
         print("   🎊 恭喜！项目已达到优秀的文化标准！")
 
 
-def print_improvement_suggestions(checks: Dict[str, Any]):
+def print_improvement_suggestions(checks: dict[str, Any]):
     """打印改进建议"""
     print()
     print("💡 改进建议:")

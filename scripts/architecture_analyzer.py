@@ -7,7 +7,7 @@ import ast
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 @dataclass
@@ -19,7 +19,7 @@ class ArchitectureIssue:
     severity: str
     description: str
     suggestion: str
-    details: Dict[str, Any] = None
+    details: dict[str, Any] = None
 
 
 class ArchitectureAnalyzer:
@@ -32,7 +32,7 @@ class ArchitectureAnalyzer:
         self.dependencies = defaultdict(set)  # 简化的依赖图
         self.module_info = {}
 
-    def analyze_architecture(self) -> Dict[str, Any]:
+    def analyze_architecture(self) -> dict[str, Any]:
         """分析项目架构"""
         print("🏗️ 开始架构设计分析...")
 
@@ -65,7 +65,7 @@ class ArchitectureAnalyzer:
                 continue
 
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
                     tree = ast.parse(content)
 
@@ -273,7 +273,7 @@ class ArchitectureAnalyzer:
         relative_path = file_path.relative_to(self.project_path)
         return str(relative_path).replace("/", ".").replace("\\", ".").replace(".py", "")
 
-    def _extract_imports(self, tree: ast.AST) -> List[str]:
+    def _extract_imports(self, tree: ast.AST) -> list[str]:
         """提取导入信息"""
         imports = []
         for node in ast.walk(tree):
@@ -285,7 +285,7 @@ class ArchitectureAnalyzer:
                     imports.append(node.module)
         return imports
 
-    def _extract_classes(self, tree: ast.AST) -> List[Dict[str, Any]]:
+    def _extract_classes(self, tree: ast.AST) -> list[dict[str, Any]]:
         """提取类信息"""
         classes = []
         for node in ast.walk(tree):
@@ -302,7 +302,7 @@ class ArchitectureAnalyzer:
                 )
         return classes
 
-    def _extract_functions(self, tree: ast.AST) -> List[str]:
+    def _extract_functions(self, tree: ast.AST) -> list[str]:
         """提取函数信息"""
         functions = []
         for node in ast.walk(tree):
@@ -312,7 +312,7 @@ class ArchitectureAnalyzer:
                 functions.append(node.name)
         return functions
 
-    def _generate_architecture_report(self) -> Dict[str, Any]:
+    def _generate_architecture_report(self) -> dict[str, Any]:
         """生成架构分析报告"""
         # 按严重程度分组
         by_severity = defaultdict(list)

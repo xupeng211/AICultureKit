@@ -5,7 +5,7 @@ Lint问题修复策略
 import re
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 
 class LintFixStrategy:
@@ -14,7 +14,7 @@ class LintFixStrategy:
     def __init__(self, project_root: str = "."):
         self.project_root = Path(project_root)
 
-    def can_fix(self, problem: Dict[str, Any]) -> bool:
+    def can_fix(self, problem: dict[str, Any]) -> bool:
         """判断是否可以修复此问题"""
         if problem.get("tool") != "ruff":
             return False
@@ -37,7 +37,7 @@ class LintFixStrategy:
 
         return code in fixable_codes
 
-    def generate_fix(self, problems: List[Dict[str, Any]]) -> Tuple[str, str, float]:
+    def generate_fix(self, problems: list[dict[str, Any]]) -> tuple[str, str, float]:
         """
         生成修复补丁
 
@@ -90,8 +90,8 @@ class LintFixStrategy:
         return patch_content, explanation, avg_confidence
 
     def _fix_file_problems(
-        self, file_path: str, problems: List[Dict[str, Any]]
-    ) -> Tuple[str, str, float]:
+        self, file_path: str, problems: list[dict[str, Any]]
+    ) -> tuple[str, str, float]:
         """修复单个文件的问题"""
 
         full_path = self.project_root / file_path
@@ -99,7 +99,7 @@ class LintFixStrategy:
             return "", f"文件不存在: {file_path}", 0.0
 
         try:
-            with open(full_path, "r", encoding="utf-8") as f:
+            with open(full_path, encoding="utf-8") as f:
                 original_content = f.read()
         except Exception as e:
             return "", f"读取文件失败: {e}", 0.0
@@ -133,7 +133,7 @@ class LintFixStrategy:
 
         return patch_content, explanation, confidence
 
-    def _apply_single_fix(self, content: str, problem: Dict[str, Any]) -> Optional[Tuple[str, str]]:
+    def _apply_single_fix(self, content: str, problem: dict[str, Any]) -> tuple[str, str] | None:
         """应用单个修复"""
 
         code = problem.get("code", "")

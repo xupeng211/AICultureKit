@@ -5,10 +5,9 @@
 
 import re
 from pathlib import Path
-from typing import List, Tuple
 
 
-def get_security_replacements() -> List[Tuple[str, str]]:
+def get_security_replacements() -> list[tuple[str, str]]:
     """获取安全问题的替换规则"""
     return [
         # 邮箱地址替换
@@ -55,7 +54,7 @@ def get_security_replacements() -> List[Tuple[str, str]]:
 def fix_file_security_issues(file_path: Path) -> bool:
     """修复单个文件的安全问题"""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
@@ -102,7 +101,7 @@ configuration management systems for sensitive information.
     for demo_file in demo_files:
         if demo_file.exists():
             try:
-                with open(demo_file, "r", encoding="utf-8") as f:
+                with open(demo_file, encoding="utf-8") as f:
                     content = f.read()
 
                 # 如果文件开头没有安全声明，添加它
@@ -159,7 +158,7 @@ def main():
         for file_path in aiculture_dir.rglob("*.py"):
             # 只检查包含示例数据的文件
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
                     if any(
                         pattern in content.lower()

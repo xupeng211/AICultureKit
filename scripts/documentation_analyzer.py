@@ -8,7 +8,7 @@ import re
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 @dataclass
@@ -31,7 +31,7 @@ class DocumentationAnalyzer:
         self.project_path = project_path
         self.issues = []
 
-    def analyze_documentation(self) -> Dict[str, Any]:
+    def analyze_documentation(self) -> dict[str, Any]:
         """分析文档质量"""
         print("📚 开始文档与注释质量分析...")
 
@@ -55,7 +55,7 @@ class DocumentationAnalyzer:
                 continue
 
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
                     tree = ast.parse(content)
 
@@ -178,7 +178,7 @@ class DocumentationAnalyzer:
                 continue
 
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 self._check_markdown_structure(file_path, content)
@@ -249,7 +249,7 @@ class DocumentationAnalyzer:
                 continue
 
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     lines = f.readlines()
 
                 self._check_comment_quality(file_path, lines)
@@ -257,7 +257,7 @@ class DocumentationAnalyzer:
             except UnicodeDecodeError:
                 continue
 
-    def _check_comment_quality(self, file_path: Path, lines: List[str]):
+    def _check_comment_quality(self, file_path: Path, lines: list[str]):
         """检查注释质量"""
         for i, line in enumerate(lines, 1):
             stripped = line.strip()
@@ -312,7 +312,7 @@ class DocumentationAnalyzer:
         skip_dirs = {"venv", "__pycache__", ".git", "node_modules", ".pytest_cache"}
         return any(part in skip_dirs for part in file_path.parts)
 
-    def _generate_documentation_report(self) -> Dict[str, Any]:
+    def _generate_documentation_report(self) -> dict[str, Any]:
         """生成文档分析报告"""
         # 按严重程度分组
         by_severity = defaultdict(list)

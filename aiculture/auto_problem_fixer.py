@@ -9,7 +9,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from .error_handling import get_logger
 from .problem_aggregator import ProblemAggregator
@@ -24,7 +24,7 @@ class AutoProblemFixer:
         self.fixed_issues = []
         self.failed_fixes = []
 
-    def auto_fix_all_problems(self) -> Dict[str, Any]:
+    def auto_fix_all_problems(self) -> dict[str, Any]:
         """自动修复所有可修复的问题 - 集成AI智能修复"""
         self.logger.info("开始自动修复所有问题...")
 
@@ -108,7 +108,7 @@ class AutoProblemFixer:
         self._display_fix_report(fix_report)
         return fix_report
 
-    def _fix_category_problems(self, category: str, problems: Dict[str, Any]):
+    def _fix_category_problems(self, category: str, problems: dict[str, Any]):
         """修复特定类别的问题"""
         if category == "安全问题":
             self._fix_security_issues(problems["categories"]["security_issues"])
@@ -117,7 +117,7 @@ class AutoProblemFixer:
         elif category == "其他警告":
             self._fix_other_warnings(problems["categories"]["culture_warnings"])
 
-    def _fix_security_issues(self, security_issues: List[Dict[str, Any]]):
+    def _fix_security_issues(self, security_issues: list[dict[str, Any]]):
         """修复安全问题"""
         for issue in security_issues:
             try:
@@ -155,7 +155,7 @@ class AutoProblemFixer:
                 continue
 
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 original_content = content
@@ -182,7 +182,7 @@ class AutoProblemFixer:
                 continue
 
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 original_content = content
@@ -202,7 +202,7 @@ class AutoProblemFixer:
             except Exception as e:
                 print(f"    ❌ 修复失败: {file_path} - {e}")
 
-    def _fix_culture_errors(self, culture_errors: List[Dict[str, Any]]):
+    def _fix_culture_errors(self, culture_errors: list[dict[str, Any]]):
         """修复文化标准错误"""
         for error in culture_errors:
             try:
@@ -287,7 +287,7 @@ if __name__ == "__main__":
                 f.write(test_content)
             print("    ✅ 创建基本测试文件")
 
-    def _fix_other_warnings(self, warnings: List[Dict[str, Any]]):
+    def _fix_other_warnings(self, warnings: list[dict[str, Any]]):
         """修复其他警告"""
         for warning in warnings[:3]:  # 只修复前3个警告，避免过度修复
             try:
@@ -341,7 +341,7 @@ def _(text: str, lang: str = None) -> str:
 
         return any(pattern in str(file_path) for pattern in skip_patterns)
 
-    def _display_fix_report(self, report: Dict[str, Any]):
+    def _display_fix_report(self, report: dict[str, Any]):
         """显示修复报告"""
         print("\n" + "=" * 80)
         print("🔧 自动修复完成报告")

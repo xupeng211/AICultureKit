@@ -6,10 +6,9 @@
 import re
 import subprocess
 from pathlib import Path
-from typing import List
 
 
-def run_flake8() -> List[str]:
+def run_flake8() -> list[str]:
     """运行flake8并获取问题列表"""
     try:
         result = subprocess.run(
@@ -156,7 +155,7 @@ def fix_redefinition_issues(content: str) -> str:
 def fix_file(file_path: Path) -> bool:
     """修复单个文件"""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         original_content = content

@@ -6,7 +6,7 @@ AICultureKit 自动测试生成器
 
 import ast
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 
 class AutoTestGenerator:
@@ -17,7 +17,7 @@ class AutoTestGenerator:
         self.project_path = project_path or Path.cwd()
         self.generated_tests = []
 
-    def analyze_function(self, func_node: ast.FunctionDef) -> Dict[str, Any]:
+    def analyze_function(self, func_node: ast.FunctionDef) -> dict[str, Any]:
         """分析函数并生成测试信息"""
         info = {
             "name": func_node.name,
@@ -33,7 +33,7 @@ class AutoTestGenerator:
 
         return info
 
-    def analyze_class(self, class_node: ast.ClassDef) -> Dict[str, Any]:
+    def analyze_class(self, class_node: ast.ClassDef) -> dict[str, Any]:
         """分析类并生成测试信息"""
         methods = []
         for node in class_node.body:
@@ -47,7 +47,7 @@ class AutoTestGenerator:
             "bases": [ast.unparse(base) for base in class_node.bases],
         }
 
-    def generate_function_tests(self, func_info: Dict[str, Any], module_name: str) -> str:
+    def generate_function_tests(self, func_info: dict[str, Any], module_name: str) -> str:
         """为函数生成测试代码"""
         func_name = func_info["name"]
         args = func_info["args"]
@@ -106,7 +106,7 @@ class AutoTestGenerator:
 
         return test_code
 
-    def generate_class_tests(self, class_info: Dict[str, Any], module_name: str) -> str:
+    def generate_class_tests(self, class_info: dict[str, Any], module_name: str) -> str:
         """为类生成测试代码"""
         class_name = class_info["name"]
 

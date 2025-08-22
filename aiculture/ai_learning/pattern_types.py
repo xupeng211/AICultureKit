@@ -5,7 +5,7 @@ AI学习系统 - 模式类型定义
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any
 
 
 @dataclass
@@ -17,7 +17,7 @@ class ProjectPattern:
     pattern_value: Any  # 模式值
     confidence: float  # 置信度 (0-1)
     frequency: int  # 出现频率
-    examples: List[str]  # 示例
+    examples: list[str]  # 示例
 
 
 @dataclass
@@ -26,9 +26,9 @@ class LearningResult:
 
     project_maturity: str  # 项目成熟度：beginner, intermediate, expert
     recommended_strictness: float  # 推荐严格度 (0-1)
-    patterns: List[ProjectPattern]  # 发现的模式
-    custom_rules: Dict[str, Any]  # 生成的自定义规则
-    team_preferences: Dict[str, Any]  # 团队偏好
+    patterns: list[ProjectPattern]  # 发现的模式
+    custom_rules: dict[str, Any]  # 生成的自定义规则
+    team_preferences: dict[str, Any]  # 团队偏好
     generated_at: float  # 生成时间戳
 
 
@@ -40,7 +40,7 @@ class PatternAnalyzer:
         self.patterns = []
         self.confidence_threshold = 0.6
 
-    def analyze(self, data: Any) -> List[ProjectPattern]:
+    def analyze(self, data: Any) -> list[ProjectPattern]:
         """分析数据并返回模式"""
         raise NotImplementedError("子类必须实现analyze方法")
 
@@ -59,8 +59,8 @@ class PatternAnalyzer:
         return min(max(confidence, 0.0), 1.0)
 
     def _extract_examples(
-        self, data: List[str], pattern_value: str, max_examples: int = 5
-    ) -> List[str]:
+        self, data: list[str], pattern_value: str, max_examples: int = 5
+    ) -> list[str]:
         """提取模式示例"""
         examples = []
         for item in data:
@@ -74,7 +74,7 @@ class PatternAnalyzer:
 class NamingPatternAnalyzer(PatternAnalyzer):
     """命名模式分析器"""
 
-    def analyze(self, names: List[str]) -> List[ProjectPattern]:
+    def analyze(self, names: list[str]) -> list[ProjectPattern]:
         """分析命名模式"""
         if not names:
             return []
@@ -153,7 +153,7 @@ class NamingPatternAnalyzer(PatternAnalyzer):
 class StructurePatternAnalyzer(PatternAnalyzer):
     """结构模式分析器"""
 
-    def analyze(self, structure_data: Dict[str, Any]) -> List[ProjectPattern]:
+    def analyze(self, structure_data: dict[str, Any]) -> list[ProjectPattern]:
         """分析项目结构模式"""
         patterns = []
 
@@ -202,7 +202,7 @@ class StructurePatternAnalyzer(PatternAnalyzer):
 class StylePatternAnalyzer(PatternAnalyzer):
     """代码风格模式分析器"""
 
-    def analyze(self, style_data: Dict[str, Any]) -> List[ProjectPattern]:
+    def analyze(self, style_data: dict[str, Any]) -> list[ProjectPattern]:
         """分析代码风格模式"""
         patterns = []
 
@@ -276,7 +276,7 @@ class StylePatternAnalyzer(PatternAnalyzer):
 class DocumentationPatternAnalyzer(PatternAnalyzer):
     """文档模式分析器"""
 
-    def analyze(self, doc_data: Dict[str, Any]) -> List[ProjectPattern]:
+    def analyze(self, doc_data: dict[str, Any]) -> list[ProjectPattern]:
         """分析文档模式"""
         patterns = []
 

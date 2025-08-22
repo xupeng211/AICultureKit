@@ -5,10 +5,10 @@ AI修复代理工具函数
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
-def get_staged_python_files() -> List[str]:
+def get_staged_python_files() -> list[str]:
     """获取已暂存的Python文件列表"""
     try:
         result = subprocess.run(
@@ -26,7 +26,7 @@ def get_staged_python_files() -> List[str]:
 def get_file_content(file_path: str) -> str:
     """读取文件内容"""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             return f.read()
     except (FileNotFoundError, UnicodeDecodeError):
         return ""
@@ -42,7 +42,7 @@ def write_file_content(file_path: str, content: str) -> bool:
         return False
 
 
-def run_command(cmd: List[str], cwd: Optional[str] = None) -> Dict[str, Any]:
+def run_command(cmd: list[str], cwd: str | None = None) -> dict[str, Any]:
     """运行命令并返回结果"""
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=60)
@@ -133,7 +133,7 @@ def count_patch_lines(patch_content: str) -> int:
     )
 
 
-def split_large_patch(patch_content: str, max_lines: int = 200) -> List[str]:
+def split_large_patch(patch_content: str, max_lines: int = 200) -> list[str]:
     """将大patch分割为小patch"""
     if count_patch_lines(patch_content) <= max_lines:
         return [patch_content] if patch_content else []
