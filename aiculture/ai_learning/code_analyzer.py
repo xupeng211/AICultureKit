@@ -236,9 +236,7 @@ class CodeAnalyzer:
 
         # 计算文档覆盖率
         total_items = doc_data["total_functions"] + doc_data["total_classes"]
-        documented_items = (
-            doc_data["documented_functions"] + doc_data["documented_classes"]
-        )
+        documented_items = doc_data["documented_functions"] + doc_data["documented_classes"]
 
         if total_items > 0:
             doc_data["coverage"] = documented_items / total_items
@@ -282,12 +280,10 @@ class CodeAnalyzer:
 
         # 计算统计信息
         if complexity_data["function_complexities"]:
-            complexity_data["avg_complexity"] = sum(
-                complexity_data["function_complexities"]
-            ) / len(complexity_data["function_complexities"])
-            complexity_data["max_complexity"] = max(
+            complexity_data["avg_complexity"] = sum(complexity_data["function_complexities"]) / len(
                 complexity_data["function_complexities"]
             )
+            complexity_data["max_complexity"] = max(complexity_data["function_complexities"])
 
         return complexity_data
 
@@ -374,8 +370,7 @@ class CodeAnalyzer:
 
                 # 检查是否为测试文件
                 is_test_file = (
-                    "test" in file_path.name.lower()
-                    or "test" in str(file_path.parent).lower()
+                    "test" in file_path.name.lower() or "test" in str(file_path.parent).lower()
                 )
 
                 if is_test_file:
@@ -391,9 +386,7 @@ class CodeAnalyzer:
                 # 计算测试函数数量
                 tree = ast.parse(content)
                 for node in ast.walk(tree):
-                    if isinstance(node, ast.FunctionDef) and node.name.startswith(
-                        "test_"
-                    ):
+                    if isinstance(node, ast.FunctionDef) and node.name.startswith("test_"):
                         testing_data["test_functions"] += 1
 
             except (SyntaxError, UnicodeDecodeError):
@@ -401,8 +394,6 @@ class CodeAnalyzer:
 
         # 估算测试覆盖率
         if len(python_files) > 0:
-            testing_data["test_coverage_estimate"] = testing_data["test_files"] / len(
-                python_files
-            )
+            testing_data["test_coverage_estimate"] = testing_data["test_files"] / len(python_files)
 
         return testing_data

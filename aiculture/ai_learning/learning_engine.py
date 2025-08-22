@@ -149,9 +149,7 @@ class LearningEngine:
 
             # 检查标准目录
             standard_dirs = ["tests", "docs", "src"]
-            found_dirs = sum(
-                1 for d in standard_dirs if d in structure.get("directories", [])
-            )
+            found_dirs = sum(1 for d in standard_dirs if d in structure.get("directories", []))
             score += (found_dirs / len(standard_dirs)) * 20
             max_score += 20
 

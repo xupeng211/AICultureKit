@@ -23,9 +23,7 @@ def run_command(cmd, capture_output=True) -> None:
 
 def get_test_results() -> None:
     """获取测试结果"""
-    cmd = (
-        "python -m pytest --tb=no -q --json-report --json-report-file=test-report.json"
-    )
+    cmd = "python -m pytest --tb=no -q --json-report --json-report-file=test-report.json"
     run_command(cmd)
 
     try:

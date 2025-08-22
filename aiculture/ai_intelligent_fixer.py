@@ -49,9 +49,7 @@ class AIIntelligentFixer:
             "fixed_issues": self.fixed_issues,
             "failed_fixes": self.failed_fixes,
             "success_rate": (
-                len(self.fixed_issues)
-                / (len(self.fixed_issues) + len(self.failed_fixes))
-                * 100
+                len(self.fixed_issues) / (len(self.fixed_issues) + len(self.failed_fixes)) * 100
                 if (len(self.fixed_issues) + len(self.failed_fixes)) > 0
                 else 0
             ),
@@ -303,9 +301,7 @@ class AIIntelligentFixer:
                     # 如果内容有变化，谨慎写回文件
                     if content != original_content:
                         # 创建备份
-                        backup_path = file_path.with_suffix(
-                            file_path.suffix + ".backup"
-                        )
+                        backup_path = file_path.with_suffix(file_path.suffix + ".backup")
                         with open(backup_path, "w", encoding="utf-8") as f:
                             f.write(original_content)
 
@@ -477,7 +473,7 @@ sys.path.insert(0, str(project_root))
 
 class TestAIGenerated(unittest.TestCase):
     """AI生成的智能测试类"""
-    
+
     def test_project_imports(self):
         """测试项目核心模块导入"""
         try:
@@ -486,7 +482,7 @@ class TestAIGenerated(unittest.TestCase):
             self.assertTrue(True, "核心模块导入成功")
         except ImportError as e:
             self.fail(f"核心模块导入失败: {e}")
-    
+
     def test_culture_enforcer_basic(self):
         """测试文化执行器基本功能"""
         try:
@@ -495,7 +491,7 @@ class TestAIGenerated(unittest.TestCase):
             self.assertIsNotNone(enforcer)
         except Exception as e:
             self.fail(f"文化执行器初始化失败: {e}")
-    
+
     def test_problem_aggregator_basic(self):
         """测试问题聚合器基本功能"""
         try:
@@ -534,7 +530,7 @@ from typing import Dict, Optional
 
 class SmartI18n:
     """智能国际化系统"""
-    
+
     def __init__(self):
         self.current_lang = os.getenv('LANG', 'zh-CN')
         self.translations = {
@@ -547,13 +543,13 @@ class SmartI18n:
             },
             'en-US': {
                 'error': 'Error',
-                'warning': 'Warning', 
+                'warning': 'Warning',
                 'success': 'Success',
                 'failed': 'Failed',
                 'processing': 'Processing...',
             }
         }
-    
+
     def _(self, key: str, lang: Optional[str] = None) -> str:
         """智能翻译函数"""
         target_lang = lang or self.current_lang
@@ -616,9 +612,7 @@ PRIVACY_PROTECTION_RULES = {
                         content = f.read()
 
                     # 简单检查是否包含敏感信息
-                    if re.search(
-                        r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b", content
-                    ):
+                    if re.search(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b", content):
                         files_with_issues.append(str(file_path))
 
                 except Exception:

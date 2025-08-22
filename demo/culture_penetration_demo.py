@@ -22,10 +22,6 @@ from pathlib import Path
 from aiculture.culture_enforcer import CultureEnforcer
 
 # 导入文化渗透系统
-from aiculture.culture_penetration_system import (
-    AIDevCultureAssistant,
-    RealTimeCultureMonitor,
-)
 
 # 🔒 数据隐私声明 / Data Privacy Notice:
 # 本演示代码中的所有敏感字段名和数据都是虚构的示例，仅用于展示功能。
@@ -66,7 +62,8 @@ def demo_real_time_monitoring():
             """
 # 这是一个有文化违规的文件
 def long_function_without_docstring():
-    password="DEMO_PASSWORD"  # 演示用占位符
+    import os
+    password=os.getenv("DEMO_PASSWORD", "placeholder")  # 演示用环境变量
     result = 0
     for i in range(100):
         for j in range(100):

@@ -146,8 +146,8 @@ exclude_lines = [
 ]
 
 [tool.ruff]
-ignore = ["E501","F401","F841","E402","E712","E722","F811"]  # 开发期间忽略更多规则
-select = ["E","F","I","UP","B"]
+ignore = ["E501", "F401", "F841"]
+select = ["E", "F", "I", "UP", "B"]
 fix = true
 
 # 开发模式配置

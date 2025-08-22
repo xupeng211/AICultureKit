@@ -375,9 +375,7 @@ class CultureEnforcer:
         suggestions = []
 
         # 按严重程度排序
-        sorted_violations = sorted(
-            self.violations, key=lambda x: 0 if x.severity == "error" else 1
-        )
+        sorted_violations = sorted(self.violations, key=lambda x: 0 if x.severity == "error" else 1)
 
         for violation in sorted_violations:
             suggestions.append(
@@ -493,9 +491,7 @@ class CultureEnforcer:
         """检查性能文化"""
         try:
             # 检查是否有性能基准
-            benchmarks_file = (
-                self.project_path / ".aiculture" / "performance_benchmarks.json"
-            )
+            benchmarks_file = self.project_path / ".aiculture" / "performance_benchmarks.json"
             if not benchmarks_file.exists():
                 self._add_violation(
                     principle="performance_culture",
@@ -522,10 +518,7 @@ class CultureEnforcer:
         try:
             # 检查日志配置
             log_files = list(self.project_path.rglob("*.log"))
-            if (
-                not log_files
-                and not (self.project_path / ".aiculture" / "observability").exists()
-            ):
+            if not log_files and not (self.project_path / ".aiculture" / "observability").exists():
                 self._add_violation(
                     principle="observability",
                     severity="warning",
@@ -590,15 +583,11 @@ class CultureEnforcer:
         """检查可访问性"""
         try:
             # 扫描可访问性问题
-            accessibility_report = (
-                self.accessibility_manager.generate_comprehensive_report()
-            )
+            accessibility_report = self.accessibility_manager.generate_comprehensive_report()
 
             total_issues = accessibility_report["total_issues"]
             if total_issues > 0:
-                accessibility_issues = accessibility_report["accessibility"][
-                    "by_severity"
-                ]
+                accessibility_issues = accessibility_report["accessibility"]["by_severity"]
 
                 if accessibility_issues["error"]:
                     self._add_violation(
@@ -617,9 +606,7 @@ class CultureEnforcer:
                     )
 
                 # 检查国际化
-                i18n_issues = accessibility_report["internationalization"][
-                    "total_issues"
-                ]
+                i18n_issues = accessibility_report["internationalization"]["total_issues"]
                 if i18n_issues > 0:
                     self._add_violation(
                         principle="accessibility",

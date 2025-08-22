@@ -23,9 +23,7 @@ class MarkdownReporter:
         if metadata:
             lines.append(f"**检查基准**: {metadata.get('base', 'HEAD')}")
             lines.append(f"**检查文件**: {metadata.get('files_checked', 'all')}")
-            lines.append(
-                f"**严格模式**: {'是' if metadata.get('strict_mode', False) else '否'}"
-            )
+            lines.append(f"**严格模式**: {'是' if metadata.get('strict_mode', False) else '否'}")
 
         lines.append("")
 
@@ -95,9 +93,7 @@ class MarkdownReporter:
         if blocking_count > 0:
             lines.append(f"### ⚡ 立即处理 ({blocking_count} 个阻塞性问题)")
             lines.append("")
-            blocking_problems = [
-                p for p in result.get("problems", []) if p.get("blocking", False)
-            ]
+            blocking_problems = [p for p in result.get("problems", []) if p.get("blocking", False)]
             for i, problem in enumerate(blocking_problems, 1):
                 lines.append(
                     f"{i}. **{problem.get('file', 'N/A')}:{problem.get('line', 0)}** - {problem.get('message', '')}"
@@ -111,9 +107,7 @@ class MarkdownReporter:
         lines.append("")
         tool_stats = self._get_tool_statistics(result.get("problems", []))
         for tool, stats in tool_stats.items():
-            lines.append(
-                f"- **{tool}**: {stats['total']} 个问题 ({stats['blocking']} 个阻塞)"
-            )
+            lines.append(f"- **{tool}**: {stats['total']} 个问题 ({stats['blocking']} 个阻塞)")
         lines.append("")
 
         # 热点文件
@@ -121,9 +115,9 @@ class MarkdownReporter:
         if file_stats:
             lines.append("### 🔥 问题热点文件")
             lines.append("")
-            for file_path, count in sorted(
-                file_stats.items(), key=lambda x: x[1], reverse=True
-            )[:10]:
+            for file_path, count in sorted(file_stats.items(), key=lambda x: x[1], reverse=True)[
+                :10
+            ]:
                 lines.append(f"- **{file_path}**: {count} 个问题")
             lines.append("")
 
@@ -173,9 +167,7 @@ class MarkdownReporter:
 
         for i, problem in enumerate(problems, 1):
             severity = problem.get("severity", "info")
-            severity_icon = {"error": "❌", "warning": "⚠️", "info": "ℹ️"}.get(
-                severity, "ℹ️"
-            )
+            severity_icon = {"error": "❌", "warning": "⚠️", "info": "ℹ️"}.get(severity, "ℹ️")
             blocking_icon = " 🚫" if problem.get("blocking", False) else ""
 
             # 问题标题
@@ -189,9 +181,7 @@ class MarkdownReporter:
             tool = problem.get("tool", "unknown")
             message = problem.get("message", "未知问题")
 
-            lines.append(
-                f"{i}. {severity_icon}{blocking_icon} [{tool}] {file_info} {message}"
-            )
+            lines.append(f"{i}. {severity_icon}{blocking_icon} [{tool}] {file_info} {message}")
 
             # 修复建议
             if problem.get("fix_suggestion"):
@@ -211,9 +201,7 @@ class MarkdownReporter:
 
         return lines
 
-    def _get_tool_statistics(
-        self, problems: List[Dict[str, Any]]
-    ) -> Dict[str, Dict[str, int]]:
+    def _get_tool_statistics(self, problems: List[Dict[str, Any]]) -> Dict[str, Dict[str, int]]:
         """获取按工具的统计信息"""
         stats = {}
 
@@ -250,9 +238,7 @@ class DashboardReporter:
 
         # ASCII艺术标题
         lines.append("╔══════════════════════════════════════════════════════════════╗")
-        lines.append(
-            "║                    🔍 AICultureKit 问题看板                    ║"
-        )
+        lines.append("║                    🔍 AICultureKit 问题看板                    ║")
         lines.append("╚══════════════════════════════════════════════════════════════╝")
         lines.append("")
 
@@ -286,9 +272,7 @@ class DashboardReporter:
             if problems:
                 count = len(problems)
                 blocking_count = len([p for p in problems if p.get("blocking", False)])
-                blocking_text = (
-                    f" ({blocking_count} 阻塞)" if blocking_count > 0 else ""
-                )
+                blocking_text = f" ({blocking_count} 阻塞)" if blocking_count > 0 else ""
 
                 category_names = {
                     "security": "🔒 安全",
@@ -311,9 +295,7 @@ class DashboardReporter:
             for file_path, risk_score in sorted(
                 file_stats.items(), key=lambda x: x[1], reverse=True
             )[:5]:
-                risk_level = (
-                    "🔴" if risk_score >= 10 else "🟡" if risk_score >= 5 else "🟢"
-                )
+                risk_level = "🔴" if risk_score >= 10 else "🟡" if risk_score >= 5 else "🟢"
                 lines.append(f"  {risk_level} {file_path} (风险: {risk_score})")
 
         lines.append("")

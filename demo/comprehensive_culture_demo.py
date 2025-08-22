@@ -77,9 +77,7 @@ def demo_observability_culture():
 
     # 演示结构化日志
     print("📝 结构化日志演示...")
-    with obs.observe_operation(
-        "demo_operation", user_id="123", request_id="req-456"
-    ) as ctx:
+    with obs.observe_operation("demo_operation", user_id="123", request_id="req-456") as ctx:
         logger = ctx["logger"]
         metrics = ctx["metrics"]
 

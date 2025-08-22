@@ -161,7 +161,7 @@ aiculture check --fix  # 自动修复代码质量问题
 
 生成的项目将包含以下标准化结构：
 
-```
+```bash
 my-project/
 ├── .github/
 │   └── workflows/
@@ -271,7 +271,7 @@ pytest --cov
 
 ### AI提示词模板
 
-```
+```text
 你是我的AI编程伙伴，请遵循以下开发文化：
 
 🎯 核心原则：
@@ -293,6 +293,61 @@ pytest --cov
 
 请在编写代码时严格遵循这些规范。
 ```
+
+## 👩‍💻 开发者使用说明
+
+> TL;DR：本地检查要“轻”，CI 门禁要“严”。小分支、小 PR、可回滚；覆盖率阈值按阶梯逐步提高（25% → 40% → 60% → 80%）。
+
+### 本地检查（轻量、可自动修复）
+
+```bash
+# 一次性安装
+pre-commit install
+
+# 提交前自检（会执行 black/ruff/isort/ruff-format，支持自动修复）
+pre-commit run --all-files
+
+# 快速单测（仅跑快测；慢测交给 CI）
+pytest -q -k "not slow"
+````
+
+- 本地仅运行：**black / ruff(E,F,I,UP,B) / ruff-format / isort**
+- 避免阻塞：安全/隐私/全量规则、覆盖率等**放到 CI** 执行
+- 特殊紧急备份分支可使用：`git push --no-verify`（不建议常用）
+
+### CI 质量门禁（严格）
+
+GitHub Actions 会执行：
+
+- Ruff（全量规则）
+- Bandit / detect-secrets（安全与敏感信息）
+- MyPy（可选）
+- `pytest --cov`（覆盖率阈值**阶梯式**提升：25% → 80%）
+
+CI 失败处理顺序：
+
+1. 保证主线为“绿色”（可部署）
+2. 小步提交修复或补测试
+3. 若为误报，更新 `.piiignore` / 调整规则范围
+4. 必要时使用 revert 回滚
+
+### 分支与 PR 规范
+
+- 每个分支仅包含一个小需求，变更 **≤300 行**，持续时间 **≤48h**
+- PR 必填：变更点、风险与回滚方案、测试点清单、是否涉及 PII
+- 行为变更务必挂 **Feature Flag**（默认 off），灰度上线
+
+### 覆盖率与规则阈值（阶梯）
+
+- 当前临时阈值：**25%**
+- 目标阈值：**≥80%**
+- 建议每次 PR 拉升 5%~10%，优先补“廉价覆盖点”（异常路径、边界条件、I/O 错误分支、FastAPI 路由集成测）
+
+### 常见问题排查
+
+- Push 被拦：确认 `.git/hooks/pre-push` 是否存在；本地仅保留自动修复型 hook
+- 误脱敏：时间戳/commit id 被当电话 → 按 `.piiignore` 上下文放行
+- CI 覆盖率挂：先降低当前分支阈值一档并补测试，再回升
 
 ## 📚 文档和资源
 
@@ -371,7 +426,7 @@ aiculture --version
 
 使用 [Conventional Commits](https://www.conventionalcommits.org/) 格式：
 
-```
+```bash
 feat: 添加JavaScript项目模板
 fix: 修复pre-commit配置问题
 docs: 更新README文档

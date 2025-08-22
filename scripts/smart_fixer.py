@@ -82,8 +82,7 @@ class SmartCodeFixer:
         fixed_count = 0
         for py_file in self.project_path.rglob("*.py"):
             if any(
-                part.startswith(".")
-                or part in ["venv", "env", "aiculture-env", "__pycache__"]
+                part.startswith(".") or part in ["venv", "env", "aiculture-env", "__pycache__"]
                 for part in py_file.parts
             ):
                 continue

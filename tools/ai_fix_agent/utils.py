@@ -17,9 +17,7 @@ def get_staged_python_files() -> List[str]:
             text=True,
             check=True,
         )
-        files = [
-            f for f in result.stdout.strip().split("\n") if f.endswith(".py") and f
-        ]
+        files = [f for f in result.stdout.strip().split("\n") if f.endswith(".py") and f]
         return files
     except subprocess.CalledProcessError:
         return []
@@ -47,9 +45,7 @@ def write_file_content(file_path: str, content: str) -> bool:
 def run_command(cmd: List[str], cwd: Optional[str] = None) -> Dict[str, Any]:
     """运行命令并返回结果"""
     try:
-        result = subprocess.run(
-            cmd, capture_output=True, text=True, cwd=cwd, timeout=60
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=60)
         return {
             "success": result.returncode == 0,
             "stdout": result.stdout,
@@ -72,15 +68,11 @@ def create_patch(original_content: str, fixed_content: str, file_path: str) -> s
     if original_content == fixed_content:
         return ""
 
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".orig", delete=False
-    ) as orig_file:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".orig", delete=False) as orig_file:
         orig_file.write(original_content)
         orig_file.flush()
 
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".fixed", delete=False
-        ) as fixed_file:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".fixed", delete=False) as fixed_file:
             fixed_file.write(fixed_content)
             fixed_file.flush()
 
@@ -94,12 +86,8 @@ def create_patch(original_content: str, fixed_content: str, file_path: str) -> s
                 if result.stdout:
                     # 替换临时文件名为实际文件名
                     patch_content = result.stdout
-                    patch_content = patch_content.replace(
-                        orig_file.name, f"a/{file_path}"
-                    )
-                    patch_content = patch_content.replace(
-                        fixed_file.name, f"b/{file_path}"
-                    )
+                    patch_content = patch_content.replace(orig_file.name, f"a/{file_path}")
+                    patch_content = patch_content.replace(fixed_file.name, f"b/{file_path}")
                     return patch_content
 
             finally:

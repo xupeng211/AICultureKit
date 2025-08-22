@@ -114,9 +114,7 @@ class MonitoringConfigManager:
             "global": {"scrape_interval": "15s", "evaluation_interval": "15s"},
             "rule_files": ["alert_rules.yml"],
             "scrape_configs": scrape_configs or default_scrape_configs,
-            "alerting": {
-                "alertmanagers": [{"static_configs": [{"targets": ["localhost:9093"]}]}]
-            },
+            "alerting": {"alertmanagers": [{"static_configs": [{"targets": ["localhost:9093"]}]}]},
         }
 
         return config
@@ -166,9 +164,7 @@ class MonitoringConfigManager:
                 "id": 1,
                 "title": _("Culture Quality Score"),
                 "type": "stat",
-                "targets": [
-                    {"expr": "aiculture_quality_score", "legendFormat": "Quality Score"}
-                ],
+                "targets": [{"expr": "aiculture_quality_score", "legendFormat": "Quality Score"}],
                 "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
                 "options": {
                     "reduceOptions": {
@@ -231,9 +227,7 @@ class MonitoringConfigManager:
                     }
                 ],
                 "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8},
-                "yAxes": [
-                    {"label": "Percentage", "min": 0, "max": 100, "unit": "percent"}
-                ],
+                "yAxes": [{"label": "Percentage", "min": 0, "max": 100, "unit": "percent"}],
                 "thresholds": [
                     {
                         "value": 80,
@@ -257,9 +251,7 @@ class MonitoringConfigManager:
                 ],
                 "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
                 "options": {"showHeader": True},
-                "fieldConfig": {
-                    "defaults": {"custom": {"align": "auto", "displayMode": "auto"}}
-                },
+                "fieldConfig": {"defaults": {"custom": {"align": "auto", "displayMode": "auto"}}},
             },
             {
                 "id": 5,
@@ -354,9 +346,7 @@ class MonitoringConfigManager:
 
         # Grafana仪表板
         dashboard_config = self.generate_culture_dashboard()
-        with open(
-            self.grafana_config / "dashboards" / "culture_dashboard.json", "w"
-        ) as f:
+        with open(self.grafana_config / "dashboards" / "culture_dashboard.json", "w") as f:
             json.dump(dashboard_config, f, indent=2, ensure_ascii=False)
 
         # Alertmanager配置

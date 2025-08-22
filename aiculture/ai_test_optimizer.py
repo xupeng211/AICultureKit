@@ -178,9 +178,7 @@ class AITestOptimizer:
                         analysis["classes_found"].append(f"{py_file.stem}.{node.name}")
                     elif isinstance(node, ast.FunctionDef):
                         module_info["functions"].append(node.name)
-                        analysis["functions_found"].append(
-                            f"{py_file.stem}.{node.name}"
-                        )
+                        analysis["functions_found"].append(f"{py_file.stem}.{node.name}")
 
                 if module_info["classes"] or module_info["functions"]:
                     analysis["modules_found"].append(module_info)
@@ -294,9 +292,7 @@ if __name__ == "__main__":
     unittest.main()
 '''
 
-        test_file = (
-            self.project_path / "tests" / "test_culture_enforcer_comprehensive.py"
-        )
+        test_file = self.project_path / "tests" / "test_culture_enforcer_comprehensive.py"
         try:
             with open(test_file, "w", encoding="utf-8") as f:
                 f.write(test_content)
@@ -376,9 +372,7 @@ if __name__ == "__main__":
     unittest.main()
 '''
 
-        test_file = (
-            self.project_path / "tests" / "test_problem_aggregator_comprehensive.py"
-        )
+        test_file = self.project_path / "tests" / "test_problem_aggregator_comprehensive.py"
         try:
             with open(test_file, "w", encoding="utf-8") as f:
                 f.write(test_content)
@@ -508,9 +502,7 @@ if __name__ == "__main__":
     unittest.main()
 '''
 
-        test_file = (
-            self.project_path / "tests" / "test_data_governance_comprehensive.py"
-        )
+        test_file = self.project_path / "tests" / "test_data_governance_comprehensive.py"
         try:
             with open(test_file, "w", encoding="utf-8") as f:
                 f.write(test_content)
@@ -580,9 +572,7 @@ if __name__ == "__main__":
     unittest.main()
 '''
 
-        test_file = (
-            self.project_path / "tests" / "test_system_integration_comprehensive.py"
-        )
+        test_file = self.project_path / "tests" / "test_system_integration_comprehensive.py"
         try:
             with open(test_file, "w", encoding="utf-8") as f:
                 f.write(test_content)
@@ -701,17 +691,13 @@ if __name__ == "__main__":
 
         if results.get("phase_3_optimization"):
             opt_results = results["phase_3_optimization"]
-            print(
-                f"   • 代码格式化: {'✅' if opt_results['code_formatting'] else '❌'}"
-            )
+            print(f"   • 代码格式化: {'✅' if opt_results['code_formatting'] else '❌'}")
             print(f"   • 导入排序: {'✅' if opt_results['import_sorting'] else '❌'}")
 
         if results.get("phase_4_validation"):
             val_results = results["phase_4_validation"]
             print(f"   • 测试通过: {'✅' if val_results['tests_pass'] else '❌'}")
-            print(
-                f"   • 覆盖率改善: {'✅' if val_results['coverage_improved'] else '❌'}"
-            )
+            print(f"   • 覆盖率改善: {'✅' if val_results['coverage_improved'] else '❌'}")
 
         print("\n🎯 AI建议:")
         if results["success"]:

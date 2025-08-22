@@ -30,8 +30,8 @@ class TestProblemAggregatorComprehensive(unittest.TestCase):
         try:
             problems = self.aggregator.collect_all_problems()
             self.assertIsInstance(problems, dict)
-            self.assertIn('summary', problems)
-            self.assertIn('categories', problems)
+            self.assertIn("summary", problems)
+            self.assertIn("categories", problems)
         except Exception as e:
             self.fail(f"问题收集失败: {e}")
 
@@ -39,14 +39,14 @@ class TestProblemAggregatorComprehensive(unittest.TestCase):
         """测试问题分类"""
         try:
             problems = self.aggregator.collect_all_problems()
-            categories = problems.get('categories', {})
+            categories = problems.get("categories", {})
 
             # 检查预期的分类是否存在
             expected_categories = [
-                'ai_behavior_violations',
-                'culture_errors',
-                'culture_warnings',
-                'security_issues',
+                "ai_behavior_violations",
+                "culture_errors",
+                "culture_warnings",
+                "security_issues",
             ]
 
             for category in expected_categories:

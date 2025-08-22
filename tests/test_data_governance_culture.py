@@ -227,9 +227,7 @@ class TestDataQualityValidator:
         """测试批量验证"""
         # 创建多个规则
         rules = [
-            DataQualityRule(
-                "email_completeness", "Email required", "completeness", "email", {}
-            ),
+            DataQualityRule("email_completeness", "Email required", "completeness", "email", {}),
             DataQualityRule(
                 "email_format",
                 "Email format",
@@ -306,9 +304,7 @@ class TestGDPRComplianceChecker:
         """
 
         consent_check1 = self.checker.check_consent_mechanisms(with_consent, "good.py")
-        consent_check2 = self.checker.check_consent_mechanisms(
-            without_consent, "bad.py"
-        )
+        consent_check2 = self.checker.check_consent_mechanisms(without_consent, "bad.py")
 
         assert consent_check1["has_consent_check"] is True
         assert consent_check2["has_consent_check"] is False
@@ -331,9 +327,7 @@ class TestGDPRComplianceChecker:
         """
 
         retention_check1 = self.checker.check_data_retention(with_retention, "good.py")
-        retention_check2 = self.checker.check_data_retention(
-            without_retention, "bad.py"
-        )
+        retention_check2 = self.checker.check_data_retention(without_retention, "bad.py")
 
         assert retention_check1["has_retention_policy"] is True
         assert retention_check2["has_retention_policy"] is False
@@ -359,9 +353,7 @@ class TestGDPRComplianceChecker:
             return save_user(user_data)
         """
 
-        gdpr_report = self.checker.generate_compliance_report(
-            test_content, "user_service.py"
-        )
+        gdpr_report = self.checker.generate_compliance_report(test_content, "user_service.py")
 
         assert isinstance(gdpr_report, dict)
         assert "personal_data_found" in gdpr_report

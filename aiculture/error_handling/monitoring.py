@@ -197,9 +197,7 @@ class PerformanceTracker:
             current_time = time.time()
             window_start = current_time - (window_minutes * 60)
 
-            recent_operations = [
-                ts for ts in self._operation_timestamps if ts >= window_start
-            ]
+            recent_operations = [ts for ts in self._operation_timestamps if ts >= window_start]
 
             if not recent_operations:
                 return 0.0

@@ -67,9 +67,7 @@ class TypeHintAdder:
         # 默认返回类型
         return "Any"
 
-    def add_return_type_annotation(
-        self, content: str, func_node: ast.FunctionDef
-    ) -> str:
+    def add_return_type_annotation(self, content: str, func_node: ast.FunctionDef) -> str:
         """为函数添加返回类型注解"""
         lines = content.split("\n")
 
@@ -90,9 +88,7 @@ class TypeHintAdder:
             return content  # 找不到冒号，跳过
 
         # 插入返回类型注解
-        new_def_line = (
-            def_line[:colon_pos] + f" -> {return_type}" + def_line[colon_pos:]
-        )
+        new_def_line = def_line[:colon_pos] + f" -> {return_type}" + def_line[colon_pos:]
         lines[def_line_idx] = new_def_line
 
         self.added_count += 1
@@ -111,11 +107,7 @@ class TypeHintAdder:
         # 跳过文档字符串和编码声明
         for i, line in enumerate(lines):
             stripped = line.strip()
-            if (
-                stripped.startswith("#")
-                or stripped.startswith('"""')
-                or stripped.startswith("'''")
-            ):
+            if stripped.startswith("#") or stripped.startswith('"""') or stripped.startswith("'''"):
                 continue
             if (
                 stripped.startswith("from __future__")
@@ -183,15 +175,11 @@ class TypeHintAdder:
 
             modified_content = content
             for func_node in functions_to_process:
-                modified_content = self.add_return_type_annotation(
-                    modified_content, func_node
-                )
+                modified_content = self.add_return_type_annotation(modified_content, func_node)
 
             # 添加必要的导入语句
             if needed_imports:
-                modified_content = self.add_import_statements(
-                    modified_content, needed_imports
-                )
+                modified_content = self.add_import_statements(modified_content, needed_imports)
 
             # 写回文件
             file_path.write_text(modified_content, encoding="utf-8")

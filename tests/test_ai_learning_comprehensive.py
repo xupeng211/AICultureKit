@@ -148,7 +148,7 @@ class TestLearningResult:
             patterns=patterns,
             custom_rules={"test": "rule"},
             team_preferences={"test": "pref"},
-            generated_at=+1-XXX-XXX-XXXX.0,
+            generated_at="2024-01-01T00:00:00",
         )
 
         assert result.project_maturity == "intermediate"

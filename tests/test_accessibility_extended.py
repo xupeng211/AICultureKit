@@ -396,9 +396,7 @@ class TestI18nIssueExtended:
         assert issue.file_path == "/path/to/file.py"
         assert issue.line_number == 42
         assert issue.text_content == "Hello, World!"
-        assert (
-            issue.recommendation == "Use internationalization function like _() or t()"
-        )
+        assert issue.recommendation == "Use internationalization function like _() or t()"
 
     def test_issue_creation_with_minimal_fields(self):
         """测试创建包含最少字段的问题"""

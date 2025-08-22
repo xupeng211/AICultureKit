@@ -118,9 +118,7 @@ class TestEnvironmentChecker:
     def test_get_installed_packages_count(self, mock_run) -> None:
         """测试获取已安装包数量"""
         # Mock pip list output
-        mock_run.return_value.stdout = (
-            "package1 1.0.0\npackage2 2.0.0\npackage3 3.0.0\n"
-        )
+        mock_run.return_value.stdout = "package1 1.0.0\npackage2 2.0.0\npackage3 3.0.0\n"
         mock_run.return_value.returncode = 0
 
         count = self.checker.get_installed_packages_count()
