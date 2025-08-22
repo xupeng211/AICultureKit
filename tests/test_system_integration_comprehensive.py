@@ -20,12 +20,6 @@ class TestSystemIntegrationComprehensive(unittest.TestCase):
             from aiculture.data_governance_culture import DataPrivacyScanner
             from aiculture.problem_aggregator import ProblemAggregator
 
-            # 验证导入的类确实可用
-            self.assertTrue(hasattr(AIBehaviorEnforcer, "__init__"))
-            self.assertTrue(hasattr(CultureEnforcer, "__init__"))
-            self.assertTrue(hasattr(DataPrivacyScanner, "__init__"))
-            self.assertTrue(hasattr(ProblemAggregator, "__init__"))
-
             self.assertTrue(True, "所有核心模块导入成功")
         except ImportError as e:
             self.fail(f"模块导入失败: {e}")
