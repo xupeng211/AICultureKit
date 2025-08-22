@@ -139,7 +139,9 @@ class TestDataGovernance:
 
     def test_manager_initialization(self):
         """测试管理器初始化"""
-        assert self.manager.config_dir == self.temp_dir / ".aiculture" / "data_governance"
+        assert (
+            self.manager.config_dir == self.temp_dir / ".aiculture" / "data_governance"
+        )
         assert hasattr(self.manager, "data_inventory")
 
     def test_privacy_scanning(self):

@@ -133,7 +133,9 @@ class StructuredLogger:
         """清除上下文"""
         self.context.data = {}
 
-    def _create_log_entry(self, level: LogLevel, message: str, **kwargs) -> StructuredLogEntry:
+    def _create_log_entry(
+        self, level: LogLevel, message: str, **kwargs
+    ) -> StructuredLogEntry:
         """创建日志条目"""
         context = self._get_context()
 
@@ -308,7 +310,9 @@ class MetricsCollector:
         """获取指标数据"""
         with self.lock:
             if format == "json":
-                return [asdict(metric) for metric in self.metrics[-1000:]]  # 最近1000个指标
+                return [
+                    asdict(metric) for metric in self.metrics[-1000:]
+                ]  # 最近1000个指标
             elif format == "prometheus":
                 return self._format_prometheus()
             else:
@@ -336,7 +340,9 @@ class MetricsCollector:
                     labels_list = [f'{k}="{v}"' for k, v in metric.labels.items()]
                     labels_str = "{" + ",".join(labels_list) + "}"
 
-                lines.append(f"{name}{labels_str} {metric.value} {int(metric.timestamp * 1000)}")
+                lines.append(
+                    f"{name}{labels_str} {metric.value} {int(metric.timestamp * 1000)}"
+                )
 
         return "\n".join(lines)
 
@@ -355,7 +361,9 @@ class DistributedTracer:
         self.spans: Dict[str, Span] = {}
         self.active_spans = threading.local()
 
-    def start_span(self, operation_name: str, parent_span_id: Optional[str] = None) -> Span:
+    def start_span(
+        self, operation_name: str, parent_span_id: Optional[str] = None
+    ) -> Span:
         """开始一个新的Span"""
         trace_id = getattr(self.active_spans, "trace_id", None)
         if not trace_id:
@@ -367,7 +375,8 @@ class DistributedTracer:
         span = Span(
             trace_id=trace_id,
             span_id=span_id,
-            parent_span_id=parent_span_id or getattr(self.active_spans, "span_id", None),
+            parent_span_id=parent_span_id
+            or getattr(self.active_spans, "span_id", None),
             operation_name=operation_name,
             start_time=time.time(),
         )
@@ -401,7 +410,9 @@ class DistributedTracer:
             yield span
             self.finish_span(span, "ok")
         except Exception as e:
-            span.logs.append({"timestamp": time.time(), "level": "error", "message": str(e)})
+            span.logs.append(
+                {"timestamp": time.time(), "level": "error", "message": str(e)}
+            )
             self.finish_span(span, "error", error=str(e))
             raise
 
@@ -437,7 +448,9 @@ class DistributedTracer:
                 }
             )
 
-        return {"data": [{"traceID": tid, "spans": spans} for tid, spans in traces.items()]}
+        return {
+            "data": [{"traceID": tid, "spans": spans} for tid, spans in traces.items()]
+        }
 
 
 class ObservabilityManager:
@@ -455,7 +468,9 @@ class ObservabilityManager:
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         # 初始化组件
-        self.logger = StructuredLogger(service_name, version, self.output_dir / "app.log")
+        self.logger = StructuredLogger(
+            service_name, version, self.output_dir / "app.log"
+        )
         self.metrics = MetricsCollector(service_name)
         self.tracer = DistributedTracer(service_name)
 
@@ -471,7 +486,9 @@ class ObservabilityManager:
             self.logger.set_context(trace_id=span.trace_id, span_id=span.span_id)
 
             # 记录开始指标
-            self.metrics.counter(f"{operation_name}_started", labels={"service": self.service_name})
+            self.metrics.counter(
+                f"{operation_name}_started", labels={"service": self.service_name}
+            )
 
             start_time = time.perf_counter()
 
@@ -550,7 +567,9 @@ if __name__ == "__main__":
     obs = ObservabilityManager("test-service", "1.0.0")
 
     # 使用全面观测
-    with obs.observe_operation("test_operation", user_id="123", request_id="req-456") as ctx:
+    with obs.observe_operation(
+        "test_operation", user_id="123", request_id="req-456"
+    ) as ctx:
         logger = ctx["logger"]
         metrics = ctx["metrics"]
         span = ctx["span"]

@@ -1,5 +1,6 @@
 """AI生成的文化执行器全面测试"""
 
+import os
 import sys
 import tempfile
 import unittest
@@ -30,8 +31,8 @@ class TestCultureEnforcerComprehensive(unittest.TestCase):
         try:
             result = self.enforcer.enforce_all()
             self.assertIsInstance(result, dict)
-            self.assertIn("score", result)
-            self.assertIn("violations", result)
+            self.assertIn('score', result)
+            self.assertIn('violations', result)
         except Exception as e:
             self.fail(f"基本执行功能失败: {e}")
 
@@ -39,7 +40,7 @@ class TestCultureEnforcerComprehensive(unittest.TestCase):
         """测试文化原则加载"""
         try:
             # 测试是否能正确加载文化原则
-            self.assertTrue(hasattr(self.enforcer, "culture_principles"))
+            self.assertTrue(hasattr(self.enforcer, 'culture_principles'))
         except Exception as e:
             self.fail(f"文化原则加载失败: {e}")
 
@@ -47,7 +48,7 @@ class TestCultureEnforcerComprehensive(unittest.TestCase):
         """测试违规检测"""
         # 创建一个包含问题的测试文件
         test_file = Path(self.temp_dir) / "test_code.py"
-        with open(test_file, "w") as f:
+        with open(test_file, 'w') as f:
             f.write('# 测试代码\nprint("hello world")\n')
 
         try:

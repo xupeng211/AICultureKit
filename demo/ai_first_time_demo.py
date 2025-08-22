@@ -110,7 +110,9 @@ def check_virtual_environment() -> bool:
 def run_command(command: str) -> dict:
     """运行命令并返回结果"""
     try:
-        result = subprocess.run(command.split(), capture_output=True, text=True, timeout=30)
+        result = subprocess.run(
+            command.split(), capture_output=True, text=True, timeout=30
+        )
         return {
             "success": result.returncode == 0,
             "output": result.stdout,

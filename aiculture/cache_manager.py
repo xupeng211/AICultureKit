@@ -69,7 +69,10 @@ class SmartCacheManager:
             current_mtime = file_path.stat().st_mtime
 
             # 验证缓存是否仍然有效
-            if cache_entry.file_hash == current_hash and cache_entry.last_modified == current_mtime:
+            if (
+                cache_entry.file_hash == current_hash
+                and cache_entry.last_modified == current_mtime
+            ):
                 return True
 
         return False
@@ -120,7 +123,8 @@ class SmartCacheManager:
 
             for file_key, cache_entry in self._memory_cache.items():
                 if (
-                    current_time - cache_entry.created_at > 7 * HOURS_PER_DAY * SECONDS_PER_HOUR
+                    current_time - cache_entry.created_at
+                    > 7 * HOURS_PER_DAY * SECONDS_PER_HOUR
                 ):  # 7天
                     expired_keys.append(file_key)
 

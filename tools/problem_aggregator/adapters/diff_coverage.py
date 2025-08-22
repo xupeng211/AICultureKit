@@ -41,7 +41,9 @@ class DiffCoverageAdapter:
             return problems
 
         # 2. 运行diff-cover检查变更行覆盖率
-        diff_problems = self._run_diff_cover(coverage_xml, base_branch, changed_lines_threshold)
+        diff_problems = self._run_diff_cover(
+            coverage_xml, base_branch, changed_lines_threshold
+        )
         problems.extend(diff_problems)
 
         # 3. 检查新文件覆盖率
@@ -117,7 +119,9 @@ class DiffCoverageAdapter:
             if result.returncode != 0:
                 # diff-cover失败，解析详细信息
                 problems.extend(
-                    self._parse_diff_cover_output(result.stdout, result.stderr, threshold)
+                    self._parse_diff_cover_output(
+                        result.stdout, result.stderr, threshold
+                    )
                 )
 
             # 尝试读取JSON报告
@@ -188,7 +192,8 @@ class DiffCoverageAdapter:
                                         "metadata": {
                                             "current_coverage": current_coverage,
                                             "required_coverage": threshold,
-                                            "coverage_gap": threshold - current_coverage,
+                                            "coverage_gap": threshold
+                                            - current_coverage,
                                         },
                                     }
                                 )
@@ -348,7 +353,9 @@ class DiffCoverageAdapter:
         except Exception:
             return []
 
-    def _get_file_coverage_from_xml(self, root: ET.Element, file_path: str) -> Optional[float]:
+    def _get_file_coverage_from_xml(
+        self, root: ET.Element, file_path: str
+    ) -> Optional[float]:
         """从XML中获取文件覆盖率"""
 
         try:
@@ -367,16 +374,22 @@ class DiffCoverageAdapter:
         except Exception:
             return None
 
-    def generate_coverage_improvement_guide(self, problems: List[Dict[str, Any]]) -> str:
+    def generate_coverage_improvement_guide(
+        self, problems: List[Dict[str, Any]]
+    ) -> str:
         """生成覆盖率改进指南"""
 
         guide = []
         guide.append("# 增量覆盖率改进指南\n")
 
         # 按问题类型分组
-        diff_coverage_problems = [p for p in problems if p.get("type") == "diff_coverage"]
+        diff_coverage_problems = [
+            p for p in problems if p.get("type") == "diff_coverage"
+        ]
         file_problems = [
-            p for p in problems if p.get("type") in ["file_diff_coverage", "new_file_coverage"]
+            p
+            for p in problems
+            if p.get("type") in ["file_diff_coverage", "new_file_coverage"]
         ]
 
         if diff_coverage_problems:

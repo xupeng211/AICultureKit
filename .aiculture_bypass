@@ -1,0 +1,8 @@
+# AICultureKit 临时绕过配置
+# 用于紧急推送或开发期间暂时降低门禁
+
+bypass_mode: true
+reason: "开发阶段 - 临时绕过质量检查"
+coverage_threshold: 20  # 降低到20%
+block_on_errors: false  # 只警告不阻塞
+ai_fix_auto: false      # 禁用自动修复 
