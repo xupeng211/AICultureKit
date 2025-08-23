@@ -1,16 +1,15 @@
-#!/bin/bash
+#!/bin/sh
 
-# AICultureKit 智能推送前检查钩子
-# 在推送到远程仓库前进行最终的质量保障检查
+# AICultureKit 简化版推送前检查钩子
+# 只做快速语法检查，其他检查在 GitHub Actions 中完成
 
 # 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}🚀 执行推送前质量检查...${NC}"
+echo -e "${BLUE}🚀 Running quick syntax check before push...${NC}"
 
 # 检查是否有未提交的更改
 if ! git diff-index --quiet HEAD --; then
@@ -19,59 +18,13 @@ if ! git diff-index --quiet HEAD --; then
 fi
 
 # 运行快速语法检查 (compile-only)
-echo -e "${BLUE}🧪 运行快速语法检查...${NC}"
-if ! python -c "import compileall, sys; ok = compileall.compile_dir('aiculture', force=True, quiet=1); sys.exit(0 if ok else 1)"; then
+echo -e "${BLUE}🧪 Running compile-only syntax check...${NC}"
+if ! python -m compileall aiculture; then
     echo -e "${RED}❌ 语法检查失败，推送被阻止${NC}"
-    echo -e "${YELLOW}💡 请修复语法错误后再推送${NC}"
+    echo -e "${BLUE}💡 请修复语法错误后再推送${NC}"
     exit 1
 fi
 
-# 跳过代码覆盖率检查 (避免运行完整测试)
-echo -e "${BLUE}📊 跳过代码覆盖率检查 (Quick Check模式)...${NC}"
-coverage_result="N/A"
-
-echo -e "${YELLOW}💡 完整的测试和覆盖率检查将在GitHub Actions的Quality Gate中执行${NC}"
-
-# 检查是否有大文件
-echo -e "${BLUE}📁 检查大文件...${NC}"
-large_files=$(find . -type f -size +1M -not -path "./.git/*" -not -path "./.*env/*" -not -path "./venv/*")
-if [[ -n "$large_files" ]]; then
-    echo -e "${YELLOW}⚠️  发现大文件:${NC}"
-    echo "$large_files"
-    echo -e "${YELLOW}💡 考虑使用Git LFS管理大文件${NC}"
-fi
-
-# 检查敏感信息
-echo -e "${BLUE}🔒 检查敏感信息...${NC}"
-sensitive_patterns=("password" "secret" "token" "api_key" "private_key")
-for pattern in "${sensitive_patterns[@]}"; do
-    if git log --oneline -n 10 | xargs git show | grep -i "$pattern" > /dev/null; then
-        echo -e "${YELLOW}⚠️  可能包含敏感信息: $pattern${NC}"
-        echo -e "${YELLOW}💡 请确认是否需要移除敏感信息${NC}"
-    fi
-done
-
-# 生成推送报告
-echo -e "${BLUE}📋 生成推送报告...${NC}"
-commit_count=$(git rev-list --count HEAD ^origin/$(git branch --show-current) 2>/dev/null || echo "0")
-changed_files=$(git diff --name-only HEAD~${commit_count}..HEAD 2>/dev/null | wc -l)
-
-echo -e "${GREEN}✅ 推送前检查完成${NC}"
-echo -e "${BLUE}📊 推送统计:${NC}"
-echo -e "   - 新提交数: $commit_count"
-echo -e "   - 修改文件数: $changed_files"
-echo -e "   - 代码覆盖率: ${coverage_result}"
-echo -e "   - 推送时间: $(date '+%Y-%m-%d %H:%M:%S')"
-
-# 询问是否继续推送（可选）
-if [[ "$1" == "--interactive" ]]; then
-    echo -e "${YELLOW}是否继续推送? (y/N)${NC}"
-    read -r response
-    if [[ ! "$response" =~ ^[Yy]$ ]]; then
-        echo -e "${YELLOW}推送已取消${NC}"
-        exit 1
-    fi
-fi
-
-echo -e "${GREEN}🚀 质量检查通过，允许推送${NC}"
+echo -e "${GREEN}✅ 语法检查通过，允许推送${NC}"
+echo -e "${BLUE}💡 完整的测试和质量检查将在 GitHub Actions 中执行${NC}"
 exit 0

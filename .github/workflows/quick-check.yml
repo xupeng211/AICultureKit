@@ -2,8 +2,15 @@ name: Quick Check
 
 on:
   push:
-    branches-ignore:
-      - main
+    branches-ignore: [ main ]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - '.github/ISSUE_TEMPLATE/**'
+
+concurrency:
+  group: quick-check-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -46,10 +53,6 @@ jobs:
       # 真正的"快速测试"：只做语法编译，不 import 依赖，不运行单测
       - name: Quick syntax smoke (compile-only)
         run: |
-          python - << 'PY'
-          import compileall, sys
-          ok = compileall.compile_dir("aiculture", force=True, quiet=1)
-          # 返回码为 0 表示成功；compile_dir 返回 True/False，这里转化为 shell 约定
-          sys.exit(0 if ok else 1)
-          PY
+          echo "🧪 Running compile-only syntax check..."
+          python -m compileall aiculture
 

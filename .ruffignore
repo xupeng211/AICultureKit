@@ -4,6 +4,12 @@ aiculture/templates/**
 **/.cookiecutter/**
 **/.copier/**
 
+# cache & compiled
+**/__pycache__/**
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
 # build & env
 .build/
 dist/
@@ -11,9 +17,7 @@ build/
 site/
 htmlcov/
 .coverage*
-.pytest_cache/
-__pycache__/
-*.egg-info/
+*.egg-info/**
 venv/
 .venv/
 .env/
