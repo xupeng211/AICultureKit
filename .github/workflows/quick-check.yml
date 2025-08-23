@@ -6,13 +6,14 @@ permissions:
 on:
   push:
     branches:
-      - "*"
+      - "**"
       - "!main"
     paths-ignore:
       - "README.md"
       - "docs/**"
-      - ".github/**"
       - "*.md"
+      - "WORKFLOW_TEST.md"
+      - "workflow_test_log.md"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

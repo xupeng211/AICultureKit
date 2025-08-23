@@ -1,47 +1,16 @@
-# AICultureKit 代码所有者配置
-# 
-# 此文件定义了项目不同部分的代码审查责任人
-# 当创建PR时，相关负责人会自动被添加为审查者
-
-# 全局默认所有者
+# Global Code Owners
+# 所有文件的默认所有者，自动指派PR评审
 * @xupeng211
 
-# 核心模块
-/aiculture/ @xupeng211
-/aiculture/core/ @xupeng211
-/aiculture/ai_learning/ @xupeng211
-
-# 错误处理和日志系统
-/aiculture/error_handling/ @xupeng211
-
-# CLI命令系统
-/aiculture/cli.py @xupeng211
-/aiculture/cli_commands/ @xupeng211
-
-# 文化标准相关
-/aiculture/accessibility_culture.py @xupeng211
-/aiculture/culture_enforcer.py @xupeng211
-
-# 测试文件
-/tests/ @xupeng211
-
-# CI/CD 配置
+# CI/CD 工作流特殊关注
 /.github/workflows/ @xupeng211
-/.githooks/ @xupeng211
+/pyproject.toml @xupeng211
+/.pre-commit-config.yaml @xupeng211
 
-# 文档
-/docs/ @xupeng211
-README.md @xupeng211
-CONTRIBUTING.md @xupeng211
+# 核心模块重点评审
+/aiculture/core.py @xupeng211
+/aiculture/cli.py @xupeng211
 
-# 配置文件
-pyproject.toml @xupeng211
-requirements.txt @xupeng211
-setup.py @xupeng211
-
-# 示例和演示
-/examples/ @xupeng211
-/demo/ @xupeng211
-
-# 脚本工具
+# 质量与安全相关
 /scripts/ @xupeng211
+/tests/ @xupeng211
