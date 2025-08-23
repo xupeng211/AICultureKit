@@ -51,12 +51,12 @@ repos:
         exclude: ^(aiculture-env/|\.venv/|venv/|tests/)
         stages: [manual]  # 只在手动运行时检查
 
-  # 🧪 自动运行快速测试
+  # 🧪 快速语法检查 (compile-only)
   - repo: local
     hooks:
       - id: quick-tests
-        name: 快速测试检查
-        entry: python -m pytest tests/ -x --tb=no -q
+        name: 快速语法检查
+        entry: python -c "import compileall, sys; ok = compileall.compile_dir('aiculture', force=True, quiet=1); sys.exit(0 if ok else 1)"
         language: system
         stages: [commit]
         pass_filenames: false

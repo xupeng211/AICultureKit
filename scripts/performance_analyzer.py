@@ -6,7 +6,7 @@
 
 import ast
 from pathlib import Path
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
 
 
 class PerformanceAnalyzer:
@@ -20,9 +20,9 @@ class PerformanceAnalyzer:
     def analyze_file(self, file_path: Path) -> List[Dict[str, Any]]:
         """分析单个文件的性能问题"""
         try:
-            content = file_path.read_text(encoding='utf-8')
+            content = file_path.read_text(encoding="utf-8")
             tree = ast.parse(content)
-            lines = content.split('\n')
+            lines = content.split("\n")
 
             file_issues = []
 
@@ -47,14 +47,16 @@ class PerformanceAnalyzer:
                 }
             ]
 
-    def check_large_functions(self, tree: ast.AST, file_path: Path) -> List[Dict[str, Any]]:
+    def check_large_functions(
+        self, tree: ast.AST, file_path: Path
+    ) -> List[Dict[str, Any]]:
         """检查过大的函数"""
         issues = []
 
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef):
                 # 计算函数行数
-                if hasattr(node, 'end_lineno') and node.end_lineno:
+                if hasattr(node, "end_lineno") and node.end_lineno:
                     func_lines = node.end_lineno - node.lineno + 1
 
                     if func_lines > 50:
@@ -71,7 +73,9 @@ class PerformanceAnalyzer:
 
         return issues
 
-    def check_nested_loops(self, tree: ast.AST, file_path: Path) -> List[Dict[str, Any]]:
+    def check_nested_loops(
+        self, tree: ast.AST, file_path: Path
+    ) -> List[Dict[str, Any]]:
         """检查嵌套循环"""
         issues = []
 
@@ -109,14 +113,19 @@ class PerformanceAnalyzer:
                 if (
                     isinstance(node.left, ast.Str)
                     or isinstance(node.right, ast.Str)
-                    or (isinstance(node.left, ast.Constant) and isinstance(node.left.value, str))
-                    or (isinstance(node.right, ast.Constant) and isinstance(node.right.value, str))
+                    or (
+                        isinstance(node.left, ast.Constant)
+                        and isinstance(node.left.value, str)
+                    )
+                    or (
+                        isinstance(node.right, ast.Constant)
+                        and isinstance(node.right.value, str)
+                    )
                 ):
-
                     # 检查是否在循环中
                     parent = node
                     in_loop = False
-                    while hasattr(parent, 'parent'):
+                    while hasattr(parent, "parent"):
                         parent = parent.parent
                         if isinstance(parent, (ast.For, ast.While)):
                             in_loop = True
@@ -146,7 +155,7 @@ class PerformanceAnalyzer:
             line_stripped = line.strip()
 
             # 检查低效的列表操作
-            if 'for' in line_stripped and 'in range(len(' in line_stripped:
+            if "for" in line_stripped and "in range(len(" in line_stripped:
                 issues.append(
                     {
                         "file": str(file_path),
@@ -159,7 +168,7 @@ class PerformanceAnalyzer:
                 )
 
             # 检查重复的字典查找
-            if line_stripped.count('[') > 2 and 'dict' in line_stripped.lower():
+            if line_stripped.count("[") > 2 and "dict" in line_stripped.lower():
                 issues.append(
                     {
                         "file": str(file_path),
@@ -173,7 +182,9 @@ class PerformanceAnalyzer:
 
         return issues
 
-    def check_file_size(self, file_path: Path, lines: List[str]) -> List[Dict[str, Any]]:
+    def check_file_size(
+        self, file_path: Path, lines: List[str]
+    ) -> List[Dict[str, Any]]:
         """检查文件大小"""
         issues = []
         line_count = len(lines)
@@ -200,13 +211,13 @@ class PerformanceAnalyzer:
         for py_file in self.project_path.rglob("*.py"):
             # 跳过虚拟环境和隐藏目录
             if any(
-                part.startswith('.') or part in ['venv', '__pycache__', 'build', 'dist']
+                part.startswith(".") or part in ["venv", "__pycache__", "build", "dist"]
                 for part in py_file.parts
             ):
                 continue
 
             # 跳过模板文件
-            if '{{' in str(py_file) or '}}' in str(py_file):
+            if "{{" in str(py_file) or "}}" in str(py_file):
                 continue
 
             stats["files_analyzed"] += 1
@@ -232,14 +243,14 @@ class PerformanceAnalyzer:
 
         report = f"""
 🚀 AICultureKit 性能分析报告
-{'='*50}
+{"=" * 50}
 
 📊 分析统计:
-  - 分析文件数: {stats['files_analyzed']}
-  - 发现问题数: {stats['issues_found']}
-  - 错误: {len(by_severity['error'])}
-  - 警告: {len(by_severity['warning'])}
-  - 信息: {len(by_severity['info'])}
+  - 分析文件数: {stats["files_analyzed"]}
+  - 发现问题数: {stats["issues_found"]}
+  - 错误: {len(by_severity["error"])}
+  - 警告: {len(by_severity["warning"])}
+  - 信息: {len(by_severity["info"])}
 
 """
 
@@ -270,7 +281,7 @@ class PerformanceAnalyzer:
                     report += f"    ... 还有 {len(type_issues) - 3} 个类似问题\n"
 
         # 优化建议
-        report += f"""
+        report += """
 
 💡 优化建议:
   1. 优先修复错误级别的问题
@@ -302,7 +313,7 @@ def main() -> None:
 
     # 保存报告到文件
     report_file = Path("performance_analysis_report.md")
-    report_file.write_text(report, encoding='utf-8')
+    report_file.write_text(report, encoding="utf-8")
     print(f"📄 详细报告已保存到: {report_file}")
 
 
