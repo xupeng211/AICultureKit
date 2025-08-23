@@ -79,4 +79,4 @@ jobs:
         run: |
           pytest -q --maxfail=1 --disable-warnings \
             --cov=aiculture --cov-report=term-missing \
-            --cov-fail-under=${{ env.COVERAGE_THRESHOLD_MIN }}
+            --cov-report=json:coverage.json --cov-fail-under=${{ env.COVERAGE_THRESHOLD_MIN }}

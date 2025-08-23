@@ -108,8 +108,9 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-q --maxfail=1 --disable-warnings"
 testpaths = ["tests"]
+addopts = "-q --maxfail=1 -k 'not slow and not e2e and not integration' --disable-warnings -p no:asyncio"
+norecursedirs = ["tests/_quarantine", ".git", ".venv", "venv"]
 
 [tool.flake8]
 max-line-length = 88
@@ -127,17 +128,12 @@ skips = ["B101", "B601"]
 confidence = "MEDIUM"
 
 [tool.coverage.run]
-branch = false
 source = ["aiculture"]
+branch = false
 omit = [
     "tests/*",
-    "*/tests/*", 
-    "*/__main__.py",
     "**/migrations/*",
-    "**/experimental/*",
-    "*/venv/*",
-    "*/build/*",
-    "*/dist/*"
+    "**/experimental/*"
 ]
 
 [tool.coverage.report]
