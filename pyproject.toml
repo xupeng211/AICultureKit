@@ -131,6 +131,7 @@ source = ["aiculture"]
 omit = ["tests/*", "*/tests/*"]
 
 [tool.coverage.report]
+fail_under = 9
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",

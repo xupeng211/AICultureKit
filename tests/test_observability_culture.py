@@ -47,7 +47,7 @@ class TestStructuredLogger:
         self.logger.critical("Critical message", {"system": "database"})
 
         # 读取日志文件验证
-        with open(self.logger.log_file, 'r') as f:
+        with open(self.logger.log_file, "r") as f:
             logs = f.readlines()
 
         assert len(logs) >= 5
@@ -73,7 +73,7 @@ class TestStructuredLogger:
         self.logger.info("User login successful", context)
 
         # 验证日志内容
-        with open(self.logger.log_file, 'r') as f:
+        with open(self.logger.log_file, "r") as f:
             log_line = f.readline().strip()
 
         log_data = json.loads(log_line)
@@ -92,7 +92,7 @@ class TestStructuredLogger:
         self.logger.error("Error message")  # 应该记录
 
         # 验证只有WARNING和ERROR被记录
-        with open(self.logger.log_file, 'r') as f:
+        with open(self.logger.log_file, "r") as f:
             logs = f.readlines()
 
         assert len(logs) == 2
@@ -154,7 +154,9 @@ class TestMetricsCollector:
         # 记录直方图指标
         response_times = [0.1, 0.2, 0.15, 0.3, 0.25, 0.18, 0.22]
         for time_val in response_times:
-            self.collector.record_metric("response_time", MetricType.HISTOGRAM, time_val)
+            self.collector.record_metric(
+                "response_time", MetricType.HISTOGRAM, time_val
+            )
 
         # 验证指标
         metric = self.collector.metrics["response_time"]
@@ -245,7 +247,9 @@ class TestDistributedTracer:
         parent_span_id = self.tracer.start_span("parent_operation")
 
         # 创建子Span
-        child_span_id = self.tracer.start_span("child_operation", parent_span_id=parent_span_id)
+        child_span_id = self.tracer.start_span(
+            "child_operation", parent_span_id=parent_span_id
+        )
 
         # 验证父子关系
         child_span = self.tracer.active_spans[child_span_id]
@@ -307,7 +311,7 @@ class TestObservabilityManager:
         self.manager.metrics.record_metric("operations", MetricType.COUNTER, 1)
 
         # 验证日志
-        with open(self.manager.logger.log_file, 'r') as f:
+        with open(self.manager.logger.log_file, "r") as f:
             log_line = f.readline().strip()
 
         log_data = json.loads(log_line)
@@ -382,7 +386,7 @@ class TestObservabilityCultureIntegration:
             assert len(manager.tracer.completed_spans) == 1
 
             # 验证日志文件
-            with open(manager.logger.log_file, 'r') as f:
+            with open(manager.logger.log_file, "r") as f:
                 logs = f.readlines()
 
             assert len(logs) == 2
