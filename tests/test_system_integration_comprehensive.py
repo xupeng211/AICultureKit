@@ -15,10 +15,13 @@ class TestSystemIntegrationComprehensive(unittest.TestCase):
     def test_module_imports(self):
         """测试所有核心模块导入"""
         try:
-            from aiculture.ai_behavior_enforcer import AIBehaviorEnforcer
-            from aiculture.culture_enforcer import CultureEnforcer
-            from aiculture.data_governance_culture import DataPrivacyScanner
-            from aiculture.problem_aggregator import ProblemAggregator
+            # Test imports
+            from aiculture.ai_behavior_enforcer import AIBehaviorEnforcer  # noqa: F401
+            from aiculture.culture_enforcer import CultureEnforcer  # noqa: F401
+            from aiculture.data_governance_culture import (  # noqa: F401
+                DataPrivacyScanner,
+            )
+            from aiculture.problem_aggregator import ProblemAggregator  # noqa: F401
 
             self.assertTrue(True, "所有核心模块导入成功")
         except ImportError as e:

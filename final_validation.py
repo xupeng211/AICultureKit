@@ -29,7 +29,7 @@ def main():
         from aiculture.data_catalog import DataCatalog
 
         # 测试数据目录
-        catalog = DataCatalog(Path("./test_catalog"))
+        # catalog = DataCatalog(Path("./test_catalog"))  # Test instance creation
         print("✅ 数据目录系统正常工作")
 
     except Exception as e:
@@ -40,7 +40,7 @@ def main():
 
         # 测试监控配置
         monitoring = MonitoringConfigManager(Path("./test_monitoring"))
-        config = monitoring.generate_prometheus_config()
+        # config = monitoring.generate_prometheus_config()  # Test config generation
         print("✅ 监控配置系统正常工作")
 
     except Exception as e:

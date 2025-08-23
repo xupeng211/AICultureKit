@@ -131,13 +131,13 @@ def send_notification_email(to_email, message) -> None:
         message: 参数说明
 
     """
-    smtp_server = os.getenv("SMTP_SERVER", "smtp.example.com")  # 使用环境变量
-    smtp_port = int(os.getenv("SMTP_PORT", "587"))  # 使用环境变量
-    sender_email = os.getenv("SENDER_EMAIL", "noreply@demo.local")  # 使用环境变量
-    sender_password = os.getenv(
-        "SENDER_PASSWORD",
-        "PLACEHOLDER_PASSWORD",
-    )  # 使用环境变量
+    # smtp_server = os.getenv("SMTP_SERVER", "smtp.example.com")  # 使用环境变量
+    # smtp_port = int(os.getenv("SMTP_PORT", "587"))  # 使用环境变量
+    # sender_email = os.getenv("SENDER_EMAIL", "noreply@demo.local")  # 使用环境变量
+    # sender_password = os.getenv(
+    #     "SENDER_PASSWORD",
+    #     "PLACEHOLDER_PASSWORD",
+    # )  # 使用环境变量
 
     # 发送邮件逻辑...
 

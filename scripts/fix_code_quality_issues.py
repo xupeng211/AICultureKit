@@ -106,7 +106,7 @@ def fix_long_lines(file_path: Path) -> bool:
         with open(file_path, encoding="utf-8") as f:
             lines = f.readlines()
 
-        original_lines = lines[:]
+        # original_lines = lines[:]  # Keep backup for reference
         modified = False
 
         for i, line in enumerate(lines):

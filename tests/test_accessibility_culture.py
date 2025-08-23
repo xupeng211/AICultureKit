@@ -364,12 +364,12 @@ class TestResponsiveDesignChecker:
         issues2 = self.checker.check_css_content(css_with_media, "with_media.css")
 
         # 没有媒体查询的可能有问题
-        media_issues1 = [
-            issue for issue in issues1 if "media" in issue.description.lower()
-        ]
-        media_issues2 = [
-            issue for issue in issues2 if "media" in issue.description.lower()
-        ]
+        # media_issues1 = [
+        #     issue for issue in issues1 if "media" in issue.description.lower()
+        # ]
+        # media_issues2 = [
+        #     issue for issue in issues2 if "media" in issue.description.lower()
+        # ]
 
         # 至少第一个应该有更多问题
         assert len(issues1) >= len(issues2)

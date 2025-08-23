@@ -144,7 +144,7 @@ class SecurityCodeModStrategy:
                 "todo": f"行号超出范围: {issue['line_num']}",
             }
 
-        original_line = lines[line_idx]
+        # original_line = lines[line_idx]  # Not used
 
         # 根据规则类型应用修复
         if issue["rule"] == "hashlib_md5":

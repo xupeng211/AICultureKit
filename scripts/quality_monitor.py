@@ -320,12 +320,16 @@ class QualityMonitor:
 📈 总体趋势:
   质量分数: {oldest['quality_score']} → {latest['quality_score']} ({latest['quality_score'] - oldest['quality_score']:+d})
   测试通过: {oldest['test_passed']}/{oldest['test_count']} → {latest['test_passed']}/{latest['test_count']}
-  代码覆盖率: {oldest['coverage_percent']:.1f}% → {latest['coverage_percent']:.1f}% ({latest['coverage_percent'] - oldest['coverage_percent']:+.1f}%)
-  代码行数: {oldest['line_count']} → {latest['line_count']} ({latest['line_count'] - oldest['line_count']:+d})
+  代码覆盖率: {oldest['coverage_percent']:.1f}% → {latest['coverage_percent']:.1f}% (
+    {latest['coverage_percent'] - oldest['coverage_percent']:+.1f}%)
+  代码行数: {oldest['line_count']} → {latest['line_count']} (
+    {latest['line_count'] - oldest['line_count']:+d})
 
 🔍 质量问题:
-  Flake8问题: {oldest['flake8_issues']} → {latest['flake8_issues']} ({latest['flake8_issues'] - oldest['flake8_issues']:+d})
-  MyPy错误: {oldest['mypy_errors']} → {latest['mypy_errors']} ({latest['mypy_errors'] - oldest['mypy_errors']:+d})
+  Flake8问题: {oldest['flake8_issues']} → {latest['flake8_issues']} (
+    {latest['flake8_issues'] - oldest['flake8_issues']:+d})
+  MyPy错误: {oldest['mypy_errors']} → {latest['mypy_errors']} (
+    {latest['mypy_errors'] - oldest['mypy_errors']:+d})
 
 📅 数据点数: {len(rows)}
 🕐 最后更新: {latest['timestamp']}

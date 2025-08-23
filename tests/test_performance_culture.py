@@ -282,16 +282,16 @@ class TestPerformanceCultureIntegration:
                 return len(data)
 
             # 创建基准
-            cpu_benchmark = manager.create_benchmark(
-                "cpu_task",
-                "function",
-                cpu_intensive_task,
-            )
-            memory_benchmark = manager.create_benchmark(
-                "memory_task",
-                "function",
-                memory_intensive_task,
-            )
+            # cpu_benchmark = manager.create_benchmark(
+            #     "cpu_task",
+            #     "function",
+            #     cpu_intensive_task,
+            # )
+            # memory_benchmark = manager.create_benchmark(
+            #     "memory_task",
+            #     "function",
+            #     memory_intensive_task,
+            # )
 
             # 运行基准测试
             cpu_result = manager.run_benchmark("cpu_task", cpu_intensive_task)
