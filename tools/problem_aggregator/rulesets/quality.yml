@@ -6,25 +6,25 @@ quality_gates:
     max_cognitive: 15
     max_function_length: 50
     max_file_length: 500
-  
+
   # 代码风格
   style:
     line_length: 88  # black default
     enforce_docstrings: true
     enforce_type_hints: false  # 可选，避免过于严格
-  
+
   # 测试要求
   testing:
     min_coverage: 80.0
     require_tests_for_new_code: true
     forbid_skip_without_reason: true
-  
+
   # 导入规则
   imports:
     forbid_star_imports: true
     sort_imports: true
     group_imports: true
-  
+
   # 文件规则
   files:
     max_size_kb: 100
@@ -37,15 +37,15 @@ linters:
     enabled: true
     select: ["E", "W", "F", "I", "N", "UP", "B", "A", "C4", "T20"]
     ignore: ["E501"]  # 行长度由black处理
-  
+
   flake8:
     enabled: false  # 使用ruff替代
     max_line_length: 88
-  
+
   mypy:
     enabled: false  # 可选启用
     strict: false
-  
+
   bandit:
     enabled: true
     skip_tests: ["B101"]  # 允许assert在测试中使用

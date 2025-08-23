@@ -21,7 +21,7 @@ class UserManager {
         }
 
         this.isLoading = true;
-        
+
         try {
             const response = await axios.get(`${this.apiUrl}/users`);
             this.users = response.data;
@@ -77,7 +77,7 @@ class UserManager {
 
     calculatePermissions(userRole) {
         const permissions = [];
-        
+
         switch (userRole) {
             case 'admin':
                 permissions.push('read', 'write', 'delete', 'manage');
@@ -91,7 +91,7 @@ class UserManager {
             default:
                 permissions.push('guest');
         }
-        
+
         return permissions;
     }
 }
@@ -137,11 +137,11 @@ const initializeApp = async () => {
     try {
         const config = await import('./config.js');
         const userManager = new UserManager(config.API_URL);
-        
+
         // 获取用户数据
         const users = await userManager.fetchUsers();
         console.log(`Loaded ${users.length} users`);
-        
+
         return userManager;
     } catch (error) {
         console.error('Failed to initialize app:', error);
@@ -157,4 +157,4 @@ export {
     initializeApp
 };
 
-export default UserManager; 
+export default UserManager;

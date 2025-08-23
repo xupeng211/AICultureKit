@@ -27,11 +27,7 @@ class DocstringAdder:
         if func_name.startswith("_"):
             return f'"""内部方法：{func_name[1:].replace("_", " ")}"""'
         if func_name in ["__init__", "__str__", "__repr__"]:
-            return (
-                '"""初始化方法"""'
-                if func_name == "__init__"
-                else '"""字符串表示方法"""'
-            )
+            return '"""初始化方法"""' if func_name == "__init__" else '"""字符串表示方法"""'
         # 根据参数生成描述
         if args:
             args_desc = "\n        ".join(f"{arg}: 参数说明" for arg in args)

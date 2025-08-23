@@ -251,14 +251,14 @@ done
 echo "🏗️ 测试 Docker 构建..."
 if docker build -t aiculture-kit:health-check . >/dev/null 2>&1; then
     echo "✅ Docker 构建成功"
-    
+
     # 测试运行
     if docker run --rm aiculture-kit:health-check aiculture --version >/dev/null 2>&1; then
         echo "✅ 容器运行测试成功"
     else
         echo "❌ 容器运行测试失败"
     fi
-    
+
     # 清理测试镜像
     docker rmi aiculture-kit:health-check >/dev/null 2>&1
 else

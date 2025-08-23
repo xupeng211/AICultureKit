@@ -22,7 +22,7 @@
 ```python
 class AILearningEngine:
     """AI学习引擎 - 项目模式智能识别"""
-    
+
     ✅ 项目成熟度评估 (beginner/intermediate/expert)
     ✅ 代码模式自动提取 (命名风格、复杂度、结构)
     ✅ 个性化规则生成 (基于项目特征)
@@ -58,7 +58,7 @@ class AILearningEngine:
 @dataclass
 class LanguageMetrics:
     """语言特定代码指标"""
-    
+
     ✅ 文件统计 (数量、行数)
     ✅ 函数分析 (大小、复杂度)
     ✅ 命名一致性 (camelCase/snake_case等)
@@ -89,7 +89,7 @@ class LanguageMetrics:
 ```python
 class PatternLearningIntegrator:
     """模式学习集成器 - 跨语言智能分析"""
-    
+
     ✅ 跨语言模式识别
     ✅ 一致性评分算法 (0-1分数)
     ✅ 智能建议生成
@@ -102,7 +102,7 @@ class PatternLearningIntegrator:
 🔄 跨语言模式分析 (3 个):
   ⚠️ quote_preference: 50.0% 一致性
     - Python: double quotes vs JavaScript: single quotes
-  ❌ complexity_consistency: 46.2% 一致性  
+  ❌ complexity_consistency: 46.2% 一致性
     - Python(5.0) vs JavaScript(1.5) 复杂度差异
   ✅ function_size_consistency: 100.0% 一致性
     - 所有语言函数大小都在合理范围
@@ -114,23 +114,23 @@ class PatternLearningIntegrator:
 ```python
 def _calculate_unified_strictness(self, python_learning, multi_lang_analysis, overall_maturity):
     """统一严格度计算 - 多因子智能评估"""
-    
+
     base_strictness = {
         'beginner': 0.6,     # 新项目温和处理
         'intermediate': 0.75, # 中等项目平衡严格
         'expert': 0.9        # 成熟项目高标准
     }
-    
+
     # 跨语言一致性调整
     if 一致性高 >= 0.8: strictness += 0.05  # 奖励一致性
     if 一致性低 < 0.5:  strictness -= 0.1   # 避免过度限制
-    
+
     return max(0.3, min(1.0, strictness))
 ```
 
 #### 📈 **智能调整效果**:
 - **项目成熟度**: intermediate → **基础严格度**: 0.75
-- **跨语言一致性**: 混合 → **微调**: -0.0 
+- **跨语言一致性**: 混合 → **微调**: -0.0
 - **最终严格度**: 0.75 (恰到好处的平衡)
 
 ---
@@ -142,7 +142,7 @@ def _calculate_unified_strictness(self, python_learning, multi_lang_analysis, ov
 # AI学习项目模式
 python -m aiculture.cli learn --path . --verbose --save
 
-# 显示学习结果  
+# 显示学习结果
 python -m aiculture.cli show-learning --path .
 
 # 自适应严格度调整
@@ -209,7 +209,7 @@ python -m aiculture.cli learn-integrated --path . --verbose --save
 💡 AI建议:
   🚀 项目进展良好，建议:
     • 优化代码复杂度
-    • 加强架构设计原则  
+    • 加强架构设计原则
     • 提升代码质量标准
 
 🔍 基于项目模式的具体建议:
@@ -224,7 +224,7 @@ python -m aiculture.cli learn-integrated --path . --verbose --save
     • 为每种语言设置对应的质量工具
     • 保持跨语言的命名风格一致性
     • 建立统一的代码审查标准
-  
+
   ⚠️ 不同语言间复杂度差异较大，关注代码质量平衡
 ```
 
@@ -238,12 +238,12 @@ javascript:
     enabled: true
     style: camelCase
     severity: warning
-    
+
   style_quote_preference:
-    enabled: true  
+    enabled: true
     preference: single
     severity: info
-    
+
   complexity_threshold:
     enabled: true
     max_complexity: 6  # 基于项目实际情况调整
@@ -273,15 +273,15 @@ aiculture/
 ```python
 class LanguageAnalyzer(ABC):
     """语言分析器抽象基类 - 支持无限扩展"""
-    
+
     @abstractmethod
     def get_file_extensions(self) -> List[str]:
         """获取支持的文件扩展名"""
-        
-    @abstractmethod  
+
+    @abstractmethod
     def analyze_file(self, file_path: Path) -> Dict[str, Any]:
         """分析单个文件"""
-        
+
     @abstractmethod
     def extract_patterns(self, file_analysis: List[Dict]) -> List[LanguagePattern]:
         """提取语言特定模式"""
@@ -289,7 +289,7 @@ class LanguageAnalyzer(ABC):
 
 #### **未来语言支持路线图**:
 - 🔄 **Java分析器** (计划中)
-- 🔄 **Go分析器** (计划中)  
+- 🔄 **Go分析器** (计划中)
 - 🔄 **Rust分析器** (计划中)
 - 🔄 **C#分析器** (计划中)
 
@@ -302,30 +302,30 @@ class LanguageAnalyzer(ABC):
 ```python
 def _assess_project_maturity(self, project_info):
     """多维度项目成熟度评估"""
-    
+
     maturity_score = 0
-    
+
     # 测试覆盖率 (20分)
     if test_ratio > 0.3: maturity_score += 20
-    
-    # 文档覆盖率 (20分) 
+
+    # 文档覆盖率 (20分)
     if doc_coverage > 0.8: maturity_score += 20
-    
+
     # 命名一致性 (15分)
     if naming_consistency > 0.9: maturity_score += 15
-    
+
     # 代码复杂度 (15分)
     if avg_complexity < 5: maturity_score += 15
-    
+
     # 结构复杂度 (15分)
     if structure_complexity == 'low': maturity_score += 15
-    
+
     # 导入组织 (15分)
     if import_org == 'good': maturity_score += 15
-    
+
     # 转换为等级
     if maturity_ratio >= 0.8: return 'expert'
-    elif maturity_ratio >= 0.6: return 'intermediate'  
+    elif maturity_ratio >= 0.6: return 'intermediate'
     else: return 'beginner'
 ```
 
@@ -412,4 +412,4 @@ def _assess_project_maturity(self, project_info):
 
 ---
 
-**准备好进入长期优化阶段了吗？还是希望在当前基础上进一步完善某些功能？** 🤔 
+**准备好进入长期优化阶段了吗？还是希望在当前基础上进一步完善某些功能？** 🤔

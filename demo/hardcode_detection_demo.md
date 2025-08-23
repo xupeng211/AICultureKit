@@ -17,7 +17,7 @@ def connect_database():
 def get_api_data():
     api_key = "sk-1234567890abcdef"  # ❌ 硬编码API密钥 - 安全风险！
     url = "https://api.example.com"   # ❌ 硬编码URL
-    
+
 def calculate_price(amount):
     tax_rate = 0.08              # ❌ 硬编码税率
     discount = 0.15              # ❌ 硬编码折扣
@@ -31,7 +31,7 @@ def calculate_price(amount):
 
 ❌ 检测到硬编码问题:
   🔴 第3行: 硬编码IP地址 "192.168.1.XXX" (安全风险，已脱敏)
-  🔴 第4行: 硬编码用户名 "admin" (安全风险)  
+  🔴 第4行: 硬编码用户名 "admin" (安全风险)
   🔴 第5行: 硬编码密码 "DEMO_PASSWORD" (极高安全风险!已脱敏)
   🔴 第6行: 硬编码数据库名 "myapp_db" (配置硬化)
   🔴 第10行: 硬编码API密钥 (极高安全风险!)
@@ -62,11 +62,11 @@ from typing import Optional
 class DatabaseConfig:
     """数据库配置 - 从环境变量加载"""
     host: str
-    user: str  
+    user: str
     password: str
     database: str
     port: int = 3306
-    
+
     @classmethod
     def from_env(cls) -> 'DatabaseConfig':
         """从环境变量创建配置"""
@@ -77,7 +77,7 @@ class DatabaseConfig:
             database=os.getenv('DB_NAME', ''),
             port=int(os.getenv('DB_PORT', '3306'))
         )
-        
+
     def validate(self) -> None:
         """验证配置完整性"""
         if not all([self.host, self.user, self.password, self.database]):
@@ -85,11 +85,11 @@ class DatabaseConfig:
 
 class DatabaseService:
     """数据库服务 - 配置注入"""
-    
+
     def __init__(self, config: DatabaseConfig):
         self.config = config
         self.config.validate()  # 配置验证
-    
+
     def connect(self):
         """安全的数据库连接"""
         return mysql.connector.connect(
@@ -105,8 +105,8 @@ class BusinessConfig:
     """业务配置 - 可动态调整"""
     tax_rate: float
     discount_rate: float
-    
-    @classmethod  
+
+    @classmethod
     def from_env(cls) -> 'BusinessConfig':
         """从环境变量或配置文件加载"""
         return cls(
@@ -116,10 +116,10 @@ class BusinessConfig:
 
 class PricingService:
     """定价服务 - 配置驱动"""
-    
+
     def __init__(self, config: BusinessConfig):
         self.config = config
-    
+
     def calculate_price(self, amount: float) -> float:
         """计算价格 - 无硬编码"""
         tax_amount = amount * self.config.tax_rate
@@ -155,7 +155,7 @@ host="192.168.1.XXX"        # IP地址 (已脱敏)
 password="mypassword"       # 密码
 database="production_db"    # 数据库名
 
-# 2. 🔴 API密钥和令牌  
+# 2. 🔴 API密钥和令牌
 api_key="sk-abc123"         # API密钥
 token="bearer_token_xyz"    # 访问令牌
 secret="my_secret_key"      # 密钥
@@ -223,7 +223,7 @@ class DatabaseService:
 
 ```python
 password = "admin123"      # 🚨 密码硬编码
-api_key = "sk-abc123"      # 🚨 API密钥硬编码  
+api_key = "sk-abc123"      # 🚨 API密钥硬编码
 secret_key = "my_secret"   # 🚨 密钥硬编码
 token = "bearer_xyz"       # 🚨 令牌硬编码
 ```
@@ -240,7 +240,7 @@ api_url = "https://api.site.com"  # 🟡 URL硬编码
 
 ```python
 port = 8080               # 🟢 端口硬编码
-timeout = 30              # 🟢 超时硬编码  
+timeout = 30              # 🟢 超时硬编码
 max_retries = 3           # 🟢 重试次数硬编码
 ```
 
@@ -293,7 +293,7 @@ graph TB
 **💎 AI编程工具配合AICultureKit后，交付的代码保证：**
 
 1. **🔒 零硬编码** - 100%配置化管理
-2. **🛡️ 生产级安全** - 敏感信息完全保护  
+2. **🛡️ 生产级安全** - 敏感信息完全保护
 3. **⚙️ 大厂标准** - 环境变量+配置类+依赖注入
 4. **🚀 即插即用** - 不同环境无需改代码
 5. **📈 可维护性** - 配置与代码完全分离

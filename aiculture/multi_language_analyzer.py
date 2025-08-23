@@ -720,9 +720,9 @@ class MultiLanguageManager:
                 if pattern.pattern_type == "naming":
                     if pattern.pattern_name not in naming_styles:
                         naming_styles[pattern.pattern_name] = {}
-                    naming_styles[pattern.pattern_name][language] = (
-                        pattern.pattern_value
-                    )
+                    naming_styles[pattern.pattern_name][
+                        language
+                    ] = pattern.pattern_value
 
         for pattern_name, language_styles in naming_styles.items():
             if len(language_styles) > 1:  # 多种语言都有这个模式

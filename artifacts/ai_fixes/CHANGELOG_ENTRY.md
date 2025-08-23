@@ -30,7 +30,7 @@
 - black: 代码格式化
 
 **警告：**
-- ruff failed: 
+- ruff failed:
 
 ### tools/ai_fix_agent/utils.py
 

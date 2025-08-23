@@ -597,14 +597,14 @@ class GDPRComplianceChecker:
         ]
 
         # 检查数据最小化
-        compliance_report["requirements"]["data_minimization"] = (
-            self._check_data_minimization(personal_data_fields)
-        )
+        compliance_report["requirements"][
+            "data_minimization"
+        ] = self._check_data_minimization(personal_data_fields)
 
         # 检查存储限制
-        compliance_report["requirements"]["storage_limitation"] = (
-            self._check_storage_limitation(personal_data_fields)
-        )
+        compliance_report["requirements"][
+            "storage_limitation"
+        ] = self._check_storage_limitation(personal_data_fields)
 
         # 检查安全措施
         compliance_report["requirements"]["security"] = self._check_security_measures(

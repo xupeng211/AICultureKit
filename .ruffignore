@@ -17,4 +17,4 @@ aiculture/templates/python/pyproject.toml.template
 *.template
 *.tmpl
 **/*.template
-**/*.tmpl 
+**/*.tmpl

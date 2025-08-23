@@ -286,9 +286,7 @@ class DashboardReporter:
             if problems:
                 count = len(problems)
                 blocking_count = len([p for p in problems if p.get("blocking", False)])
-                blocking_text = (
-                    f" ({blocking_count} 阻塞)" if blocking_count > 0 else ""
-                )
+                blocking_text = f" ({blocking_count} 阻塞)" if blocking_count > 0 else ""
 
                 category_names = {
                     "security": "🔒 安全",

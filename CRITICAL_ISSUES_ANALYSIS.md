@@ -75,11 +75,11 @@ def complex_feature():
 def setup_pre_commit(self):
     """设置pre-commit配置"""
     template_path = self.project_path / "templates" / "pre-commit-config.yaml"
-    
+
     # 必须检查依赖是否存在
     if not template_path.exists():
         raise FileNotFoundError(f"模板文件不存在: {template_path}")
-    
+
     # 必须验证功能真正可用
     result = self._copy_and_validate_template(template_path)
     return result
@@ -94,7 +94,7 @@ def setup_pre_commit(self):
 #### **P0 - 架构一致性原则** (新增)
 
 ```yaml
-原则名称: "架构一致性原则" 
+原则名称: "架构一致性原则"
 优先级: P0
 描述: "设计文档与代码实现必须保持一致"
 检查规则:
@@ -116,7 +116,7 @@ class CultureConfig:
                 "tools": ["black", "flake8", "mypy"]
             }
         }
-    
+
     def get_principle(self, name: str) -> List[str]:
         """返回具体原则列表"""
         return self.config.get("culture", {}).get("principles", [])
@@ -150,7 +150,7 @@ def create_project(self, name: str, template: str) -> bool:
     project_path = Path(name)
     if project_path.exists():
         raise ValueError(f"项目 {name} 已存在")
-    
+
     template_dir = self._get_template_dir(template)
     self._copy_template(template_dir, project_path)
     return True
@@ -199,7 +199,7 @@ AI执行检查清单:
    - 所有模板文件必须可访问
    - 所有配置文件必须有效
 
-2. 🔗 依赖完整性检查  
+2. 🔗 依赖完整性检查
    - 所有import的模块必须可用
    - 所有调用的方法必须存在
    - 所有配置项必须有对应实现
@@ -217,12 +217,12 @@ AI架构检查规则:
 1. 📐 接口一致性
    if 定义了接口:
        assert 实现完全符合接口约定
-   
-2. 📋 配置一致性  
+
+2. 📋 配置一致性
    if 代码中使用config["key"]:
        assert 配置文件中存在该key
        assert 数据类型匹配
-   
+
 3. 📚 文档一致性
    if 文档声称功能X:
        assert 代码中确实实现了功能X
@@ -237,12 +237,12 @@ AI测试检查规则:
    for 每个public方法:
        assert 存在对应单元测试
        assert 测试覆盖正常和异常场景
-   
+
 2. 🔗 集成测试检查
    for 每个CLI命令:
        assert 存在端到端集成测试
        assert 测试真实用户场景
-   
+
 3. ✅ 测试质量检查
    for 每个测试:
        assert 测试名称清晰描述意图
@@ -257,13 +257,13 @@ AI测试检查规则:
 ### 📋 **修正后的AI行为模式**
 
 ```
-AI工具进入项目 
+AI工具进入项目
     ↓
 🔍 基础设施检查 (已有)
     ↓
 🎯 功能完整性检查 (新增)
     ↓
-📐 架构一致性检查 (新增)  
+📐 架构一致性检查 (新增)
     ↓
 🧪 测试验证检查 (强化)
     ↓
@@ -326,7 +326,7 @@ mkdir -p aiculture/templates/javascript
 1. **为核心功能编写测试**
 ```python
 # 每个CLI命令的集成测试
-# 每个核心类的单元测试  
+# 每个核心类的单元测试
 # 端到端工作流测试
 ```
 
@@ -366,4 +366,4 @@ mkdir -p aiculture/templates/javascript
 
 > "检测到功能不完整！aiculture/templates目录缺失，这会导致create命令失败。我拒绝在功能破碎的环境中工作。请先创建完整的模板系统，并为其编写验证测试。"
 
-**这样就能从根本上避免这些致命问题的再次出现！** 🎯 
+**这样就能从根本上避免这些致命问题的再次出现！** 🎯

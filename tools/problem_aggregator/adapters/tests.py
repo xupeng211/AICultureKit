@@ -221,9 +221,7 @@ class TestsAdapter:
                                     float(class_elem.get("line-rate", 0)) * 100
                                 )
 
-                                if (
-                                    class_line_rate < min_coverage * 0.7
-                                ):  # 低于70%的文件
+                                if class_line_rate < min_coverage * 0.7:  # 低于70%的文件
                                     problems.append(
                                         {
                                             "tool": "coverage",

@@ -48,7 +48,7 @@ flowchart TD
     G --> H{检查通过?}
     H -->|是| I[正常推送]
     H -->|否| B
-    
+
     style A fill:#ff9999
     style I fill:#99ff99
     style B fill:#ffcc99
@@ -126,7 +126,7 @@ behavior_score = 100 - (critical_violations * 30) - (total_violations * 5)
 if behavior_score >= 90:
     level = "优秀AI助手"
 elif behavior_score >= 80:
-    level = "合格AI助手"  
+    level = "合格AI助手"
 elif behavior_score >= 60:
     level = "需要改进"
 else:

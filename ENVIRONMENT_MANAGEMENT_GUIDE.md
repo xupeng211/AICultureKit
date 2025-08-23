@@ -12,7 +12,7 @@
 📦 包安装位置: 系统级或用户级目录
 🚨 潜在风险:
   - 依赖版本冲突
-  - 污染系统Python环境  
+  - 污染系统Python环境
   - 无法保证不同项目的隔离
   - 难以复现开发环境
   - 部署时依赖不一致
@@ -132,7 +132,7 @@ pip install --upgrade pip
 # 安装生产依赖
 pip install -r requirements.txt
 
-# 安装开发依赖  
+# 安装开发依赖
 pip install -r requirements-dev.txt
 
 # 安装项目本身 (可编辑模式)
@@ -165,7 +165,7 @@ echo "✅ 虚拟环境已配置" > .venv/README.md
 AICultureKit/
 ├── .venv/                 # 虚拟环境目录
 ├── requirements.txt       # 生产依赖
-├── requirements-dev.txt   # 开发依赖  
+├── requirements-dev.txt   # 开发依赖
 ├── requirements.lock      # 锁定版本
 ├── .python-version       # Python版本指定
 ├── .gitignore            # 忽略虚拟环境
@@ -256,29 +256,29 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8, 3.9, 3.10, 3.11]
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-    
+
     - name: Create virtual environment
       run: |
         python -m venv .venv
         source .venv/bin/activate
         echo "VIRTUAL_ENV=.venv" >> $GITHUB_ENV
         echo ".venv/bin" >> $GITHUB_PATH
-    
+
     - name: Install dependencies
       run: |
         pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
         pip install -e .
-    
+
     - name: Run tests
       run: |
         pytest --cov=aiculture
@@ -326,14 +326,14 @@ from pathlib import Path
 
 class EnvironmentChecker:
     """环境检查器 - 验证开发环境设置"""
-    
+
     @staticmethod
     def check_virtual_env() -> bool:
         """检查是否在虚拟环境中"""
         return hasattr(sys, 'real_prefix') or (
             hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix
         )
-    
+
     @staticmethod
     def check_dependencies() -> bool:
         """检查依赖是否正确安装"""
@@ -344,7 +344,7 @@ class EnvironmentChecker:
             return True
         except ImportError:
             return False
-    
+
     @staticmethod
     def get_environment_info() -> dict:
         """获取环境信息"""
@@ -362,17 +362,17 @@ def check_env():
     """检查开发环境配置"""
     checker = EnvironmentChecker()
     info = checker.get_environment_info()
-    
+
     if info['in_venv']:
         click.echo("✅ 运行在虚拟环境中")
     else:
         click.echo("⚠️ 警告: 未使用虚拟环境!")
-    
+
     if info['dependencies_ok']:
         click.echo("✅ 依赖安装正确")
     else:
         click.echo("❌ 依赖缺失或损坏")
-    
+
     click.echo(f"🐍 Python版本: {info['python_version']}")
     click.echo(f"📍 Python路径: {info['python_path']}")
     click.echo(f"🌟 虚拟环境: {info['virtual_env'] or '未设置'}")
@@ -403,7 +403,7 @@ aiculture setup --check-env  # 设置时验证环境
 ```
 🔧 立即创建虚拟环境
 📦 重新安装所有依赖
-🔒 锁定依赖版本  
+🔒 锁定依赖版本
 📋 更新文档和脚本
 🚀 集成到CI/CD流程
 ```
@@ -424,4 +424,4 @@ pip install -e .
 python -m aiculture.cli check-env
 ```
 
-**💡 你的观察完全正确！这恰好证明了AICultureKit的价值 - 它不仅检查代码质量，还应该检查开发环境规范！让我们立即修复这个问题！** 🚀 
+**💡 你的观察完全正确！这恰好证明了AICultureKit的价值 - 它不仅检查代码质量，还应该检查开发环境规范！让我们立即修复这个问题！** 🚀

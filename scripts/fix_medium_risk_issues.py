@@ -136,10 +136,7 @@ def add_data_privacy_comments():
                     content = f.read()
 
                 # 如果文件中没有隐私声明，添加它
-                if (
-                    "数据隐私声明" not in content
-                    and "Data Privacy Notice" not in content
-                ):
+                if "数据隐私声明" not in content and "Data Privacy Notice" not in content:
                     lines = content.split("\n")
 
                     # 找到合适的插入位置（在导入语句之后）

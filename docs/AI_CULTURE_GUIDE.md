@@ -217,7 +217,7 @@ class UserRepository:
     """专注于用户数据存储"""
     def save_user(self, user: User) -> bool: ...
 
-# ✅ 开闭原则 (OCP) 
+# ✅ 开闭原则 (OCP)
 class PaymentProcessor:
     def process(self, payment_method: PaymentMethod) -> bool:
         return payment_method.process()  # 可扩展新支付方式
@@ -277,7 +277,7 @@ class Config:
     @property
     def api_key(self) -> Optional[str]:
         return os.getenv('API_KEY')
-    
+
     @property
     def database_password(self) -> Optional[str]:
         return os.getenv('DB_PASSWORD')
@@ -302,7 +302,7 @@ def safe_save_file(content: str, filename: str) -> bool:
         file_path = Path(filename).resolve()
         if not str(file_path).startswith(str(Path.cwd())):
             raise ValueError("不安全的文件路径")
-        
+
         # 安全写入
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(content)
@@ -329,7 +329,7 @@ quality:
   # 质量门禁设置
   min_score: 80
   strict_mode: true
-  
+
   # 检查规则
   checks:
     code_quality: true
@@ -344,7 +344,7 @@ tools:
   mypy: true
   isort: true
   bandit: true
-  
+
   # CI/CD工具
   docker: true
   pytest: true
@@ -352,7 +352,7 @@ tools:
 
 principles:
   # 开发原则权重
-  solid: 
+  solid:
     weight: 30
     strict: true
   dry:
@@ -434,20 +434,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: 设置Python环境
       uses: actions/setup-python@v3
       with:
         python-version: '3.9'
-    
+
     - name: 安装AI文化工具包
       run: |
         pip install aiculture-kit
-    
+
     - name: AI开发文化验证
       run: |
         python -m aiculture.cli validate --path .
-        
+
     - name: CI/CD健康检查
       run: |
         python -m aiculture.cli cicd-check --path .
@@ -492,7 +492,7 @@ repos:
 ### 🏆 团队激励机制
 
 - **质量明星**: 月度代码质量最高奖励
-- **改进达人**: 质量提升最大奖励  
+- **改进达人**: 质量提升最大奖励
 - **文化传播者**: 帮助他人提升质量奖励
 
 ---
@@ -537,7 +537,7 @@ repos:
     hooks:
       - id: black
         args: [--fast]  # 添加快速模式
-        
+
   - repo: https://github.com/pycqa/flake8
     rev: 6.0.0
     hooks:

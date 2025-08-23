@@ -178,4 +178,3 @@ quick_commit = true
 enabled = false
 coverage_threshold = 60  # 最终目标：60%+ (从80%调整为更现实的60%)
 strict_checks = true
-

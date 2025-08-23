@@ -101,7 +101,7 @@
 
 主要修复的测试:
 - test_culture_enforcer_with_string_path
-- test_add_violation  
+- test_add_violation
 - test_generate_report
 - test_empty_project_enforcement
 - test_get_python_info
@@ -127,7 +127,7 @@
 ### 🔧 代码质量工具状态
 ```
 ✅ Black: 格式化通过
-✅ isort: 导入排序通过  
+✅ isort: 导入排序通过
 ✅ flake8: 代码检查通过(忽略部分规则)
 ⚠️ mypy: 类型检查有120个错误(非阻塞)
 ⚠️ bandit: 安全检查暂时禁用(配置问题)

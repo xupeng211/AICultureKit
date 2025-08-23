@@ -8,11 +8,11 @@
 +        result = subprocess.run(
 +            cmd, cwd=project_root, capture_output=True, text=True, timeout=30
 +        )
- 
+
          if result.returncode == 0:
              files = result.stdout.strip().splitlines()
 @@ -75,7 +77,9 @@
- 
+
  def read_coverage_threshold(project_root: str = ".") -> int:
      """读取覆盖率阈值配置"""
 -    config_path = Path(project_root) / "tools" / "problem_aggregator" / "rulesets" / "culture.yml"
@@ -21,7 +21,7 @@
 +    )
      if not config_path.exists():
          return 80  # 默认阈值
- 
+
 @@ -83,7 +87,9 @@
          with open(config_path, "r", encoding="utf-8") as f:
              config = yaml.safe_load(f)
@@ -34,14 +34,14 @@
      except Exception:
          return 80
 @@ -101,7 +107,9 @@
- 
+
          # 运行 diff-cover
          cmd = ["diff-cover", "coverage.xml", "--compare-branch", base, "--fail-under=0"]
 -        result = subprocess.run(cmd, cwd=project_root, capture_output=True, text=True, timeout=60)
 +        result = subprocess.run(
 +            cmd, cwd=project_root, capture_output=True, text=True, timeout=60
 +        )
- 
+
          if result.returncode != 0:
              return None
 @@ -151,7 +159,11 @@
@@ -74,7 +74,7 @@
                  print(f"     发现 {len(diff_coverage_problems)} 个增量覆盖率问题")
 @@ -339,7 +355,10 @@
                                  )
- 
+
                  # 检查跳过的测试
 -                if culture_config.get("forbid_skipping_tests", True) and "test_" in file_path:
 +                if (
@@ -87,7 +87,7 @@
 @@ -503,7 +522,9 @@
          else:
              cmd = ["ruff", "check", "--output-format", "json", "."]
- 
+
 -        result = subprocess.run(cmd, cwd=project_path, capture_output=True, text=True, timeout=60)
 +        result = subprocess.run(
 +            cmd, cwd=project_path, capture_output=True, text=True, timeout=60
@@ -98,7 +98,7 @@
 @@ -527,9 +548,13 @@
          else:
              cmd = ["bandit", "-q", "-r", ".", "-f", "json"]
- 
+
 -        result = subprocess.run(cmd, cwd=project_path, capture_output=True, text=True, timeout=60)
 +        result = subprocess.run(
 +            cmd, cwd=project_path, capture_output=True, text=True, timeout=60
@@ -125,7 +125,7 @@
 @@ -556,10 +579,16 @@
          else:
              cmd = ["detect-secrets", "scan", "--all-files"]
- 
+
 -        result = subprocess.run(cmd, cwd=project_path, capture_output=True, text=True, timeout=60)
 +        result = subprocess.run(
 +            cmd, cwd=project_path, capture_output=True, text=True, timeout=60
@@ -143,7 +143,7 @@
                  "status": "success",
                  "data": secrets_data,
 @@ -576,7 +605,9 @@
- 
+
      # 4) pytest 可用性检查
      try:
 -        result = subprocess.run(["pytest", "--version"], capture_output=True, text=True, timeout=10)
@@ -165,9 +165,9 @@
 +                else "low" if diff_cov is not None else "unavailable"
              ),
          }
- 
+
 @@ -685,12 +715,16 @@
- 
+
      if secrets_count > 0:
          lines.append(f"### Potential Secrets ({secrets_count})")
 -        lines.append("Review detect-secrets output and update .secrets.baseline if needed.")
@@ -175,7 +175,7 @@
 +            "Review detect-secrets output and update .secrets.baseline if needed."
 +        )
          lines.append("")
- 
+
      if not coverage_exists:
          lines.append("### Missing Coverage Report")
 -        lines.append("Run `pytest --cov=. --cov-report=xml` to generate coverage report.")
@@ -183,7 +183,7 @@
 +            "Run `pytest --cov=. --cov-report=xml` to generate coverage report."
 +        )
          lines.append("")
- 
+
      if not pytest_available:
 @@ -779,7 +813,9 @@
          threshold = summary.get("coverage_threshold", 80)
@@ -204,12 +204,12 @@
 +        result = aggregator.aggregate_problems(
 +            base=args.base, files=args.files, strict=args.strict
 +        )
- 
+
          # 输出JSON
          if args.out:
 @@ -821,7 +859,9 @@
          print(f"   信息: {summary['by_severity'].get('info', 0)} 个")
- 
+
          # 退出码
 -        if args.strict and (summary["blocking"] > 0 or summary["by_severity"].get("error", 0) > 0):
 +        if args.strict and (

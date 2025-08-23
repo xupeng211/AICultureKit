@@ -58,4 +58,4 @@ class TestCLISmoke:
         runner = CliRunner()
         # 使用 --help 确保不会真正执行初始化
         result = runner.invoke(cli.init, ['--help'])
-        assert result.exit_code == 0 
+        assert result.exit_code == 0

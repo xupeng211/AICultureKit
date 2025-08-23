@@ -14,31 +14,31 @@
 </head>
 <body>
     <h1>🏆 AICultureKit 文化仪表板</h1>
-    
+
     <div class="metric">
         <h3>📊 质量评分</h3>
         <div class="score" id="quality-score">--</div>
     </div>
-    
+
     <div class="metric">
         <h3>🧪 测试覆盖率</h3>
         <div class="score" id="test-coverage">--</div>
     </div>
-    
+
     <div class="metric">
         <h3>🔒 安全问题</h3>
         <div class="score" id="security-issues">--</div>
     </div>
-    
+
     <div class="metric">
         <h3>📝 文档完整性</h3>
         <div class="score" id="doc-completeness">--</div>
     </div>
-    
+
     <script>
         // 这里可以添加JavaScript来动态更新指标
         // 实际项目中可以通过API获取实时数据
-        
+
         function updateMetrics() {
             // 模拟数据更新
             document.getElementById('quality-score').textContent = '85/100';
@@ -46,10 +46,10 @@
             document.getElementById('security-issues').textContent = '3';
             document.getElementById('doc-completeness').textContent = '78%';
         }
-        
+
         // 页面加载时更新一次
         updateMetrics();
-        
+
         // 每30秒更新一次
         setInterval(updateMetrics, 30000);
     </script>

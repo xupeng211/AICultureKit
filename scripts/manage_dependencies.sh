@@ -67,11 +67,11 @@ install_legacy() {
 update_deps() {
     log_info "检查过时的依赖..."
     pip list --outdated
-    
+
     log_info "更新依赖..."
     pip install --upgrade pip setuptools wheel
     pip install -e ".[dev]" --upgrade
-    
+
     log_success "依赖更新完成"
 }
 
@@ -85,25 +85,25 @@ generate_lock() {
 # 安全检查
 security_check() {
     log_info "执行安全检查..."
-    
+
     # 检查是否安装了安全工具
     if ! command -v safety &> /dev/null; then
         log_warning "safety 未安装，正在安装..."
         pip install safety
     fi
-    
+
     if ! command -v pip-audit &> /dev/null; then
         log_warning "pip-audit 未安装，正在安装..."
         pip install pip-audit
     fi
-    
+
     # 运行安全检查
     log_info "运行 safety 检查..."
     safety check || log_warning "发现安全问题，请检查上述输出"
-    
+
     log_info "运行 pip-audit 检查..."
     pip-audit || log_warning "发现漏洞，请检查上述输出"
-    
+
     log_success "安全检查完成"
 }
 
@@ -111,18 +111,18 @@ security_check() {
 clean_env() {
     log_info "清理pip缓存..."
     pip cache purge
-    
+
     log_info "清理Python缓存..."
     find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
     find . -name "*.pyc" -delete 2>/dev/null || true
-    
+
     log_success "环境清理完成"
 }
 
 # 验证安装
 verify_install() {
     log_info "验证安装..."
-    
+
     # 检查主要命令
     if command -v aiculture &> /dev/null; then
         log_success "aiculture 命令可用: $(aiculture --version)"
@@ -130,7 +130,7 @@ verify_install() {
         log_error "aiculture 命令不可用"
         return 1
     fi
-    
+
     # 检查开发工具
     local tools=("black" "flake8" "mypy" "pytest")
     for tool in "${tools[@]}"; do
@@ -140,7 +140,7 @@ verify_install() {
             log_warning "$tool 不可用"
         fi
     done
-    
+
     log_success "安装验证完成"
 }
 

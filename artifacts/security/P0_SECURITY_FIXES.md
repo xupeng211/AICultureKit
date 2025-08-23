@@ -14,7 +14,7 @@
 - **修复**: 替换为 `hashlib.sha256()`
 - **影响**: 文件内容哈希计算，纯内部使用，无外部兼容性影响
 
-### 2. aiculture/error_handling/error_handler.py:79  
+### 2. aiculture/error_handling/error_handler.py:79
 
 - **问题**: `hashlib.md5()` 弱哈希算法
 - **修复**: 替换为 `hashlib.sha256()`
@@ -29,7 +29,7 @@
 ## 验证状态
 
 - [x] 本地语法检查通过
-- [x] Bandit安全扫描通过 (仅发现1个低风险问题)  
+- [x] Bandit安全扫描通过 (仅发现1个低风险问题)
 - [ ] 功能测试通过
 
 ## 回退方案

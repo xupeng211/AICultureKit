@@ -16,24 +16,24 @@ NC='\033[0m'
 # 检查提交信息是否符合规范
 check_commit_format() {
     local msg="$1"
-    
+
     # 跳过merge提交
     if [[ $msg =~ ^Merge ]]; then
         return 0
     fi
-    
+
     # 检查是否有emoji和类型标识
     if [[ $msg =~ ^(✨|🐛|📚|🎨|♻️|⚡|🧪|🔧|🚀|🔒)[[:space:]]+(feat|fix|docs|style|refactor|perf|test|chore|deploy|security): ]]; then
         return 0
     fi
-    
+
     return 1
 }
 
 # 自动修复提交信息
 auto_fix_commit() {
     local msg="$1"
-    
+
     # 如果是简单的描述，尝试自动添加类型
     if [[ $msg =~ ^(add|添加|新增) ]]; then
         echo "✨ feat: $msg"
@@ -54,23 +54,23 @@ auto_fix_commit() {
 # 主逻辑
 if ! check_commit_format "$commit_msg"; then
     echo -e "${YELLOW}📝 提交信息不符合规范，正在自动修复...${NC}"
-    
+
     # 获取第一行（标题）
     title=$(echo "$commit_msg" | head -n1)
-    
+
     # 自动修复
     fixed_msg=$(auto_fix_commit "$title")
-    
+
     # 保留原始的详细描述（如果有）
     body=$(echo "$commit_msg" | tail -n +2)
-    
+
     # 生成新的提交信息
     if [[ -n "$body" && "$body" != "$title" ]]; then
         echo -e "$fixed_msg\n$body" > "$commit_file"
     else
         echo "$fixed_msg" > "$commit_file"
     fi
-    
+
     echo -e "${GREEN}✅ 提交信息已自动规范化: $fixed_msg${NC}"
 fi
 

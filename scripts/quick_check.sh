@@ -19,9 +19,9 @@ echo "=================================="
 check_step() {
     local step_name="$1"
     local command="$2"
-    
+
     echo -n "📋 $step_name ... "
-    
+
     if eval "$command" > /dev/null 2>&1; then
         echo -e "${GREEN}✅ 通过${NC}"
         return 0
@@ -35,7 +35,7 @@ check_step() {
 count_issues() {
     local tool="$1"
     local command="$2"
-    
+
     local count=$(eval "$command" 2>/dev/null | wc -l || echo "0")
     echo "$count"
 }

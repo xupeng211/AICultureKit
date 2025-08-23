@@ -158,4 +158,4 @@ exclude_lines = [
 # Bandit 安全检查配置
 [tool.bandit]
 exclude_dirs = ["tests", "test_*"]
-skips = ["B101", "B601"] 
+skips = ["B101", "B601"]

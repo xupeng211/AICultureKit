@@ -157,7 +157,7 @@ report:
       if [ -d "tools/problem_aggregator" ]; then
         echo "🔍 运行AICultureKit问题聚合器..."
         python -m tools.problem_aggregator.aggregator --base origin/main --out artifacts/ci_problems.json --md artifacts/ci_problems_report.md || echo "⚠️ 问题聚合器执行失败"
-        
+
         # 如果有阻塞性问题，尝试生成AI修复建议
         if [ -f "artifacts/ci_problems.json" ]; then
           echo "🤖 尝试生成AI修复建议..."
@@ -176,7 +176,7 @@ report:
       echo "" >> artifacts/ci_summary.md
       echo "## 📊 检查结果" >> artifacts/ci_summary.md
       echo "" >> artifacts/ci_summary.md
-      
+
       # 检查各阶段结果
       echo "- **代码风格**: $([ -f artifacts/ruff_report.json ] && echo '✅ 已检查' || echo '❌ 未执行')" >> artifacts/ci_summary.md
       echo "- **测试执行**: $([ -f coverage.xml ] && echo '✅ 已执行' || echo '❌ 未执行')" >> artifacts/ci_summary.md
@@ -184,7 +184,7 @@ report:
       echo "- **安全检查**: $([ -f artifacts/bandit_report.json ] && echo '✅ 已检查' || echo '❌ 未执行')" >> artifacts/ci_summary.md
       echo "- **问题聚合**: $([ -f artifacts/ci_problems.json ] && echo '✅ 已生成' || echo '❌ 未生成')" >> artifacts/ci_summary.md
       echo "" >> artifacts/ci_summary.md
-      
+
       # 添加下一步建议
       echo "## 🚀 下一步建议" >> artifacts/ci_summary.md
       echo "" >> artifacts/ci_summary.md
@@ -192,7 +192,7 @@ report:
       echo "2. 应用AI修复: \`cd artifacts/ai_fixes && ./apply_fixes.sh\`" >> artifacts/ci_summary.md
       echo "3. 本地验证: \`python -m tools.problem_aggregator.aggregator\`" >> artifacts/ci_summary.md
       echo "4. 重新推送验证修复效果" >> artifacts/ci_summary.md
-      
+
       echo "📋 CI摘要报告已生成"
     - echo "✅ 综合报告生成完成"
   artifacts:
@@ -212,7 +212,7 @@ gate_decision:
     - |
       # 检查是否有阻塞性问题
       BLOCKING_ISSUES=0
-      
+
       if [ -f "artifacts/ci_problems.json" ]; then
         # 使用Python解析JSON获取阻塞性问题数量
         BLOCKING_ISSUES=$(python -c "
@@ -224,10 +224,10 @@ try:
 except:
     print(0)
 " 2>/dev/null || echo 0)
-        
+
         echo "发现 $BLOCKING_ISSUES 个阻塞性问题"
       fi
-      
+
       if [ "$BLOCKING_ISSUES" -gt 0 ]; then
         echo "❌ PR合并被阻塞: 存在 $BLOCKING_ISSUES 个阻塞性问题"
         echo "📋 详细报告: artifacts/ci_problems_report.md"

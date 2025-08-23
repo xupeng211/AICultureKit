@@ -190,7 +190,7 @@ requirements.freeze: 有精确版本但不是主要依赖文件
    ```bash
    # 创建.python-version文件
    echo "3.11.9" > .python-version
-   
+
    # 更新CI/CD配置
    # 更新pyproject.toml要求
    # 更新文档
@@ -308,4 +308,4 @@ docker-compose up --build
 code . # VSCode自动配置检查
 ```
 
-**🎯 修复这些问题后，AICultureKit将具备企业级的基础设施标准！** 
+**🎯 修复这些问题后，AICultureKit将具备企业级的基础设施标准！**

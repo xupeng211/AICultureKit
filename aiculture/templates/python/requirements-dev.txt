@@ -72,4 +72,4 @@ flake8-comprehensions>=3.14.0
 
 # 测试报告
 pytest-html>=3.2.0
-coverage[toml]>=7.2.0 
+coverage[toml]>=7.2.0

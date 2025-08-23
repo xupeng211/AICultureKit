@@ -50,11 +50,11 @@ class TypedUserService {
     // 泛型方法
     async fetchData<T>(endpoint: string): Promise<ApiResponse<T>> {
         const response = await fetch(`${this.apiUrl}${endpoint}`);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         return response.json() as Promise<ApiResponse<T>>;
     }
 
@@ -65,7 +65,7 @@ class TypedUserService {
         }
 
         this.isLoading = true;
-        
+
         try {
             const response = await this.fetchData<User[]>('/users');
             this.users = response.data;
@@ -80,17 +80,17 @@ class TypedUserService {
         if (typeof criteria === 'number') {
             return this.users.find(user => user.id === criteria);
         }
-        
+
         if (typeof criteria === 'string') {
-            return this.users.find(user => 
-                user.email === criteria || 
+            return this.users.find(user =>
+                user.email === criteria ||
                 user.firstName === criteria ||
                 user.lastName === criteria
             );
         }
-        
+
         return this.users.find(user => {
-            return Object.keys(criteria).every(key => 
+            return Object.keys(criteria).every(key =>
                 user[key as keyof User] === criteria[key as keyof User]
             );
         });
@@ -109,15 +109,15 @@ class TypedUserService {
             if (filter.activeOnly && !user.isActive) {
                 return false;
             }
-            
+
             if (filter.minAge && user.age < filter.minAge) {
                 return false;
             }
-            
+
             if (filter.roles && !filter.roles.includes(user.role)) {
                 return false;
             }
-            
+
             return true;
         });
     }
@@ -208,4 +208,4 @@ export {
     UserSummary
 };
 
-export default TypedUserService; 
+export default TypedUserService;

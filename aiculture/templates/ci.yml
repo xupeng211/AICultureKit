@@ -94,7 +94,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: always()
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -112,23 +112,23 @@ jobs:
     - name: Run comprehensive quality checks
       run: |
         echo "🔍 Running comprehensive quality checks..."
-        
+
         # 代码复杂度检查
         radon cc {{package_name}} --min B
-        
+
         # 依赖安全检查
         safety check --json || true
-        
+
         # 检查过时的依赖
         pip list --outdated
-        
+
         echo "✅ Quality gate checks completed"
 
   build:
     runs-on: ubuntu-latest
     needs: [test, quality-gate]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4

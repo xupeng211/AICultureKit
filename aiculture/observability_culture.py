@@ -312,9 +312,7 @@ class MetricsCollector:
         """获取指标数据"""
         with self.lock:
             if format == "json":
-                return [
-                    asdict(metric) for metric in self.metrics[-1000:]
-                ]  # 最近1000个指标
+                return [asdict(metric) for metric in self.metrics[-1000:]]  # 最近1000个指标
             if format == "prometheus":
                 return self._format_prometheus()
             return self.metrics[-1000:]

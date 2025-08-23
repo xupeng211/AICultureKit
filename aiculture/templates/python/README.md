@@ -192,4 +192,4 @@ mkdocs serve
 ## 🙏 致谢
 
 - 感谢所有贡献者
-- 基于 [AICultureKit](https://github.com/your-org/AICultureKit) 最佳实践 
+- 基于 [AICultureKit](https://github.com/your-org/AICultureKit) 最佳实践

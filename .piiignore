@@ -1,2 +1,2 @@
 allow_if_context_contains = created_at, updated_at, timestamp, ts, time, job_id, run_id, commit, sha, version, id, uuid, key, name, path
-deny_patterns = (?i)(password|secret|api[_-]?key|private[_-]?key|token) 
+deny_patterns = (?i)(password|secret|api[_-]?key|private[_-]?key|token)

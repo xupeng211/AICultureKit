@@ -125,4 +125,4 @@ python -m aiculture.cli validate --path . > /dev/null 2>&1 && {
 
 echo ""
 echo "🎉 环境设置完成！开始愉快的开发吧！"
-echo "💡 记得在新的终端会话中运行: source $VENV_NAME/bin/activate" 
+echo "💡 记得在新的终端会话中运行: source $VENV_NAME/bin/activate"

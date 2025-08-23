@@ -114,9 +114,7 @@ class SecurityFixStrategy:
 
         # 生成patch
         patch_content = self._generate_patch(file_path, original_content, fixed_content)
-        explanation = (
-            f"修复了 {len(applied_fixes)} 个安全问题: {', '.join(applied_fixes)}"
-        )
+        explanation = f"修复了 {len(applied_fixes)} 个安全问题: {', '.join(applied_fixes)}"
         confidence = 0.6  # 安全修复的置信度相对较低，需要人工审查
 
         return patch_content, explanation, confidence

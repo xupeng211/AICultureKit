@@ -73,13 +73,13 @@
 def process_user_data(user_consent=True):
     if not user_consent:
         raise ValueError("User consent required")
-    
+
     # 使用环境变量
     db_password = os.getenv("DB_PASSWORD")
-    
+
     # 数据脱敏
     masked_email = mask_email(user_email)
-    
+
     return process_data(masked_email)
 
 # ❌ 避免的做法

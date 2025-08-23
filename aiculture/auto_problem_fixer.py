@@ -67,10 +67,7 @@ class AutoProblemFixer:
                 [f"AI修复: {issue['problem']}" for issue in ai_report["fixed_issues"]],
             )
             self.failed_fixes.extend(
-                [
-                    f"AI无法修复: {issue['problem']}"
-                    for issue in ai_report["failed_fixes"]
-                ],
+                [f"AI无法修复: {issue['problem']}" for issue in ai_report["failed_fixes"]],
             )
 
         except ImportError:
