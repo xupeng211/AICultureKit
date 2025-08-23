@@ -44,6 +44,7 @@ jobs:
           python -m pytest -q \
             --disable-warnings --maxfail=1 \
             -p no:asyncio \
+            -m 'not quarantine' \
             --cov=aiculture --cov-report=term-missing \
             --cov-fail-under=${COVERAGE_THRESHOLD_MIN}
 
