@@ -41,7 +41,8 @@
     "aiculture/templates/**",
     "templates/**",
     "examples/**",
-    "scaffolds/**"
+    "scaffolds/**",
+    "tests/test_templates/**"
   ],
   "search.exclude": {
     "**/__pycache__": true,

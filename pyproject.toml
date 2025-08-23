@@ -153,6 +153,7 @@ extend-exclude = [
     "templates/**",
     "examples/**",
     "scaffolds/**",
+    "tests/test_templates/**",
 ]
 
 [tool.ruff.lint]
