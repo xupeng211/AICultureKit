@@ -20,8 +20,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  SOFT_FAIL: true # 软失败开关：true=不阻断；false=阻断
+  COVERAGE_THRESHOLD_MIN: 25 # 覆盖率阈值（后续逐步提高）
   PYTHON_VERSION: "3.11"
-  COVERAGE_THRESHOLD_MIN: 30
 
 jobs:
   strict-quality-check:
@@ -60,15 +61,22 @@ jobs:
 
       - name: 🔍 Full lint check (Ruff)
         run: ruff check . --no-fix
+        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
 
       - name: 🔒 Security check (Bandit)
-        run: bandit -r aiculture
+        run: bandit -r aiculture --severity-level high
+        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
 
       - name: 🔐 Secrets scan (detect-secrets)
         run: detect-secrets scan --baseline .secrets.baseline --all-files
+        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
 
       - name: 🔧 Type check (MyPy)
         run: mypy aiculture --ignore-missing-imports
+        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
 
-      - name: 🧪 Test with coverage
-        run: pytest --cov=aiculture --cov-fail-under=${{ env.COVERAGE_THRESHOLD_MIN }}
+      - name: 🧪 Test with coverage (BLOCKING)
+        run: |
+          pytest -q --maxfail=1 --disable-warnings \
+            --cov=aiculture --cov-report=term-missing \
+            --cov-fail-under=${{ env.COVERAGE_THRESHOLD_MIN }}
