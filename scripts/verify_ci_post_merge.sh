@@ -74,16 +74,17 @@ else
     check_fail "Quality Gate trigger configuration incorrect"
 fi
 
-# Check docker-build.yml triggers
+# Check docker-build.yml triggers (updated for noise reduction)
 if [ -f ".github/workflows/docker-build.yml" ]; then
     echo "Docker Build triggers:"
-    docker_push_main=$(grep -A20 "^on:" .github/workflows/docker-build.yml | grep -A10 "push:" | grep "main" | wc -l)
-    docker_tags=$(grep -A20 "^on:" .github/workflows/docker-build.yml | grep -A5 "tags:" | grep "v\*" | wc -l)
+    docker_workflow_dispatch=$(grep -A10 "^on:" .github/workflows/docker-build.yml | grep "workflow_dispatch" | wc -l)
+    docker_tags=$(grep -A15 "^on:" .github/workflows/docker-build.yml | grep -A5 "tags:" | grep "v\*" | wc -l)
+    docker_no_main_push=$(grep -A20 "^on:" .github/workflows/docker-build.yml | grep -A10 "push:" | grep "main" | wc -l)
     
-    if [ "$docker_push_main" -eq 1 ] && [ "$docker_tags" -eq 1 ]; then
-        check_pass "Docker Build correctly triggers on push to main and tags"
+    if [ "$docker_workflow_dispatch" -eq 1 ] && [ "$docker_tags" -eq 1 ] && [ "$docker_no_main_push" -eq 0 ]; then
+        check_pass "Docker Build correctly triggers only on tags and manual dispatch (noise reduced)"
     else
-        check_fail "Docker Build trigger configuration incorrect"
+        check_fail "Docker Build trigger should be tags + workflow_dispatch only (found: dispatch=$docker_workflow_dispatch, tags=$docker_tags, main_push=$docker_no_main_push)"
     fi
 else
     check_warn "Docker Build workflow not found"
