@@ -1,11 +1,25 @@
-# ===== AI开发文化优化的.dockerignore =====
-
-# Git相关
+# Git files
 .git
 .gitignore
 .gitattributes
 
-# Python相关
+# Documentation
+*.md
+docs/
+*.rst
+*.txt
+# Keep requirements files
+!requirements.txt
+!requirements-dev.txt
+
+# Development files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python cache and artifacts
 __pycache__/
 *.py[cod]
 *$py.class
@@ -23,51 +37,35 @@ parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 MANIFEST
 
-# 虚拟环境
+# Virtual environments
 venv/
 env/
 ENV/
 .venv/
-.env/
-pip-log.txt
-pip-delete-this-directory.txt
+.env
 
-# 测试相关
-.tox/
-.coverage
-.coverage.*
-.cache
+# Testing
 .pytest_cache/
+.coverage
 htmlcov/
-.benchmarks/
-tests/
-*_test.py
-test_*.py
-**/test_*
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
 
-# 文档
-docs/
-*.md
-!README.md
-*.rst
-!README.rst
-
-# IDE和编辑器
+# IDEs
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
-.sublime-*
 
-# 操作系统
+# OS generated files
 .DS_Store
 .DS_Store?
 ._*
@@ -75,73 +73,36 @@ docs/
 .Trashes
 ehthumbs.db
 Thumbs.db
-desktop.ini
 
-# 开发工具
-.mypy_cache/
-.dmypy.json
-dmypy.json
-.flake8
-.bandit
-.pre-commit-config.yaml
-.secrets.baseline
-
-# CI/CD和部署
+# CI/CD files
 .github/
-.gitlab-ci.yml
 .travis.yml
-Jenkinsfile
+.circleci/
+.appveyor.yml
+
+# Docker files (avoid recursive builds)
+Dockerfile*
 docker-compose*.yml
-!docker-compose.yml
+.dockerignore
 
-# 日志和临时文件
+# Temporary files
+*.tmp
+*.temp
 *.log
-logs/
-tmp/
-temp/
-.tmp/
 
-# 数据库
-*.db
-*.sqlite
-*.sqlite3
+# Project specific
+artifacts/
+.aiculture/
+*.json
+htmlcov/
 
-# 环境配置
-.env
-.env.*
-!.env.example
-config/local.py
-local_settings.py
-
-# 媒体文件（如果项目中有）
-*.jpg
-*.jpeg
-*.png
-*.gif
-*.svg
-*.ico
-*.pdf
-*.mp4
-*.avi
-*.mov
-
-# 压缩文件
-*.zip
-*.tar.gz
-*.rar
-*.7z
-
-# Node.js (如果是混合项目)
+# Node modules (if any)
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
-yarn.lock
 
-# 其他常见的不需要文件
-*.bak
-*.backup
+# Optional
 *.orig
-*.tmp
-*~
+*.rej
+*.bak
