@@ -215,6 +215,44 @@ class AccessibilityChecker:
 
         return issues
 
+    def check_html_content(self, content: str, file_name: str) -> list[AccessibilityIssue]:
+        """检查HTML内容字符串的可访问性."""
+        issues = []
+
+        try:
+            # 检查HTML规则
+            for rule_id, rule in self.html_rules.items():
+                matches = re.finditer(
+                    rule["pattern"],
+                    content,
+                    re.IGNORECASE | re.MULTILINE,
+                )
+
+                for match in matches:
+                    line_num = content[: match.start()].count("\n") + 1
+
+                    issue = AccessibilityIssue(
+                        rule_id=rule_id,
+                        severity=rule["severity"],
+                        category=rule["category"],
+                        level=rule["level"],
+                        description=rule["description"],
+                        file_path=file_name,
+                        line_number=line_num,
+                        element=match.group(0)[:100],
+                        recommendation=rule["recommendation"],
+                        wcag_reference=rule["wcag_reference"],
+                    )
+                    issues.append(issue)
+
+            # 检查标题层级
+            issues.extend(self._check_heading_hierarchy(content, file_name))
+
+        except Exception as e:
+            print(f"检查HTML内容时出错: {e}")
+
+        return issues
+
     def check_jsx_file(self, file_path: Path) -> list[AccessibilityIssue]:
         """检查JSX文件的可访问性."""
         issues = []
