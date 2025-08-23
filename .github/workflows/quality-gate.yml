@@ -7,13 +7,16 @@ on:
   pull_request:
     branches:
       - "main"
+    types: [opened, synchronize, reopened, ready_for_review]
     paths-ignore:
       - "README.md"
       - "docs/**"
       - "*.md"
+      - "WORKFLOW_TEST.md"
+      - "workflow_test_log.md"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  group: quality-gate-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 env:

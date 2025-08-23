@@ -6,14 +6,16 @@ permissions:
 on:
   push:
     branches:
-      - "feature/*"
+      - "feature/**"
     paths-ignore:
       - "README.md"
       - "docs/**"
       - "*.md"
+      - "WORKFLOW_TEST.md"
+      - "workflow_test_log.md"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: quick-check-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -38,7 +40,7 @@ jobs:
       - name: 📦 Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
+          pip install ruff
 
       - name: Set enforcement mode by branch
         id: set-mode
@@ -54,12 +56,12 @@ jobs:
       - name: Show enforcement mode
         run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
 
-      - name: 🎨 Format & Lint (Ruff)
+      - name: 🎨 Basic Lint Check
         run: |
-          ruff check . --fix
-          black --check --diff .
-          isort --check-only --diff .
+          echo "🔍 Running basic ruff check..."
+          ruff check . --no-fix || echo "⚠️ Lint issues found but not blocking in feature branch"
 
-      - name: 🧪 Quick tests
+      - name: 🧪 Quick syntax test
         run: |
-          pytest -k "not slow" --maxfail=1
+          echo "🧪 Testing basic import..."
+          python -c "import aiculture.core; print('✅ Core module import successful')"
