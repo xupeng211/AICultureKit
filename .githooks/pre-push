@@ -18,22 +18,19 @@ if ! git diff-index --quiet HEAD --; then
     exit 1
 fi
 
-# 运行完整的测试套件
-echo -e "${BLUE}🧪 运行完整测试套件...${NC}"
-if ! python -m pytest --tb=short -q; then
-    echo -e "${RED}❌ 测试失败，推送被阻止${NC}"
-    echo -e "${YELLOW}💡 请修复测试问题后再推送${NC}"
+# 运行快速语法检查 (compile-only)
+echo -e "${BLUE}🧪 运行快速语法检查...${NC}"
+if ! python -c "import compileall, sys; ok = compileall.compile_dir('aiculture', force=True, quiet=1); sys.exit(0 if ok else 1)"; then
+    echo -e "${RED}❌ 语法检查失败，推送被阻止${NC}"
+    echo -e "${YELLOW}💡 请修复语法错误后再推送${NC}"
     exit 1
 fi
 
-# 检查代码覆盖率
-echo -e "${BLUE}📊 检查代码覆盖率...${NC}"
-coverage_result=$(python -m pytest --cov=aiculture --cov-report=term-missing --tb=no -q 2>/dev/null | grep "TOTAL" | awk '{print $NF}' | sed 's/%//')
+# 跳过代码覆盖率检查 (避免运行完整测试)
+echo -e "${BLUE}📊 跳过代码覆盖率检查 (Quick Check模式)...${NC}"
+coverage_result="N/A"
 
-if [[ -n "$coverage_result" && "$coverage_result" -lt 30 ]]; then
-    echo -e "${YELLOW}⚠️  代码覆盖率较低 ($coverage_result%)，建议提升到30%以上${NC}"
-    echo -e "${YELLOW}💡 这不会阻止推送，但建议添加更多测试${NC}"
-fi
+echo -e "${YELLOW}💡 完整的测试和覆盖率检查将在GitHub Actions的Quality Gate中执行${NC}"
 
 # 检查是否有大文件
 echo -e "${BLUE}📁 检查大文件...${NC}"
@@ -63,7 +60,7 @@ echo -e "${GREEN}✅ 推送前检查完成${NC}"
 echo -e "${BLUE}📊 推送统计:${NC}"
 echo -e "   - 新提交数: $commit_count"
 echo -e "   - 修改文件数: $changed_files"
-echo -e "   - 代码覆盖率: ${coverage_result}%"
+echo -e "   - 代码覆盖率: ${coverage_result}"
 echo -e "   - 推送时间: $(date '+%Y-%m-%d %H:%M:%S')"
 
 # 询问是否继续推送（可选）
