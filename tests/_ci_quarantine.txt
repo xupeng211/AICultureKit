@@ -8,6 +8,9 @@ tests/test_accessibility_culture.py
 # ai_culture_principles 测试 - 间接依赖psutil问题
 tests/test_ai_culture_principles.py
 
+# basic_functionality 测试 - 间接依赖psutil问题
+tests/test_basic_functionality.py
+
 # core 测试 - 模板生成问题
 tests/test_core.py
 
