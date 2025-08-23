@@ -21,7 +21,7 @@ concurrency:
 
 env:
   SOFT_FAIL: true # 软失败开关：true=不阻断；false=阻断
-  COVERAGE_THRESHOLD_MIN: 40 # 覆盖率阈值（阶段1：40%）
+  COVERAGE_THRESHOLD_MIN: 60 # 覆盖率阈值（阶段2：60%）
   PYTHON_VERSION: "3.11"
 
 jobs:
@@ -63,9 +63,9 @@ jobs:
         run: ruff check . --no-fix
         # 阶段1: ruff变为硬阻断
 
-      - name: 🔒 Security check (Bandit) - SOFT FAIL
+      - name: 🔒 Security check (Bandit) - BLOCKING
         run: bandit -r aiculture --severity-level high
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
+        # 阶段2: bandit变为硬阻断
 
       - name: 🔐 Secrets scan (detect-secrets) - SOFT FAIL
         run: detect-secrets scan --baseline .secrets.baseline --all-files
