@@ -23,7 +23,9 @@ def run_command(cmd, capture_output=True) -> None:
 
 def get_test_results() -> None:
     """获取测试结果"""
-    cmd = "python -m pytest --tb=no -q --json-report --json-report-file=test-report.json"
+    cmd = (
+        "python -m pytest --tb=no -q --json-report --json-report-file=test-report.json"
+    )
     run_command(cmd)
 
     try:
@@ -82,7 +84,7 @@ def get_quality_issues() -> None:
     """获取代码质量问题"""
     # Flake8检查
     flake8_output = run_command("flake8 . --count --statistics")
-    flake8_count = len(flake8_output.split('\n')) if flake8_output else 0
+    flake8_count = len(flake8_output.split("\n")) if flake8_output else 0
 
     # MyPy检查
     mypy_output = run_command("mypy aiculture --ignore-missing-imports")
@@ -128,44 +130,69 @@ def generate_html_report(data) -> None:
     <div class="container">
         <div class="header">
             <h1>🚀 AICultureKit 质量报告</h1>
-            <p>生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | 提交: {data['metrics']['commit_hash']} | 日期: {data['metrics']['commit_date']}</p>
+            <p>生成时间: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | 提交: {
+        data["metrics"]["commit_hash"]
+    } | 日期: {data["metrics"]["commit_date"]}</p>
         </div>
 
         <div class="metrics">
-            <div class="metric {'success' if data['tests']['failed'] == 0 else 'danger'}">
+            <div class="metric {
+        "success" if data["tests"]["failed"] == 0 else "danger"
+    }">
                 <h3>🧪 测试结果</h3>
-                <div class="value">{data['tests']['passed']}/{data['tests']['total']}</div>
-                <div class="label">通过/总计 ({data['tests']['duration']:.2f}s)</div>
+                <div class="value">{data["tests"]["passed"]}/{
+        data["tests"]["total"]
+    }</div>
+                <div class="label">通过/总计 ({data["tests"]["duration"]:.2f}s)</div>
             </div>
 
-            <div class="metric {'success' if data['coverage']['percent'] >= 80 else 'warning' if data['coverage']['percent'] >= 30 else 'danger'}">
+            <div class="metric {
+        "success"
+        if data["coverage"]["percent"] >= 80
+        else "warning"
+        if data["coverage"]["percent"] >= 30
+        else "danger"
+    }">
                 <h3>📊 代码覆盖率</h3>
-                <div class="value">{data['coverage']['percent']:.1f}%</div>
-                <div class="label">{data['coverage']['lines_covered']}/{data['coverage']['lines_total']} 行</div>
+                <div class="value">{data["coverage"]["percent"]:.1f}%</div>
+                <div class="label">{data["coverage"]["lines_covered"]}/{
+        data["coverage"]["lines_total"]
+    } 行</div>
             </div>
 
             <div class="metric">
                 <h3>📏 代码规模</h3>
-                <div class="value">{data['metrics']['total_lines']:,}</div>
-                <div class="label">{data['metrics']['file_count']} 个Python文件</div>
+                <div class="value">{data["metrics"]["total_lines"]:,}</div>
+                <div class="label">{data["metrics"]["file_count"]} 个Python文件</div>
             </div>
 
-            <div class="metric {'success' if data['quality']['flake8_issues'] == 0 else 'warning'}">
+            <div class="metric {
+        "success" if data["quality"]["flake8_issues"] == 0 else "warning"
+    }">
                 <h3>🔍 代码质量</h3>
-                <div class="value">{data['quality']['flake8_issues']}</div>
+                <div class="value">{data["quality"]["flake8_issues"]}</div>
                 <div class="label">Flake8 问题</div>
             </div>
 
-            <div class="metric {'success' if data['quality']['mypy_errors'] == 0 else 'warning'}">
+            <div class="metric {
+        "success" if data["quality"]["mypy_errors"] == 0 else "warning"
+    }">
                 <h3>🔧 类型检查</h3>
-                <div class="value">{data['quality']['mypy_errors']}</div>
+                <div class="value">{data["quality"]["mypy_errors"]}</div>
                 <div class="label">MyPy 错误</div>
             </div>
 
             <div class="metric success">
                 <h3>🎯 质量分数</h3>
-                <div class="value">{max(0, 
-                    100 - data['tests']['failed'] * 10 - data['quality']['flake8_issues'] * 2 - data['quality']['mypy_errors'])}</div>
+                <div class="value">{
+        max(
+            0,
+            100
+            - data["tests"]["failed"] * 10
+            - data["quality"]["flake8_issues"] * 2
+            - data["quality"]["mypy_errors"],
+        )
+    }</div>
                 <div class="label">综合评分</div>
             </div>
         </div>

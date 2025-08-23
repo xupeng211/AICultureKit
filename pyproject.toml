@@ -44,6 +44,13 @@ dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
     "pre-commit>=2.20.0",
+    "ruff>=0.1.0",
+    "bandit>=1.7.0",
+    "detect-secrets>=1.4.0",
+]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
 ]
 
 [project.urls]
@@ -107,9 +114,13 @@ module = ["cookiecutter.*", "git.*", "jinja2.*", "yaml.*", "click.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-minversion = "7.0"
-addopts = "-ra -q --cov=aiculture --cov-report=term-missing -p no:asyncio"
-testpaths = ["tests"]
+addopts = "-q"
+markers = [
+  "slow: slow tests",
+  "e2e: end-to-end tests",
+  "quarantine: temporarily quarantined tests"
+]
+# 不在 pyproject 里强制 --cov-* 或 fail_under，避免与工作流重复冲突
 
 [tool.flake8]
 max-line-length = 88
@@ -131,6 +142,7 @@ source = ["aiculture"]
 omit = ["tests/*", "*/tests/*"]
 
 [tool.coverage.report]
+fail_under = 9
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",

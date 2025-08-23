@@ -135,7 +135,9 @@ class TestDataCatalogBasics:
         assert retrieved.name == "Managed Asset"
 
         # 更新资产
-        success = self.catalog.update_asset("managed_asset", {"description": "Updated description"})
+        success = self.catalog.update_asset(
+            "managed_asset", {"description": "Updated description"}
+        )
         assert success is True
 
         updated = self.catalog.get_asset("managed_asset")
@@ -328,7 +330,7 @@ class TestCultureEnforcerBasics:
         self.temp_dir = Path(tempfile.mkdtemp())
         # 创建一个简单的Python文件用于测试
         test_file = self.temp_dir / "test_module.py"
-        with open(test_file, 'w') as f:
+        with open(test_file, "w") as f:
             f.write(
                 '''
 def hello_world():
@@ -355,7 +357,7 @@ class TestClass:
     def test_enforcer_initialization(self):
         """测试执行器初始化"""
         assert str(self.enforcer.project_path) == str(self.temp_dir)
-        assert hasattr(self.enforcer, 'violations')
+        assert hasattr(self.enforcer, "violations")
 
     def test_basic_enforcement(self):
         """测试基础执行"""

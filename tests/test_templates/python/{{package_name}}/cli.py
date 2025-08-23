@@ -3,7 +3,6 @@
 TODO: 添加具体的测试用例
 """
 
-import pytest
 
 # from aiculture.templates.{{package_name}}.cli import *
 # TODO:    替换为实际的导入语句
