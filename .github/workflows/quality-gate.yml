@@ -20,8 +20,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  SOFT_FAIL: true # 软失败开关：true=不阻断；false=阻断
-  COVERAGE_THRESHOLD_MIN: 60 # 覆盖率阈值（阶段2：60%）
+  SOFT_FAIL: false # 软失败开关：false=全面硬阻断（生产就绪）
+  COVERAGE_THRESHOLD_MIN: 80 # 覆盖率阈值（阶段3：80% - 企业级标准）
   PYTHON_VERSION: "3.11"
 
 jobs:
@@ -67,9 +67,9 @@ jobs:
         run: bandit -r aiculture --severity-level high
         # 阶段2: bandit变为硬阻断
 
-      - name: 🔐 Secrets scan (detect-secrets) - SOFT FAIL
+      - name: 🔐 Secrets scan (detect-secrets) - BLOCKING
         run: detect-secrets scan --baseline .secrets.baseline --all-files
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
+        # 阶段3: 全面硬阻断模式，所有检查都是阻断项
 
       - name: 🔧 Type check (MyPy) - BLOCKING
         run: mypy aiculture --ignore-missing-imports
