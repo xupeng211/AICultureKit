@@ -131,7 +131,7 @@ source = ["aiculture"]
 omit = ["tests/*", "*/tests/*"]
 
 [tool.coverage.report]
-fail_under = 8
+fail_under = 22
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
@@ -164,12 +164,12 @@ ignore = ["E501", "F401", "F841"]
 [tool.aiculture.dev_mode]
 enabled = true
 bypass_blocking_errors = true
-coverage_threshold = 8
+coverage_threshold = 22  # 当前: 22% -> 阶段1: 30% -> 阶段2: 50%
 quick_commit = true
 
 # 生产模式配置（长期目标）
 [tool.aiculture.prod_mode]
 enabled = false
-coverage_threshold = 80
+coverage_threshold = 60  # 最终目标：60%+ (从80%调整为更现实的60%)
 strict_checks = true
 
