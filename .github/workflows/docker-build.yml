@@ -5,18 +5,10 @@ permissions:
   packages: write
 
 on:
+  workflow_dispatch: # 允许手动触发
   push:
-    branches:
-      - "main"
     tags:
       - "v*"
-    paths:
-      - "Dockerfile"
-      - "docker-compose.yml"
-      - ".dockerignore"
-      - "requirements.txt"
-      - "requirements-dev.txt"
-  workflow_dispatch: # 允许手动触发
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -31,7 +23,7 @@ jobs:
   docker-build-and-push:
     name: 🐳 Build & Push Docker Image
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
 
     steps:
       - name: 📥 Checkout code

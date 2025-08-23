@@ -1,11 +1,10 @@
-# ===== AI开发文化优化的.dockerignore =====
-
-# Git相关
+# Git 目录
 .git
+.github
 .gitignore
 .gitattributes
 
-# Python相关
+# Python 缓存和编译文件
 __pycache__/
 *.py[cod]
 *$py.class
@@ -23,125 +22,86 @@ parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 MANIFEST
 
-# 虚拟环境
-venv/
-env/
-ENV/
-.venv/
-.env/
-pip-log.txt
-pip-delete-this-directory.txt
-
-# 测试相关
-.tox/
-.coverage
-.coverage.*
-.cache
+# 测试和覆盖率
 .pytest_cache/
+.coverage
+coverage*.json
+coverage*.xml
 htmlcov/
-.benchmarks/
-tests/
-*_test.py
-test_*.py
-**/test_*
+.tox/
+.nox/
 
-# 文档
-docs/
-*.md
-!README.md
-*.rst
-!README.rst
+# 虚拟环境
+.env
+.venv/
+venv/
+ENV/
+env/
+aiculture-env/
 
-# IDE和编辑器
+# IDE 和编辑器
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-.sublime-*
 
-# 操作系统
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-desktop.ini
-
-# 开发工具
+# 代码质量工具缓存
 .mypy_cache/
-.dmypy.json
-dmypy.json
+.ruff_cache/
 .flake8
 .bandit
-.pre-commit-config.yaml
-.secrets.baseline
 
-# CI/CD和部署
-.github/
-.gitlab-ci.yml
-.travis.yml
-Jenkinsfile
-docker-compose*.yml
-!docker-compose.yml
+# 文档和报告
+docs/_build/
+.sphinx/
+*.md
+CHANGELOG.md
+CONTRIBUTING.md
+LICENSE
 
-# 日志和临时文件
-*.log
-logs/
-tmp/
-temp/
+# 临时文件
 .tmp/
+temp/
+*.tmp
+*.bak
+*.log
+
+# Node.js (如果有前端资源)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # 数据库
 *.db
 *.sqlite
 *.sqlite3
 
-# 环境配置
-.env
-.env.*
-!.env.example
-config/local.py
-local_settings.py
+# 质量报告和分析文件
+bandit-report.json
+diff_coverage_report.json
+.secrets.baseline
+.quality_history.db
+performance_analysis_report.md
+IMPROVEMENT_SUMMARY.md
+*_REPORT.md
+*_SUMMARY.md
+*_GUIDE.md
 
-# 媒体文件（如果项目中有）
-*.jpg
-*.jpeg
-*.png
-*.gif
-*.svg
-*.ico
-*.pdf
-*.mp4
-*.avi
-*.mov
+# 备份和快照
+backup/
+.aiculture_bypass
 
-# 压缩文件
-*.zip
-*.tar.gz
-*.rar
-*.7z
+# 构建工具
+.benchmarks/
+artifacts/
 
-# Node.js (如果是混合项目)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-package-lock.json
-yarn.lock
-
-# 其他常见的不需要文件
-*.bak
-*.backup
-*.orig
-*.tmp
-*~
+# 容器相关
+docker-compose.override.yml
+.dockerignore
