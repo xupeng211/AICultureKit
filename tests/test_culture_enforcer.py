@@ -27,7 +27,7 @@ class TestCultureEnforcer:
     def test_culture_enforcer_creation(self) -> None:
         """测试CultureEnforcer创建"""
         assert self.enforcer.project_path == self.temp_path
-        assert hasattr(self.enforcer, 'violations')
+        assert hasattr(self.enforcer, "violations")
         assert isinstance(self.enforcer.violations, list)
 
     def test_culture_enforcer_with_string_path(self) -> None:
@@ -101,7 +101,9 @@ class TestCultureEnforcer:
         self.enforcer._check_file_structure()
 
         # 应该有一些违规记录（缺少其他必要文件）
-        structure_violations = [v for v in self.enforcer.violations if "文件结构" in v.description]
+        structure_violations = [
+            v for v in self.enforcer.violations if "文件结构" in v.description
+        ]
         # 至少应该检测到一些缺失的文件
         assert len(structure_violations) >= 0  # 可能为0如果所有必要文件都存在
 
@@ -159,7 +161,7 @@ class TestCultureEnforcer:
         assert isinstance(report, dict)
         assert report["score"] < 100  # 空项目不应该得满分
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_check_code_quality_tools(self, mock_run) -> None:
         """测试代码质量工具检查"""
         # Mock subprocess.run to simulate tool execution

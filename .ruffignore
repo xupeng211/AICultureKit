@@ -1,0 +1,26 @@
+# templates (Jinja) —— 里面常有占位符，避免被 Ruff 解析
+aiculture/templates/**
+**/templates/**
+**/.cookiecutter/**
+**/.copier/**
+
+# cache & compiled
+**/__pycache__/**
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# build & env
+.build/
+dist/
+build/
+site/
+htmlcov/
+.coverage*
+*.egg-info/**
+venv/
+.venv/
+.env/
+.env.*
+.cache/
+
