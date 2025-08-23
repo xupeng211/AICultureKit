@@ -37,6 +37,8 @@ jobs:
           python -m pip install -U pip
           pip install -e .[dev] || pip install -e .
           pip install pytest pytest-cov
+          # Install common dependencies that tests might need
+          pip install psutil click
 
       # ✅ 唯一阻断项：pytest + coverage
       - name: Test with coverage (BLOCKING)
