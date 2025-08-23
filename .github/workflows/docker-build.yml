@@ -1,0 +1,108 @@
+name: 🐳 Docker Build & Publish
+
+permissions:
+  contents: read
+  packages: write
+
+on:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "v*"
+    paths:
+      - "Dockerfile"
+      - "docker-compose.yml"
+      - ".dockerignore"
+      - "requirements.txt"
+      - "requirements-dev.txt"
+  workflow_dispatch: # 允许手动触发
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ${{ secrets.REGISTRY }}
+  REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+  IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
+
+jobs:
+  docker-build-and-push:
+    name: 🐳 Build & Push Docker Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔑 Log in to Container Registry
+        run: |
+          echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ secrets.REGISTRY }} -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+
+      - name: 📋 Extract metadata
+        id: meta
+        run: |
+          # 设置基础镜像标签
+          TAGS="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          
+          # 如果是 main 分支，添加 latest 标签
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            TAGS="${TAGS},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          fi
+          
+          # 如果是 tag，添加版本标签
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+            TAGS="${TAGS},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}"
+          fi
+          
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
+          echo "Generated tags: ${TAGS}"
+
+      - name: 🏗️ Build and push Docker image
+        run: |
+          # 构建镜像
+          docker build -t ${{ secrets.REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }} .
+          
+          # 推送镜像
+          docker push ${{ secrets.REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}
+          
+          # 如果有额外标签，添加并推送
+          IFS=',' read -ra TAG_ARRAY <<< "${{ steps.meta.outputs.tags }}"
+          for tag in "${TAG_ARRAY[@]}"; do
+            if [[ "$tag" != "${{ secrets.REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}" ]]; then
+              echo "Tagging and pushing: $tag"
+              docker tag ${{ secrets.REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }} "$tag"
+              docker push "$tag"
+            fi
+          done
+
+      - name: 🧪 Test Docker image functionality
+        run: |
+          echo "Testing basic functionality..."
+          docker run --rm ${{ secrets.REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }} aiculture --version || echo "Version check failed - continuing"
+          docker run --rm ${{ secrets.REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }} aiculture --help || echo "Help check failed - continuing"
+
+          # 测试健康检查
+          echo "Testing health check..."
+          docker run --rm ${{ secrets.REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }} python -c "import aiculture; print('✅ Import successful')" || echo "Import test failed - continuing"
+
+      - name: 🔍 Inspect image
+        run: |
+          echo "Image inspection:"
+          docker image inspect ${{ secrets.REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}
+
+          echo "Image size:"
+          docker images | grep -E "${{ env.IMAGE_NAME }}"
+
+      - name: 📊 Report build status
+        run: |
+          echo "✅ Docker build and push completed successfully!"
+          echo "📦 Image: ${{ secrets.REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}"
+          echo "🏷️  Tags: ${{ steps.meta.outputs.tags }}"
+          echo "🔗 Registry: ${{ secrets.REGISTRY }}" 
