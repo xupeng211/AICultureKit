@@ -55,7 +55,7 @@ Issues = "https://github.com/{{github_username}}/{{project_name}}/issues"
 Documentation = "https://{{project_name}}.readthedocs.io/"
 
 [project.scripts]
-{{project_name}} = "{{package_name}}.cli:main"
+"{{project_name}}" = "{{package_name}}.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]

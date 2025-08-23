@@ -16,19 +16,26 @@ def check_test_coverage():
     """检查测试覆盖率"""
     try:
         result = subprocess.run(
-            ["python", "-m", "pytest", "--cov=aiculture", "--cov-report=term", "--quiet"],
+            [
+                "python",
+                "-m",
+                "pytest",
+                "--cov=aiculture",
+                "--cov-report=term",
+                "--quiet",
+            ],
             capture_output=True,
             text=True,
             timeout=30,
         )
 
         # 解析覆盖率
-        for line in result.stdout.split('\n'):
-            if 'TOTAL' in line and '%' in line:
+        for line in result.stdout.split("\n"):
+            if "TOTAL" in line and "%" in line:
                 parts = line.split()
                 for part in parts:
-                    if '%' in part:
-                        coverage = int(part.replace('%', ''))
+                    if "%" in part:
+                        coverage = int(part.replace("%", ""))
                         return coverage
         return 0
     except Exception as e:
@@ -49,7 +56,7 @@ def check_code_quality():
         # 统计错误数量
         error_count = 0
         if result.stdout:
-            lines = result.stdout.strip().split('\n')
+            lines = result.stdout.strip().split("\n")
             if lines and lines[-1].isdigit():
                 error_count = int(lines[-1])
 
@@ -64,11 +71,11 @@ def check_security_issues():
     try:
         from aiculture.data_governance_culture import DataGovernanceManager
 
-        governance = DataGovernanceManager(Path('.'))
+        governance = DataGovernanceManager(Path("."))
         scan_result = governance.scan_project_for_privacy_issues()
 
-        high_risk = len(scan_result.get('by_severity', {}).get('high', []))
-        medium_risk = len(scan_result.get('by_severity', {}).get('medium', []))
+        high_risk = len(scan_result.get("by_severity", {}).get("high", []))
+        medium_risk = len(scan_result.get("by_severity", {}).get("medium", []))
 
         return high_risk, medium_risk
     except Exception as e:
@@ -82,13 +89,13 @@ def check_internationalization():
         from aiculture.i18n import _, set_locale
 
         # 测试中英文切换
-        set_locale('en')
-        en_text = _('welcome')
+        set_locale("en")
+        en_text = _("welcome")
 
-        set_locale('zh')
-        zh_text = _('welcome')
+        set_locale("zh")
+        zh_text = _("welcome")
 
-        return en_text != zh_text and en_text == 'Welcome' and zh_text == '欢迎'
+        return en_text != zh_text and en_text == "Welcome" and zh_text == "欢迎"
     except Exception as e:
         print(f"国际化功能检查失败: {e}")
         return False
@@ -99,14 +106,14 @@ def check_data_catalog():
     try:
         from aiculture.data_catalog import DataCatalog
 
-        catalog = DataCatalog(Path('./temp_catalog'))
+        catalog = DataCatalog(Path("./temp_catalog"))
         report = catalog.generate_catalog_report()
 
         # 清理临时目录
         import shutil
 
-        if Path('./temp_catalog').exists():
-            shutil.rmtree('./temp_catalog')
+        if Path("./temp_catalog").exists():
+            shutil.rmtree("./temp_catalog")
 
         return isinstance(report, dict)
     except Exception as e:
@@ -119,16 +126,16 @@ def check_monitoring_config():
     try:
         from aiculture.monitoring_config import MonitoringConfigManager
 
-        manager = MonitoringConfigManager(Path('./temp_monitoring'))
+        manager = MonitoringConfigManager(Path("./temp_monitoring"))
         config = manager.generate_prometheus_config()
 
         # 清理临时目录
         import shutil
 
-        if Path('./temp_monitoring').exists():
-            shutil.rmtree('./temp_monitoring')
+        if Path("./temp_monitoring").exists():
+            shutil.rmtree("./temp_monitoring")
 
-        return isinstance(config, dict) and 'global' in config
+        return isinstance(config, dict) and "global" in config
     except Exception as e:
         print(f"监控配置功能检查失败: {e}")
         return False
@@ -138,39 +145,39 @@ def run_all_checks() -> Dict[str, Any]:
     """运行所有检查项目"""
     checks = {}
 
-    print('🧪 检查测试覆盖率...')
+    print("🧪 检查测试覆盖率...")
     coverage = check_test_coverage()
-    checks['test_coverage'] = coverage
-    print(f'   测试覆盖率: {coverage}%')
+    checks["test_coverage"] = coverage
+    print(f"   测试覆盖率: {coverage}%")
 
-    print('📝 检查代码质量...')
+    print("📝 检查代码质量...")
     flake8_errors = check_code_quality()
-    checks['code_quality'] = flake8_errors
+    checks["code_quality"] = flake8_errors
     if flake8_errors == -1:
-        print('   代码质量检查失败')
+        print("   代码质量检查失败")
     else:
-        print(f'   Flake8错误数: {flake8_errors}')
+        print(f"   Flake8错误数: {flake8_errors}")
 
-    print('🔒 检查安全问题...')
+    print("🔒 检查安全问题...")
     high_risk, medium_risk = check_security_issues()
-    checks['security'] = (high_risk, medium_risk)
-    print(f'   高风险问题: {high_risk} 个')
-    print(f'   中等风险问题: {medium_risk} 个')
+    checks["security"] = (high_risk, medium_risk)
+    print(f"   高风险问题: {high_risk} 个")
+    print(f"   中等风险问题: {medium_risk} 个")
 
-    print('🌐 检查国际化支持...')
+    print("🌐 检查国际化支持...")
     i18n_ok = check_internationalization()
-    checks['i18n'] = i18n_ok
-    print(f'   国际化功能: {"✅ 正常" if i18n_ok else "❌ 异常"}')
+    checks["i18n"] = i18n_ok
+    print(f"   国际化功能: {'✅ 正常' if i18n_ok else '❌ 异常'}")
 
-    print('📋 检查数据目录功能...')
+    print("📋 检查数据目录功能...")
     catalog_ok = check_data_catalog()
-    checks['data_catalog'] = catalog_ok
-    print(f'   数据目录功能: {"✅ 正常" if catalog_ok else "❌ 异常"}')
+    checks["data_catalog"] = catalog_ok
+    print(f"   数据目录功能: {'✅ 正常' if catalog_ok else '❌ 异常'}")
 
-    print('📊 检查监控配置功能...')
+    print("📊 检查监控配置功能...")
     monitoring_ok = check_monitoring_config()
-    checks['monitoring'] = monitoring_ok
-    print(f'   监控配置功能: {"✅ 正常" if monitoring_ok else "❌ 异常"}')
+    checks["monitoring"] = monitoring_ok
+    print(f"   监控配置功能: {'✅ 正常' if monitoring_ok else '❌ 异常'}")
 
     return checks
 
@@ -214,11 +221,11 @@ def calculate_security_score(high_risk: int, medium_risk: int) -> Tuple[int, str
 def calculate_functional_score(checks: Dict[str, Any]) -> Tuple[int, str]:
     """计算功能完整性评分"""
     functional_score = 0
-    if checks['i18n']:
+    if checks["i18n"]:
         functional_score += 8
-    if checks['data_catalog']:
+    if checks["data_catalog"]:
         functional_score += 8
-    if checks['monitoring']:
+    if checks["monitoring"]:
         functional_score += 9
 
     if functional_score >= 20:
@@ -237,53 +244,57 @@ def calculate_scores(checks: Dict[str, Any]) -> Tuple[int, Dict[str, str]]:
     status_info = {}
 
     # 测试覆盖率 (30分)
-    coverage_score, coverage_status = calculate_coverage_score(checks['test_coverage'])
+    coverage_score, coverage_status = calculate_coverage_score(checks["test_coverage"])
     score += coverage_score
-    status_info['coverage'] = coverage_status
+    status_info["coverage"] = coverage_status
 
     # 代码质量 (25分)
-    quality_score, quality_status = calculate_quality_score(checks['code_quality'])
+    quality_score, quality_status = calculate_quality_score(checks["code_quality"])
     score += quality_score
-    status_info['quality'] = quality_status
+    status_info["quality"] = quality_status
 
     # 安全性 (20分)
-    high_risk, medium_risk = checks['security']
+    high_risk, medium_risk = checks["security"]
     security_score, security_status = calculate_security_score(high_risk, medium_risk)
     score += security_score
-    status_info['security'] = security_status
+    status_info["security"] = security_status
 
     # 功能完整性 (25分)
     functional_score, functional_status = calculate_functional_score(checks)
     score += functional_score
-    status_info['functional'] = functional_status
+    status_info["functional"] = functional_status
 
     return score, status_info
 
 
-def print_evaluation_results(checks: Dict[str, Any], score: int, status_info: Dict[str, str]):
+def print_evaluation_results(
+    checks: Dict[str, Any], score: int, status_info: Dict[str, str]
+):
     """打印评估结果"""
     print()
-    print('📊 综合评估结果:')
-    print('-' * 40)
+    print("📊 综合评估结果:")
+    print("-" * 40)
 
-    coverage = checks['test_coverage']
-    flake8_errors = checks['code_quality']
-    high_risk, medium_risk = checks['security']
+    coverage = checks["test_coverage"]
+    flake8_errors = checks["code_quality"]
+    high_risk, medium_risk = checks["security"]
     functional_score = sum(
         [
-            8 if checks['i18n'] else 0,
-            8 if checks['data_catalog'] else 0,
-            9 if checks['monitoring'] else 0,
+            8 if checks["i18n"] else 0,
+            8 if checks["data_catalog"] else 0,
+            9 if checks["monitoring"] else 0,
         ]
     )
 
-    print(f'📊 测试覆盖率: {coverage}% ({status_info["coverage"]})')
-    print(f'📝 代码质量: {flake8_errors} 个错误 ({status_info["quality"]})')
-    print(f'🔒 安全性: {high_risk} 高风险, {medium_risk} 中风险 ({status_info["security"]})')
-    print(f'🔧 功能完整性: {functional_score}/25 分 ({status_info["functional"]})')
+    print(f"📊 测试覆盖率: {coverage}% ({status_info['coverage']})")
+    print(f"📝 代码质量: {flake8_errors} 个错误 ({status_info['quality']})")
+    print(
+        f"🔒 安全性: {high_risk} 高风险, {medium_risk} 中风险 ({status_info['security']})"
+    )
+    print(f"🔧 功能完整性: {functional_score}/25 分 ({status_info['functional']})")
     print()
 
-    print(f'🏆 总体评分: {score}/100')
+    print(f"🏆 总体评分: {score}/100")
 
 
 def print_final_assessment(score: int):
@@ -305,50 +316,50 @@ def print_final_assessment(score: int):
         emoji = "❌"
         message = "项目不符合开发文化标准，需要大幅改进。"
 
-    print(f'{emoji} 文化标准符合度: {overall_status}')
-    print(f'💬 评价: {message}')
+    print(f"{emoji} 文化标准符合度: {overall_status}")
+    print(f"💬 评价: {message}")
 
 
 def print_quality_suggestions(coverage: int, flake8_errors: int):
     """打印质量相关建议"""
     if coverage < 80:
-        print('   • 提升测试覆盖率，目标80%以上')
+        print("   • 提升测试覆盖率，目标80%以上")
     if flake8_errors > 0:
-        print('   • 修复代码质量问题，消除flake8错误')
+        print("   • 修复代码质量问题，消除flake8错误")
 
 
 def print_security_suggestions(high_risk: int, medium_risk: int):
     """打印安全相关建议"""
     if high_risk > 0:
-        print('   • 立即处理高风险安全问题')
+        print("   • 立即处理高风险安全问题")
     if medium_risk > 20:
-        print('   • 逐步清理中等风险安全问题')
+        print("   • 逐步清理中等风险安全问题")
 
 
 def print_functionality_suggestions(checks: Dict[str, Any]):
     """打印功能相关建议"""
-    if not checks['i18n']:
-        print('   • 修复国际化功能问题')
-    if not checks['data_catalog']:
-        print('   • 修复数据目录功能问题')
-    if not checks['monitoring']:
-        print('   • 修复监控配置功能问题')
+    if not checks["i18n"]:
+        print("   • 修复国际化功能问题")
+    if not checks["data_catalog"]:
+        print("   • 修复数据目录功能问题")
+    if not checks["monitoring"]:
+        print("   • 修复监控配置功能问题")
 
 
 def print_congratulations(coverage: int, flake8_errors: int, high_risk: int):
     """打印祝贺信息"""
     if coverage >= 80 and flake8_errors == 0 and high_risk == 0:
-        print('   🎊 恭喜！项目已达到优秀的文化标准！')
+        print("   🎊 恭喜！项目已达到优秀的文化标准！")
 
 
 def print_improvement_suggestions(checks: Dict[str, Any]):
     """打印改进建议"""
     print()
-    print('💡 改进建议:')
+    print("💡 改进建议:")
 
-    coverage = checks['test_coverage']
-    flake8_errors = checks['code_quality']
-    high_risk, medium_risk = checks['security']
+    coverage = checks["test_coverage"]
+    flake8_errors = checks["code_quality"]
+    high_risk, medium_risk = checks["security"]
 
     print_quality_suggestions(coverage, flake8_errors)
     print_security_suggestions(high_risk, medium_risk)
@@ -358,8 +369,8 @@ def print_improvement_suggestions(checks: Dict[str, Any]):
 
 def main():
     """主函数"""
-    print('🔍 AICultureKit 项目文化标准符合度检查')
-    print('=' * 60)
+    print("🔍 AICultureKit 项目文化标准符合度检查")
+    print("=" * 60)
 
     # 运行所有检查
     checks = run_all_checks()

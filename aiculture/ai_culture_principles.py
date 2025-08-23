@@ -255,7 +255,7 @@ class AICulturePrinciples:
             ],
             tools=["sphinx", "mkdocs", "swagger"],
             examples={
-                "good": "def calculate_tax(amount: float) -> float:\n    \"\"\"计算税额，根据当前税率政策\"\"\"",
+                "good": 'def calculate_tax(amount: float) -> float:\n    """计算税额，根据当前税率政策"""',
                 "bad": "def calc(x): # 计算",
             },
         )
@@ -370,13 +370,18 @@ class AICulturePrinciples:
         """获取指定原则"""
         return self.principles.get(name)
 
-    def get_by_category(self, category: PrincipleCategory) -> List[DevelopmentPrinciple]:
+    def get_by_category(
+        self, category: PrincipleCategory
+    ) -> List[DevelopmentPrinciple]:
         """按分类获取原则"""
         return [p for p in self.principles.values() if p.category == category]
 
     def get_ai_instructions(self) -> Dict[str, List[str]]:
         """获取所有AI指令"""
-        return {name: principle.ai_instructions for name, principle in self.principles.items()}
+        return {
+            name: principle.ai_instructions
+            for name, principle in self.principles.items()
+        }
 
     def export_to_yaml(self, file_path: str) -> None:
         """导出原则到YAML文件"""
@@ -393,7 +398,7 @@ class AICulturePrinciples:
                 "examples": principle.examples,
             }
 
-        with open(file_path, 'w', encoding='utf-8') as f:
+        with open(file_path, "w", encoding="utf-8") as f:
             yaml.dump(data, f, default_flow_style=False, allow_unicode=True)
 
     def validate_project(self, project_path: str) -> Dict[str, Any]:
@@ -411,7 +416,9 @@ class AICulturePrinciples:
             violations.append("缺少.gitignore文件")
 
         # 检查Python项目结构
-        if (project_dir / "requirements.txt").exists() or (project_dir / "pyproject.toml").exists():
+        if (project_dir / "requirements.txt").exists() or (
+            project_dir / "pyproject.toml"
+        ).exists():
             if not (project_dir / "tests").exists():
                 violations.append("Python项目缺少tests目录")
 

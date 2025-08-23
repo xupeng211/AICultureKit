@@ -76,19 +76,21 @@ class RealTimeCultureMonitor:
 
         # 监控的文件扩展名
         self.monitored_extensions = {
-            '.py',
-            '.js',
-            '.ts',
-            '.jsx',
-            '.tsx',
-            '.html',
-            '.css',
+            ".py",
+            ".js",
+            ".ts",
+            ".jsx",
+            ".tsx",
+            ".html",
+            ".css",
         }
 
         # 文件修改时间缓存
         self.file_mtimes = {}
 
-    def add_violation_callback(self, callback: Callable[[CultureViolation], None]) -> None:
+    def add_violation_callback(
+        self, callback: Callable[[CultureViolation], None]
+    ) -> None:
         """添加违规回调函数"""
         self.callbacks.append(callback)
 
@@ -142,7 +144,7 @@ class RealTimeCultureMonitor:
 
             # 跳过隐藏目录和虚拟环境
             if any(
-                part.startswith('.') or part in ['venv', '__pycache__', 'node_modules']
+                part.startswith(".") or part in ["venv", "__pycache__", "node_modules"]
                 for part in file_path.parts
             ):
                 continue
@@ -176,16 +178,20 @@ class RealTimeCultureMonitor:
         violations = []
 
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
-            lines = content.split('\n')
+            lines = content.split("\n")
 
             # 检查各种文化违规
             violations.extend(self._check_test_culture(file_path, content, lines))
-            violations.extend(self._check_documentation_culture(file_path, content, lines))
+            violations.extend(
+                self._check_documentation_culture(file_path, content, lines)
+            )
             violations.extend(self._check_security_culture(file_path, content, lines))
-            violations.extend(self._check_code_quality_culture(file_path, content, lines))
+            violations.extend(
+                self._check_code_quality_culture(file_path, content, lines)
+            )
 
         except Exception as e:
             print(f"检查文件 {file_path} 时出错: {e}")
@@ -199,7 +205,7 @@ class RealTimeCultureMonitor:
         violations = []
 
         # 如果是新的Python模块，检查是否有对应的测试文件
-        if file_path.suffix == '.py' and not str(file_path).startswith('test_'):
+        if file_path.suffix == ".py" and not str(file_path).startswith("test_"):
             test_file = file_path.parent / f"test_{file_path.name}"
             tests_dir_file = file_path.parent / "tests" / f"test_{file_path.name}"
 
@@ -225,7 +231,7 @@ class RealTimeCultureMonitor:
         """检查文档文化"""
         violations = []
 
-        if file_path.suffix == '.py':
+        if file_path.suffix == ".py":
             # 检查类和函数是否有文档字符串
             import ast
 
@@ -290,12 +296,12 @@ class RealTimeCultureMonitor:
         violations = []
 
         # 检查函数长度
-        if file_path.suffix == '.py':
+        if file_path.suffix == ".py":
             try:
                 tree = ast.parse(content)
                 for node in ast.walk(tree):
                     if isinstance(node, ast.FunctionDef):
-                        if hasattr(node, 'end_lineno') and node.end_lineno:
+                        if hasattr(node, "end_lineno") and node.end_lineno:
                             func_lines = node.end_lineno - node.lineno + 1
                             if func_lines > 50:
                                 violations.append(
@@ -360,7 +366,9 @@ class CultureQualityGate:
             ),
         }
 
-    def check_gate(self, gate_name: str, violations: List[CultureViolation]) -> Dict[str, Any]:
+    def check_gate(
+        self, gate_name: str, violations: List[CultureViolation]
+    ) -> Dict[str, Any]:
         """检查质量门禁"""
         if gate_name not in self.gates:
             return {
@@ -535,17 +543,23 @@ class AIDevCultureAssistant:
             "recommendations": self._generate_recommendations(violations),
         }
 
-    def _generate_recommendations(self, violations: List[CultureViolation]) -> List[str]:
+    def _generate_recommendations(
+        self, violations: List[CultureViolation]
+    ) -> List[str]:
         """生成改进建议"""
         recommendations = []
 
         # 按原则统计违规数量
         principle_counts = {}
         for violation in violations:
-            principle_counts[violation.principle] = principle_counts.get(violation.principle, 0) + 1
+            principle_counts[violation.principle] = (
+                principle_counts.get(violation.principle, 0) + 1
+            )
 
         # 生成针对性建议
-        for principle, count in sorted(principle_counts.items(), key=lambda x: x[1], reverse=True):
+        for principle, count in sorted(
+            principle_counts.items(), key=lambda x: x[1], reverse=True
+        ):
             if principle == "testing":
                 recommendations.append(f"为新模块编写单元测试 ({count} 个缺失)")
             elif principle == "documentation":

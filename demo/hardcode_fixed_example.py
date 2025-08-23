@@ -27,14 +27,14 @@ class DatabaseConfig:
     port: int = 3306
 
     @classmethod
-    def from_env(cls) -> 'DatabaseConfig':
+    def from_env(cls) -> "DatabaseConfig":
         """从环境变量创建配置"""
         return cls(
-            host=os.getenv('DB_HOST', 'localhost'),
-            user=os.getenv('DB_USER', ''),
-            password=os.getenv('DB_PASSWORD', ''),
-            database=os.getenv('DB_NAME', ''),
-            port=int(os.getenv('DB_PORT', '3306')),
+            host=os.getenv("DB_HOST", "localhost"),
+            user=os.getenv("DB_USER", ""),
+            password=os.getenv("DB_PASSWORD", ""),
+            database=os.getenv("DB_NAME", ""),
+            port=int(os.getenv("DB_PORT", "3306")),
         )
 
 
@@ -47,12 +47,12 @@ class ApiConfig:
     timeout: int = 30
 
     @classmethod
-    def from_env(cls) -> 'ApiConfig':
+    def from_env(cls) -> "ApiConfig":
         """从环境变量创建API配置"""
         return cls(
-            base_url=os.getenv('API_BASE_URL', ''),
-            api_key=os.getenv('API_KEY', ''),
-            timeout=int(os.getenv('API_TIMEOUT', '30')),
+            base_url=os.getenv("API_BASE_URL", ""),
+            api_key=os.getenv("API_KEY", ""),
+            timeout=int(os.getenv("API_TIMEOUT", "30")),
         )
 
 
@@ -66,13 +66,13 @@ class ServerConfig:
     workers: int
 
     @classmethod
-    def from_env(cls) -> 'ServerConfig':
+    def from_env(cls) -> "ServerConfig":
         """从环境变量创建服务器配置"""
         return cls(
-            host=os.getenv('SERVER_HOST', 'localhost'),
-            port=int(os.getenv('SERVER_PORT', '8080')),
-            debug=os.getenv('DEBUG', 'false').lower() == 'true',
-            workers=int(os.getenv('WORKERS', '4')),
+            host=os.getenv("SERVER_HOST", "localhost"),
+            port=int(os.getenv("SERVER_PORT", "8080")),
+            debug=os.getenv("DEBUG", "false").lower() == "true",
+            workers=int(os.getenv("WORKERS", "4")),
         )
 
 
@@ -94,12 +94,12 @@ class DiscountConfig:
     regular_rate: float
 
     @classmethod
-    def from_env(cls) -> 'DiscountConfig':
+    def from_env(cls) -> "DiscountConfig":
         """从环境变量创建折扣配置"""
         return cls(
-            premium_rate=float(os.getenv('PREMIUM_DISCOUNT', '0.15')),
-            vip_rate=float(os.getenv('VIP_DISCOUNT', '0.25')),
-            regular_rate=float(os.getenv('REGULAR_DISCOUNT', '0.05')),
+            premium_rate=float(os.getenv("PREMIUM_DISCOUNT", "0.15")),
+            vip_rate=float(os.getenv("VIP_DISCOUNT", "0.25")),
+            regular_rate=float(os.getenv("REGULAR_DISCOUNT", "0.05")),
         )
 
 
@@ -111,11 +111,11 @@ class RateLimitConfig:
     time_window_seconds: int
 
     @classmethod
-    def from_env(cls) -> 'RateLimitConfig':
+    def from_env(cls) -> "RateLimitConfig":
         """从环境变量创建限流配置"""
         return cls(
-            max_requests_per_minute=int(os.getenv('RATE_LIMIT_REQUESTS', '100')),
-            time_window_seconds=int(os.getenv('RATE_LIMIT_WINDOW', '60')),
+            max_requests_per_minute=int(os.getenv("RATE_LIMIT_REQUESTS", "100")),
+            time_window_seconds=int(os.getenv("RATE_LIMIT_WINDOW", "60")),
         )
 
 
@@ -198,7 +198,7 @@ class FileService:
         Args:
             log_directory: 日志目录路径
         """
-        self.log_directory = log_directory or os.getenv('LOG_DIR', '/tmp')
+        self.log_directory = log_directory or os.getenv("LOG_DIR", "/tmp")
 
     def save_user_data(self, data: str, filename: str = "users.log") -> None:
         """保存用户数据
@@ -213,7 +213,7 @@ class FileService:
             # 确保目录存在
             os.makedirs(self.log_directory, exist_ok=True)
 
-            with open(file_path, "a", encoding='utf-8') as f:
+            with open(file_path, "a", encoding="utf-8") as f:
                 f.write(f"{data}\n")
 
             logger.info(f"Data saved to: {file_path}")
@@ -323,15 +323,15 @@ class AppConfig:
         self.rate_limit = RateLimitConfig.from_env()
 
         # 加密相关配置
-        self.encryption_key = os.getenv('ENCRYPTION_KEY', '')
+        self.encryption_key = os.getenv("ENCRYPTION_KEY", "")
         if not self.encryption_key:
             raise ValueError("ENCRYPTION_KEY environment variable is required")
 
         # 邮件配置
-        self.smtp_server = os.getenv('SMTP_SERVER', '')
-        self.smtp_port = int(os.getenv('SMTP_PORT', '587'))
-        self.sender_email = os.getenv('SENDER_EMAIL', '')
-        self.sender_password = os.getenv('SENDER_PASSWORD', '')
+        self.smtp_server = os.getenv("SMTP_SERVER", "")
+        self.smtp_port = int(os.getenv("SMTP_PORT", "587"))
+        self.sender_email = os.getenv("SENDER_EMAIL", "")
+        self.sender_password = os.getenv("SENDER_PASSWORD", "")
 
 
 # ✅ 应用服务工厂 - 依赖注入
