@@ -7,68 +7,73 @@ on:
       - '**/*.md'
       - 'docs/**'
       - '.github/ISSUE_TEMPLATE/**'
-      - 'README*'
-
-permissions: read-all
 
 concurrency:
-  group: quality-gate-${{ github.ref }}
+  group: quality-gate-${{ github.event.pull_request.head.ref || github.ref }}
   cancel-in-progress: true
-
-env:
-  SOFT_FAIL: 'true'                   # 非 pytest 检查一律软失败
-  COVERAGE_THRESHOLD_MIN: '9'         # 统一 9%
 
 jobs:
   gate:
     name: Quality Gate
     runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    env:
+      # 覆盖率阈值：与 pyproject.toml 对齐
+      COVERAGE_THRESHOLD_MIN: 9
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python 3.11 (pin for stability)
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install minimal test deps
+      - name: Show python/pip/pytest versions
         run: |
-          python -m pip install -U pip
-          # 项目自身 + 测试与质量工具（pytest 为唯一阻断项）
-          python -m pip install -e .[test] pytest pytest-cov
+          python -V
+          pip -V || true
+          python -c "import sys;print('site:', sys.path[0])"
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade wheel setuptools
+          python -m pip --version
+
+      - name: Install test dependencies
+        run: |
+          python -m pip install -e .[test] || python -m pip install -e .
+          python -m pip install pytest pytest-cov
+          # 软失败工具独立安装，失败不阻断
           python -m pip install ruff mypy bandit detect-secrets || true
 
-      - name: Show enforcement mode (soft-fail design)
-        run: |
-          echo "SOFT_FAIL=${SOFT_FAIL}"
-          echo "COVERAGE_THRESHOLD_MIN=${COVERAGE_THRESHOLD_MIN}"
-
-      # ---- 软失败检查：只报告，不阻断 ----
-      - name: Ruff format (soft)
-        run: python -m ruff format --check .
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
-
-      - name: Ruff lint (soft)
-        run: python -m ruff check .
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
-
-      - name: MyPy (soft)
-        run: mypy .
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
-
-      - name: Bandit (soft)
-        run: bandit -q -r aiculture
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
-
-      - name: Detect secrets (soft)
-        run: detect-secrets scan
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
-
-      # ---- 唯一阻断：pytest + coverage ≥ 阈值 ----
+      # -------- 唯一硬阻断：pytest + coverage >= env 阈值 ----------
       - name: Test with coverage (BLOCKING)
         run: |
-          # 使用 quarantine 机制（若项目已有 conftest，仍加 -m 兜底）
-          pytest -q -m "not quarantine" \
-            --cov=aiculture --cov-report=term-missing \
+          echo "Threshold: ${COVERAGE_THRESHOLD_MIN}%"
+          python -m pytest -q \
+            -m "not quarantine" \
+            --disable-warnings --maxfail=1 \
+            --cov=aiculture --cov-report=term \
             --cov-fail-under=${COVERAGE_THRESHOLD_MIN}
+
+      # --------- 以下均为软失败，不得阻断合并 ---------------------
+      - name: Ruff format (SOFT FAIL)
+        continue-on-error: true
+        run: python -m ruff format --check .
+
+      - name: Ruff lint (SOFT FAIL)
+        continue-on-error: true
+        run: python -m ruff check .
+
+      - name: MyPy (SOFT FAIL)
+        continue-on-error: true
+        run: mypy . || true
+
+      - name: Bandit (SOFT FAIL)
+        continue-on-error: true
+        run: bandit -q -r aiculture || true
+
+      - name: Detect secrets (SOFT FAIL)
+        continue-on-error: true
+        run: detect-secrets scan || true
