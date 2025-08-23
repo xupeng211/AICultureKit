@@ -8,21 +8,18 @@ on:
       - 'docs/**'
       - '.github/ISSUE_TEMPLATE/**'
 
+permissions: read-all
+
 concurrency:
   group: quick-check-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-
 jobs:
   quick:
-    name: Quick Lint & Test
+    name: Quick Lint & Syntax
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -30,29 +27,14 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install tools
+      # 不安装依赖，不 import，仅编译语法
+      - name: Compile-only syntax check
+        run: python -m compileall aiculture -q
+
+      - name: Ruff (soft)
         run: |
           python -m pip install -U pip
-          python -m pip install "ruff==0.5.7"
-
-      # 软失败：格式检查（不阻断）
-      - name: Format check (Ruff)
-        continue-on-error: true
-        run: |
-          python -m ruff --version
-          # --isolated：忽略任何 pyproject/ruff.toml，避免解析模板文件
-          # --check：只检查格式，不写回
-          python -m ruff format . --check --isolated
-
-      # 软失败：静态检查（不阻断）
-      - name: Lint check (Ruff)
-        continue-on-error: true
-        run: |
-          python -m ruff check . --output-format=github --isolated
-
-      # 真正的"快速测试"：只做语法编译，不 import 依赖，不运行单测
-      - name: Quick syntax smoke (compile-only)
-        run: |
-          echo "🧪 Running compile-only syntax check..."
-          python -m compileall aiculture
+          python -m pip install ruff
+          python -m ruff format --check . || true
+          python -m ruff check . || true
 
