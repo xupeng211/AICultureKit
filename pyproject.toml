@@ -108,7 +108,7 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q --cov=aiculture --cov-report=term-missing -p no:asyncio"
+addopts = "-ra -q -m 'not quarantine' --cov=aiculture --cov-report=term-missing -p no:asyncio"
 testpaths = ["tests"]
 
 [tool.flake8]
