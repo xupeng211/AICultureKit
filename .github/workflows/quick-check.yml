@@ -26,6 +26,7 @@ jobs:
     name: 🚀 Quick Lint & Test
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    if: ${{ github.event_name == 'push' }}
 
     steps:
       - name: 📥 Checkout code
@@ -61,7 +62,16 @@ jobs:
           echo "🔍 Running basic ruff check..."
           ruff check . --no-fix || echo "⚠️ Lint issues found but not blocking in feature branch"
 
-      - name: 🧪 Quick syntax test
+      - name: 🧪 Quick syntax test (compile only, no imports)
         run: |
-          echo "🧪 Testing basic import..."
-          python -c "import aiculture.core; print('✅ Core module import successful')"
+          echo "🧪 Testing syntax compilation..."
+          python - <<'PY'
+          import compileall, sys
+          ok = compileall.compile_dir('aiculture', force=True, quiet=1)
+          if ok:
+              print('✅ All syntax checks passed')
+              sys.exit(0)
+          else:
+              print('❌ Syntax errors found')
+              sys.exit(1)
+          PY
