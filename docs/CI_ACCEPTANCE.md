@@ -37,8 +37,9 @@
 - ✅ Require conversation resolution before merging  
 - ✅ Do not allow bypassing the above settings
 
-> 截图插槽（可粘贴 GitHub 截图）：  
-> ![branch-protection](./_images/branch-protection.png)
+> 分支保护配置截图：  
+> ![branch-protection-1](./_images/branch-protection-1.png)
+> ![branch-protection-2](./_images/branch-protection-2.png)
 
 ## 5. 验收流程（每次变更或回归）
 **A. Feature push（预期）**  
