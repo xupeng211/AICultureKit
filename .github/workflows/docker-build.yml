@@ -8,12 +8,11 @@ on:
   push:
     branches:
       - "main"
-      - "feature/*"
     tags:
       - "v*"
-  pull_request:
-    branches:
-      - "main"
+  # 移除 pull_request 触发器，避免与 Quality Gate 重复
+  # 移除 feature/* 分支触发，避免与 Quick Check 重复
+  workflow_dispatch: # 允许手动触发
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
