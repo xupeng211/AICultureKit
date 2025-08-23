@@ -6,8 +6,7 @@ permissions:
 on:
   push:
     branches:
-      - "*"
-      - "!main"
+      - "feature/*"
     paths-ignore:
       - "README.md"
       - "docs/**"
@@ -64,4 +63,3 @@ jobs:
       - name: 🧪 Quick tests
         run: |
           pytest -k "not slow" --maxfail=1
-
