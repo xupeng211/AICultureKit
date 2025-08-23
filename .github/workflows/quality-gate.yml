@@ -21,7 +21,7 @@ concurrency:
 
 env:
   SOFT_FAIL: true # 软失败开关：true=不阻断；false=阻断
-  COVERAGE_THRESHOLD_MIN: 25 # 覆盖率阈值（后续逐步提高）
+  COVERAGE_THRESHOLD_MIN: 40 # 覆盖率阈值（阶段1：40%）
   PYTHON_VERSION: "3.11"
 
 jobs:
@@ -59,21 +59,21 @@ jobs:
       - name: Show enforcement mode
         run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
 
-      - name: 🔍 Full lint check (Ruff)
+      - name: 🔍 Full lint check (Ruff) - BLOCKING
         run: ruff check . --no-fix
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
+        # 阶段1: ruff变为硬阻断
 
-      - name: 🔒 Security check (Bandit)
+      - name: 🔒 Security check (Bandit) - SOFT FAIL
         run: bandit -r aiculture --severity-level high
         continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
 
-      - name: 🔐 Secrets scan (detect-secrets)
+      - name: 🔐 Secrets scan (detect-secrets) - SOFT FAIL
         run: detect-secrets scan --baseline .secrets.baseline --all-files
         continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
 
-      - name: 🔧 Type check (MyPy)
+      - name: 🔧 Type check (MyPy) - BLOCKING
         run: mypy aiculture --ignore-missing-imports
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
+        # 阶段1: mypy变为硬阻断
 
       - name: 🧪 Test with coverage (BLOCKING)
         run: |
