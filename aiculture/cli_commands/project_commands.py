@@ -231,7 +231,7 @@ def report(path: str, output: str) -> None:
 
 - **Python 文件**: {len(python_files)}
 - **测试文件**: {len(test_files)}
-- **测试覆盖率估算**: {len(test_files)/max(len(python_files), 1):.1%}
+- **测试覆盖率估算**: {len(test_files) / max(len(python_files), 1):.1%}
 
 ## 项目结构
 

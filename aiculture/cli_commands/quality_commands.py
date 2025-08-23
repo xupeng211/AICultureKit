@@ -258,7 +258,7 @@ def _show_quality_summary(results: dict) -> None:
         if result.get("success", False):
             passed += 1
 
-    click.echo(f"\n📈 总体通过率: {passed}/{total} ({passed/max(total, 1):.1%})")
+    click.echo(f"\n📈 总体通过率: {passed}/{total} ({passed / max(total, 1):.1%})")
 
     if passed == total:
         click.echo("🎉 所有检查都通过了！")

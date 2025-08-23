@@ -115,10 +115,10 @@ def report(path: str, output: str) -> None:
 """
 
         summary = report_data.get("summary", {})
-        report_content += f"""- **检查文件数**: {summary.get('total_files_checked', 0)}
-- **发现问题数**: {summary.get('total_issues_found', 0)}
-- **国际化问题**: {summary.get('i18n_issues_count', 0)}
-- **可访问性问题**: {summary.get('accessibility_issues_count', 0)}
+        report_content += f"""- **检查文件数**: {summary.get("total_files_checked", 0)}
+- **发现问题数**: {summary.get("total_issues_found", 0)}
+- **国际化问题**: {summary.get("i18n_issues_count", 0)}
+- **可访问性问题**: {summary.get("accessibility_issues_count", 0)}
 
 ## 详细问题
 

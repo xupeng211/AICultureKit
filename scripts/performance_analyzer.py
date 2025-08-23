@@ -254,14 +254,14 @@ class PerformanceAnalyzer:
 
         report = f"""
 🚀 AICultureKit 性能分析报告
-{'='*50}
+{"=" * 50}
 
 📊 分析统计:
-  - 分析文件数: {stats['files_analyzed']}
-  - 发现问题数: {stats['issues_found']}
-  - 错误: {len(by_severity['error'])}
-  - 警告: {len(by_severity['warning'])}
-  - 信息: {len(by_severity['info'])}
+  - 分析文件数: {stats["files_analyzed"]}
+  - 发现问题数: {stats["issues_found"]}
+  - 错误: {len(by_severity["error"])}
+  - 警告: {len(by_severity["warning"])}
+  - 信息: {len(by_severity["info"])}
 
 """
 

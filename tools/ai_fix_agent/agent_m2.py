@@ -110,9 +110,9 @@ class AIFixAgentM2:
 
             for j, patch_content in enumerate(patch_parts):
                 if len(patch_parts) > 1:
-                    filename = f"{prefix}_{i+1:03d}_{j+1:02d}.patch"
+                    filename = f"{prefix}_{i + 1:03d}_{j + 1:02d}.patch"
                 else:
-                    filename = f"{prefix}_{i+1:03d}.patch"
+                    filename = f"{prefix}_{i + 1:03d}.patch"
 
                 patch_file = output_path / filename
                 patch_file.write_text(patch_content, encoding="utf-8")

@@ -128,7 +128,7 @@ class TestsAdapter:
                         "tool": "pytest",
                         "type": "test_failure",
                         "severity": "error",
-                        "message": f'测试失败: {"; ".join(failure_info[:3])}',
+                        "message": f"测试失败: {'; '.join(failure_info[:3])}",
                         "fix_suggestion": "修复失败的测试用例",
                         "blocking": True,
                     },

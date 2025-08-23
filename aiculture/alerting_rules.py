@@ -481,7 +481,7 @@ class AlertingRulesManager:
         """转换为Prometheus表达式"""
         # 简化的转换逻辑
         if "avg_response_time > threshold" in condition:
-            return f"avg(response_time_seconds) > {threshold/1000}"
+            return f"avg(response_time_seconds) > {threshold / 1000}"
         if "memory_usage_percent > threshold" in condition:
             return f"(process_resident_memory_bytes / node_memory_MemTotal_bytes) * 100 > {threshold}"
         if "cpu_usage_percent > threshold" in condition:

@@ -323,7 +323,7 @@ class AICultureKitIDE:
         lines.append(f"- **已修复**: {fixed} 个问题")
         lines.append(
             (
-                f"- **修复率**: {(fixed/before*100):.1f}%"
+                f"- **修复率**: {(fixed / before * 100):.1f}%"
                 if before > 0
                 else "- **修复率**: N/A"
             ),

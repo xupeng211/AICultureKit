@@ -17,7 +17,7 @@ def main():
 
         # 设置中文环境
         set_locale("zh")
-        print(f'🌐 语言设置: {_("welcome")}')
+        print(f"🌐 语言设置: {_('welcome')}")
 
         # 测试国际化功能
         print("✅ 国际化系统正常工作")

@@ -167,17 +167,17 @@ def run_all_checks() -> dict[str, Any]:
     print("🌐 检查国际化支持...")
     i18n_ok = check_internationalization()
     checks["i18n"] = i18n_ok
-    print(f'   国际化功能: {"✅ 正常" if i18n_ok else "❌ 异常"}')
+    print(f"   国际化功能: {'✅ 正常' if i18n_ok else '❌ 异常'}")
 
     print("📋 检查数据目录功能...")
     catalog_ok = check_data_catalog()
     checks["data_catalog"] = catalog_ok
-    print(f'   数据目录功能: {"✅ 正常" if catalog_ok else "❌ 异常"}')
+    print(f"   数据目录功能: {'✅ 正常' if catalog_ok else '❌ 异常'}")
 
     print("📊 检查监控配置功能...")
     monitoring_ok = check_monitoring_config()
     checks["monitoring"] = monitoring_ok
-    print(f'   监控配置功能: {"✅ 正常" if monitoring_ok else "❌ 异常"}')
+    print(f"   监控配置功能: {'✅ 正常' if monitoring_ok else '❌ 异常'}")
 
     return checks
 
@@ -284,12 +284,12 @@ def print_evaluation_results(
         ],
     )
 
-    print(f'📊 测试覆盖率: {coverage}% ({status_info["coverage"]})')
-    print(f'📝 代码质量: {flake8_errors} 个错误 ({status_info["quality"]})')
+    print(f"📊 测试覆盖率: {coverage}% ({status_info['coverage']})")
+    print(f"📝 代码质量: {flake8_errors} 个错误 ({status_info['quality']})")
     print(
-        f'🔒 安全性: {high_risk} 高风险, {medium_risk} 中风险 ({status_info["security"]})',
+        f"🔒 安全性: {high_risk} 高风险, {medium_risk} 中风险 ({status_info['security']})",
     )
-    print(f'🔧 功能完整性: {functional_score}/25 分 ({status_info["functional"]})')
+    print(f"🔧 功能完整性: {functional_score}/25 分 ({status_info['functional']})")
     print()
 
     print(f"🏆 总体评分: {score}/100")

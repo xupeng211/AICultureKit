@@ -215,7 +215,9 @@ class AccessibilityChecker:
 
         return issues
 
-    def check_html_content(self, content: str, file_name: str) -> list[AccessibilityIssue]:
+    def check_html_content(
+        self, content: str, file_name: str
+    ) -> list[AccessibilityIssue]:
         """检查HTML内容字符串的可访问性."""
         issues = []
 

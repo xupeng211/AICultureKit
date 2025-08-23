@@ -158,7 +158,7 @@ import pytest
 from aiculture.{module_name} import *
 
 
-class Test{py_file.stem.title().replace('_', '')}:
+class Test{py_file.stem.title().replace("_", "")}:
     """TODO: 添加测试类文档字符串"""
 
     def test_basic_functionality(self) -> None:

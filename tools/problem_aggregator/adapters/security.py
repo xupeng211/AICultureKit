@@ -143,7 +143,7 @@ class SecurityAdapter:
                                     "line": secret.get("line_number", 0),
                                     "column": 0,
                                     "code": secret.get("type", "SECRET"),
-                                    "message": f'检测到潜在密钥: {secret.get("type", "未知类型")}',
+                                    "message": f"检测到潜在密钥: {secret.get('type', '未知类型')}",
                                     "fix_suggestion": "移除硬编码密钥，使用环境变量或配置文件",
                                     "blocking": True,
                                 },
