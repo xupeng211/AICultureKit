@@ -10,7 +10,6 @@ are fictional example data. In real projects, use environment variables or secur
 configuration management systems for sensitive information.
 """
 
-
 """
 硬编码问题示例 - 用于演示AICultureKit检测能力
 """
@@ -128,7 +127,9 @@ def send_notification_email(to_email, message) -> None:
     smtp_server = "smtp.gmail.com"  # 硬编码SMTP服务器
     smtp_port = 587  # 硬编码端口
     sender_email = os.getenv("SENDER_EMAIL", "noreply@demo.local")  # 使用环境变量
-    sender_password = os.getenv("SENDER_PASSWORD", "PLACEHOLDER_PASSWORD")  # 使用环境变量
+    sender_password = os.getenv(
+        "SENDER_PASSWORD", "PLACEHOLDER_PASSWORD"
+    )  # 使用环境变量
 
     # 发送邮件逻辑...
 

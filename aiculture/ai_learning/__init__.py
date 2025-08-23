@@ -11,20 +11,20 @@ from .pattern_types import (
     NamingPatternAnalyzer,
     StructurePatternAnalyzer,
     StylePatternAnalyzer,
-    DocumentationPatternAnalyzer
+    DocumentationPatternAnalyzer,
 )
 
 from .code_analyzer import CodeAnalyzer
 from .learning_engine import LearningEngine
 
 __all__ = [
-    'ProjectPattern',
-    'LearningResult',
-    'PatternAnalyzer',
-    'NamingPatternAnalyzer',
-    'StructurePatternAnalyzer',
-    'StylePatternAnalyzer',
-    'DocumentationPatternAnalyzer',
-    'CodeAnalyzer',
-    'LearningEngine'
+    "ProjectPattern",
+    "LearningResult",
+    "PatternAnalyzer",
+    "NamingPatternAnalyzer",
+    "StructurePatternAnalyzer",
+    "StylePatternAnalyzer",
+    "DocumentationPatternAnalyzer",
+    "CodeAnalyzer",
+    "LearningEngine",
 ]
