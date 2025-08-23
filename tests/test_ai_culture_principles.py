@@ -2,7 +2,6 @@
 测试aiculture.ai_culture_principles模块
 """
 
-import pytest
 
 from aiculture.ai_culture_principles import (
     AICulturePrinciples,
@@ -41,7 +40,7 @@ class TestAICulturePrinciples:
     def test_ai_culture_principles_creation(self) -> None:
         """测试AI文化原则管理器创建"""
         principles = AICulturePrinciples()
-        assert hasattr(principles, 'principles')
+        assert hasattr(principles, "principles")
         assert isinstance(principles.principles, dict)
         assert len(principles.principles) > 0
 
@@ -50,7 +49,9 @@ class TestAICulturePrinciples:
         principles = AICulturePrinciples()
 
         # 测试获取代码质量类别的原则
-        code_quality_principles = principles.get_by_category(PrincipleCategory.CODE_QUALITY)
+        code_quality_principles = principles.get_by_category(
+            PrincipleCategory.CODE_QUALITY
+        )
         assert isinstance(code_quality_principles, list)
 
         # 验证返回的都是正确类别的原则
@@ -66,7 +67,9 @@ class TestAICulturePrinciples:
             first_principle_name = list(principles.principles.keys())[0]
             found_principle = principles.get_principle(first_principle_name)
             assert found_principle is not None
-            assert found_principle.name == principles.principles[first_principle_name].name
+            assert (
+                found_principle.name == principles.principles[first_principle_name].name
+            )
 
         # 测试获取不存在的原则
         found_principle = principles.get_principle("nonexistent_principle")
@@ -99,14 +102,14 @@ class TestAICulturePrinciples:
         principles = AICulturePrinciples()
 
         for principle in principles.principles.values():
-            assert hasattr(principle, 'name')
-            assert hasattr(principle, 'category')
-            assert hasattr(principle, 'description')
-            assert hasattr(principle, 'rules')
-            assert hasattr(principle, 'ai_instructions')
-            assert hasattr(principle, 'enforcement_level')
-            assert hasattr(principle, 'tools')
-            assert hasattr(principle, 'examples')
+            assert hasattr(principle, "name")
+            assert hasattr(principle, "category")
+            assert hasattr(principle, "description")
+            assert hasattr(principle, "rules")
+            assert hasattr(principle, "ai_instructions")
+            assert hasattr(principle, "enforcement_level")
+            assert hasattr(principle, "tools")
+            assert hasattr(principle, "examples")
 
             # 验证字段类型
             assert isinstance(principle.name, str)

@@ -7,10 +7,9 @@ import json
 import yaml
 from pathlib import Path
 from typing import Dict, List, Any, Optional
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 
 from .i18n import _
-import re
 
 
 @dataclass
@@ -114,7 +113,9 @@ class MonitoringConfigManager:
             "global": {"scrape_interval": "15s", "evaluation_interval": "15s"},
             "rule_files": ["alert_rules.yml"],
             "scrape_configs": scrape_configs or default_scrape_configs,
-            "alerting": {"alertmanagers": [{"static_configs": [{"targets": ["localhost:9093"]}]}]},
+            "alerting": {
+                "alertmanagers": [{"static_configs": [{"targets": ["localhost:9093"]}]}]
+            },
         }
 
         return config
@@ -164,10 +165,16 @@ class MonitoringConfigManager:
                 "id": 1,
                 "title": _("Culture Quality Score"),
                 "type": "stat",
-                "targets": [{"expr": "aiculture_quality_score", "legendFormat": "Quality Score"}],
+                "targets": [
+                    {"expr": "aiculture_quality_score", "legendFormat": "Quality Score"}
+                ],
                 "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
                 "options": {
-                    "reduceOptions": {"values": False, "calcs": ["lastNotNull"], "fields": ""},
+                    "reduceOptions": {
+                        "values": False,
+                        "calcs": ["lastNotNull"],
+                        "fields": "",
+                    },
                     "orientation": "auto",
                     "textMode": "auto",
                     "colorMode": "value",
@@ -202,7 +209,11 @@ class MonitoringConfigManager:
                 ],
                 "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
                 "options": {
-                    "reduceOptions": {"values": False, "calcs": ["lastNotNull"], "fields": ""},
+                    "reduceOptions": {
+                        "values": False,
+                        "calcs": ["lastNotNull"],
+                        "fields": "",
+                    },
                     "pieType": "pie",
                     "tooltip": {"mode": "single"},
                     "legend": {"displayMode": "visible", "placement": "bottom"},
@@ -213,12 +224,23 @@ class MonitoringConfigManager:
                 "title": _("Test Coverage Over Time"),
                 "type": "graph",
                 "targets": [
-                    {"expr": "aiculture_test_coverage_percent", "legendFormat": "Test Coverage"}
+                    {
+                        "expr": "aiculture_test_coverage_percent",
+                        "legendFormat": "Test Coverage",
+                    }
                 ],
                 "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8},
-                "yAxes": [{"label": "Percentage", "min": 0, "max": 100, "unit": "percent"}],
+                "yAxes": [
+                    {"label": "Percentage", "min": 0, "max": 100, "unit": "percent"}
+                ],
                 "thresholds": [
-                    {"value": 80, "colorMode": "critical", "op": "lt", "fill": True, "line": True}
+                    {
+                        "value": 80,
+                        "colorMode": "critical",
+                        "op": "lt",
+                        "fill": True,
+                        "line": True,
+                    }
                 ],
             },
             {
@@ -226,18 +248,27 @@ class MonitoringConfigManager:
                 "title": _("Security Issues"),
                 "type": "table",
                 "targets": [
-                    {"expr": "aiculture_security_issues", "format": "table", "instant": True}
+                    {
+                        "expr": "aiculture_security_issues",
+                        "format": "table",
+                        "instant": True,
+                    }
                 ],
                 "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
                 "options": {"showHeader": True},
-                "fieldConfig": {"defaults": {"custom": {"align": "auto", "displayMode": "auto"}}},
+                "fieldConfig": {
+                    "defaults": {"custom": {"align": "auto", "displayMode": "auto"}}
+                },
             },
             {
                 "id": 5,
                 "title": _("Performance Metrics"),
                 "type": "graph",
                 "targets": [
-                    {"expr": "aiculture_execution_time_seconds", "legendFormat": "Execution Time"},
+                    {
+                        "expr": "aiculture_execution_time_seconds",
+                        "legendFormat": "Execution Time",
+                    },
                     {
                         "expr": "aiculture_memory_usage_bytes / 1024 / 1024",
                         "legendFormat": "Memory Usage (MB)",
@@ -275,7 +306,10 @@ class MonitoringConfigManager:
     def generate_alertmanager_config(self) -> Dict[str, Any]:
         """生成Alertmanager配置"""
         return {
-            "global": {"smtp_smarthost": "localhost:587", "smtp_from": "demo@placeholder.local"},
+            "global": {
+                "smtp_smarthost": "localhost:587",
+                "smtp_from": "demo@placeholder.local",
+            },
             "route": {
                 "group_by": ["alertname"],
                 "group_wait": "10s",
@@ -304,27 +338,29 @@ class MonitoringConfigManager:
         """保存所有配置文件"""
         # Prometheus配置
         prometheus_config = self.generate_prometheus_config()
-        with open(self.prometheus_config, 'w') as f:
+        with open(self.prometheus_config, "w") as f:
             yaml.dump(prometheus_config, f, default_flow_style=False)
 
         # 告警规则
         alert_rules = self.generate_alert_rules()
-        with open(self.config_dir / "alert_rules.yml", 'w') as f:
+        with open(self.config_dir / "alert_rules.yml", "w") as f:
             yaml.dump(alert_rules, f, default_flow_style=False)
 
         # Grafana数据源
         datasource_config = self.generate_grafana_datasource()
-        with open(self.grafana_config / "datasources" / "prometheus.yml", 'w') as f:
+        with open(self.grafana_config / "datasources" / "prometheus.yml", "w") as f:
             yaml.dump(datasource_config, f, default_flow_style=False)
 
         # Grafana仪表板
         dashboard_config = self.generate_culture_dashboard()
-        with open(self.grafana_config / "dashboards" / "culture_dashboard.json", 'w') as f:
+        with open(
+            self.grafana_config / "dashboards" / "culture_dashboard.json", "w"
+        ) as f:
             json.dump(dashboard_config, f, indent=2, ensure_ascii=False)
 
         # Alertmanager配置
         alertmanager_config = self.generate_alertmanager_config()
-        with open(self.alertmanager_config, 'w') as f:
+        with open(self.alertmanager_config, "w") as f:
             yaml.dump(alertmanager_config, f, default_flow_style=False)
 
         print(_("Monitoring configurations saved to {dir}").format(dir=self.config_dir))
@@ -406,7 +442,7 @@ class MonitoringConfigManager:
             AlertRule(
                 name="SecurityIssuesHigh",
                 description="High number of security issues",
-                expression="sum(aiculture_security_issues{severity=\"high\"}) > 0",
+                expression='sum(aiculture_security_issues{severity="high"}) > 0',
                 duration="1m",
                 severity="critical",
                 labels={"team": "security"},

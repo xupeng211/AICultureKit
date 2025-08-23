@@ -40,7 +40,7 @@ pyproject_threshold=$(grep -A5 "\[tool\.coverage\.report\]" pyproject.toml | gre
 echo "pyproject.toml coverage fail_under: ${pyproject_threshold}"
 
 # Check quality-gate.yml coverage threshold
-quality_gate_threshold=$(grep "COVERAGE_THRESHOLD_MIN:" .github/workflows/quality-gate.yml | sed 's/.*: *//' | sed 's/ *.*//')
+quality_gate_threshold=$(grep "COVERAGE_THRESHOLD_MIN:" .github/workflows/quality-gate.yml | sed 's/.*: *//' | sed 's/ .*//')
 echo "quality-gate.yml COVERAGE_THRESHOLD_MIN: ${quality_gate_threshold}"
 
 if [ "$pyproject_threshold" = "$quality_gate_threshold" ]; then

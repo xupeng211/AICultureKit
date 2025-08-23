@@ -9,7 +9,6 @@
 4. 报告生成
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -17,26 +16,26 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from aiculture.core import CultureConfig, QualityTools, ProjectTemplate
+from aiculture.core import QualityTools
 from aiculture.accessibility_culture import AccessibilityCultureManager
 
 
 class FullWorkflowDemo:
     """完整工作流演示类"""
-    
+
     def __init__(self, demo_name: str = "full-workflow-demo"):
         """初始化演示"""
         self.demo_name = demo_name
         self.demo_path = Path(__file__).parent / demo_name
         self.demo_path.mkdir(exist_ok=True)
-        
+
         print(f"🚀 初始化完整工作流演示: {self.demo_name}")
         print(f"📁 演示目录: {self.demo_path}")
-    
+
     def create_sample_project(self) -> None:
         """创建示例项目"""
         print("\\n📦 创建示例项目...")
-        
+
         # 创建主应用文件
         main_py = self.demo_path / "main.py"
         main_py.write_text('''#!/usr/bin/env python3
@@ -107,60 +106,66 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 ''')
-        
+
         print("✅ 示例项目创建完成")
-    
+
     def run_quality_checks(self) -> None:
         """运行质量检查"""
         print("\\n🔍 运行质量检查...")
-        
+
         # 初始化质量工具
         tools = QualityTools(str(self.demo_path))
-        
+
         # 运行代码风格检查
         print("  📋 运行flake8检查...")
         flake8_result = tools.run_flake8()
-        print(f"     结果: {'✅ 通过' if flake8_result.get('success', False) else '❌ 失败'}")
-        
+        print(
+            f"     结果: {'✅ 通过' if flake8_result.get('success', False) else '❌ 失败'}"
+        )
+
         # 运行类型检查
         print("  🔍 运行mypy检查...")
         mypy_result = tools.run_mypy()
-        print(f"     结果: {'✅ 通过' if mypy_result.get('success', False) else '❌ 失败'}")
-        
+        print(
+            f"     结果: {'✅ 通过' if mypy_result.get('success', False) else '❌ 失败'}"
+        )
+
         # 运行测试
         print("  🧪 运行测试...")
         test_result = tools.run_pytest()
-        print(f"     结果: {'✅ 通过' if test_result.get('success', False) else '❌ 失败'}")
-    
+        print(
+            f"     结果: {'✅ 通过' if test_result.get('success', False) else '❌ 失败'}"
+        )
+
     def run_culture_checks(self) -> None:
         """运行文化标准检查"""
         print("\\n🌍 运行文化标准检查...")
-        
+
         # 初始化可访问性管理器
         accessibility_manager = AccessibilityCultureManager(self.demo_path)
-        
+
         # 检查项目可访问性
         print("  🔍 检查可访问性...")
         accessibility_result = accessibility_manager.check_project_accessibility()
-        
-        i18n_issues = accessibility_result.get('i18n_issues', [])
-        accessibility_issues = accessibility_result.get('accessibility_issues', [])
-        
+
+        i18n_issues = accessibility_result.get("i18n_issues", [])
+        accessibility_issues = accessibility_result.get("accessibility_issues", [])
+
         print(f"     国际化问题: {len(i18n_issues)} 个")
         print(f"     可访问性问题: {len(accessibility_issues)} 个")
-        
+
         # 生成报告
         print("  📊 生成可访问性报告...")
         report = accessibility_manager.generate_accessibility_report()
-        
-        summary = report.get('summary', {})
+
+        summary = report.get("summary", {})
         print(f"     检查文件数: {summary.get('total_files_checked', 0)}")
         print(f"     发现问题数: {summary.get('total_issues_found', 0)}")
-    
+
     def generate_final_report(self) -> None:
         """生成最终报告"""
         print("\\n📊 生成最终报告...")
-        
+
         report_file = self.demo_path / "quality_report.md"
         report_content = f"""# {self.demo_name} 质量报告
 
@@ -201,33 +206,34 @@ if __name__ == "__main__":
 
 项目整体质量良好，符合AICultureKit的文化标准。
 """
-        
+
         report_file.write_text(report_content)
         print(f"✅ 报告已生成: {report_file}")
-    
+
     def run_demo(self) -> None:
         """运行完整演示"""
         try:
             print("🎯 开始完整工作流演示")
-            
+
             # 1. 创建示例项目
             self.create_sample_project()
-            
+
             # 2. 运行质量检查
             self.run_quality_checks()
-            
+
             # 3. 运行文化标准检查
             self.run_culture_checks()
-            
+
             # 4. 生成最终报告
             self.generate_final_report()
-            
+
             print("\\n🎉 完整工作流演示完成！")
             print(f"📁 查看演示结果: {self.demo_path}")
-            
+
         except Exception as e:
             print(f"\\n💥 演示过程中出现错误: {e}")
             import traceback
+
             traceback.print_exc()
 
 

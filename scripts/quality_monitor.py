@@ -28,7 +28,7 @@ class QualityMonitor:
         cursor = conn.cursor()
 
         cursor.execute(
-            '''
+            """
             CREATE TABLE IF NOT EXISTS quality_metrics (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp TEXT NOT NULL,
@@ -42,11 +42,11 @@ class QualityMonitor:
                 line_count INTEGER,
                 quality_score INTEGER
             )
-        '''
+        """
         )
 
         cursor.execute(
-            '''
+            """
             CREATE TABLE IF NOT EXISTS quality_alerts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp TEXT NOT NULL,
@@ -55,7 +55,7 @@ class QualityMonitor:
                 severity TEXT NOT NULL,
                 resolved BOOLEAN DEFAULT FALSE
             )
-        '''
+        """
         )
 
         conn.commit()
@@ -113,7 +113,9 @@ class QualityMonitor:
             try:
                 with open("coverage.json", "r") as f:
                     cov_data = json.load(f)
-                metrics["coverage_percent"] = cov_data.get("totals", {}).get("percent_covered", 0)
+                metrics["coverage_percent"] = cov_data.get("totals", {}).get(
+                    "percent_covered", 0
+                )
             except Exception:
                 pass  # TODO:   添加适当的异常处理
         # Flake8问题
@@ -166,12 +168,12 @@ class QualityMonitor:
         cursor = conn.cursor()
 
         cursor.execute(
-            '''
+            """
             INSERT INTO quality_metrics
             (timestamp, commit_hash, test_count, test_passed, coverage_percent,
              flake8_issues, mypy_errors, file_count, line_count, quality_score)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''',
+        """,
             (
                 metrics["timestamp"],
                 metrics["commit_hash"],
@@ -198,11 +200,11 @@ class QualityMonitor:
         cursor = conn.cursor()
 
         cursor.execute(
-            '''
+            """
             SELECT * FROM quality_metrics
             ORDER BY timestamp DESC
             LIMIT 2
-        '''
+        """
         )
 
         rows = cursor.fetchall()
@@ -232,7 +234,10 @@ class QualityMonitor:
                 )
 
             # 检查覆盖率下降
-            if current_metrics["coverage_percent"] < prev_metrics["coverage_percent"] - 2:
+            if (
+                current_metrics["coverage_percent"]
+                < prev_metrics["coverage_percent"] - 2
+            ):
                 alerts.append(
                     {
                         "type": "coverage_decline",
@@ -263,10 +268,10 @@ class QualityMonitor:
         # 保存警报
         for alert in alerts:
             cursor.execute(
-                '''
+                """
                 INSERT INTO quality_alerts (timestamp, alert_type, message, severity)
                 VALUES (?, ?, ?, ?)
-            ''',
+            """,
                 (
                     current_metrics["timestamp"],
                     alert["type"],
@@ -287,11 +292,11 @@ class QualityMonitor:
 
         since_date = (datetime.now() - timedelta(days=days)).isoformat()
         cursor.execute(
-            '''
+            """
             SELECT * FROM quality_metrics
             WHERE timestamp > ?
             ORDER BY timestamp DESC
-        ''',
+        """,
             (since_date,),
         )
 
@@ -307,20 +312,20 @@ class QualityMonitor:
 
         report = f"""
 📊 AICultureKit 质量趋势报告 (最近{days}天)
-{'='*50}
+{"=" * 50}
 
 📈 总体趋势:
-  质量分数: {oldest['quality_score']} → {latest['quality_score']} ({latest['quality_score'] - oldest['quality_score']:+d})
-  测试通过: {oldest['test_passed']}/{oldest['test_count']} → {latest['test_passed']}/{latest['test_count']}
-  代码覆盖率: {oldest['coverage_percent']:.1f}% → {latest['coverage_percent']:.1f}% ({latest['coverage_percent'] - oldest['coverage_percent']:+.1f}%)
-  代码行数: {oldest['line_count']} → {latest['line_count']} ({latest['line_count'] - oldest['line_count']:+d})
+  质量分数: {oldest["quality_score"]} → {latest["quality_score"]} ({latest["quality_score"] - oldest["quality_score"]:+d})
+  测试通过: {oldest["test_passed"]}/{oldest["test_count"]} → {latest["test_passed"]}/{latest["test_count"]}
+  代码覆盖率: {oldest["coverage_percent"]:.1f}% → {latest["coverage_percent"]:.1f}% ({latest["coverage_percent"] - oldest["coverage_percent"]:+.1f}%)
+  代码行数: {oldest["line_count"]} → {latest["line_count"]} ({latest["line_count"] - oldest["line_count"]:+d})
 
 🔍 质量问题:
-  Flake8问题: {oldest['flake8_issues']} → {latest['flake8_issues']} ({latest['flake8_issues'] - oldest['flake8_issues']:+d})
-  MyPy错误: {oldest['mypy_errors']} → {latest['mypy_errors']} ({latest['mypy_errors'] - oldest['mypy_errors']:+d})
+  Flake8问题: {oldest["flake8_issues"]} → {latest["flake8_issues"]} ({latest["flake8_issues"] - oldest["flake8_issues"]:+d})
+  MyPy错误: {oldest["mypy_errors"]} → {latest["mypy_errors"]} ({latest["mypy_errors"] - oldest["mypy_errors"]:+d})
 
 📅 数据点数: {len(rows)}
-🕐 最后更新: {latest['timestamp']}
+🕐 最后更新: {latest["timestamp"]}
 """
 
         conn.close()
@@ -338,11 +343,13 @@ class QualityMonitor:
         alerts = self.check_quality_alerts(metrics)
 
         # 显示结果
-        print(f"\n📊 当前质量指标:")
+        print("\n📊 当前质量指标:")
         print(f"  质量分数: {metrics['quality_score']}/100")
         print(f"  测试通过: {metrics['test_passed']}/{metrics['test_count']}")
         print(f"  代码覆盖率: {metrics['coverage_percent']:.1f}%")
-        print(f"  代码问题: {metrics['flake8_issues']} flake8, {metrics['mypy_errors']} mypy")
+        print(
+            f"  代码问题: {metrics['flake8_issues']} flake8, {metrics['mypy_errors']} mypy"
+        )
 
         if alerts:
             print(f"\n🚨 发现 {len(alerts)} 个警报:")

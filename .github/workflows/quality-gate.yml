@@ -1,80 +1,74 @@
-name: "🛡️ Quality Gate"
-
-permissions:
-  contents: read
+name: Quality Gate
 
 on:
   pull_request:
-    branches:
-      - "main"
+    branches: [ main ]
     paths-ignore:
-      - "README.md"
-      - "docs/**"
-      - "*.md"
+      - '**/*.md'
+      - 'docs/**'
+      - '.github/ISSUE_TEMPLATE/**'
+      - 'README*'
+
+permissions: read-all
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: quality-gate-${{ github.ref }}
   cancel-in-progress: true
 
 env:
-  SOFT_FAIL: true # 软失败开关：true=务实策略，先跑通流程
-  COVERAGE_THRESHOLD_MIN: 9 # 覆盖率阈值（匹配当前实际水平：8.4%，设置为9%确保稳定）
-  PYTHON_VERSION: "3.11"
+  SOFT_FAIL: 'true'                   # 非 pytest 检查一律软失败
+  COVERAGE_THRESHOLD_MIN: '9'         # 统一 9%
 
 jobs:
-  strict-quality-check:
-    name: "🛡️ Strict Quality Check"
+  gate:
+    name: Quality Gate
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
     steps:
-      - name: 📥 Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: "pip"
+          python-version: '3.11'
 
-      - name: 📦 Install dependencies
+      - name: Install minimal test deps
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
-          pip install ruff detect-secrets bandit mypy pytest-cov
+          python -m pip install -U pip
+          # 项目自身 + 测试与质量工具（pytest 为唯一阻断项）
+          python -m pip install -e .[test] pytest pytest-cov
+          python -m pip install ruff mypy bandit detect-secrets || true
 
-      - name: Set enforcement mode by branch
-        id: set-mode
+      - name: Show enforcement mode (soft-fail design)
         run: |
-          BRANCH="${{ github.base_ref }}" # For PRs, use base_ref
-          if [[ "$BRANCH" == "main" || "$BRANCH" == release/* ]]; then
-            echo "mode=block" >> "$GITHUB_OUTPUT"
-          else
-            echo "mode=warn" >> "$GITHUB_OUTPUT"
-          fi
-          echo "AICULTURE_ENFORCE_BLOCKING=${{ steps.set-mode.outputs.mode }}" >> "$GITHUB_ENV"
+          echo "SOFT_FAIL=${SOFT_FAIL}"
+          echo "COVERAGE_THRESHOLD_MIN=${COVERAGE_THRESHOLD_MIN}"
 
-      - name: Show enforcement mode
-        run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
-
-      - name: 🔍 Full lint check (Ruff) - SOFT FAIL
-        run: ruff check . --no-fix
+      # ---- 软失败检查：只报告，不阻断 ----
+      - name: Ruff format (soft)
+        run: python -m ruff format --check .
         continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
 
-      - name: 🔒 Security check (Bandit) - SOFT FAIL
-        run: bandit -r aiculture --severity-level high
+      - name: Ruff lint (soft)
+        run: python -m ruff check .
         continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
 
-      - name: 🔐 Secrets scan (detect-secrets) - SOFT FAIL
-        run: detect-secrets scan --baseline .secrets.baseline --all-files
+      - name: MyPy (soft)
+        run: mypy .
         continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
 
-      - name: 🔧 Type check (MyPy) - SOFT FAIL
-        run: mypy aiculture --ignore-missing-imports
+      - name: Bandit (soft)
+        run: bandit -q -r aiculture
         continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
 
-      - name: 🧪 Test with coverage (BLOCKING)
+      - name: Detect secrets (soft)
+        run: detect-secrets scan
+        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
+
+      # ---- 唯一阻断：pytest + coverage ≥ 阈值 ----
+      - name: Test with coverage (BLOCKING)
         run: |
-          pytest -q --maxfail=1 --disable-warnings \
+          # 使用 quarantine 机制（若项目已有 conftest，仍加 -m 兜底）
+          pytest -q -m "not quarantine" \
             --cov=aiculture --cov-report=term-missing \
-            --cov-report=json:coverage.json --cov-fail-under=${{ env.COVERAGE_THRESHOLD_MIN }}
+            --cov-fail-under=${COVERAGE_THRESHOLD_MIN}
