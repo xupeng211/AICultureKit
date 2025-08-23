@@ -1,0 +1,7 @@
+aiculture/templates/**
+templates/**
+.venv/**
+venv/**
+dist/**
+build/**
+

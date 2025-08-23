@@ -45,11 +45,11 @@ jobs:
 
       - name: 🎨 Format check (Ruff)
         run: |
-          python -m ruff format . --check --exclude "aiculture/templates/**" --exclude "templates/**"
+          python -m ruff format . --check --isolated --exclude "aiculture/templates/**" --exclude "templates/**"
 
       - name: 🔍 Lint check (Ruff)
         run: |
-          python -m ruff check . --fix --exclude "aiculture/templates/**" --exclude "templates/**"
+          python -m ruff check . --fix --isolated --exclude "aiculture/templates/**" --exclude "templates/**"
 
       - name: 🧪 Quick tests
         run: |
