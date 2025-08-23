@@ -1,21 +1,96 @@
+# AICultureKit 标准 pre-commit 配置
+# 确保代码质量和一致性
+
 repos:
+  # Python 代码格式化
   - repo: https://github.com/psf/black
-    rev: 24.8.0
+    rev: 23.12.1
     hooks:
       - id: black
+        language_version: python3
+        args: [--line-length=88]
 
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.5
-    hooks:
-      - id: ruff
-        args:
-          - --fix
-          - --select=E,F,I,UP,B
-        exclude: ^(aiculture/templates/|templates/|examples/|scaffolds/).*
-      - id: ruff-format
-        exclude: ^(aiculture/templates/|templates/|examples/|scaffolds/).*
-
+  # Python 导入排序
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
     hooks:
       - id: isort
+        args: [--profile=black, --line-length=88]
+
+  # Python 代码检查
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        args: [--max-line-length=88, --extend-ignore=E203,W503]
+
+  # Python 类型检查
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-PyYAML, types-requests]
+        args: [--ignore-missing-imports]
+
+  # Python 安全检查
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        args: [-r, ., -f, json, -o, bandit-report.json]
+        exclude: ^tests/
+
+  # 通用文件检查
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+      - id: detect-private-key
+
+  # 密钥泄漏检测
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: [--baseline, .secrets.baseline]
+        exclude: package.lock.json
+
+  # Dockerfile 检查
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint-docker
+        args: [--ignore, DL3008, --ignore, DL3009]
+
+  # YAML 格式化
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        types: [yaml]
+        exclude: ^\.github/
+
+  # Markdown 检查
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.38.0
+    hooks:
+      - id: markdownlint
+        args: [--fix]
+        exclude: ^CHANGELOG.md$
+
+# 本地钩子配置
+default_language_version:
+  python: python3
+
+# 失败时停止
+fail_fast: false
+
+# 最小 pre-commit 版本
+minimum_pre_commit_version: 3.0.0

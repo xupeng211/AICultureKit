@@ -1,0 +1,27 @@
+culture:
+  ai_guidelines:
+    context_sharing: true
+    documentation_first: true
+    incremental_development: true
+  code_style:
+    javascript:
+      formatter: prettier
+      linter: eslint
+    python:
+      formatter: black
+      import_sorter: isort
+      line_length: 88
+      linter:
+      - flake8
+      - mypy
+  git_flow:
+    commit_format: conventional
+    feature_prefix: feature/
+    hotfix_prefix: hotfix/
+    main_branch: main
+  principles:
+  - YAGNI - You Aren't Gonna Need It
+  - KISS - Keep It Simple, Stupid
+  - SOLID - 面向对象设计原则
+  - 优雅代码，避免过度设计
+  - AI协作友好的代码风格
