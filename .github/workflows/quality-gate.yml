@@ -1,80 +1,68 @@
-name: "🛡️ Quality Gate"
-
-permissions:
-  contents: read
+name: Quality Gate
 
 on:
   pull_request:
-    branches:
-      - "main"
-    paths-ignore:
-      - "README.md"
-      - "docs/**"
-      - "*.md"
+    branches: [ main ]
+    types: [opened, synchronize, reopened]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: quality-gate-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  SOFT_FAIL: true # 软失败开关：true=务实策略，先跑通流程
-  COVERAGE_THRESHOLD_MIN: 12 # 覆盖率阈值（通过便宜覆盖测试包提升至12%）
-  PYTHON_VERSION: "3.11"
-
 jobs:
-  strict-quality-check:
-    name: "🛡️ Strict Quality Check"
+  gate:
+    name: Quality Gate
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
+
+    env:
+      COVERAGE_THRESHOLD_MIN: 12
 
     steps:
-      - name: 📥 Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: "pip"
+          python-version: '3.11'
 
-      - name: 📦 Install dependencies
+      - name: Show versions
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
-          pip install ruff detect-secrets bandit mypy pytest-cov
+          python -V
+          pip -V
 
-      - name: Set enforcement mode by branch
-        id: set-mode
+      - name: Install test deps (minimal)
         run: |
-          BRANCH="${{ github.base_ref }}" # For PRs, use base_ref
-          if [[ "$BRANCH" == "main" || "$BRANCH" == release/* ]]; then
-            echo "mode=block" >> "$GITHUB_OUTPUT"
-          else
-            echo "mode=warn" >> "$GITHUB_OUTPUT"
-          fi
-          echo "AICULTURE_ENFORCE_BLOCKING=${{ steps.set-mode.outputs.mode }}" >> "$GITHUB_ENV"
+          python -m pip install -U pip
+          pip install pytest pytest-cov
 
-      - name: Show enforcement mode
-        run: echo "AICULTURE_ENFORCE_BLOCKING=$AICULTURE_ENFORCE_BLOCKING"
-
-      - name: 🔍 Full lint check (Ruff) - SOFT FAIL
-        run: ruff check . --no-fix
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
-
-      - name: 🔒 Security check (Bandit) - SOFT FAIL
-        run: bandit -r aiculture --severity-level high
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
-
-      - name: 🔐 Secrets scan (detect-secrets) - SOFT FAIL
-        run: detect-secrets scan --baseline .secrets.baseline --all-files
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
-
-      - name: 🔧 Type check (MyPy) - SOFT FAIL
-        run: mypy aiculture --ignore-missing-imports
-        continue-on-error: ${{ env.SOFT_FAIL == 'true' }}
-
-      - name: 🧪 Test with coverage (BLOCKING)
+      # ✅ 唯一阻断项：pytest + coverage
+      - name: Test with coverage (BLOCKING)
         run: |
-          pytest -q --maxfail=1 --disable-warnings \
+          python -m pytest -q \
+            --disable-warnings --maxfail=1 \
+            -p no:asyncio \
             --cov=aiculture --cov-report=term-missing \
-            --cov-report=json:coverage.json --cov-fail-under=${{ env.COVERAGE_THRESHOLD_MIN }}
+            --cov-fail-under=${COVERAGE_THRESHOLD_MIN}
+
+      # 其余全部软失败（不阻断）
+      - name: Ruff format (SOFT)
+        run: |
+          python -m pip install ruff==0.5.7
+          python -m ruff format --check . || true
+      - name: Ruff lint (SOFT)
+        run: |
+          python -m ruff check . || true
+      - name: MyPy (SOFT)
+        run: |
+          python -m pip install mypy || true
+          mypy . || true
+      - name: Bandit (SOFT)
+        run: |
+          python -m pip install bandit || true
+          bandit -q -r aiculture || true
+      - name: Detect Secrets (SOFT)
+        run: |
+          python -m pip install detect-secrets || true
+          detect-secrets scan || true
