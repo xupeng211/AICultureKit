@@ -1,3 +1,7 @@
+# 📘 CI/CD 使用指南
+
+- 详见 [docs/CI_SOP.md](docs/CI_SOP.md)
+
 # AICultureKit 🤖✨
 
 > 标准化AI主导开发的文化和最佳实践工具包
