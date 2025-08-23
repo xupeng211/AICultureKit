@@ -8,3 +8,10 @@
 - 预期触发: Quick Check
 - 预期不触发: Quality Gate, Docker Build
 
+
+### 测试场景 2: 文档文件变更
+- 分支: feature/improve-readme  
+- 变更类型: README.md / 文档文件
+- 预期触发: 无（所有工作流都应忽略）
+- 预期不触发: Quick Check, Quality Gate, Docker Build
+
