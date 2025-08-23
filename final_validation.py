@@ -26,8 +26,6 @@ def main():
         print(f"❌ 国际化系统错误: {e}")
 
     try:
-        from aiculture.data_catalog import DataCatalog
-
         # 测试数据目录
         # catalog = DataCatalog(Path("./test_catalog"))  # Test instance creation
         print("✅ 数据目录系统正常工作")
