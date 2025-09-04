@@ -1,0 +1,43 @@
+# 🔧 AICultureKit 依赖包
+
+# 代码格式化和静态分析
+black==23.12.1
+flake8==7.0.0
+mypy==1.8.0
+isort==5.13.2
+
+# 测试框架
+pytest==7.4.4
+pytest-cov==4.1.0
+coverage==7.4.0
+
+# 代码质量分析
+radon==6.0.1
+bandit==1.7.5
+
+# 日志和配置
+structlog==23.2.0
+python-dotenv==1.0.0
+
+# 数据处理
+pandas==2.1.4
+numpy==1.26.2
+
+# 网络请求
+requests==2.31.0
+
+# 时间处理
+python-dateutil==2.8.2
+
+# 开发工具
+pre-commit==3.6.0
+tox==4.11.4
+
+# 文档生成
+sphinx==7.2.6
+sphinx-rtd-theme==2.0.0
+
+# 项目管理
+setuptools==69.0.3
+wheel==0.42.0
+build==1.0.3 

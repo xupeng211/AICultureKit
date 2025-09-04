@@ -1,0 +1,151 @@
+{
+  "timestamp": "2025-09-05T00:54:32.584243",
+  "project_root": "/home/user/projects/AICultureKit",
+  "directory_structure": {
+    "root_files": [
+      "requirements.txt",
+      "rules.md",
+      "README.md",
+      "Cursor_ClosedLoop_Prompt.md"
+    ],
+    "directories": {
+      "src": {
+        "files": [
+          "__init__.py"
+        ],
+        "subdirectories": [],
+        "python_files": [
+          "__init__.py"
+        ],
+        "test_files": []
+      },
+      "tests": {
+        "files": [],
+        "subdirectories": [],
+        "python_files": [],
+        "test_files": []
+      },
+      "docs": {
+        "files": [
+          "USAGE_EXAMPLES.md"
+        ],
+        "subdirectories": [],
+        "python_files": [],
+        "test_files": []
+      },
+      "scripts": {
+        "files": [
+          "cursor_runner.py",
+          "quality_checker.py",
+          "setup_project.py",
+          "context_loader.py"
+        ],
+        "subdirectories": [],
+        "python_files": [
+          "cursor_runner.py",
+          "quality_checker.py",
+          "setup_project.py",
+          "context_loader.py"
+        ],
+        "test_files": []
+      },
+      "logs": {
+        "files": [],
+        "subdirectories": [],
+        "python_files": [],
+        "test_files": []
+      }
+    },
+    "total_files": 6,
+    "total_directories": 5
+  },
+  "git_info": {
+    "repository_exists": false,
+    "current_branch": null,
+    "recent_commits": [],
+    "status": null,
+    "remote_url": null
+  },
+  "existing_modules": {
+    "python_modules": [
+      "__init__.py"
+    ],
+    "module_structure": {
+      "__init__": {
+        "file_path": "__init__.py",
+        "size": 455,
+        "modified": "2025-09-05T00:52:48.591566"
+      }
+    },
+    "import_analysis": {}
+  },
+  "existing_tests": {
+    "test_files": [],
+    "test_structure": {},
+    "coverage_info": null
+  },
+  "dependencies": {
+    "requirements_txt": [
+      "# 🔧 AICultureKit 依赖包",
+      "",
+      "# 代码格式化和静态分析",
+      "black==23.12.1",
+      "flake8==7.0.0",
+      "mypy==1.8.0",
+      "isort==5.13.2",
+      "",
+      "# 测试框架",
+      "pytest==7.4.4",
+      "pytest-cov==4.1.0",
+      "coverage==7.4.0",
+      "",
+      "# 代码质量分析",
+      "radon==6.0.1",
+      "bandit==1.7.5",
+      "",
+      "# 日志和配置",
+      "structlog==23.2.0",
+      "python-dotenv==1.0.0",
+      "",
+      "# 数据处理",
+      "pandas==2.1.4",
+      "numpy==1.26.2",
+      "",
+      "# 网络请求",
+      "requests==2.31.0",
+      "",
+      "# 时间处理",
+      "python-dateutil==2.8.2",
+      "",
+      "# 开发工具",
+      "pre-commit==3.6.0",
+      "tox==4.11.4",
+      "",
+      "# 文档生成",
+      "sphinx==7.2.6",
+      "sphinx-rtd-theme==2.0.0",
+      "",
+      "# 项目管理",
+      "setuptools==69.0.3",
+      "wheel==0.42.0",
+      "build==1.0.3"
+    ],
+    "setup_py": null,
+    "pyproject_toml": null,
+    "pipfile": null,
+    "conda_env": null
+  },
+  "recent_changes": {
+    "modified_files": [],
+    "added_files": [],
+    "deleted_files": [],
+    "last_commit_info": null
+  },
+  "project_stats": {
+    "total_python_files": 5,
+    "total_test_files": 0,
+    "total_lines_of_code": 1639,
+    "project_size_mb": 0.08,
+    "last_activity": "2025-09-05T00:53:16.651958"
+  }
+}

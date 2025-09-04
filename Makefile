@@ -1,0 +1,437 @@
+# 🚀 AICultureKit 项目通用 Makefile
+# 使用方法：make <target>
+# 推荐目标：make prepush
+
+PYTHON := python3
+VENV := venv
+ACTIVATE := . $(VENV)/bin/activate
+PROJECT_NAME := AICultureKit
+
+# 颜色定义
+RED := \033[31m
+GREEN := \033[32m
+YELLOW := \033[33m
+BLUE := \033[34m
+RESET := \033[0m
+
+# -------------------------------
+# 📋 帮助信息
+# -------------------------------
+.PHONY: help
+help: ## 显示帮助信息
+	@echo "$(BLUE)🚀 $(PROJECT_NAME) 开发工具$(RESET)"
+	@echo ""
+	@echo "$(YELLOW)环境管理:$(RESET)"
+	@echo "  venv        创建虚拟环境"
+	@echo "  install     安装项目依赖"
+	@echo "  clean       清理环境和缓存"
+	@echo ""
+	@echo "$(YELLOW)代码质量:$(RESET)"
+	@echo "  format      代码格式化"
+	@echo "  lint        代码风格检查"
+	@echo "  typecheck   类型检查"
+	@echo "  security    安全检查"
+	@echo ""
+	@echo "$(YELLOW)测试:$(RESET)"
+	@echo "  test        运行单元测试"
+	@echo "  coverage    运行覆盖率测试"
+	@echo "  test-watch  监控模式运行测试"
+	@echo ""
+	@echo "$(YELLOW)闭环流程:$(RESET)"
+	@echo "  env-check   环境检查"
+	@echo "  quality     完整质量检查"
+	@echo "  ci          本地CI模拟"
+	@echo "  prepush     提交前完整检查+Issue同步"
+	@echo ""
+	@echo "$(YELLOW)项目管理:$(RESET)"
+	@echo "  init        初始化项目"
+	@echo "  context     加载项目上下文"
+	@echo "  status      查看项目状态"
+	@echo "  sync        同步Issues到远程仓库"
+	@echo "  sync-config 配置Issue同步"
+
+# -------------------------------
+# 🌐 环境管理
+# -------------------------------
+$(VENV)/bin/activate:
+	@echo "$(BLUE)>>> 创建虚拟环境...$(RESET)"
+	$(PYTHON) -m venv $(VENV)
+	@echo "$(GREEN)✅ 虚拟环境创建完成$(RESET)"
+
+.PHONY: venv
+venv: $(VENV)/bin/activate ## 创建虚拟环境
+	@echo "$(GREEN)>>> 虚拟环境已准备就绪$(RESET)"
+
+.PHONY: install
+install: venv ## 安装项目依赖
+	@echo "$(BLUE)>>> 安装依赖包...$(RESET)"
+	$(ACTIVATE) && pip install -U pip setuptools wheel
+	$(ACTIVATE) && pip install -r requirements.txt
+	@echo "$(GREEN)✅ 依赖安装完成$(RESET)"
+
+.PHONY: init
+init: install ## 初始化项目（首次使用）
+	@echo "$(BLUE)>>> 初始化项目结构...$(RESET)"
+	$(ACTIVATE) && python scripts/setup_project.py
+	@echo "$(GREEN)✅ 项目初始化完成$(RESET)"
+
+# -------------------------------
+# 🔍 环境检查
+# -------------------------------
+.PHONY: env-check
+env-check: venv ## 环境检查
+	@echo "$(BLUE)>>> 运行环境检查...$(RESET)"
+	@if $(ACTIVATE) && python scripts/env_checker.py --summary --fix-suggestions; then \
+		echo "$(GREEN)✅ 环境检查通过$(RESET)"; \
+	else \
+		echo "$(RED)❌ 环境检查失败$(RESET)"; \
+		echo "$(YELLOW)   请根据上述建议修复环境问题$(RESET)"; \
+		exit 1; \
+	fi
+
+.PHONY: context
+context: venv ## 加载项目上下文
+	@echo "$(BLUE)>>> 加载项目上下文...$(RESET)"
+	$(ACTIVATE) && python scripts/context_loader.py --summary
+	@echo "$(GREEN)✅ 上下文加载完成$(RESET)"
+
+# -------------------------------
+# 🔧 代码质量
+# -------------------------------
+.PHONY: format
+format: venv ## 代码格式化
+	@echo "$(BLUE)>>> 代码格式化...$(RESET)"
+	$(ACTIVATE) && python -m black src/ tests/ scripts/ --line-length=88
+	$(ACTIVATE) && python -m isort src/ tests/ scripts/
+	@echo "$(GREEN)✅ 代码格式化完成$(RESET)"
+
+.PHONY: lint
+lint: venv ## 代码风格检查
+	@echo "$(BLUE)>>> 代码风格检查...$(RESET)"
+	$(ACTIVATE) && python -m flake8 src/ tests/ scripts/ --max-line-length=88 --extend-ignore=E203,W503
+	@echo "$(GREEN)✅ 代码风格检查通过$(RESET)"
+
+.PHONY: typecheck
+typecheck: venv ## 类型检查
+	@echo "$(BLUE)>>> 类型检查...$(RESET)"
+	@if $(ACTIVATE) && python -c "import mypy" 2>/dev/null; then \
+		$(ACTIVATE) && python -m mypy src/ --ignore-missing-imports; \
+		echo "$(GREEN)✅ 类型检查完成$(RESET)"; \
+	else \
+		echo "$(YELLOW)⚠️ mypy未安装，跳过类型检查$(RESET)"; \
+	fi
+
+.PHONY: security
+security: venv ## 安全检查
+	@echo "$(BLUE)>>> 安全检查...$(RESET)"
+	@if $(ACTIVATE) && python -c "import bandit" 2>/dev/null; then \
+		$(ACTIVATE) && python -m bandit -r src/ -f json | python -m json.tool || true; \
+		echo "$(GREEN)✅ 安全检查完成$(RESET)"; \
+	else \
+		echo "$(YELLOW)⚠️ bandit未安装，跳过安全检查$(RESET)"; \
+	fi
+
+.PHONY: complexity
+complexity: venv ## 复杂度检查
+	@echo "$(BLUE)>>> 复杂度分析...$(RESET)"
+	@if $(ACTIVATE) && python -c "import radon" 2>/dev/null; then \
+		$(ACTIVATE) && python -m radon cc src/ --show-complexity; \
+		echo "$(GREEN)✅ 复杂度分析完成$(RESET)"; \
+	else \
+		echo "$(YELLOW)⚠️ radon未安装，跳过复杂度检查$(RESET)"; \
+	fi
+
+# -------------------------------
+# 🧪 测试
+# -------------------------------
+.PHONY: test
+test: venv ## 运行单元测试
+	@echo "$(BLUE)>>> 运行单元测试...$(RESET)"
+	@if [ -d "tests" ] && [ -n "$$(find tests -name '*.py' -type f)" ]; then \
+		if $(ACTIVATE) && python -m pytest tests/ -v --tb=short; then \
+			echo "$(GREEN)✅ 单元测试通过$(RESET)"; \
+		else \
+			echo "$(RED)❌ 单元测试失败$(RESET)"; \
+			echo "$(YELLOW)   请修复失败的测试后重试$(RESET)"; \
+			exit 1; \
+		fi; \
+	else \
+		echo "$(YELLOW)⚠️ 未找到测试文件，跳过测试$(RESET)"; \
+	fi
+
+.PHONY: coverage
+coverage: venv ## 运行覆盖率测试
+	@echo "$(BLUE)>>> 运行覆盖率测试...$(RESET)"
+	@if [ -d "tests" ] && [ -n "$$(find tests -name '*.py' -type f)" ]; then \
+		if $(ACTIVATE) && python -c "import coverage" 2>/dev/null; then \
+			if $(ACTIVATE) && python -m coverage run -m pytest tests/ && $(ACTIVATE) && python -m coverage report --show-missing; then \
+				echo "$(GREEN)✅ 覆盖率测试通过$(RESET)"; \
+			else \
+				echo "$(RED)❌ 覆盖率测试失败$(RESET)"; \
+				echo "$(YELLOW)   请修复测试问题后重试$(RESET)"; \
+				exit 1; \
+			fi; \
+		else \
+			echo "$(YELLOW)⚠️ coverage未安装，运行普通测试$(RESET)"; \
+			if $(ACTIVATE) && python -m pytest tests/ -v; then \
+				echo "$(GREEN)✅ 测试通过$(RESET)"; \
+			else \
+				echo "$(RED)❌ 测试失败$(RESET)"; \
+				exit 1; \
+			fi; \
+		fi; \
+	else \
+		echo "$(YELLOW)⚠️ 未找到测试文件，跳过测试$(RESET)"; \
+	fi
+
+.PHONY: test-watch
+test-watch: venv ## 监控模式运行测试
+	@echo "$(BLUE)>>> 监控模式运行测试...$(RESET)"
+	@if $(ACTIVATE) && python -c "import pytest_watch" 2>/dev/null; then \
+		$(ACTIVATE) && ptw tests/; \
+	else \
+		echo "$(YELLOW)⚠️ pytest-watch未安装，运行普通测试$(RESET)"; \
+		$(MAKE) test; \
+	fi
+
+# -------------------------------
+# ✅ 完整质量检查
+# -------------------------------
+.PHONY: quality
+quality: venv format lint typecheck security complexity ## 完整质量检查
+	@echo "$(BLUE)>>> 运行质量检查器...$(RESET)"
+	@if $(ACTIVATE) && python scripts/quality_checker.py --summary; then \
+		echo "$(GREEN)✅ 完整质量检查通过$(RESET)"; \
+	else \
+		echo "$(RED)❌ 质量检查失败$(RESET)"; \
+		echo "$(YELLOW)   请修复代码质量问题后重试$(RESET)"; \
+		exit 1; \
+	fi
+
+# -------------------------------
+# 🚀 CI 模拟和闭环流程
+# -------------------------------
+.PHONY: ci
+ci: env-check context quality test coverage ## 本地CI模拟
+	@echo "$(GREEN)>>> 本地CI检查全部通过 ✅$(RESET)"
+	@echo "$(GREEN)>>> 代码质量验证完成，可以安全推送$(RESET)"
+
+.PHONY: cursor-run
+cursor-run: venv ## 运行Cursor闭环系统
+	@echo "$(BLUE)>>> 运行Cursor闭环系统...$(RESET)"
+	@read -p "请输入任务描述: " task; \
+	$(ACTIVATE) && python scripts/cursor_runner.py --task "$$task" --summary
+	@echo "$(GREEN)✅ Cursor闭环执行完成$(RESET)"
+
+.PHONY: prepush
+prepush: ## 提交前完整检查、推送和Issue同步（带失败保护）
+	@echo "$(BLUE)>>> 开始prepush流程（包含失败保护机制）...$(RESET)"
+	@echo "$(YELLOW)>>> 第1步: 执行CI检查...$(RESET)"
+	@if $(MAKE) ci; then \
+		echo "$(GREEN)✅ CI检查通过，继续推送流程$(RESET)"; \
+		echo "$(YELLOW)>>> 第2步: 检查Git状态...$(RESET)"; \
+		if [ -z "$$(git status --porcelain)" ]; then \
+			echo "$(YELLOW)⚠️ 工作区干净，无需提交$(RESET)"; \
+		else \
+			echo "$(BLUE)>>> 添加文件到暂存区...$(RESET)"; \
+			git add .; \
+			echo "$(BLUE)>>> 创建提交...$(RESET)"; \
+			git commit -m "chore: prepush auto commit - $$(date '+%Y-%m-%d %H:%M:%S')"; \
+			echo "$(BLUE)>>> 推送到远程仓库...$(RESET)"; \
+			git push origin HEAD; \
+			echo "$(GREEN)✅ 代码推送完成$(RESET)"; \
+		fi; \
+		echo "$(YELLOW)>>> 第3步: 同步Issues...$(RESET)"; \
+		$(MAKE) sync; \
+		echo "$(GREEN)🎉 prepush完整流程成功完成！$(RESET)"; \
+	else \
+		echo "$(RED)❌ CI检查失败，停止推送流程$(RESET)"; \
+		echo "$(RED)   请修复上述问题后重新运行 make prepush$(RESET)"; \
+		echo "$(YELLOW)💡 快速修复建议:$(RESET)"; \
+		echo "$(YELLOW)   - 代码格式问题: make fix$(RESET)"; \
+		echo "$(YELLOW)   - 测试失败: make test$(RESET)"; \
+		echo "$(YELLOW)   - 环境问题: make env-check$(RESET)"; \
+		exit 1; \
+	fi
+
+.PHONY: prepush-with-message
+prepush-with-message: ## 提交前检查并使用自定义消息推送（带失败保护）
+	@echo "$(BLUE)>>> 开始prepush流程（自定义消息+失败保护）...$(RESET)"
+	@echo "$(YELLOW)>>> 第1步: 执行CI检查...$(RESET)"
+	@if $(MAKE) ci; then \
+		echo "$(GREEN)✅ CI检查通过，继续推送流程$(RESET)"; \
+		echo "$(YELLOW)>>> 第2步: 准备提交...$(RESET)"; \
+		read -p "请输入提交消息: " message; \
+		if [ -z "$$(git status --porcelain)" ]; then \
+			echo "$(YELLOW)⚠️ 工作区干净，无需提交$(RESET)"; \
+		else \
+			git add .; \
+			git commit -m "$$message"; \
+			git push origin HEAD; \
+			echo "$(GREEN)✅ 代码推送完成$(RESET)"; \
+		fi; \
+		echo "$(YELLOW)>>> 第3步: 同步Issues...$(RESET)"; \
+		$(MAKE) sync; \
+		echo "$(GREEN)🎉 prepush完整流程成功完成！$(RESET)"; \
+	else \
+		echo "$(RED)❌ CI检查失败，停止推送流程$(RESET)"; \
+		echo "$(RED)   请修复上述问题后重新运行 make prepush-with-message$(RESET)"; \
+		echo "$(YELLOW)💡 快速修复建议:$(RESET)"; \
+		echo "$(YELLOW)   - 代码格式问题: make fix$(RESET)"; \
+		echo "$(YELLOW)   - 测试失败: make test$(RESET)"; \
+		echo "$(YELLOW)   - 环境问题: make env-check$(RESET)"; \
+		exit 1; \
+	fi
+
+# -------------------------------
+# 📊 项目状态
+# -------------------------------
+.PHONY: status
+status: venv ## 查看项目状态
+	@echo "$(BLUE)>>> 项目状态总览$(RESET)"
+	@echo ""
+	@echo "$(YELLOW)📁 项目信息:$(RESET)"
+	@echo "  项目名称: $(PROJECT_NAME)"
+	@echo "  Python版本: $$($(ACTIVATE) && python --version)"
+	@echo "  虚拟环境: $(VENV)"
+	@echo ""
+	@echo "$(YELLOW)📊 代码统计:$(RESET)"
+	@echo "  Python文件: $$(find . -name "*.py" -not -path "./$(VENV)/*" | wc -l)"
+	@echo "  代码行数: $$(find . -name "*.py" -not -path "./$(VENV)/*" -exec wc -l {} + | tail -1 | awk '{print $$1}')"
+	@echo ""
+	@echo "$(YELLOW)🌿 Git状态:$(RESET)"
+	@if [ -d ".git" ]; then \
+		echo "  当前分支: $$(git branch --show-current)"; \
+		echo "  最近提交: $$(git log -1 --pretty=format:'%h %s')"; \
+		uncommitted=$$(git status --porcelain | wc -l); \
+		echo "  未提交文件: $$uncommitted"; \
+	else \
+		echo "  $(RED)未初始化Git仓库$(RESET)"; \
+	fi
+	@echo ""
+	@echo "$(YELLOW)📦 依赖状态:$(RESET)"
+	@if [ -f "requirements.txt" ]; then \
+		echo "  依赖文件: requirements.txt"; \
+		echo "  依赖数量: $$(cat requirements.txt | grep -v '^#' | grep -v '^$$' | wc -l)"; \
+	else \
+		echo "  $(RED)未找到requirements.txt$(RESET)"; \
+	fi
+
+# -------------------------------
+# 📋 Issue 同步管理
+# -------------------------------
+.PHONY: sync
+sync: ## 同步ISSUES.md到远程仓库
+	@echo "$(BLUE)>>> 检查Issue同步配置...$(RESET)"
+	@if [ -f "ISSUES.md" ]; then \
+		echo "$(BLUE)>>> 发现 ISSUES.md，准备同步...$(RESET)"; \
+		if [ -z "$$GIT_PLATFORM" ]; then \
+			echo "$(YELLOW)⚠️ 未设置 GIT_PLATFORM 环境变量$(RESET)"; \
+			echo "$(YELLOW)   请设置: export GIT_PLATFORM=github 或 export GIT_PLATFORM=gitee$(RESET)"; \
+		elif [ "$$GIT_PLATFORM" = "github" ]; then \
+			if command -v gh >/dev/null 2>&1; then \
+				echo "$(BLUE)>>> 使用 GitHub CLI 同步Issues...$(RESET)"; \
+				while IFS= read -r line; do \
+					if [ -n "$$line" ] && [ "$${line#\#}" = "$$line" ]; then \
+						echo "$(BLUE)   创建Issue: $$line$(RESET)"; \
+						gh issue create --title "$$line" --body "Auto-synced from ISSUES.md" || echo "$(YELLOW)   ⚠️ Issue创建失败: $$line$(RESET)"; \
+					fi; \
+				done < ISSUES.md; \
+				echo "$(GREEN)✅ GitHub Issues同步完成$(RESET)"; \
+			else \
+				echo "$(RED)❌ GitHub CLI (gh) 未安装$(RESET)"; \
+				echo "$(YELLOW)   安装: brew install gh 或 apt install gh$(RESET)"; \
+			fi; \
+		elif [ "$$GIT_PLATFORM" = "gitee" ]; then \
+			if command -v tea >/dev/null 2>&1; then \
+				echo "$(BLUE)>>> 使用 Gitee CLI 同步Issues...$(RESET)"; \
+				while IFS= read -r line; do \
+					if [ -n "$$line" ] && [ "$${line#\#}" = "$$line" ]; then \
+						echo "$(BLUE)   创建Issue: $$line$(RESET)"; \
+						tea issue create --title "$$line" --body "Auto-synced from ISSUES.md" || echo "$(YELLOW)   ⚠️ Issue创建失败: $$line$(RESET)"; \
+					fi; \
+				done < ISSUES.md; \
+				echo "$(GREEN)✅ Gitee Issues同步完成$(RESET)"; \
+			else \
+				echo "$(RED)❌ Gitee CLI (tea) 未安装$(RESET)"; \
+				echo "$(YELLOW)   安装: https://gitea.com/gitea/tea$(RESET)"; \
+			fi; \
+		else \
+			echo "$(RED)❌ 不支持的平台: $$GIT_PLATFORM$(RESET)"; \
+			echo "$(YELLOW)   支持的平台: github, gitee$(RESET)"; \
+		fi; \
+	else \
+		echo "$(YELLOW)>>> 未发现 ISSUES.md 文件，跳过Issue同步$(RESET)"; \
+		echo "$(YELLOW)   创建 ISSUES.md 文件，每行一个Issue标题即可自动同步$(RESET)"; \
+	fi
+
+.PHONY: sync-config
+sync-config: ## 配置Issue同步环境变量
+	@echo "$(BLUE)>>> Issue同步配置向导$(RESET)"
+	@echo ""
+	@echo "$(YELLOW)请按照以下步骤配置:$(RESET)"
+	@echo ""
+	@echo "$(YELLOW)1. 选择平台并设置环境变量:$(RESET)"
+	@echo "   GitHub: export GIT_PLATFORM=github"
+	@echo "   Gitee:  export GIT_PLATFORM=gitee"
+	@echo ""
+	@echo "$(YELLOW)2. 安装对应的CLI工具:$(RESET)"
+	@echo "   GitHub: brew install gh 或 apt install gh"
+	@echo "   Gitee:  下载 tea CLI from https://gitea.com/gitea/tea"
+	@echo ""
+	@echo "$(YELLOW)3. 登录认证:$(RESET)"
+	@echo "   GitHub: gh auth login"
+	@echo "   Gitee:  tea login add"
+	@echo ""
+	@echo "$(YELLOW)4. 创建 ISSUES.md 文件:$(RESET)"
+	@echo "   每行一个Issue标题，例如:"
+	@echo "   实现用户认证功能"
+	@echo "   修复登录页面bug"
+	@echo "   添加数据导出功能"
+	@echo ""
+	@echo "$(YELLOW)5. 运行同步:$(RESET)"
+	@echo "   make sync 或 make prepush"
+
+# -------------------------------
+# 🧹 清理
+# -------------------------------
+.PHONY: clean
+clean: ## 清理环境和缓存
+	@echo "$(BLUE)>>> 清理环境...$(RESET)"
+	rm -rf $(VENV)
+	rm -rf .pytest_cache
+	rm -rf .mypy_cache
+	rm -rf .coverage
+	rm -rf htmlcov
+	rm -rf dist
+	rm -rf build
+	rm -rf *.egg-info
+	find . -type d -name __pycache__ -delete
+	find . -type f -name "*.pyc" -delete
+	@echo "$(GREEN)✅ 清理完成$(RESET)"
+
+.PHONY: clean-logs
+clean-logs: ## 清理日志文件
+	@echo "$(BLUE)>>> 清理日志文件...$(RESET)"
+	rm -rf logs/*.log
+	rm -rf logs/*.json
+	@echo "$(GREEN)✅ 日志清理完成$(RESET)"
+
+# -------------------------------
+# 🎯 快捷方式
+# -------------------------------
+.PHONY: dev
+dev: install env-check ## 开发环境快速准备
+	@echo "$(GREEN)✅ 开发环境已准备就绪$(RESET)"
+	@echo "$(BLUE)>>> 可以开始编码了！建议运行: make status$(RESET)"
+
+.PHONY: fix
+fix: format lint ## 快速修复代码问题
+	@echo "$(GREEN)✅ 代码问题修复完成$(RESET)"
+
+.PHONY: check
+check: quality test ## 快速质量检查
+	@echo "$(GREEN)✅ 快速检查完成$(RESET)"
+
+# 默认目标
+.DEFAULT_GOAL := help 
