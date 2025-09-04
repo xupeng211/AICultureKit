@@ -1,0 +1,77 @@
+# Docker相关命令
+
+.PHONY: docker-build docker-run docker-dev docker-stop docker-clean docker-push
+
+# 构建生产镜像
+docker-build:
+	@echo "🐳 构建生产Docker镜像..."
+	docker build -t aiculturekit:latest .
+
+# 构建开发镜像
+docker-build-dev:
+	@echo "🐳 构建开发Docker镜像..."
+	docker build -f Dockerfile.dev -t aiculturekit:dev .
+
+# 运行生产环境
+docker-run:
+	@echo "🚀 启动生产环境..."
+	docker-compose up -d
+
+# 运行开发环境
+docker-dev:
+	@echo "🚀 启动开发环境..."
+	docker-compose -f docker-compose.dev.yml up -d
+
+# 停止所有容器
+docker-stop:
+	@echo "🛑 停止所有容器..."
+	docker-compose down
+	docker-compose -f docker-compose.dev.yml down
+
+# 查看日志
+docker-logs:
+	@echo "📋 查看应用日志..."
+	docker-compose logs -f app
+
+# 进入应用容器
+docker-shell:
+	@echo "🐚 进入应用容器..."
+	docker-compose exec app bash
+
+# 重新构建并启动
+docker-rebuild:
+	@echo "🔄 重新构建并启动..."
+	docker-compose down
+	docker-compose build --no-cache
+	docker-compose up -d
+
+# 清理Docker资源
+docker-clean:
+	@echo "🧹 清理Docker资源..."
+	docker system prune -f
+	docker volume prune -f
+
+# 推送镜像到注册表
+docker-push:
+	@echo "📤 推送镜像到GitHub Container Registry..."
+	docker tag aiculturekit:latest ghcr.io/xupeng211/aiculturekit:latest
+	docker push ghcr.io/xupeng211/aiculturekit:latest
+
+# 本地完整测试
+docker-test:
+	@echo "🧪 运行Docker环境测试..."
+	docker-compose -f docker-compose.dev.yml up -d
+	sleep 10
+	docker-compose -f docker-compose.dev.yml exec -T app pytest tests/
+	docker-compose -f docker-compose.dev.yml down
+
+# 健康检查
+docker-health:
+	@echo "🏥 检查容器健康状态..."
+	docker-compose ps
+	curl -f http://localhost:8000/health || echo "健康检查失败"
+
+# 查看镜像大小
+docker-size:
+	@echo "📊 查看镜像大小..."
+	docker images | grep aiculturekit 

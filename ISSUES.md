@@ -11,9 +11,9 @@
 ## 📝 待处理Issues
 
 ### 🏗️ 核心架构（已完成 ✅）
-完成src模块结构实现
-创建core/models/services/utils模块
-建立基础测试框架
+# 完成src模块结构实现
+# 创建core/models/services/utils模块  
+# 建立基础测试框架
 
 ### 🎯 下阶段开发任务
 实现ContentAnalysisService的具体AI算法
