@@ -1,0 +1,588 @@
+{
+  "timestamp": "2025-09-05T02:12:52.926175",
+  "project_root": "/home/user/projects/AICultureKit",
+  "checks": {
+    "backup": {
+      "name": "备份文件",
+      "success": true,
+      "message": "已备份 60 个文件",
+      "details": {
+        "backup_directory": "/home/user/projects/AICultureKit/backup/20250905_021257",
+        "files_backed_up": [
+          "src/__init__.py",
+          "src/utils/__init__.py",
+          "src/models/__init__.py",
+          "src/core/__init__.py",
+          "src/services/__init__.py",
+          "backup/20250905_021252/src/__init__.py",
+          "backup/20250905_021252/src/utils/__init__.py",
+          "backup/20250905_021252/src/models/__init__.py",
+          "backup/20250905_021252/src/core/__init__.py",
+          "backup/20250905_021252/src/services/__init__.py",
+          "backup/20250905_021252/scripts/cursor_runner.py",
+          "backup/20250905_021252/scripts/test_failure.py",
+          "backup/20250905_021252/scripts/quality_checker.py",
+          "backup/20250905_021252/scripts/setup_project.py",
+          "backup/20250905_021252/scripts/context_loader.py",
+          "backup/20250905_021252/scripts/env_checker.py",
+          "backup/20250905_021252/tests/__init__.py",
+          "backup/20250905_021252/tests/integration/__init__.py",
+          "backup/20250905_021252/tests/fixtures/__init__.py",
+          "backup/20250905_021252/tests/unit/__init__.py",
+          "backup/20250905_021255/src/__init__.py",
+          "backup/20250905_021255/src/utils/__init__.py",
+          "backup/20250905_021255/src/models/__init__.py",
+          "backup/20250905_021255/src/core/__init__.py",
+          "backup/20250905_021255/src/services/__init__.py",
+          "backup/20250905_021255/backup/20250905_021252/src/__init__.py",
+          "backup/20250905_021255/backup/20250905_021252/src/utils/__init__.py",
+          "backup/20250905_021255/backup/20250905_021252/src/models/__init__.py",
+          "backup/20250905_021255/backup/20250905_021252/src/core/__init__.py",
+          "backup/20250905_021255/backup/20250905_021252/src/services/__init__.py",
+          "backup/20250905_021255/backup/20250905_021252/scripts/cursor_runner.py",
+          "backup/20250905_021255/backup/20250905_021252/scripts/test_failure.py",
+          "backup/20250905_021255/backup/20250905_021252/scripts/quality_checker.py",
+          "backup/20250905_021255/backup/20250905_021252/scripts/setup_project.py",
+          "backup/20250905_021255/backup/20250905_021252/scripts/context_loader.py",
+          "backup/20250905_021255/backup/20250905_021252/scripts/env_checker.py",
+          "backup/20250905_021255/backup/20250905_021252/tests/__init__.py",
+          "backup/20250905_021255/backup/20250905_021252/tests/integration/__init__.py",
+          "backup/20250905_021255/backup/20250905_021252/tests/fixtures/__init__.py",
+          "backup/20250905_021255/backup/20250905_021252/tests/unit/__init__.py",
+          "backup/20250905_021255/scripts/cursor_runner.py",
+          "backup/20250905_021255/scripts/test_failure.py",
+          "backup/20250905_021255/scripts/quality_checker.py",
+          "backup/20250905_021255/scripts/setup_project.py",
+          "backup/20250905_021255/scripts/context_loader.py",
+          "backup/20250905_021255/scripts/env_checker.py",
+          "backup/20250905_021255/tests/__init__.py",
+          "backup/20250905_021255/tests/integration/__init__.py",
+          "backup/20250905_021255/tests/fixtures/__init__.py",
+          "backup/20250905_021255/tests/unit/__init__.py",
+          "scripts/cursor_runner.py",
+          "scripts/test_failure.py",
+          "scripts/quality_checker.py",
+          "scripts/setup_project.py",
+          "scripts/context_loader.py",
+          "scripts/env_checker.py",
+          "tests/__init__.py",
+          "tests/integration/__init__.py",
+          "tests/fixtures/__init__.py",
+          "tests/unit/__init__.py"
+        ]
+      },
+      "retry": 2
+    },
+    "format": {
+      "name": "代码格式化",
+      "success": true,
+      "message": "代码格式化完成",
+      "details": {
+        "stdout": "",
+        "stderr": "All done! ✨ 🍰 ✨\n15 files left unchanged.\n",
+        "return_code": 0
+      },
+      "retry": 2
+    },
+    "lint": {
+      "name": "代码风格检查",
+      "success": false,
+      "message": "发现 25 个风格问题",
+      "details": {
+        "issues": [
+          "scripts/context_loader.py:13:1: F401 'typing.List' imported but unused",
+          "scripts/context_loader.py:13:1: F401 'typing.Optional' imported but unused",
+          "scripts/context_loader.py:360:17: E722 do not use bare 'except'",
+          "scripts/context_loader.py:408:89: E501 line too long (89 > 88 characters)",
+          "scripts/context_loader.py:427:5: F841 local variable 'context' is assigned to but never used",
+          "scripts/cursor_runner.py:9:1: F401 'os' imported but unused",
+          "scripts/cursor_runner.py:14:1: F401 'typing.Optional' imported but unused",
+          "scripts/cursor_runner.py:116:89: E501 line too long (103 > 88 characters)",
+          "scripts/cursor_runner.py:364:15: F541 f-string is missing placeholders",
+          "scripts/env_checker.py:8:1: F401 'os' imported but unused",
+          "scripts/env_checker.py:123:89: E501 line too long (138 > 88 characters)",
+          "scripts/env_checker.py:133:89: E501 line too long (96 > 88 characters)",
+          "scripts/env_checker.py:240:89: E501 line too long (95 > 88 characters)",
+          "scripts/env_checker.py:273:13: F841 local variable 'sync_result' is assigned to but never used",
+          "scripts/env_checker.py:427:15: F541 f-string is missing placeholders",
+          "scripts/env_checker.py:464:19: F541 f-string is missing placeholders",
+          "scripts/env_checker.py:468:19: F541 f-string is missing placeholders",
+          "scripts/quality_checker.py:14:1: F401 'typing.Optional' imported but unused",
+          "scripts/quality_checker.py:90:35: F541 f-string is missing placeholders",
+          "scripts/quality_checker.py:93:39: F541 f-string is missing placeholders",
+          "scripts/quality_checker.py:95:39: F541 f-string is missing placeholders",
+          "scripts/quality_checker.py:560:15: F541 f-string is missing placeholders",
+          "scripts/setup_project.py:8:1: F401 'os' imported but unused",
+          "scripts/setup_project.py:151:1: W293 blank line contains whitespace",
+          "src/models/__init__.py:6:7: W291 trailing whitespace"
+        ],
+        "stdout": "scripts/context_loader.py:13:1: F401 'typing.List' imported but unused\nscripts/context_loader.py:13:1: F401 'typing.Optional' imported but unused\nscripts/context_loader.py:360:17: E722 do not use bare 'except'\nscripts/context_loader.py:408:89: E501 line too long (89 > 88 characters)\nscripts/context_loader.py:427:5: F841 local variable 'context' is assigned to but never used\nscripts/cursor_runner.py:9:1: F401 'os' imported but unused\nscripts/cursor_runner.py:14:1: F401 'typing.Optional' imported but unused\nscripts/cursor_runner.py:116:89: E501 line too long (103 > 88 characters)\nscripts/cursor_runner.py:364:15: F541 f-string is missing placeholders\nscripts/env_checker.py:8:1: F401 'os' imported but unused\nscripts/env_checker.py:123:89: E501 line too long (138 > 88 characters)\nscripts/env_checker.py:133:89: E501 line too long (96 > 88 characters)\nscripts/env_checker.py:240:89: E501 line too long (95 > 88 characters)\nscripts/env_checker.py:273:13: F841 local variable 'sync_result' is assigned to but never used\nscripts/env_checker.py:427:15: F541 f-string is missing placeholders\nscripts/env_checker.py:464:19: F541 f-string is missing placeholders\nscripts/env_checker.py:468:19: F541 f-string is missing placeholders\nscripts/quality_checker.py:14:1: F401 'typing.Optional' imported but unused\nscripts/quality_checker.py:90:35: F541 f-string is missing placeholders\nscripts/quality_checker.py:93:39: F541 f-string is missing placeholders\nscripts/quality_checker.py:95:39: F541 f-string is missing placeholders\nscripts/quality_checker.py:560:15: F541 f-string is missing placeholders\nscripts/setup_project.py:8:1: F401 'os' imported but unused\nscripts/setup_project.py:151:1: W293 blank line contains whitespace\nsrc/models/__init__.py:6:7: W291 trailing whitespace\n",
+        "stderr": ""
+      },
+      "retry": 2
+    },
+    "type_check": {
+      "name": "类型检查",
+      "success": true,
+      "message": "类型检查通过",
+      "details": {
+        "issues": []
+      },
+      "retry": 2
+    },
+    "test": {
+      "name": "单元测试",
+      "success": false,
+      "message": "测试失败",
+      "details": {
+        "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.11.9, pytest-8.4.1, pluggy-1.6.0 -- /home/user/.pyenv/versions/3.11.9/bin/python\ncachedir: .pytest_cache\nbenchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)\nrootdir: /home/user/projects/AICultureKit\nplugins: cov-6.2.1, asyncio-1.1.0, benchmark-5.1.0, mock-3.14.0, xdist-3.5.0, anyio-4.10.0\nasyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollecting ... collected 0 items\n\n============================ no tests ran in 0.01s =============================\n",
+        "stderr": "",
+        "return_code": 5
+      },
+      "retry": 2
+    },
+    "coverage": {
+      "name": "测试覆盖率",
+      "success": false,
+      "message": "覆盖率测试失败",
+      "details": {
+        "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.11.9, pytest-8.4.1, pluggy-1.6.0\nbenchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)\nrootdir: /home/user/projects/AICultureKit\nplugins: cov-6.2.1, asyncio-1.1.0, benchmark-5.1.0, mock-3.14.0, xdist-3.5.0, anyio-4.10.0\nasyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 0 items\n\n============================ no tests ran in 0.01s =============================\n",
+        "stderr": "/home/user/.pyenv/versions/3.11.9/lib/python3.11/site-packages/coverage/control.py:945: CoverageWarning: No data was collected. (no-data-collected)\n  self._warn(\"No data was collected.\", slug=\"no-data-collected\")\n"
+      },
+      "retry": 2
+    },
+    "complexity": {
+      "name": "复杂度分析",
+      "success": true,
+      "message": "radon未安装，跳过复杂度检查",
+      "details": {
+        "skipped": true
+      },
+      "retry": 2
+    }
+  },
+  "overall_status": "failed",
+  "retry_count": 2,
+  "iteration_log": [
+    {
+      "timestamp": "2025-09-05T02:12:55.543512",
+      "retry": 0,
+      "passed": false,
+      "checks": {
+        "backup": {
+          "name": "备份文件",
+          "success": true,
+          "message": "已备份 15 个文件",
+          "details": {
+            "backup_directory": "/home/user/projects/AICultureKit/backup/20250905_021252",
+            "files_backed_up": [
+              "src/__init__.py",
+              "src/utils/__init__.py",
+              "src/models/__init__.py",
+              "src/core/__init__.py",
+              "src/services/__init__.py",
+              "scripts/cursor_runner.py",
+              "scripts/test_failure.py",
+              "scripts/quality_checker.py",
+              "scripts/setup_project.py",
+              "scripts/context_loader.py",
+              "scripts/env_checker.py",
+              "tests/__init__.py",
+              "tests/integration/__init__.py",
+              "tests/fixtures/__init__.py",
+              "tests/unit/__init__.py"
+            ]
+          },
+          "retry": 0
+        },
+        "format": {
+          "name": "代码格式化",
+          "success": true,
+          "message": "代码格式化完成",
+          "details": {
+            "stdout": "",
+            "stderr": "reformatted /home/user/projects/AICultureKit/src/core/__init__.py\nreformatted /home/user/projects/AICultureKit/tests/__init__.py\nreformatted /home/user/projects/AICultureKit/tests/fixtures/__init__.py\nreformatted /home/user/projects/AICultureKit/tests/integration/__init__.py\nreformatted /home/user/projects/AICultureKit/tests/unit/__init__.py\nreformatted /home/user/projects/AICultureKit/src/models/__init__.py\nreformatted /home/user/projects/AICultureKit/src/services/__init__.py\nreformatted /home/user/projects/AICultureKit/src/utils/__init__.py\n\nAll done! ✨ 🍰 ✨\n8 files reformatted, 7 files left unchanged.\n",
+            "return_code": 0
+          },
+          "retry": 0
+        },
+        "lint": {
+          "name": "代码风格检查",
+          "success": false,
+          "message": "发现 25 个风格问题",
+          "details": {
+            "issues": [
+              "scripts/context_loader.py:13:1: F401 'typing.List' imported but unused",
+              "scripts/context_loader.py:13:1: F401 'typing.Optional' imported but unused",
+              "scripts/context_loader.py:360:17: E722 do not use bare 'except'",
+              "scripts/context_loader.py:408:89: E501 line too long (89 > 88 characters)",
+              "scripts/context_loader.py:427:5: F841 local variable 'context' is assigned to but never used",
+              "scripts/cursor_runner.py:9:1: F401 'os' imported but unused",
+              "scripts/cursor_runner.py:14:1: F401 'typing.Optional' imported but unused",
+              "scripts/cursor_runner.py:116:89: E501 line too long (103 > 88 characters)",
+              "scripts/cursor_runner.py:364:15: F541 f-string is missing placeholders",
+              "scripts/env_checker.py:8:1: F401 'os' imported but unused",
+              "scripts/env_checker.py:123:89: E501 line too long (138 > 88 characters)",
+              "scripts/env_checker.py:133:89: E501 line too long (96 > 88 characters)",
+              "scripts/env_checker.py:240:89: E501 line too long (95 > 88 characters)",
+              "scripts/env_checker.py:273:13: F841 local variable 'sync_result' is assigned to but never used",
+              "scripts/env_checker.py:427:15: F541 f-string is missing placeholders",
+              "scripts/env_checker.py:464:19: F541 f-string is missing placeholders",
+              "scripts/env_checker.py:468:19: F541 f-string is missing placeholders",
+              "scripts/quality_checker.py:14:1: F401 'typing.Optional' imported but unused",
+              "scripts/quality_checker.py:90:35: F541 f-string is missing placeholders",
+              "scripts/quality_checker.py:93:39: F541 f-string is missing placeholders",
+              "scripts/quality_checker.py:95:39: F541 f-string is missing placeholders",
+              "scripts/quality_checker.py:560:15: F541 f-string is missing placeholders",
+              "scripts/setup_project.py:8:1: F401 'os' imported but unused",
+              "scripts/setup_project.py:151:1: W293 blank line contains whitespace",
+              "src/models/__init__.py:6:7: W291 trailing whitespace"
+            ],
+            "stdout": "scripts/context_loader.py:13:1: F401 'typing.List' imported but unused\nscripts/context_loader.py:13:1: F401 'typing.Optional' imported but unused\nscripts/context_loader.py:360:17: E722 do not use bare 'except'\nscripts/context_loader.py:408:89: E501 line too long (89 > 88 characters)\nscripts/context_loader.py:427:5: F841 local variable 'context' is assigned to but never used\nscripts/cursor_runner.py:9:1: F401 'os' imported but unused\nscripts/cursor_runner.py:14:1: F401 'typing.Optional' imported but unused\nscripts/cursor_runner.py:116:89: E501 line too long (103 > 88 characters)\nscripts/cursor_runner.py:364:15: F541 f-string is missing placeholders\nscripts/env_checker.py:8:1: F401 'os' imported but unused\nscripts/env_checker.py:123:89: E501 line too long (138 > 88 characters)\nscripts/env_checker.py:133:89: E501 line too long (96 > 88 characters)\nscripts/env_checker.py:240:89: E501 line too long (95 > 88 characters)\nscripts/env_checker.py:273:13: F841 local variable 'sync_result' is assigned to but never used\nscripts/env_checker.py:427:15: F541 f-string is missing placeholders\nscripts/env_checker.py:464:19: F541 f-string is missing placeholders\nscripts/env_checker.py:468:19: F541 f-string is missing placeholders\nscripts/quality_checker.py:14:1: F401 'typing.Optional' imported but unused\nscripts/quality_checker.py:90:35: F541 f-string is missing placeholders\nscripts/quality_checker.py:93:39: F541 f-string is missing placeholders\nscripts/quality_checker.py:95:39: F541 f-string is missing placeholders\nscripts/quality_checker.py:560:15: F541 f-string is missing placeholders\nscripts/setup_project.py:8:1: F401 'os' imported but unused\nscripts/setup_project.py:151:1: W293 blank line contains whitespace\nsrc/models/__init__.py:6:7: W291 trailing whitespace\n",
+            "stderr": ""
+          },
+          "retry": 0
+        },
+        "type_check": {
+          "name": "类型检查",
+          "success": true,
+          "message": "类型检查通过",
+          "details": {
+            "issues": []
+          },
+          "retry": 0
+        },
+        "test": {
+          "name": "单元测试",
+          "success": false,
+          "message": "测试失败",
+          "details": {
+            "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.11.9, pytest-8.4.1, pluggy-1.6.0 -- /home/user/.pyenv/versions/3.11.9/bin/python\ncachedir: .pytest_cache\nbenchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)\nrootdir: /home/user/projects/AICultureKit\nplugins: cov-6.2.1, asyncio-1.1.0, benchmark-5.1.0, mock-3.14.0, xdist-3.5.0, anyio-4.10.0\nasyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollecting ... collected 0 items\n\n============================ no tests ran in 0.01s =============================\n",
+            "stderr": "",
+            "return_code": 5
+          },
+          "retry": 0
+        },
+        "coverage": {
+          "name": "测试覆盖率",
+          "success": false,
+          "message": "覆盖率测试失败",
+          "details": {
+            "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.11.9, pytest-8.4.1, pluggy-1.6.0\nbenchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)\nrootdir: /home/user/projects/AICultureKit\nplugins: cov-6.2.1, asyncio-1.1.0, benchmark-5.1.0, mock-3.14.0, xdist-3.5.0, anyio-4.10.0\nasyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 0 items\n\n============================ no tests ran in 0.01s =============================\n",
+            "stderr": "/home/user/.pyenv/versions/3.11.9/lib/python3.11/site-packages/coverage/control.py:945: CoverageWarning: No data was collected. (no-data-collected)\n  self._warn(\"No data was collected.\", slug=\"no-data-collected\")\n"
+          },
+          "retry": 0
+        },
+        "complexity": {
+          "name": "复杂度分析",
+          "success": true,
+          "message": "radon未安装，跳过复杂度检查",
+          "details": {
+            "skipped": true
+          },
+          "retry": 0
+        }
+      }
+    },
+    {
+      "timestamp": "2025-09-05T02:12:57.123346",
+      "retry": 1,
+      "passed": false,
+      "checks": {
+        "backup": {
+          "name": "备份文件",
+          "success": true,
+          "message": "已备份 30 个文件",
+          "details": {
+            "backup_directory": "/home/user/projects/AICultureKit/backup/20250905_021255",
+            "files_backed_up": [
+              "src/__init__.py",
+              "src/utils/__init__.py",
+              "src/models/__init__.py",
+              "src/core/__init__.py",
+              "src/services/__init__.py",
+              "backup/20250905_021252/src/__init__.py",
+              "backup/20250905_021252/src/utils/__init__.py",
+              "backup/20250905_021252/src/models/__init__.py",
+              "backup/20250905_021252/src/core/__init__.py",
+              "backup/20250905_021252/src/services/__init__.py",
+              "backup/20250905_021252/scripts/cursor_runner.py",
+              "backup/20250905_021252/scripts/test_failure.py",
+              "backup/20250905_021252/scripts/quality_checker.py",
+              "backup/20250905_021252/scripts/setup_project.py",
+              "backup/20250905_021252/scripts/context_loader.py",
+              "backup/20250905_021252/scripts/env_checker.py",
+              "backup/20250905_021252/tests/__init__.py",
+              "backup/20250905_021252/tests/integration/__init__.py",
+              "backup/20250905_021252/tests/fixtures/__init__.py",
+              "backup/20250905_021252/tests/unit/__init__.py",
+              "scripts/cursor_runner.py",
+              "scripts/test_failure.py",
+              "scripts/quality_checker.py",
+              "scripts/setup_project.py",
+              "scripts/context_loader.py",
+              "scripts/env_checker.py",
+              "tests/__init__.py",
+              "tests/integration/__init__.py",
+              "tests/fixtures/__init__.py",
+              "tests/unit/__init__.py"
+            ]
+          },
+          "retry": 1
+        },
+        "format": {
+          "name": "代码格式化",
+          "success": true,
+          "message": "代码格式化完成",
+          "details": {
+            "stdout": "",
+            "stderr": "All done! ✨ 🍰 ✨\n15 files left unchanged.\n",
+            "return_code": 0
+          },
+          "retry": 1
+        },
+        "lint": {
+          "name": "代码风格检查",
+          "success": false,
+          "message": "发现 25 个风格问题",
+          "details": {
+            "issues": [
+              "scripts/context_loader.py:13:1: F401 'typing.List' imported but unused",
+              "scripts/context_loader.py:13:1: F401 'typing.Optional' imported but unused",
+              "scripts/context_loader.py:360:17: E722 do not use bare 'except'",
+              "scripts/context_loader.py:408:89: E501 line too long (89 > 88 characters)",
+              "scripts/context_loader.py:427:5: F841 local variable 'context' is assigned to but never used",
+              "scripts/cursor_runner.py:9:1: F401 'os' imported but unused",
+              "scripts/cursor_runner.py:14:1: F401 'typing.Optional' imported but unused",
+              "scripts/cursor_runner.py:116:89: E501 line too long (103 > 88 characters)",
+              "scripts/cursor_runner.py:364:15: F541 f-string is missing placeholders",
+              "scripts/env_checker.py:8:1: F401 'os' imported but unused",
+              "scripts/env_checker.py:123:89: E501 line too long (138 > 88 characters)",
+              "scripts/env_checker.py:133:89: E501 line too long (96 > 88 characters)",
+              "scripts/env_checker.py:240:89: E501 line too long (95 > 88 characters)",
+              "scripts/env_checker.py:273:13: F841 local variable 'sync_result' is assigned to but never used",
+              "scripts/env_checker.py:427:15: F541 f-string is missing placeholders",
+              "scripts/env_checker.py:464:19: F541 f-string is missing placeholders",
+              "scripts/env_checker.py:468:19: F541 f-string is missing placeholders",
+              "scripts/quality_checker.py:14:1: F401 'typing.Optional' imported but unused",
+              "scripts/quality_checker.py:90:35: F541 f-string is missing placeholders",
+              "scripts/quality_checker.py:93:39: F541 f-string is missing placeholders",
+              "scripts/quality_checker.py:95:39: F541 f-string is missing placeholders",
+              "scripts/quality_checker.py:560:15: F541 f-string is missing placeholders",
+              "scripts/setup_project.py:8:1: F401 'os' imported but unused",
+              "scripts/setup_project.py:151:1: W293 blank line contains whitespace",
+              "src/models/__init__.py:6:7: W291 trailing whitespace"
+            ],
+            "stdout": "scripts/context_loader.py:13:1: F401 'typing.List' imported but unused\nscripts/context_loader.py:13:1: F401 'typing.Optional' imported but unused\nscripts/context_loader.py:360:17: E722 do not use bare 'except'\nscripts/context_loader.py:408:89: E501 line too long (89 > 88 characters)\nscripts/context_loader.py:427:5: F841 local variable 'context' is assigned to but never used\nscripts/cursor_runner.py:9:1: F401 'os' imported but unused\nscripts/cursor_runner.py:14:1: F401 'typing.Optional' imported but unused\nscripts/cursor_runner.py:116:89: E501 line too long (103 > 88 characters)\nscripts/cursor_runner.py:364:15: F541 f-string is missing placeholders\nscripts/env_checker.py:8:1: F401 'os' imported but unused\nscripts/env_checker.py:123:89: E501 line too long (138 > 88 characters)\nscripts/env_checker.py:133:89: E501 line too long (96 > 88 characters)\nscripts/env_checker.py:240:89: E501 line too long (95 > 88 characters)\nscripts/env_checker.py:273:13: F841 local variable 'sync_result' is assigned to but never used\nscripts/env_checker.py:427:15: F541 f-string is missing placeholders\nscripts/env_checker.py:464:19: F541 f-string is missing placeholders\nscripts/env_checker.py:468:19: F541 f-string is missing placeholders\nscripts/quality_checker.py:14:1: F401 'typing.Optional' imported but unused\nscripts/quality_checker.py:90:35: F541 f-string is missing placeholders\nscripts/quality_checker.py:93:39: F541 f-string is missing placeholders\nscripts/quality_checker.py:95:39: F541 f-string is missing placeholders\nscripts/quality_checker.py:560:15: F541 f-string is missing placeholders\nscripts/setup_project.py:8:1: F401 'os' imported but unused\nscripts/setup_project.py:151:1: W293 blank line contains whitespace\nsrc/models/__init__.py:6:7: W291 trailing whitespace\n",
+            "stderr": ""
+          },
+          "retry": 1
+        },
+        "type_check": {
+          "name": "类型检查",
+          "success": true,
+          "message": "类型检查通过",
+          "details": {
+            "issues": []
+          },
+          "retry": 1
+        },
+        "test": {
+          "name": "单元测试",
+          "success": false,
+          "message": "测试失败",
+          "details": {
+            "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.11.9, pytest-8.4.1, pluggy-1.6.0 -- /home/user/.pyenv/versions/3.11.9/bin/python\ncachedir: .pytest_cache\nbenchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)\nrootdir: /home/user/projects/AICultureKit\nplugins: cov-6.2.1, asyncio-1.1.0, benchmark-5.1.0, mock-3.14.0, xdist-3.5.0, anyio-4.10.0\nasyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollecting ... collected 0 items\n\n============================ no tests ran in 0.01s =============================\n",
+            "stderr": "",
+            "return_code": 5
+          },
+          "retry": 1
+        },
+        "coverage": {
+          "name": "测试覆盖率",
+          "success": false,
+          "message": "覆盖率测试失败",
+          "details": {
+            "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.11.9, pytest-8.4.1, pluggy-1.6.0\nbenchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)\nrootdir: /home/user/projects/AICultureKit\nplugins: cov-6.2.1, asyncio-1.1.0, benchmark-5.1.0, mock-3.14.0, xdist-3.5.0, anyio-4.10.0\nasyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 0 items\n\n============================ no tests ran in 0.01s =============================\n",
+            "stderr": "/home/user/.pyenv/versions/3.11.9/lib/python3.11/site-packages/coverage/control.py:945: CoverageWarning: No data was collected. (no-data-collected)\n  self._warn(\"No data was collected.\", slug=\"no-data-collected\")\n"
+          },
+          "retry": 1
+        },
+        "complexity": {
+          "name": "复杂度分析",
+          "success": true,
+          "message": "radon未安装，跳过复杂度检查",
+          "details": {
+            "skipped": true
+          },
+          "retry": 1
+        }
+      }
+    },
+    {
+      "timestamp": "2025-09-05T02:12:58.814698",
+      "retry": 2,
+      "passed": false,
+      "checks": {
+        "backup": {
+          "name": "备份文件",
+          "success": true,
+          "message": "已备份 60 个文件",
+          "details": {
+            "backup_directory": "/home/user/projects/AICultureKit/backup/20250905_021257",
+            "files_backed_up": [
+              "src/__init__.py",
+              "src/utils/__init__.py",
+              "src/models/__init__.py",
+              "src/core/__init__.py",
+              "src/services/__init__.py",
+              "backup/20250905_021252/src/__init__.py",
+              "backup/20250905_021252/src/utils/__init__.py",
+              "backup/20250905_021252/src/models/__init__.py",
+              "backup/20250905_021252/src/core/__init__.py",
+              "backup/20250905_021252/src/services/__init__.py",
+              "backup/20250905_021252/scripts/cursor_runner.py",
+              "backup/20250905_021252/scripts/test_failure.py",
+              "backup/20250905_021252/scripts/quality_checker.py",
+              "backup/20250905_021252/scripts/setup_project.py",
+              "backup/20250905_021252/scripts/context_loader.py",
+              "backup/20250905_021252/scripts/env_checker.py",
+              "backup/20250905_021252/tests/__init__.py",
+              "backup/20250905_021252/tests/integration/__init__.py",
+              "backup/20250905_021252/tests/fixtures/__init__.py",
+              "backup/20250905_021252/tests/unit/__init__.py",
+              "backup/20250905_021255/src/__init__.py",
+              "backup/20250905_021255/src/utils/__init__.py",
+              "backup/20250905_021255/src/models/__init__.py",
+              "backup/20250905_021255/src/core/__init__.py",
+              "backup/20250905_021255/src/services/__init__.py",
+              "backup/20250905_021255/backup/20250905_021252/src/__init__.py",
+              "backup/20250905_021255/backup/20250905_021252/src/utils/__init__.py",
+              "backup/20250905_021255/backup/20250905_021252/src/models/__init__.py",
+              "backup/20250905_021255/backup/20250905_021252/src/core/__init__.py",
+              "backup/20250905_021255/backup/20250905_021252/src/services/__init__.py",
+              "backup/20250905_021255/backup/20250905_021252/scripts/cursor_runner.py",
+              "backup/20250905_021255/backup/20250905_021252/scripts/test_failure.py",
+              "backup/20250905_021255/backup/20250905_021252/scripts/quality_checker.py",
+              "backup/20250905_021255/backup/20250905_021252/scripts/setup_project.py",
+              "backup/20250905_021255/backup/20250905_021252/scripts/context_loader.py",
+              "backup/20250905_021255/backup/20250905_021252/scripts/env_checker.py",
+              "backup/20250905_021255/backup/20250905_021252/tests/__init__.py",
+              "backup/20250905_021255/backup/20250905_021252/tests/integration/__init__.py",
+              "backup/20250905_021255/backup/20250905_021252/tests/fixtures/__init__.py",
+              "backup/20250905_021255/backup/20250905_021252/tests/unit/__init__.py",
+              "backup/20250905_021255/scripts/cursor_runner.py",
+              "backup/20250905_021255/scripts/test_failure.py",
+              "backup/20250905_021255/scripts/quality_checker.py",
+              "backup/20250905_021255/scripts/setup_project.py",
+              "backup/20250905_021255/scripts/context_loader.py",
+              "backup/20250905_021255/scripts/env_checker.py",
+              "backup/20250905_021255/tests/__init__.py",
+              "backup/20250905_021255/tests/integration/__init__.py",
+              "backup/20250905_021255/tests/fixtures/__init__.py",
+              "backup/20250905_021255/tests/unit/__init__.py",
+              "scripts/cursor_runner.py",
+              "scripts/test_failure.py",
+              "scripts/quality_checker.py",
+              "scripts/setup_project.py",
+              "scripts/context_loader.py",
+              "scripts/env_checker.py",
+              "tests/__init__.py",
+              "tests/integration/__init__.py",
+              "tests/fixtures/__init__.py",
+              "tests/unit/__init__.py"
+            ]
+          },
+          "retry": 2
+        },
+        "format": {
+          "name": "代码格式化",
+          "success": true,
+          "message": "代码格式化完成",
+          "details": {
+            "stdout": "",
+            "stderr": "All done! ✨ 🍰 ✨\n15 files left unchanged.\n",
+            "return_code": 0
+          },
+          "retry": 2
+        },
+        "lint": {
+          "name": "代码风格检查",
+          "success": false,
+          "message": "发现 25 个风格问题",
+          "details": {
+            "issues": [
+              "scripts/context_loader.py:13:1: F401 'typing.List' imported but unused",
+              "scripts/context_loader.py:13:1: F401 'typing.Optional' imported but unused",
+              "scripts/context_loader.py:360:17: E722 do not use bare 'except'",
+              "scripts/context_loader.py:408:89: E501 line too long (89 > 88 characters)",
+              "scripts/context_loader.py:427:5: F841 local variable 'context' is assigned to but never used",
+              "scripts/cursor_runner.py:9:1: F401 'os' imported but unused",
+              "scripts/cursor_runner.py:14:1: F401 'typing.Optional' imported but unused",
+              "scripts/cursor_runner.py:116:89: E501 line too long (103 > 88 characters)",
+              "scripts/cursor_runner.py:364:15: F541 f-string is missing placeholders",
+              "scripts/env_checker.py:8:1: F401 'os' imported but unused",
+              "scripts/env_checker.py:123:89: E501 line too long (138 > 88 characters)",
+              "scripts/env_checker.py:133:89: E501 line too long (96 > 88 characters)",
+              "scripts/env_checker.py:240:89: E501 line too long (95 > 88 characters)",
+              "scripts/env_checker.py:273:13: F841 local variable 'sync_result' is assigned to but never used",
+              "scripts/env_checker.py:427:15: F541 f-string is missing placeholders",
+              "scripts/env_checker.py:464:19: F541 f-string is missing placeholders",
+              "scripts/env_checker.py:468:19: F541 f-string is missing placeholders",
+              "scripts/quality_checker.py:14:1: F401 'typing.Optional' imported but unused",
+              "scripts/quality_checker.py:90:35: F541 f-string is missing placeholders",
+              "scripts/quality_checker.py:93:39: F541 f-string is missing placeholders",
+              "scripts/quality_checker.py:95:39: F541 f-string is missing placeholders",
+              "scripts/quality_checker.py:560:15: F541 f-string is missing placeholders",
+              "scripts/setup_project.py:8:1: F401 'os' imported but unused",
+              "scripts/setup_project.py:151:1: W293 blank line contains whitespace",
+              "src/models/__init__.py:6:7: W291 trailing whitespace"
+            ],
+            "stdout": "scripts/context_loader.py:13:1: F401 'typing.List' imported but unused\nscripts/context_loader.py:13:1: F401 'typing.Optional' imported but unused\nscripts/context_loader.py:360:17: E722 do not use bare 'except'\nscripts/context_loader.py:408:89: E501 line too long (89 > 88 characters)\nscripts/context_loader.py:427:5: F841 local variable 'context' is assigned to but never used\nscripts/cursor_runner.py:9:1: F401 'os' imported but unused\nscripts/cursor_runner.py:14:1: F401 'typing.Optional' imported but unused\nscripts/cursor_runner.py:116:89: E501 line too long (103 > 88 characters)\nscripts/cursor_runner.py:364:15: F541 f-string is missing placeholders\nscripts/env_checker.py:8:1: F401 'os' imported but unused\nscripts/env_checker.py:123:89: E501 line too long (138 > 88 characters)\nscripts/env_checker.py:133:89: E501 line too long (96 > 88 characters)\nscripts/env_checker.py:240:89: E501 line too long (95 > 88 characters)\nscripts/env_checker.py:273:13: F841 local variable 'sync_result' is assigned to but never used\nscripts/env_checker.py:427:15: F541 f-string is missing placeholders\nscripts/env_checker.py:464:19: F541 f-string is missing placeholders\nscripts/env_checker.py:468:19: F541 f-string is missing placeholders\nscripts/quality_checker.py:14:1: F401 'typing.Optional' imported but unused\nscripts/quality_checker.py:90:35: F541 f-string is missing placeholders\nscripts/quality_checker.py:93:39: F541 f-string is missing placeholders\nscripts/quality_checker.py:95:39: F541 f-string is missing placeholders\nscripts/quality_checker.py:560:15: F541 f-string is missing placeholders\nscripts/setup_project.py:8:1: F401 'os' imported but unused\nscripts/setup_project.py:151:1: W293 blank line contains whitespace\nsrc/models/__init__.py:6:7: W291 trailing whitespace\n",
+            "stderr": ""
+          },
+          "retry": 2
+        },
+        "type_check": {
+          "name": "类型检查",
+          "success": true,
+          "message": "类型检查通过",
+          "details": {
+            "issues": []
+          },
+          "retry": 2
+        },
+        "test": {
+          "name": "单元测试",
+          "success": false,
+          "message": "测试失败",
+          "details": {
+            "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.11.9, pytest-8.4.1, pluggy-1.6.0 -- /home/user/.pyenv/versions/3.11.9/bin/python\ncachedir: .pytest_cache\nbenchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)\nrootdir: /home/user/projects/AICultureKit\nplugins: cov-6.2.1, asyncio-1.1.0, benchmark-5.1.0, mock-3.14.0, xdist-3.5.0, anyio-4.10.0\nasyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollecting ... collected 0 items\n\n============================ no tests ran in 0.01s =============================\n",
+            "stderr": "",
+            "return_code": 5
+          },
+          "retry": 2
+        },
+        "coverage": {
+          "name": "测试覆盖率",
+          "success": false,
+          "message": "覆盖率测试失败",
+          "details": {
+            "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.11.9, pytest-8.4.1, pluggy-1.6.0\nbenchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)\nrootdir: /home/user/projects/AICultureKit\nplugins: cov-6.2.1, asyncio-1.1.0, benchmark-5.1.0, mock-3.14.0, xdist-3.5.0, anyio-4.10.0\nasyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 0 items\n\n============================ no tests ran in 0.01s =============================\n",
+            "stderr": "/home/user/.pyenv/versions/3.11.9/lib/python3.11/site-packages/coverage/control.py:945: CoverageWarning: No data was collected. (no-data-collected)\n  self._warn(\"No data was collected.\", slug=\"no-data-collected\")\n"
+          },
+          "retry": 2
+        },
+        "complexity": {
+          "name": "复杂度分析",
+          "success": true,
+          "message": "radon未安装，跳过复杂度检查",
+          "details": {
+            "skipped": true
+          },
+          "retry": 2
+        }
+      }
+    }
+  ]
+}
