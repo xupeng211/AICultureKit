@@ -53,7 +53,7 @@ class FileUtils:
     @staticmethod
     def get_file_hash(file_path: Union[str, Path]) -> str:
         """获取文件MD5哈希值"""
-        hash_md5 = hashlib.md5()
+        hash_md5 = hashlib.md5(usedforsecurity=False)
         with open(file_path, "rb") as f:
             for chunk in iter(lambda: f.read(4096), b""):
                 hash_md5.update(chunk)
@@ -162,7 +162,7 @@ class CryptoUtils:
     def hash_string(text: str, algorithm: str = "md5") -> str:
         """字符串哈希"""
         if algorithm == "md5":
-            return hashlib.md5(text.encode("utf-8")).hexdigest()
+            return hashlib.md5(text.encode("utf-8"), usedforsecurity=False).hexdigest()
         elif algorithm == "sha256":
             return hashlib.sha256(text.encode("utf-8")).hexdigest()
         else:
