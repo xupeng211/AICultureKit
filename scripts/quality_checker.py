@@ -363,9 +363,9 @@ class QualityChecker:
                     {"stdout": result.stdout, "stderr": result.stderr},
                 )
 
-            # 获取覆盖率报告
+            # 获取覆盖率报告（JSON格式）
             report_result = subprocess.run(
-                ["python", "-m", "coverage", "report", "--format=json"],
+                ["python", "-m", "coverage", "json"],
                 cwd=self.project_root,
                 capture_output=True,
                 text=True,
@@ -373,10 +373,22 @@ class QualityChecker:
 
             if report_result.returncode == 0:
                 try:
-                    coverage_data = json.loads(report_result.stdout)
-                    total_coverage = coverage_data.get("totals", {}).get(
-                        "percent_covered", 0
+                    # 读取生成的coverage.json文件
+                    coverage_json_path = os.path.join(
+                        self.project_root, "coverage.json"
                     )
+                    if os.path.exists(coverage_json_path):
+                        with open(coverage_json_path, "r", encoding="utf-8") as f:
+                            coverage_data = json.load(f)
+                        total_coverage = coverage_data.get("totals", {}).get(
+                            "percent_covered", 0
+                        )
+                    else:
+                        return (
+                            False,
+                            "覆盖率JSON报告文件未生成",
+                            {"error": "coverage.json not found"},
+                        )
 
                     min_coverage = int(os.getenv("TEST_COVERAGE_MIN", "80"))
 
