@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-05T12:58:18.483755",
+  "timestamp": "2025-09-05T13:13:42.796663",
   "project_root": "/home/user/projects/AICultureKit",
   "directory_structure": {
     "root_files": [
@@ -168,6 +168,8 @@
     "repository_exists": true,
     "current_branch": "feature/ci-quality-test",
     "recent_commits": [
+      "f9ce1d5 docs: 在AI_PROMPT.md中添加虚拟环境启动说明和验证命令",
+      "eb0b4ef docs: 更新开发规则，添加详细中文注释、文件管理和结构化输出要求",
       "8d422c0 触发CI质检: 空提交测试流水线",
       "9bab7fa Merge pull request #27 from xupeng211/fix/backup-recursive-issue",
       "1e94a41 fix(lint): 修复代码风格问题",
@@ -175,11 +177,9 @@
       "4e0cfb4 fix(backup): 修复质量检查器中备份功能的递归问题",
       "03b7f20 refactor: 重构项目开发规则架构",
       "c1fbbf5 docs: 添加安全修复成功报告和完整验证结果",
-      "96b9697 security: 修复所有致命安全问题和依赖冲突",
-      "2c64e64 feat: 新增GitHub Actions CI监控工具",
-      "c3abbcb fix: 修复CI依赖冲突导致的红灯问题"
+      "96b9697 security: 修复所有致命安全问题和依赖冲突"
     ],
-    "status": "M logs/project_context.json\n M logs/quality_check.json\n M scripts/quality_checker.py\n?? coverage.json",
+    "status": "",
     "remote_url": "https://github.com/xupeng211/AICultureKit.git"
   },
   "existing_modules": {
@@ -581,25 +581,21 @@
     "conda_env": null
   },
   "recent_changes": {
-    "modified_files": [
-      "ogs/project_context.json",
-      "logs/quality_check.json",
-      "scripts/quality_checker.py"
-    ],
+    "modified_files": [],
     "added_files": [],
     "deleted_files": [],
     "last_commit_info": {
-      "hash": "8d422c05682e1cb8338f4aec456c9adfb8025a0d",
+      "hash": "f9ce1d5e708477a643cf7e3088b1f204b959798c",
       "author": "xupeng",
-      "date": "Fri Sep 5 12:52:04 2025 +0800",
-      "message": "触发CI质检: 空提交测试流水线"
+      "date": "Fri Sep 5 13:08:57 2025 +0800",
+      "message": "docs: 在AI_PROMPT.md中添加虚拟环境启动说明和验证命令"
     }
   },
   "project_stats": {
-    "total_python_files": 15459,
-    "total_test_files": 2663,
-    "total_lines_of_code": 5559891,
-    "project_size_mb": 2014.38,
+    "total_python_files": 15480,
+    "total_test_files": 2667,
+    "total_lines_of_code": 5564132,
+    "project_size_mb": 2015.04,
     "last_activity": "2025-09-05T12:57:45.042017"
   }
 }
