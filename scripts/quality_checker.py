@@ -158,7 +158,7 @@ class QualityChecker:
     def _should_backup(self, file_path: Path) -> bool:
         """判断文件是否需要备份"""
         # 排除一些不需要备份的目录
-        exclude_dirs = {"__pycache__", ".git", ".pytest_cache", "venv", "env"}
+        exclude_dirs = {"__pycache__", ".git", ".pytest_cache", "venv", "env", "backup"}
 
         for parent in file_path.parents:
             if parent.name in exclude_dirs:

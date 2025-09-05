@@ -1,5 +1,5 @@
 # Editable install with no version control (aiculture-kit==0.1.0)
--e /home/user/projects/football-predict-system/src/aiculture-kit
+# -e /home/user/projects/football-predict-system/src/aiculture-kit  # 已注释掉错误路径
 aiohappyeyeballs==2.6.1
 aiohttp==3.12.15
 aiosignal==1.4.0
@@ -81,8 +81,8 @@ flask-cors==6.0.1
 Flask-Limiter==3.5.1
 Flask-Login==0.6.3
 flask-talisman==1.1.0
--e git+ssh://git@github.com/xupeng211/football.git@f859c4d78688c0e23b1bb982f3e3cb9a78ac941b#egg=football_predict_system
--e git+ssh://git@github.com/xupeng211/football.git@f859c4d78688c0e23b1bb982f3e3cb9a78ac941b#egg=football_predictor
+# -e git+ssh://git@github.com/xupeng211/football.git@f859c4d78688c0e23b1bb982f3e3cb9a78ac941b#egg=football_predict_system  # 已注释掉，非当前项目依赖
+# -e git+ssh://git@github.com/xupeng211/football.git@f859c4d78688c0e23b1bb982f3e3cb9a78ac941b#egg=football_predictor  # 已注释掉，非当前项目依赖
 frozenlist==1.7.0
 fsspec==2025.7.0
 gevent==25.5.1
