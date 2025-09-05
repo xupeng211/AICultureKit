@@ -14,7 +14,7 @@ pytest-xdist==3.5.0
 # 代码质量工具
 bandit==1.7.5
 radon==6.0.1
-safety==2.3.5
+safety>=3.5.0
 
 # 开发服务器（在开发环境Dockerfile中使用）
 uvicorn[standard]==0.24.0
