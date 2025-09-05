@@ -63,7 +63,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.11"]
-    
+
     steps:
     - name: Checkout代码
       uses: actions/checkout@v4
@@ -90,10 +90,12 @@ jobs:
         pytest tests/ --cov=src --cov-report=xml --cov-report=term-missing
 
     - name: 上传覆盖率报告
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         file: ./coverage.xml
-        fail_ci_if_error: true
+        fail_ci_if_error: false
+        token: ${{ secrets.CODECOV_TOKEN }}
+      continue-on-error: true
 
   # Docker镜像构建和推送
   build-and-push:
@@ -146,7 +148,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop'
     environment: staging
-    
+
     steps:
     - name: 部署到测试环境
       run: |
@@ -161,10 +163,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment: production
-    
+
     steps:
     - name: 部署到生产环境
       run: |
         echo "🚀 部署到生产环境"
         echo "镜像: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-        # 这里可以添加实际的部署脚本 
+        # 这里可以添加实际的部署脚本
