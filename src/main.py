@@ -3,6 +3,7 @@ AICultureKit FastAPI 应用入口点
 """
 
 import asyncio
+import os
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,10 +21,11 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# 添加CORS中间件
+# 添加CORS中间件 - 安全配置：限制允许的域名
+cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 生产环境中应该设置具体的域名
+    allow_origins=cors_origins,  # 使用环境变量控制允许的域名
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -104,19 +106,23 @@ async def api_status():
         raise HTTPException(status_code=500, detail="服务状态检查失败")
 
 
-# 错误处理
+# 错误处理 - 安全配置：生产环境隐藏敏感信息
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
     """全局异常处理"""
     logger.error(f"全局异常: {exc}")
-    return JSONResponse(
-        status_code=500, content={"error": "内部服务器错误", "detail": str(exc)}
-    )
+    debug_mode = os.getenv("DEBUG", "false").lower() == "true"
+    if debug_mode:
+        return JSONResponse(status_code=500, content={"error": str(exc)})
+    return JSONResponse(status_code=500, content={"error": "服务暂时不可用"})
 
 
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(
-        "src.main:app", host="0.0.0.0", port=8000, reload=True, log_level="info"
-    )
+    # 安全配置：使用环境变量控制网络绑定和模式
+    host = os.getenv("API_HOST", "127.0.0.1")  # 默认只监听本地
+    port = int(os.getenv("API_PORT", "8000"))
+    reload = os.getenv("DEBUG", "false").lower() == "true"  # 只在DEBUG模式启用reload
+
+    uvicorn.run("src.main:app", host=host, port=port, reload=reload, log_level="info")
