@@ -12,22 +12,19 @@ CI质量保障守护者 - 自动监控CI问题并生成防御机制
 版本：v1.0.0
 """
 
-import asyncio
 import json
 import re
 import subprocess
-import sys
-import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple, Union
+from typing import Dict, List, Optional, Tuple
 
 import click
-import yaml
 
 
 class CIIssueType:
     """CI问题类型定义"""
+
     CODE_STYLE = "code_style"
     TYPE_CHECK = "type_check"
     SYNTAX_ERROR = "syntax_error"
@@ -41,7 +38,7 @@ class CIIssueType:
 
 class CIIssue:
     """CI问题数据模型"""
-    
+
     def __init__(
         self,
         issue_type: str,
@@ -50,7 +47,7 @@ class CIIssue:
         line_number: Optional[int] = None,
         error_message: str = "",
         tool_name: str = "",
-        severity: str = "medium"
+        severity: str = "medium",
     ):
         self.issue_type = issue_type
         self.description = description
@@ -60,7 +57,7 @@ class CIIssue:
         self.tool_name = tool_name
         self.severity = severity
         self.timestamp = datetime.now(timezone.utc)
-        
+
     def to_dict(self) -> Dict:
         """转换为字典格式"""
         return {
@@ -71,13 +68,13 @@ class CIIssue:
             "error_message": self.error_message,
             "tool_name": self.tool_name,
             "severity": self.severity,
-            "timestamp": self.timestamp.isoformat()
+            "timestamp": self.timestamp.isoformat(),
         }
 
 
 class CIOutputAnalyzer:
     """CI输出分析器 - 智能解析CI日志并识别问题类型"""
-    
+
     def __init__(self):
         # 定义问题识别模式
         self.patterns = {
@@ -86,73 +83,77 @@ class CIOutputAnalyzer:
                 r"W\d+.*whitespace",
                 r"F401.*imported but unused",
                 r"black.*would reformat",
-                r"ruff.*(\w+) \[(\w+)\]"
+                r"ruff.*(\w+) \[(\w+)\]",
             ],
             CIIssueType.TYPE_CHECK: [
                 r"mypy.*error:",
                 r"Incompatible types",
                 r"missing type annotation",
-                r"Cannot determine type"
+                r"Cannot determine type",
             ],
             CIIssueType.SYNTAX_ERROR: [
                 r"SyntaxError:",
                 r"IndentationError:",
-                r"invalid syntax"
+                r"invalid syntax",
             ],
             CIIssueType.TEST_FAILURE: [
                 r"FAILED.*test_",
                 r"AssertionError",
                 r"pytest.*failed",
-                r"ERROR.*test_"
+                r"ERROR.*test_",
             ],
             CIIssueType.IMPORT_ERROR: [
                 r"ImportError:",
                 r"ModuleNotFoundError:",
-                r"No module named"
+                r"No module named",
             ],
             CIIssueType.SECURITY_ISSUE: [
                 r"bandit.*HIGH:",
                 r"bandit.*MEDIUM:",
                 r"security vulnerability",
-                r"hardcoded password"
+                r"hardcoded password",
             ],
             CIIssueType.COVERAGE_LOW: [
                 r"coverage.*below.*threshold",
                 r"TOTAL.*\d+%.*missing",
-                r"coverage.* \d+% < \d+%"
-            ]
+                r"coverage.* \d+% < \d+%",
+            ],
         }
-    
+
     def analyze_output(self, output: str, tool_name: str = "") -> List[CIIssue]:
         """分析CI输出并提取问题"""
         issues = []
-        lines = output.split('\n')
-        
+        lines = output.split("\n")
+
         for line_num, line in enumerate(lines):
             for issue_type, patterns in self.patterns.items():
                 for pattern in patterns:
                     if re.search(pattern, line, re.IGNORECASE):
-                        issue = self._parse_issue_line(line, issue_type, tool_name, line_num)
+                        issue = self._parse_issue_line(
+                            line, issue_type, tool_name, line_num
+                        )
                         if issue:
                             issues.append(issue)
                         break
-        
+
         return issues
-    
-    def _parse_issue_line(self, line: str, issue_type: str, tool_name: str, line_num: int) -> Optional[CIIssue]:
+
+    def _parse_issue_line(
+        self, line: str, issue_type: str, tool_name: str, line_num: int
+    ) -> Optional[CIIssue]:
         """解析单行错误信息"""
         # 提取文件路径和行号
-        file_match = re.search(r'([^:\s]+\.py):(\d+)', line)
+        file_match = re.search(r"([^:\s]+\.py):(\d+)", line)
         file_path = file_match.group(1) if file_match else None
         line_number = int(file_match.group(2)) if file_match else None
-        
+
         # 提取错误描述
         description = line.strip()
         if len(description) > 200:
             description = description[:200] + "..."
-        
+
         severity = self._determine_severity(issue_type, line)
-        
+
         return CIIssue(
             issue_type=issue_type,
             description=description,
@@ -160,14 +161,17 @@ class CIOutputAnalyzer:
             line_number=line_number,
             error_message=line,
             tool_name=tool_name,
-            severity=severity
+            severity=severity,
         )
-    
+
     def _determine_severity(self, issue_type: str, line: str) -> str:
         """根据问题类型和内容确定严重程度"""
         if "HIGH" in line or "CRITICAL" in line:
             return "high"
-        elif "ERROR" in line or issue_type in [CIIssueType.SYNTAX_ERROR, CIIssueType.IMPORT_ERROR]:
+        elif "ERROR" in line or issue_type in [
+            CIIssueType.SYNTAX_ERROR,
+            CIIssueType.IMPORT_ERROR,
+        ]:
             return "high"
         elif "WARNING" in line or "MEDIUM" in line:
             return "medium"
@@ -177,27 +181,27 @@ class CIOutputAnalyzer:
 
 class DefenseMechanismGenerator:
     """防御机制生成器 - 根据CI问题类型生成相应的预防措施"""
-    
+
     def __init__(self, project_root: Path):
         self.project_root = Path(project_root)
         self.generated_files = []
-    
+
     def generate_defenses(self, issues: List[CIIssue]) -> Dict[str, List[str]]:
         """根据问题列表生成防御机制"""
         defenses = {
             "test_files": [],
             "lint_rules": [],
             "pre_commit_hooks": [],
-            "ci_checks": []
+            "ci_checks": [],
         }
-        
+
         # 按问题类型分组
         issues_by_type = {}
         for issue in issues:
             if issue.issue_type not in issues_by_type:
                 issues_by_type[issue.issue_type] = []
             issues_by_type[issue.issue_type].append(issue)
-        
+
         # 为每种问题类型生成防御机制
         for issue_type, issue_list in issues_by_type.items():
             if issue_type == CIIssueType.CODE_STYLE:
@@ -210,84 +214,86 @@ class DefenseMechanismGenerator:
                 defenses.update(self._generate_security_defenses(issue_list))
             elif issue_type == CIIssueType.IMPORT_ERROR:
                 defenses.update(self._generate_import_defenses(issue_list))
-        
+
         return defenses
-    
+
     def _generate_style_defenses(self, issues: List[CIIssue]) -> Dict[str, List[str]]:
         """生成代码风格问题的防御机制"""
         defenses = {"lint_rules": [], "pre_commit_hooks": []}
-        
+
         # 更新 ruff 配置
         ruff_rules = self._create_enhanced_ruff_config(issues)
         if ruff_rules:
             defenses["lint_rules"].append("pyproject.toml")
-        
+
         # 添加 pre-commit 钩子
-        precommit_config = self._create_precommit_config()
+        self._create_precommit_config()
         defenses["pre_commit_hooks"].append(".pre-commit-config.yaml")
-        
+
         return defenses
-    
+
     def _generate_test_defenses(self, issues: List[CIIssue]) -> Dict[str, List[str]]:
         """生成测试失败的防御机制"""
         defenses = {"test_files": [], "ci_checks": []}
-        
+
         # 为每个失败的测试生成增强测试
         for issue in issues:
             if issue.file_path and "test_" in issue.file_path:
                 enhanced_test = self._create_enhanced_test(issue)
                 if enhanced_test:
                     defenses["test_files"].append(enhanced_test)
-        
+
         # 添加测试覆盖率检查
-        coverage_check = self._create_coverage_enforcement()
+        self._create_coverage_enforcement()
         defenses["ci_checks"].append(".github/workflows/enhanced-testing.yml")
-        
+
         return defenses
-    
+
     def _generate_type_defenses(self, issues: List[CIIssue]) -> Dict[str, List[str]]:
         """生成类型检查问题的防御机制"""
         defenses = {"lint_rules": [], "ci_checks": []}
-        
+
         # 更新 mypy 配置
-        mypy_config = self._create_enhanced_mypy_config(issues)
+        self._create_enhanced_mypy_config(issues)
         defenses["lint_rules"].append("mypy.ini")
-        
+
         # 添加类型检查的 CI 步骤
         defenses["ci_checks"].append("type-check-enforcement")
-        
+
         return defenses
-    
-    def _generate_security_defenses(self, issues: List[CIIssue]) -> Dict[str, List[str]]:
+
+    def _generate_security_defenses(
+        self, issues: List[CIIssue]
+    ) -> Dict[str, List[str]]:
         """生成安全问题的防御机制"""
         defenses = {"lint_rules": [], "ci_checks": []}
-        
+
         # 更新安全检查配置
-        security_config = self._create_security_config(issues)
+        self._create_security_config(issues)
         defenses["lint_rules"].append(".bandit")
-        
+
         # 添加安全扫描 CI 步骤
         defenses["ci_checks"].append("security-scan-enhancement")
-        
+
         return defenses
-    
+
     def _generate_import_defenses(self, issues: List[CIIssue]) -> Dict[str, List[str]]:
         """生成导入错误的防御机制"""
         defenses = {"ci_checks": [], "test_files": []}
-        
+
         # 创建导入验证测试
-        import_test = self._create_import_validation_test(issues)
+        self._create_import_validation_test(issues)
         defenses["test_files"].append("tests/test_imports.py")
-        
+
         # 添加依赖检查
         defenses["ci_checks"].append("dependency-validation")
-        
+
         return defenses
-    
+
     def _create_enhanced_ruff_config(self, issues: List[CIIssue]) -> bool:
         """创建增强的 ruff 配置"""
         config_path = self.project_root / "pyproject.toml"
-        
+
         # 分析具体的风格问题
         rules_to_add = set()
         for issue in issues:
@@ -297,8 +303,8 @@ class DefenseMechanismGenerator:
                 rules_to_add.add("F401")
             if "whitespace" in issue.error_message:
                 rules_to_add.add("W292")
-        
-        ruff_config = f'''
+
+        ruff_config = f"""
 # Enhanced Ruff Configuration - Auto-generated by CI Guardian
 [tool.ruff]
 line-length = 88
@@ -330,8 +336,8 @@ ignore = [
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
-'''
-        
+"""
+
         try:
             with open(config_path, "a", encoding="utf-8") as f:
                 f.write(ruff_config)
@@ -340,12 +346,12 @@ indent-style = "space"
         except Exception as e:
             click.echo(f"❌ 创建 ruff 配置失败: {e}")
             return False
-    
+
     def _create_precommit_config(self) -> bool:
         """创建 pre-commit 配置"""
         config_path = self.project_root / ".pre-commit-config.yaml"
-        
-        precommit_config = '''# Auto-generated Pre-commit Configuration
+
+        precommit_config = """# Auto-generated Pre-commit Configuration
 # This file prevents CI failures by running checks locally before commit
 
 repos:
@@ -387,8 +393,8 @@ repos:
         pass_filenames: false
         always_run: true
         args: ["tests/", "--cov=src", "--cov-fail-under=80"]
-'''
-        
+"""
+
         try:
             with open(config_path, "w", encoding="utf-8") as f:
                 f.write(precommit_config)
@@ -397,20 +403,20 @@ repos:
         except Exception as e:
             click.echo(f"❌ 创建 pre-commit 配置失败: {e}")
             return False
-    
+
     def _create_enhanced_test(self, issue: CIIssue) -> Optional[str]:
         """为失败的测试创建增强版本"""
         if not issue.file_path:
             return None
-        
+
         # 提取测试函数名
-        test_function = re.search(r'test_\w+', issue.error_message)
+        test_function = re.search(r"test_\w+", issue.error_message)
         if not test_function:
             return None
-        
+
         test_name = test_function.group(0)
         enhanced_test_path = f"tests/enhanced_{test_name}_validation.py"
-        
+
         enhanced_test_content = f'''"""
 增强测试 - 自动生成以防止 {test_name} 再次失败
 生成时间: {datetime.now().isoformat()}
@@ -425,7 +431,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 
-class Test{test_name.title().replace('_', '')}Validation:
+class Test{test_name.title().replace("_", "")}Validation:
     """增强版测试，添加更多边界条件检查"""
     
     def test_basic_functionality(self):
@@ -452,31 +458,31 @@ class Test{test_name.title().replace('_', '')}Validation:
         # TODO: 根据实际业务逻辑添加参数化测试
         assert isinstance(test_input, str)
 '''
-        
+
         try:
             enhanced_test_full_path = self.project_root / enhanced_test_path
             enhanced_test_full_path.parent.mkdir(parents=True, exist_ok=True)
-            
+
             with open(enhanced_test_full_path, "w", encoding="utf-8") as f:
                 f.write(enhanced_test_content)
-            
+
             self.generated_files.append(str(enhanced_test_full_path))
             return enhanced_test_path
         except Exception as e:
             click.echo(f"❌ 创建增强测试失败: {e}")
             return None
-    
+
     def _create_import_validation_test(self, issues: List[CIIssue]) -> bool:
         """创建导入验证测试"""
         test_path = self.project_root / "tests" / "test_imports.py"
-        
+
         # 从错误中提取导入失败的模块
         failed_imports = set()
         for issue in issues:
             import_match = re.search(r"No module named '(\w+)'", issue.error_message)
             if import_match:
                 failed_imports.add(import_match.group(1))
-        
+
         test_content = f'''"""
 导入验证测试 - 确保所有必要模块都能正确导入
 自动生成时间: {datetime.now().isoformat()}
@@ -524,14 +530,21 @@ class TestImports:
             except ImportError as e:
                 pytest.fail(f"必需依赖 {{package}} 不可用: {{e}}")
     
-    {"".join([f'''
+    {
+            "".join(
+                [
+                    f'''
     def test_{module}_import(self):
         """测试 {module} 模块导入 - 之前失败过"""
         try:
             importlib.import_module("{module}")
         except ImportError as e:
             pytest.fail(f"模块 {module} 导入失败: {{e}}")
-    ''' for module in failed_imports])}
+    '''
+                    for module in failed_imports
+                ]
+            )
+        }
     
     def test_circular_imports(self):
         """检测循环导入问题"""
@@ -553,7 +566,7 @@ class TestImports:
                 if module.startswith('src.'):
                     sys.modules.pop(module, None)
 '''
-        
+
         try:
             test_path.parent.mkdir(parents=True, exist_ok=True)
             with open(test_path, "w", encoding="utf-8") as f:
@@ -567,69 +580,62 @@ class TestImports:
 
 class CIGuardian:
     """CI质量保障守护者主控制器"""
-    
+
     def __init__(self, project_root: Path = None):
         self.project_root = Path(project_root) if project_root else Path.cwd()
         self.logs_dir = self.project_root / "logs"
         self.logs_dir.mkdir(exist_ok=True)
-        
+
         self.analyzer = CIOutputAnalyzer()
         self.generator = DefenseMechanismGenerator(self.project_root)
         self.issues_detected = []
-        
+
     def monitor_ci_output(self, command: str) -> Tuple[str, int]:
         """执行CI命令并监控输出"""
         click.echo(f"🔍 执行CI命令: {command}")
-        
+
         try:
             result = subprocess.run(
-                command.split(),
-                capture_output=True,
-                text=True,
-                cwd=self.project_root
+                command.split(), capture_output=True, text=True, cwd=self.project_root
             )
-            
+
             output = result.stdout + result.stderr
             return output, result.returncode
         except Exception as e:
             click.echo(f"❌ CI命令执行失败: {e}")
             return str(e), 1
-    
+
     def analyze_ci_issues(self, output: str, tool_name: str = "") -> List[CIIssue]:
         """分析CI输出并识别问题"""
         issues = self.analyzer.analyze_output(output, tool_name)
         self.issues_detected.extend(issues)
-        
+
         # 保存问题到日志
         self._save_issues_to_log(issues)
-        
+
         return issues
-    
+
     def generate_defenses(self) -> Dict[str, List[str]]:
         """生成防御机制"""
         if not self.issues_detected:
             click.echo("ℹ️ 没有检测到CI问题，无需生成防御机制")
             return {}
-        
+
         click.echo(f"🛡️ 为 {len(self.issues_detected)} 个问题生成防御机制...")
         defenses = self.generator.generate_defenses(self.issues_detected)
-        
+
         # 保存防御机制信息
         self._save_defenses_to_log(defenses)
-        
+
         return defenses
-    
+
     def validate_defenses(self) -> bool:
         """验证新生成的防御机制是否有效"""
         click.echo("✅ 验证防御机制有效性...")
-        
+
         # 重新运行CI检查
-        validation_commands = [
-            "make lint",
-            "make test", 
-            "make typecheck"
-        ]
-        
+        validation_commands = ["make lint", "make test", "make typecheck"]
+
         all_passed = True
         for cmd in validation_commands:
             output, returncode = self.monitor_ci_output(cmd)
@@ -641,41 +647,41 @@ class CIGuardian:
                     all_passed = False
             else:
                 click.echo(f"✅ 验证通过: {cmd}")
-        
+
         return all_passed
-    
+
     def _save_issues_to_log(self, issues: List[CIIssue]):
         """保存问题到日志文件"""
         log_file = self.logs_dir / "ci_issues.json"
-        
+
         # 读取现有日志
         existing_issues = []
         if log_file.exists():
             try:
                 with open(log_file, "r", encoding="utf-8") as f:
                     existing_issues = json.load(f)
-            except:
+            except (FileNotFoundError, json.JSONDecodeError):
                 existing_issues = []
-        
+
         # 添加新问题
         for issue in issues:
             existing_issues.append(issue.to_dict())
-        
+
         # 保存回文件
         with open(log_file, "w", encoding="utf-8") as f:
             json.dump(existing_issues, f, indent=2, ensure_ascii=False)
-    
+
     def _save_defenses_to_log(self, defenses: Dict[str, List[str]]):
         """保存防御机制到日志文件"""
         log_file = self.logs_dir / "defenses_generated.json"
-        
+
         defense_log = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "defenses": defenses,
             "generated_files": self.generator.generated_files,
-            "issues_count": len(self.issues_detected)
+            "issues_count": len(self.issues_detected),
         }
-        
+
         with open(log_file, "w", encoding="utf-8") as f:
             json.dump(defense_log, f, indent=2, ensure_ascii=False)
 
@@ -690,22 +696,22 @@ class CIGuardian:
 def main(command, analyze_logs, generate_only, validate, project_root, summary):
     """
     🛡️ CI质量保障守护者
-    
+
     自动监控CI问题并生成防御机制，确保同类问题不再发生。
-    
+
     Examples:
         ci_guardian.py -c "make quality"    # 监控质量检查
         ci_guardian.py -l                   # 分析现有日志
         ci_guardian.py -g                   # 仅生成防御机制
         ci_guardian.py -v                   # 验证防御机制
     """
-    
+
     project_path = Path(project_root) if project_root else Path.cwd()
     guardian = CIGuardian(project_path)
-    
+
     click.echo("🛡️ CI质量保障守护者启动")
     click.echo(f"📁 项目路径: {project_path}")
-    
+
     if analyze_logs:
         # 分析现有日志
         click.echo("📋 分析现有问题日志...")
@@ -720,17 +726,17 @@ def main(command, analyze_logs, generate_only, validate, project_root, summary):
                             output = check_data.get("output", "")
                             issues = guardian.analyze_ci_issues(output, check_name)
                             click.echo(f"  从 {check_name} 检测到 {len(issues)} 个问题")
-    
+
     elif command:
         # 执行并监控指定命令
         output, returncode = guardian.monitor_ci_output(command)
         issues = guardian.analyze_ci_issues(output, command)
-        
+
         if returncode != 0:
             click.echo(f"❌ 命令执行失败，检测到 {len(issues)} 个问题")
         else:
             click.echo(f"✅ 命令执行成功，检测到 {len(issues)} 个潜在问题")
-    
+
     elif validate:
         # 仅验证现有防御机制
         if guardian.validate_defenses():
@@ -738,17 +744,17 @@ def main(command, analyze_logs, generate_only, validate, project_root, summary):
         else:
             click.echo("❌ 部分防御机制验证失败")
         return
-    
+
     # 生成防御机制（如果检测到问题）
     if guardian.issues_detected or generate_only:
         defenses = guardian.generate_defenses()
-        
+
         if defenses:
             click.echo("\n🛡️ 生成的防御机制:")
             for defense_type, files in defenses.items():
                 if files:
                     click.echo(f"  {defense_type}: {', '.join(files)}")
-            
+
             # 验证防御机制
             if guardian.validate_defenses():
                 click.echo("✅ 防御机制验证通过，问题已得到防护")
@@ -756,13 +762,13 @@ def main(command, analyze_logs, generate_only, validate, project_root, summary):
                 click.echo("⚠️ 防御机制需要进一步完善")
         else:
             click.echo("ℹ️ 没有生成新的防御机制")
-    
+
     if summary:
-        click.echo(f"\n📊 执行摘要:")
+        click.echo("\n📊 执行摘要:")
         click.echo(f"  检测问题数: {len(guardian.issues_detected)}")
         click.echo(f"  生成文件数: {len(guardian.generator.generated_files)}")
         click.echo(f"  项目根目录: {project_path}")
 
 
 if __name__ == "__main__":
-    main() 
+    main()
