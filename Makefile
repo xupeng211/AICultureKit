@@ -55,6 +55,9 @@ help: ## 显示帮助信息
 	@echo "  init        初始化项目"
 	@echo "  context     加载项目上下文"
 	@echo "  status      查看项目状态"
+	@echo "  ci-status   查看GitHub Actions CI状态"
+	@echo "  ci-monitor  实时监控CI执行过程"
+	@echo "  ci-analyze  深度分析CI失败原因"
 	@echo "  sync        同步Issues到远程仓库"
 	@echo "  sync-config 配置Issue同步"
 
@@ -324,6 +327,44 @@ status: venv ## 查看项目状态
 	else \
 		echo "  $(RED)未找到requirements.txt$(RESET)"; \
 	fi
+
+# -------------------------------
+# 🔍 CI监控工具
+# -------------------------------
+.PHONY: ci-status ci-monitor ci-analyze ci-help
+ci-status: venv ## 查看最新CI运行状态
+	@echo "$(BLUE)>>> GitHub Actions CI状态监控$(RESET)"
+	@$(ACTIVATE) && python scripts/ci_monitor.py
+
+ci-monitor: venv ## 实时监控CI执行过程  
+	@echo "$(BLUE)>>> 启动CI实时监控$(RESET)"
+	@echo "$(YELLOW)💡 按 Ctrl+C 停止监控$(RESET)"
+	@$(ACTIVATE) && python scripts/ci_monitor.py --monitor
+
+ci-analyze: venv ## 深度分析指定的CI运行（需要RUN_ID参数）
+	@echo "$(BLUE)>>> CI失败原因深度分析$(RESET)"
+	@if [ -z "$(RUN_ID)" ]; then \
+		echo "$(YELLOW)⚠️  请提供CI运行ID: make ci-analyze RUN_ID=123456$(RESET)"; \
+		echo "$(YELLOW)💡 或运行 make ci-status 查看可用的运行ID$(RESET)"; \
+	else \
+		$(ACTIVATE) && python scripts/ci_monitor.py --analyze $(RUN_ID); \
+	fi
+
+ci-help: ## 显示CI监控工具使用帮助
+	@echo "$(BLUE)🔍 CI监控工具使用指南$(RESET)"
+	@echo "==============================="
+	@echo "$(YELLOW)📋 可用命令:$(RESET)"
+	@echo "  make ci-status          查看最新CI状态"
+	@echo "  make ci-monitor         实时监控CI执行"
+	@echo "  make ci-analyze RUN_ID  分析特定CI运行"
+	@echo ""
+	@echo "$(YELLOW)💡 使用示例:$(RESET)"
+	@echo "  make ci-status                    # 快速查看CI状态"
+	@echo "  make ci-monitor                   # 推送后实时监控"
+	@echo "  make ci-analyze RUN_ID=1234567    # 分析失败原因"
+	@echo ""
+	@echo "$(YELLOW)🔧 环境配置:$(RESET)"
+	@echo "  export GITHUB_TOKEN=your_token    # 设置GitHub访问令牌"
 
 # -------------------------------
 # 📋 Issue 同步管理

@@ -23,9 +23,10 @@ python-dotenv==1.0.0
 pandas==2.1.4
 numpy==1.26.2
 
-# 网络请求
+# 网络请求  
 requests==2.31.0
 httpx==0.26.0
+types-requests==2.31.0.20240218  # 类型提示支持
 
 # Web框架
 fastapi==0.104.1
