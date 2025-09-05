@@ -1,4 +1,4 @@
-"""基本功能测试"""
+"""基本功能测试 - 验证核心模块的基础功能和数据模型的正确性"""
 
 import pytest
 
@@ -8,41 +8,45 @@ from src.utils import CryptoUtils, DataValidator, TimeUtils
 
 
 class TestConfig:
-    """配置类测试"""
+    """配置类测试 - 验证配置管理的基础功能和数据持久化"""
 
     def test_config_creation(self):
-        """测试配置创建"""
+        """测试配置创建 - 确保Config类能正常实例化并初始化内部状态"""
         cfg = Config()
         assert cfg is not None
 
     def test_config_get_set(self):
-        """测试配置读写"""
+        """测试配置读写 - 验证配置项的设置、获取和默认值处理机制"""
         cfg = Config()
+        # 测试设置和获取配置项的基本功能
         cfg.set("test_key", "test_value")
         assert cfg.get("test_key") == "test_value"
+        # 测试默认值机制，确保未设置的配置项返回正确的默认值
         assert cfg.get("non_existent_key", "default") == "default"
 
 
 class TestModels:
-    """数据模型测试"""
+    """数据模型测试 - 验证业务数据模型的创建、序列化和类型安全性"""
 
     def test_user_creation(self):
-        """测试用户模型创建"""
+        """测试用户模型创建 - 验证User模型的实例化和默认值设置"""
         user = User(id="test_id", username="test_user", email="test@example.com")
         assert user.id == "test_id"
         assert user.username == "test_user"
+        # 验证默认角色设置，确保用户权限控制的安全性
         assert user.role == UserRole.VIEWER
 
     def test_user_to_dict(self):
-        """测试用户模型转字典"""
+        """测试用户模型转字典 - 验证数据序列化功能，确保API接口数据格式正确"""
         user = User(id="test_id", username="test_user", email="test@example.com")
         user_dict = user.to_dict()
         assert user_dict["id"] == "test_id"
         assert user_dict["username"] == "test_user"
+        # 验证枚举值的正确序列化，确保前端能正确解析用户角色
         assert user_dict["role"] == "viewer"
 
     def test_content_creation(self):
-        """测试内容模型创建"""
+        """测试内容模型创建 - 验证Content模型的实例化和内容类型处理"""
         content = Content(
             id="content_1",
             title="测试内容",

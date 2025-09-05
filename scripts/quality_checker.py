@@ -11,7 +11,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 
 class QualityChecker:
@@ -58,7 +58,7 @@ class QualityChecker:
             ("complexity", "复杂度分析", self._run_complexity_check),
         ]
 
-        # 执行检查循环
+        # 执行检查循环 - 多轮检查机制，自动修复问题并重试验证
         for retry in range(self.max_retries):
             self.results["retry_count"] = retry
             print(f"\n🔄 第 {retry + 1} 轮检查...")
@@ -69,8 +69,10 @@ class QualityChecker:
                 print(f"  ▶️ {check_name}...")
 
                 try:
+                    # 执行单项检查，获取结果状态和详细信息
                     success, message, details = check_func()
 
+                    # 记录每项检查的详细结果，便于问题追踪和分析
                     self.results["checks"][check_id] = {
                         "name": check_name,
                         "success": success,

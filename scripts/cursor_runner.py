@@ -6,12 +6,11 @@
 """
 
 import json
-import os
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Tuple
 
 from context_loader import ProjectContextLoader
 from env_checker import EnvironmentChecker
@@ -50,7 +49,7 @@ class CursorClosedLoopRunner:
             "overall_success": False,
         }
 
-        # 定义执行阶段
+        # 定义执行阶段 - 闭环开发的标准化流程，确保质量和一致性
         phases = [
             ("env_check", "开发环境检查", self._check_environment),
             ("context_loading", "项目上下文加载", self._load_context),
@@ -61,13 +60,15 @@ class CursorClosedLoopRunner:
             ("documentation", "文档更新", self._update_documentation),
         ]
 
-        # 执行各个阶段
+        # 执行各个阶段 - 顺序执行确保依赖关系，失败时提供详细诊断信息
         for phase_id, phase_name, phase_func in phases:
             print(f"\n📋 阶段: {phase_name}")
 
             try:
+                # 每个阶段返回执行状态、消息和详细信息的标准化接口
                 success, message, details = phase_func()
 
+                # 详细记录每个阶段的执行情况，用于后续分析和调试
                 self.execution_log["phases"][phase_id] = {
                     "name": phase_name,
                     "success": success,

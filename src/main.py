@@ -76,8 +76,7 @@ async def health_check():
         "status": "healthy",
         "timestamp": str(asyncio.get_event_loop().time()),
         "services": {
-            service_name: "active"
-            for service_name in service_manager.services.keys()
+            service_name: "active" for service_name in service_manager.services.keys()
         },
     }
 
@@ -119,9 +118,5 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(
-        "src.main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,
-        log_level="info"
+        "src.main:app", host="0.0.0.0", port=8000, reload=True, log_level="info"
     )

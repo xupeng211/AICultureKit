@@ -10,7 +10,7 @@ import os
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 
 class ProjectContextLoader:
@@ -111,7 +111,7 @@ class ProjectContextLoader:
         return info
 
     def _get_git_info(self) -> Dict[str, Any]:
-        """获取Git信息"""
+        """获取Git信息 - 收集版本控制状态，为开发上下文提供代码变更追踪能力"""
         print("  🌿 获取Git信息...")
 
         git_info = {
@@ -123,7 +123,7 @@ class ProjectContextLoader:
         }
 
         try:
-            # 检查是否是Git仓库
+            # 检查是否是Git仓库 - 确定项目是否在版本控制下
             result = subprocess.run(
                 ["git", "rev-parse", "--git-dir"],
                 cwd=self.project_root,
@@ -134,7 +134,7 @@ class ProjectContextLoader:
             if result.returncode == 0:
                 git_info["repository_exists"] = True
 
-                # 获取当前分支
+                # 获取当前分支 - 了解开发分支情况，便于分支策略管理
                 result = subprocess.run(
                     ["git", "branch", "--show-current"],
                     cwd=self.project_root,
@@ -144,7 +144,7 @@ class ProjectContextLoader:
                 if result.returncode == 0:
                     git_info["current_branch"] = result.stdout.strip()
 
-                # 获取最近提交
+                # 获取最近提交 - 了解代码变更历史，便于理解项目演进
                 result = subprocess.run(
                     ["git", "log", "--oneline", "-10"],
                     cwd=self.project_root,
@@ -154,7 +154,7 @@ class ProjectContextLoader:
                 if result.returncode == 0:
                     git_info["recent_commits"] = result.stdout.strip().split("\n")
 
-                # 获取状态
+                # 获取状态 - 检查工作区变更，确保开发环境清洁
                 result = subprocess.run(
                     ["git", "status", "--porcelain"],
                     cwd=self.project_root,
@@ -164,7 +164,7 @@ class ProjectContextLoader:
                 if result.returncode == 0:
                     git_info["status"] = result.stdout.strip()
 
-                # 获取远程URL
+                # 获取远程URL - 了解仓库来源，便于协作和部署
                 result = subprocess.run(
                     ["git", "remote", "get-url", "origin"],
                     cwd=self.project_root,
@@ -175,6 +175,7 @@ class ProjectContextLoader:
                     git_info["remote_url"] = result.stdout.strip()
 
         except Exception as e:
+            # Git命令执行失败时记录错误，不影响其他上下文信息收集
             git_info["error"] = f"获取Git信息失败: {e}"
 
         return git_info
@@ -357,7 +358,7 @@ class ProjectContextLoader:
                 try:
                     with open(py_file, "r", encoding="utf-8") as f:
                         total_lines += len(f.readlines())
-                except:
+                except Exception:
                     pass
 
             stats["total_lines_of_code"] = total_lines

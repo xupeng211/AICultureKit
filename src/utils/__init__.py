@@ -92,9 +92,10 @@ class DataValidator:
     def validate_required_fields(
         data: Dict[str, Any], required_fields: List[str]
     ) -> List[str]:
-        """验证必需字段"""
+        """验证必需字段 - 检查数据完整性，返回缺失字段列表用于错误提示"""
         missing_fields = []
         for field in required_fields:
+            # 检查字段是否存在且不为None，确保数据有效性
             if field not in data or data[field] is None:
                 missing_fields.append(field)
         return missing_fields
@@ -103,10 +104,11 @@ class DataValidator:
     def validate_data_types(
         data: Dict[str, Any], type_specs: Dict[str, type]
     ) -> List[str]:
-        """验证数据类型"""
+        """验证数据类型 - 确保输入数据符合预期类型，防止运行时类型错误"""
         invalid_fields = []
         for field, expected_type in type_specs.items():
             if field in data and not isinstance(data[field], expected_type):
+                # 提供详细的类型不匹配信息，便于调试
                 invalid_fields.append(
                     f"{field}: 期望 {expected_type.__name__}, "
                     f"实际 {type(data[field]).__name__}"
@@ -227,7 +229,7 @@ class DictUtils:
 
     @staticmethod
     def deep_merge(dict1: Dict[str, Any], dict2: Dict[str, Any]) -> Dict[str, Any]:
-        """深度合并字典"""
+        """深度合并字典 - 递归合并嵌套字典，dict2的值会覆盖dict1中的同名键"""
         result = dict1.copy()
         for key, value in dict2.items():
             if (
@@ -235,8 +237,10 @@ class DictUtils:
                 and isinstance(result[key], dict)
                 and isinstance(value, dict)
             ):
+                # 如果两边都是字典，则递归合并，保持嵌套结构
                 result[key] = DictUtils.deep_merge(result[key], value)
             else:
+                # 非字典值直接覆盖，确保最新值优先
                 result[key] = value
         return result
 
@@ -244,11 +248,13 @@ class DictUtils:
     def flatten_dict(
         d: Dict[str, Any], parent_key: str = "", sep: str = "."
     ) -> Dict[str, Any]:
-        """扁平化嵌套字典"""
+        """扁平化嵌套字典 - 将多层嵌套结构转为单层，便于配置管理和数据传输"""
         items: List[tuple] = []
         for k, v in d.items():
+            # 构建新的键名，使用分隔符连接层级关系
             new_key = f"{parent_key}{sep}{k}" if parent_key else k
             if isinstance(v, dict):
+                # 递归处理嵌套字典，保持层级关系的可追溯性
                 items.extend(DictUtils.flatten_dict(v, new_key, sep=sep).items())
             else:
                 items.append((new_key, v))

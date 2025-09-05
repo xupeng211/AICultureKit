@@ -5,7 +5,7 @@
 快速设置完整的开发环境，包括Git初始化、依赖安装、基础文件创建等。
 """
 
-import os
+
 import subprocess
 import sys
 from pathlib import Path
