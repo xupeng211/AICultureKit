@@ -3,15 +3,16 @@
 """
 
 import pytest
+
+from src.models import AnalysisResult, Content, User
 from src.services import (
     BaseService,
     ContentAnalysisService,
-    UserProfileService,
     DataProcessingService,
     ServiceManager,
+    UserProfileService,
     service_manager,
 )
-from src.models import Content, User, AnalysisResult
 
 
 class TestBaseService:
@@ -19,14 +20,15 @@ class TestBaseService:
 
     def test_base_service_creation(self):
         """测试基础服务创建"""
+
         # 由于BaseService是抽象类，需要创建具体实现来测试
         class TestService(BaseService):
             async def initialize(self) -> bool:
                 return True
-            
+
             async def shutdown(self) -> None:
                 pass
-        
+
         service = TestService("test_service")
         assert service.name == "test_service"
         assert service.logger is not None
@@ -44,6 +46,7 @@ class TestContentAnalysisService:
     def sample_content(self):
         """创建测试内容"""
         from src.models import ContentType
+
         return Content(
             id="test_content_1",
             title="测试内容",
@@ -72,7 +75,7 @@ class TestContentAnalysisService:
         """测试内容分析成功"""
         await service.initialize()
         result = await service.analyze_content(sample_content)
-        
+
         assert result is not None
         assert isinstance(result, AnalysisResult)
         assert result.content_id == sample_content.id
@@ -89,13 +92,26 @@ class TestContentAnalysisService:
     async def test_batch_analyze(self, service):
         """测试批量分析"""
         await service.initialize()
-        
+
         from src.models import ContentType
+
         contents = [
-            Content(id="1", title="内容1", content_data="测试内容1", author_id="user1", content_type=ContentType.TEXT),
-            Content(id="2", title="内容2", content_data="测试内容2", author_id="user2", content_type=ContentType.TEXT),
+            Content(
+                id="1",
+                title="内容1",
+                content_data="测试内容1",
+                author_id="user1",
+                content_type=ContentType.TEXT,
+            ),
+            Content(
+                id="2",
+                title="内容2",
+                content_data="测试内容2",
+                author_id="user2",
+                content_type=ContentType.TEXT,
+            ),
         ]
-        
+
         results = await service.batch_analyze(contents)
         assert len(results) == 2
         assert all(isinstance(r, AnalysisResult) for r in results)
@@ -136,7 +152,7 @@ class TestUserProfileService:
     async def test_generate_profile(self, service, sample_user):
         """测试生成用户画像"""
         profile = await service.generate_profile(sample_user)
-        
+
         assert profile.user_id == sample_user.id
         assert "文化" in profile.interests
         assert profile.preferences["language"] == "zh"
@@ -147,7 +163,7 @@ class TestUserProfileService:
         """测试获取存在的用户画像"""
         await service.generate_profile(sample_user)
         profile = await service.get_profile(sample_user.id)
-        
+
         assert profile is not None
         assert profile.user_id == sample_user.id
 
@@ -161,10 +177,10 @@ class TestUserProfileService:
     async def test_update_profile_success(self, service, sample_user):
         """测试更新用户画像成功"""
         await service.generate_profile(sample_user)
-        
+
         updates = {"interests": ["新兴趣"]}
         updated_profile = await service.update_profile(sample_user.id, updates)
-        
+
         assert updated_profile is not None
         assert updated_profile.interests == ["新兴趣"]
 
@@ -201,7 +217,7 @@ class TestDataProcessingService:
         """测试文本处理"""
         test_text = "  这是一个测试文本  "
         result = await service.process_text(test_text)
-        
+
         assert "processed_text" in result
         assert result["processed_text"] == "这是一个测试文本"
         assert result["word_count"] == 1
@@ -215,7 +231,7 @@ class TestDataProcessingService:
             "文本2",
             123,  # 非字符串数据应该被跳过
         ]
-        
+
         results = await service.process_batch(data_list)
         assert len(results) == 2  # 只处理了两个字符串
         assert all("processed_text" in r for r in results)
@@ -232,18 +248,19 @@ class TestServiceManager:
     @pytest.fixture
     def test_service(self):
         """创建测试服务"""
+
         class TestService(BaseService):
             def __init__(self):
                 super().__init__("TestService")
                 self.initialized = False
-                
+
             async def initialize(self) -> bool:
                 self.initialized = True
                 return True
-                
+
             async def shutdown(self) -> None:
                 self.initialized = False
-        
+
         return TestService()
 
     def test_register_service(self, manager, test_service):
@@ -257,39 +274,41 @@ class TestServiceManager:
         """测试初始化所有服务成功"""
         manager.register_service(test_service)
         result = await manager.initialize_all()
-        
+
         assert result is True
         assert test_service.initialized is True
 
     @pytest.mark.asyncio
     async def test_initialize_all_failure(self, manager):
         """测试初始化服务失败"""
+
         class FailingService(BaseService):
             async def initialize(self) -> bool:
                 return False  # 初始化失败
-                
+
             async def shutdown(self) -> None:
                 pass
-        
+
         failing_service = FailingService("FailingService")
         manager.register_service(failing_service)
-        
+
         result = await manager.initialize_all()
         assert result is False
 
     @pytest.mark.asyncio
     async def test_initialize_all_exception(self, manager):
         """测试初始化服务异常"""
+
         class ExceptionService(BaseService):
             async def initialize(self) -> bool:
                 raise Exception("初始化异常")
-                
+
             async def shutdown(self) -> None:
                 pass
-        
+
         exception_service = ExceptionService("ExceptionService")
         manager.register_service(exception_service)
-        
+
         result = await manager.initialize_all()
         assert result is False
 
@@ -299,22 +318,23 @@ class TestServiceManager:
         manager.register_service(test_service)
         await manager.initialize_all()
         await manager.shutdown_all()
-        
+
         assert test_service.initialized is False
 
     @pytest.mark.asyncio
     async def test_shutdown_all_with_exception(self, manager):
         """测试关闭服务时发生异常"""
+
         class ExceptionService(BaseService):
             async def initialize(self) -> bool:
                 return True
-                
+
             async def shutdown(self) -> None:
                 raise Exception("关闭异常")
-        
+
         exception_service = ExceptionService("ExceptionService")
         manager.register_service(exception_service)
-        
+
         # 应该不抛出异常，即使某个服务关闭失败
         await manager.shutdown_all()
 
@@ -342,9 +362,9 @@ class TestGlobalServiceManager:
         """测试默认服务已注册"""
         expected_services = [
             "ContentAnalysisService",
-            "UserProfileService", 
-            "DataProcessingService"
+            "UserProfileService",
+            "DataProcessingService",
         ]
-        
+
         for service_name in expected_services:
-            assert service_name in service_manager.services 
+            assert service_name in service_manager.services

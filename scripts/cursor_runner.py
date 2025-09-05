@@ -187,7 +187,13 @@ class CursorClosedLoopRunner:
 
             # 根据复杂度评估建议的子任务
             if complexity_score >= 3:
-                suggested_subtasks = ["设计模块架构", "实现核心功能", "编写单元测试", "集成测试", "文档编写"]
+                suggested_subtasks = [
+                    "设计模块架构",
+                    "实现核心功能",
+                    "编写单元测试",
+                    "集成测试",
+                    "文档编写",
+                ]
             elif complexity_score >= 1:
                 suggested_subtasks = ["实现核心功能", "编写单元测试", "文档更新"]
             else:

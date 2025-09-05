@@ -3,17 +3,19 @@
 """
 
 import json
-import pytest
 import tempfile
-from pathlib import Path
 from datetime import datetime, timezone
+from pathlib import Path
+
+import pytest
+
 from src.utils import (
-    FileUtils,
-    DataValidator,
-    TimeUtils,
     CryptoUtils,
-    StringUtils,
+    DataValidator,
     DictUtils,
+    FileUtils,
+    StringUtils,
+    TimeUtils,
 )
 
 
@@ -30,11 +32,11 @@ class TestFileUtils:
 
     def test_read_json_success(self):
         """测试读取JSON文件成功"""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             test_data = {"key": "value", "number": 123}
             json.dump(test_data, f)
             f.flush()
-            
+
             result = FileUtils.read_json(f.name)
             assert result == test_data
 
@@ -45,10 +47,10 @@ class TestFileUtils:
 
     def test_read_json_invalid_format(self):
         """测试读取格式错误的JSON文件"""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             f.write("invalid json content")
             f.flush()
-            
+
             with pytest.raises(FileNotFoundError, match="无法读取JSON文件"):
                 FileUtils.read_json(f.name)
 
@@ -57,11 +59,11 @@ class TestFileUtils:
         with tempfile.TemporaryDirectory() as temp_dir:
             test_data = {"测试": "数据", "数字": 42}
             file_path = Path(temp_dir) / "test.json"
-            
+
             FileUtils.write_json(test_data, file_path)
-            
+
             assert file_path.exists()
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 result = json.load(f)
             assert result == test_data
 
@@ -70,31 +72,31 @@ class TestFileUtils:
         with tempfile.TemporaryDirectory() as temp_dir:
             test_data = {"key": "value"}
             file_path = Path(temp_dir) / "nested" / "dir" / "test.json"
-            
+
             FileUtils.write_json(test_data, file_path, ensure_dir=True)
-            
+
             assert file_path.exists()
             assert file_path.parent.exists()
 
     def test_get_file_hash(self):
         """测试获取文件哈希值"""
-        with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:
             f.write("test content")
             f.flush()
-            
+
             hash_value = FileUtils.get_file_hash(f.name)
             assert isinstance(hash_value, str)
             assert len(hash_value) == 32  # MD5哈希长度
 
     def test_get_file_size(self):
         """测试获取文件大小"""
-        with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:
             test_content = "test content"
             f.write(test_content)
             f.flush()
-            
+
             size = FileUtils.get_file_size(f.name)
-            assert size == len(test_content.encode('utf-8'))
+            assert size == len(test_content.encode("utf-8"))
 
 
 class TestDataValidator:
@@ -147,7 +149,7 @@ class TestDataValidator:
         """测试验证必需字段 - 全部存在"""
         data = {"name": "test", "age": 25, "email": "test@example.com"}
         required_fields = ["name", "age", "email"]
-        
+
         missing = DataValidator.validate_required_fields(data, required_fields)
         assert missing == []
 
@@ -155,7 +157,7 @@ class TestDataValidator:
         """测试验证必需字段 - 部分缺失"""
         data = {"name": "test", "age": None}
         required_fields = ["name", "age", "email"]
-        
+
         missing = DataValidator.validate_required_fields(data, required_fields)
         assert "email" in missing
         assert "age" in missing
@@ -165,7 +167,7 @@ class TestDataValidator:
         """测试验证数据类型 - 全部正确"""
         data = {"name": "test", "age": 25, "active": True}
         type_specs = {"name": str, "age": int, "active": bool}
-        
+
         invalid = DataValidator.validate_data_types(data, type_specs)
         assert invalid == []
 
@@ -173,7 +175,7 @@ class TestDataValidator:
         """测试验证数据类型 - 部分错误"""
         data = {"name": "test", "age": "25", "active": 1}
         type_specs = {"name": str, "age": int, "active": bool}
-        
+
         invalid = DataValidator.validate_data_types(data, type_specs)
         assert len(invalid) == 2
         assert any("age" in error for error in invalid)
@@ -193,7 +195,7 @@ class TestTimeUtils:
         """测试时间戳转datetime"""
         timestamp = 1640995200.0  # 2022-01-01 00:00:00 UTC
         dt = TimeUtils.timestamp_to_datetime(timestamp)
-        
+
         assert isinstance(dt, datetime)
         assert dt.tzinfo == timezone.utc
 
@@ -201,18 +203,18 @@ class TestTimeUtils:
         """测试datetime转时间戳"""
         dt = datetime(2022, 1, 1, tzinfo=timezone.utc)
         timestamp = TimeUtils.datetime_to_timestamp(dt)
-        
+
         assert isinstance(timestamp, float)
         assert timestamp == 1640995200.0
 
     def test_format_datetime(self):
         """测试格式化日期时间"""
         dt = datetime(2022, 1, 1, 12, 30, 45)
-        
+
         # 默认格式
         formatted = TimeUtils.format_datetime(dt)
         assert formatted == "2022-01-01 12:30:45"
-        
+
         # 自定义格式
         formatted_custom = TimeUtils.format_datetime(dt, "%Y/%m/%d")
         assert formatted_custom == "2022/01/01"
@@ -221,7 +223,7 @@ class TestTimeUtils:
         """测试解析日期时间字符串"""
         date_str = "2022-01-01 12:30:45"
         dt = TimeUtils.parse_datetime(date_str)
-        
+
         assert isinstance(dt, datetime)
         assert dt.year == 2022
         assert dt.month == 1
@@ -236,7 +238,7 @@ class TestCryptoUtils:
         """测试生成UUID"""
         uuid1 = CryptoUtils.generate_uuid()
         uuid2 = CryptoUtils.generate_uuid()
-        
+
         assert isinstance(uuid1, str)
         assert isinstance(uuid2, str)
         assert uuid1 != uuid2
@@ -248,7 +250,7 @@ class TestCryptoUtils:
         short_id = CryptoUtils.generate_short_id()
         assert isinstance(short_id, str)
         assert len(short_id) == 8
-        
+
         # 自定义长度
         custom_id = CryptoUtils.generate_short_id(12)
         assert len(custom_id) == 12
@@ -257,7 +259,7 @@ class TestCryptoUtils:
         """测试字符串MD5哈希"""
         text = "test string"
         hash_value = CryptoUtils.hash_string(text, "md5")
-        
+
         assert isinstance(hash_value, str)
         assert len(hash_value) == 32
 
@@ -265,7 +267,7 @@ class TestCryptoUtils:
         """测试字符串SHA256哈希"""
         text = "test string"
         hash_value = CryptoUtils.hash_string(text, "sha256")
-        
+
         assert isinstance(hash_value, str)
         assert len(hash_value) == 64
 
@@ -277,12 +279,12 @@ class TestCryptoUtils:
     def test_hash_password(self):
         """测试密码哈希"""
         password = "test_password"
-        
+
         # 不提供salt
         hash1 = CryptoUtils.hash_password(password)
         hash2 = CryptoUtils.hash_password(password)
         assert hash1 != hash2  # 由于随机salt，结果不同
-        
+
         # 提供salt
         salt = "fixed_salt"
         hash3 = CryptoUtils.hash_password(password, salt)
@@ -355,7 +357,7 @@ class TestDictUtils:
         """测试简单字典深度合并"""
         dict1 = {"a": 1, "b": 2}
         dict2 = {"b": 3, "c": 4}
-        
+
         result = DictUtils.deep_merge(dict1, dict2)
         expected = {"a": 1, "b": 3, "c": 4}
         assert result == expected
@@ -364,13 +366,9 @@ class TestDictUtils:
         """测试嵌套字典深度合并"""
         dict1 = {"a": {"x": 1, "y": 2}, "b": 3}
         dict2 = {"a": {"y": 3, "z": 4}, "c": 5}
-        
+
         result = DictUtils.deep_merge(dict1, dict2)
-        expected = {
-            "a": {"x": 1, "y": 3, "z": 4},
-            "b": 3,
-            "c": 5
-        }
+        expected = {"a": {"x": 1, "y": 3, "z": 4}, "b": 3, "c": 5}
         assert result == expected
 
     def test_flatten_dict_simple(self):
@@ -381,22 +379,10 @@ class TestDictUtils:
 
     def test_flatten_dict_nested(self):
         """测试扁平化嵌套字典"""
-        d = {
-            "a": 1,
-            "b": {
-                "x": 2,
-                "y": {
-                    "z": 3
-                }
-            }
-        }
-        
+        d = {"a": 1, "b": {"x": 2, "y": {"z": 3}}}
+
         result = DictUtils.flatten_dict(d)
-        expected = {
-            "a": 1,
-            "b.x": 2,
-            "b.y.z": 3
-        }
+        expected = {"a": 1, "b.x": 2, "b.y.z": 3}
         assert result == expected
 
     def test_flatten_dict_custom_separator(self):
@@ -411,4 +397,4 @@ class TestDictUtils:
         d = {"a": 1, "b": None, "c": "test", "d": None}
         result = DictUtils.filter_none_values(d)
         expected = {"a": 1, "c": "test"}
-        assert result == expected 
+        assert result == expected

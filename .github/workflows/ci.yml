@@ -40,14 +40,10 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
 
-    - name: 代码格式检查
+    - name: 代码质量检查（Ruff）
       run: |
-        black --check src/ tests/ scripts/
-        isort --check-only src/ tests/ scripts/
-
-    - name: 代码风格检查
-      run: |
-        flake8 src/ tests/ scripts/
+        ruff check src/ tests/ scripts/
+        ruff format --check src/ tests/ scripts/
 
     - name: 类型检查
       run: |

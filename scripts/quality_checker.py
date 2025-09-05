@@ -414,7 +414,11 @@ class QualityChecker:
                         )
 
                 except json.JSONDecodeError:
-                    return False, "无法解析覆盖率报告", {"raw_output": report_result.stdout}
+                    return (
+                        False,
+                        "无法解析覆盖率报告",
+                        {"raw_output": report_result.stdout},
+                    )
 
             return (
                 False,
@@ -487,7 +491,11 @@ class QualityChecker:
                 except json.JSONDecodeError:
                     return False, "无法解析复杂度报告", {"raw_output": result.stdout}
 
-            return False, "复杂度检查失败", {"stdout": result.stdout, "stderr": result.stderr}
+            return (
+                False,
+                "复杂度检查失败",
+                {"stdout": result.stdout, "stderr": result.stderr},
+            )
 
         except Exception as e:
             return False, f"复杂度检查失败: {e}", {"exception": str(e)}

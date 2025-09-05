@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-05T13:18:00.658201",
+  "timestamp": "2025-09-05T14:30:52.852588",
   "project_root": "/home/user/projects/AICultureKit",
   "directory_structure": {
     "root_files": [
@@ -71,11 +71,15 @@
         "files": [
           "test_example.py",
           "__init__.py",
+          "test_utils.py",
           "test_basic.py",
+          "test_core.py",
           "test_ci_monitor.py",
+          "test_services.py",
           "integration/__init__.py",
           "fixtures/__init__.py",
           "unit/__init__.py",
+          "__pycache__/test_services.cpython-311-pytest-8.4.2.pyc",
           "__pycache__/test_failure_demo.cpython-311-pytest-7.4.4.pyc",
           "__pycache__/test_basic.cpython-311-pytest-7.4.4.pyc",
           "__pycache__/test_basic.cpython-311-pytest-8.4.2.pyc",
@@ -84,7 +88,9 @@
           "__pycache__/__init__.cpython-310.pyc",
           "__pycache__/__init__.cpython-311.pyc",
           "__pycache__/test_example.cpython-311-pytest-8.4.2.pyc",
+          "__pycache__/test_utils.cpython-311-pytest-8.4.2.pyc",
           "__pycache__/test_basic.cpython-310-pytest-8.4.1.pyc",
+          "__pycache__/test_core.cpython-311-pytest-8.4.2.pyc",
           "__pycache__/test_ci_monitor.cpython-311-pytest-7.4.4.pyc"
         ],
         "subdirectories": [
@@ -96,16 +102,22 @@
         "python_files": [
           "test_example.py",
           "__init__.py",
+          "test_utils.py",
           "test_basic.py",
+          "test_core.py",
           "test_ci_monitor.py",
+          "test_services.py",
           "integration/__init__.py",
           "fixtures/__init__.py",
           "unit/__init__.py"
         ],
         "test_files": [
           "test_example.py",
+          "test_utils.py",
           "test_basic.py",
-          "test_ci_monitor.py"
+          "test_core.py",
+          "test_ci_monitor.py",
+          "test_services.py"
         ]
       },
       "docs": {
@@ -161,13 +173,14 @@
         "test_files": []
       }
     },
-    "total_files": 52,
+    "total_files": 58,
     "total_directories": 5
   },
   "git_info": {
     "repository_exists": true,
     "current_branch": "feature/ci-quality-test",
     "recent_commits": [
+      "3962190 feat(tests): 提升测试覆盖率至92%",
       "3617cc4 docs: 通过开发入口进行环境检查和上下文加载",
       "f9ce1d5 docs: 在AI_PROMPT.md中添加虚拟环境启动说明和验证命令",
       "eb0b4ef docs: 更新开发规则，添加详细中文注释、文件管理和结构化输出要求",
@@ -176,10 +189,9 @@
       "1e94a41 fix(lint): 修复代码风格问题",
       "2c28382 refactor: 重构规则管理结构",
       "4e0cfb4 fix(backup): 修复质量检查器中备份功能的递归问题",
-      "03b7f20 refactor: 重构项目开发规则架构",
-      "c1fbbf5 docs: 添加安全修复成功报告和完整验证结果"
+      "03b7f20 refactor: 重构项目开发规则架构"
     ],
-    "status": "",
+    "status": "M .github/workflows/ci.yml\n M Makefile\n M coverage.json\n M logs/project_context.json\n M logs/quality_check.json\n M scripts/ci_monitor.py\n M scripts/cursor_runner.py\n M scripts/env_checker.py\n M scripts/quality_checker.py\n M scripts/setup_project.py\n M tests/test_core.py\n M tests/test_services.py\n M tests/test_utils.py",
     "remote_url": "https://github.com/xupeng211/AICultureKit.git"
   },
   "existing_modules": {
@@ -228,21 +240,36 @@
   "existing_tests": {
     "test_files": [
       "test_example.py",
+      "test_utils.py",
       "test_basic.py",
-      "test_ci_monitor.py"
+      "test_core.py",
+      "test_ci_monitor.py",
+      "test_services.py"
     ],
     "test_structure": {
       "test_example.py": {
         "size": 524,
         "modified": "2025-09-05T12:48:37.788458"
       },
+      "test_utils.py": {
+        "size": 13213,
+        "modified": "2025-09-05T13:26:30.992129"
+      },
       "test_basic.py": {
         "size": 4382,
         "modified": "2025-09-05T08:04:46.030677"
       },
+      "test_core.py": {
+        "size": 10203,
+        "modified": "2025-09-05T13:27:25.233464"
+      },
       "test_ci_monitor.py": {
         "size": 11652,
         "modified": "2025-09-05T08:42:20.516861"
+      },
+      "test_services.py": {
+        "size": 11664,
+        "modified": "2025-09-05T13:26:30.976129"
       }
     },
     "coverage_info": null
@@ -581,21 +608,35 @@
     "conda_env": null
   },
   "recent_changes": {
-    "modified_files": [],
+    "modified_files": [
+      "github/workflows/ci.yml",
+      "Makefile",
+      "coverage.json",
+      "logs/project_context.json",
+      "logs/quality_check.json",
+      "scripts/ci_monitor.py",
+      "scripts/cursor_runner.py",
+      "scripts/env_checker.py",
+      "scripts/quality_checker.py",
+      "scripts/setup_project.py",
+      "tests/test_core.py",
+      "tests/test_services.py",
+      "tests/test_utils.py"
+    ],
     "added_files": [],
     "deleted_files": [],
     "last_commit_info": {
-      "hash": "3617cc481f634a8797209317a0995bac8716cf6e",
+      "hash": "396219017c26ee39076e89ba596c9c87f4c1ce12",
       "author": "xupeng",
-      "date": "Fri Sep 5 13:15:23 2025 +0800",
-      "message": "docs: 通过开发入口进行环境检查和上下文加载"
+      "date": "Fri Sep 5 13:22:37 2025 +0800",
+      "message": "feat(tests): 提升测试覆盖率至92%"
     }
   },
   "project_stats": {
-    "total_python_files": 15543,
-    "total_test_files": 2679,
-    "total_lines_of_code": 5576855,
-    "project_size_mb": 2015.07,
-    "last_activity": "2025-09-05T12:57:45.042017"
+    "total_python_files": 15619,
+    "total_test_files": 2703,
+    "total_lines_of_code": 5594083,
+    "project_size_mb": 2015.91,
+    "last_activity": "2025-09-05T14:30:22.788243"
   }
 }
