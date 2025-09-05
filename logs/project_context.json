@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-05T13:13:42.796663",
+  "timestamp": "2025-09-05T13:18:00.658201",
   "project_root": "/home/user/projects/AICultureKit",
   "directory_structure": {
     "root_files": [
@@ -168,6 +168,7 @@
     "repository_exists": true,
     "current_branch": "feature/ci-quality-test",
     "recent_commits": [
+      "3617cc4 docs: 通过开发入口进行环境检查和上下文加载",
       "f9ce1d5 docs: 在AI_PROMPT.md中添加虚拟环境启动说明和验证命令",
       "eb0b4ef docs: 更新开发规则，添加详细中文注释、文件管理和结构化输出要求",
       "8d422c0 触发CI质检: 空提交测试流水线",
@@ -176,8 +177,7 @@
       "2c28382 refactor: 重构规则管理结构",
       "4e0cfb4 fix(backup): 修复质量检查器中备份功能的递归问题",
       "03b7f20 refactor: 重构项目开发规则架构",
-      "c1fbbf5 docs: 添加安全修复成功报告和完整验证结果",
-      "96b9697 security: 修复所有致命安全问题和依赖冲突"
+      "c1fbbf5 docs: 添加安全修复成功报告和完整验证结果"
     ],
     "status": "",
     "remote_url": "https://github.com/xupeng211/AICultureKit.git"
@@ -585,17 +585,17 @@
     "added_files": [],
     "deleted_files": [],
     "last_commit_info": {
-      "hash": "f9ce1d5e708477a643cf7e3088b1f204b959798c",
+      "hash": "3617cc481f634a8797209317a0995bac8716cf6e",
       "author": "xupeng",
-      "date": "Fri Sep 5 13:08:57 2025 +0800",
-      "message": "docs: 在AI_PROMPT.md中添加虚拟环境启动说明和验证命令"
+      "date": "Fri Sep 5 13:15:23 2025 +0800",
+      "message": "docs: 通过开发入口进行环境检查和上下文加载"
     }
   },
   "project_stats": {
-    "total_python_files": 15480,
-    "total_test_files": 2667,
-    "total_lines_of_code": 5564132,
-    "project_size_mb": 2015.04,
+    "total_python_files": 15543,
+    "total_test_files": 2679,
+    "total_lines_of_code": 5576855,
+    "project_size_mb": 2015.07,
     "last_activity": "2025-09-05T12:57:45.042017"
   }
 }
