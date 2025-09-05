@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-05T14:30:52.852588",
+  "timestamp": "2025-09-05T18:58:20.566125",
   "project_root": "/home/user/projects/AICultureKit",
   "directory_structure": {
     "root_files": [
@@ -7,6 +7,7 @@
       "Makefile.docker",
       "=0.30.0",
       "requirements.txt",
+      "coverage.xml",
       "coverage.json",
       "SECURITY_FIX_SUCCESS_REPORT.md",
       "docker-compose.yml",
@@ -180,18 +181,18 @@
     "repository_exists": true,
     "current_branch": "feature/ci-quality-test",
     "recent_commits": [
+      "c43aa83 feat(quality): 正确提升代码覆盖率至99%",
+      "881e1b6 fix(ci): 修复codecov覆盖率导致CI失败问题",
+      "ee0f216 fix(ci): 修复CI依赖冲突和命令差异",
+      "c10a999 fix(ci): 添加feature分支CI支持 - 修复CI不在feature分支运行的问题",
+      "98732d3 trigger: 触发CI流程 - 更新CI配置和质量检查脚本",
       "3962190 feat(tests): 提升测试覆盖率至92%",
       "3617cc4 docs: 通过开发入口进行环境检查和上下文加载",
       "f9ce1d5 docs: 在AI_PROMPT.md中添加虚拟环境启动说明和验证命令",
       "eb0b4ef docs: 更新开发规则，添加详细中文注释、文件管理和结构化输出要求",
-      "8d422c0 触发CI质检: 空提交测试流水线",
-      "9bab7fa Merge pull request #27 from xupeng211/fix/backup-recursive-issue",
-      "1e94a41 fix(lint): 修复代码风格问题",
-      "2c28382 refactor: 重构规则管理结构",
-      "4e0cfb4 fix(backup): 修复质量检查器中备份功能的递归问题",
-      "03b7f20 refactor: 重构项目开发规则架构"
+      "8d422c0 触发CI质检: 空提交测试流水线"
     ],
-    "status": "M .github/workflows/ci.yml\n M Makefile\n M coverage.json\n M logs/project_context.json\n M logs/quality_check.json\n M scripts/ci_monitor.py\n M scripts/cursor_runner.py\n M scripts/env_checker.py\n M scripts/quality_checker.py\n M scripts/setup_project.py\n M tests/test_core.py\n M tests/test_services.py\n M tests/test_utils.py",
+    "status": "M coverage.json\n M logs/project_context.json\n M logs/quality_check.json\n?? coverage.xml",
     "remote_url": "https://github.com/xupeng211/AICultureKit.git"
   },
   "existing_modules": {
@@ -609,34 +610,24 @@
   },
   "recent_changes": {
     "modified_files": [
-      "github/workflows/ci.yml",
-      "Makefile",
-      "coverage.json",
+      "overage.json",
       "logs/project_context.json",
-      "logs/quality_check.json",
-      "scripts/ci_monitor.py",
-      "scripts/cursor_runner.py",
-      "scripts/env_checker.py",
-      "scripts/quality_checker.py",
-      "scripts/setup_project.py",
-      "tests/test_core.py",
-      "tests/test_services.py",
-      "tests/test_utils.py"
+      "logs/quality_check.json"
     ],
     "added_files": [],
     "deleted_files": [],
     "last_commit_info": {
-      "hash": "396219017c26ee39076e89ba596c9c87f4c1ce12",
+      "hash": "c43aa835a402756cb4688f970bbe9945136d52e7",
       "author": "xupeng",
-      "date": "Fri Sep 5 13:22:37 2025 +0800",
-      "message": "feat(tests): 提升测试覆盖率至92%"
+      "date": "Fri Sep 5 18:46:33 2025 +0800",
+      "message": "feat(quality): 正确提升代码覆盖率至99%"
     }
   },
   "project_stats": {
-    "total_python_files": 15619,
-    "total_test_files": 2703,
-    "total_lines_of_code": 5594083,
-    "project_size_mb": 2015.91,
-    "last_activity": "2025-09-05T14:30:22.788243"
+    "total_python_files": 15691,
+    "total_test_files": 2724,
+    "total_lines_of_code": 5610127,
+    "project_size_mb": 2021.24,
+    "last_activity": "2025-09-05T18:23:53.541558"
   }
 }
