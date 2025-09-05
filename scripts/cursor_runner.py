@@ -362,7 +362,7 @@ class CursorClosedLoopRunner:
 
     def print_summary(self) -> None:
         """打印执行摘要"""
-        print(f"\n📊 闭环执行摘要:")
+        print("\n📊 闭环执行摘要:")
         print(f"   🎯 任务: {self.task_description or '未指定'}")
         print(f"   ⚡ 整体状态: {'成功' if self.execution_log['overall_success'] else '部分失败'}")
 

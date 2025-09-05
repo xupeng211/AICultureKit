@@ -148,7 +148,6 @@ def test_string_operations():
 
 class TestExampleClass:
     """示例测试类"""
-    
     def test_list_operations(self):
         """列表操作测试"""
         test_list = [1, 2, 3]

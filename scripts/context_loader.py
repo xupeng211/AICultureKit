@@ -425,7 +425,7 @@ def main():
     args = parser.parse_args()
 
     loader = ProjectContextLoader(args.project_root)
-    context = loader.load_all_context()
+    loader.load_all_context()
     loader.save_context(args.output)
 
     if args.summary:

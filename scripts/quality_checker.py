@@ -89,12 +89,12 @@ class QualityChecker:
 
                         # 尝试自动修复
                         if self._can_auto_fix(check_id):
-                            print(f"    🔧 尝试自动修复...")
+                            print("    🔧 尝试自动修复...")
                             fix_success = self._auto_fix(check_id, details)
                             if fix_success:
-                                print(f"    ✨ 自动修复成功")
+                                print("    ✨ 自动修复成功")
                             else:
-                                print(f"    ⚠️ 自动修复失败")
+                                print("    ⚠️ 自动修复失败")
 
                 except Exception as e:
                     print(f"    💥 {check_name}异常: {e}")
@@ -559,7 +559,7 @@ class QualityChecker:
 
     def print_summary(self) -> None:
         """打印检查摘要"""
-        print(f"\n📊 质量检查摘要:")
+        print("\n📊 质量检查摘要:")
         print(f"   ⚡ 整体状态: {self.results['overall_status']}")
         print(f"   🔄 重试次数: {self.results['retry_count']}")
 

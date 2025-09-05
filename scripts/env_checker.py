@@ -270,7 +270,7 @@ class EnvironmentChecker:
             )
 
             # 检查远程同步状态
-            sync_result = subprocess.run(
+            subprocess.run(
                 ["git", "fetch", "--dry-run"],
                 cwd=self.project_root,
                 capture_output=True,
@@ -424,7 +424,7 @@ class EnvironmentChecker:
 
     def print_summary(self) -> None:
         """打印检查摘要"""
-        print(f"\n📊 环境检查摘要:")
+        print("\n📊 环境检查摘要:")
 
         for check_id, result in self.check_results.items():
             status = "✅" if result["success"] else "❌"
@@ -461,11 +461,11 @@ def main():
     if args.fix_suggestions:
         actions = checker.get_action_items()
         if actions:
-            print(f"\n🔧 修复建议:")
+            print("\n🔧 修复建议:")
             for i, action in enumerate(actions, 1):
                 print(f"   {i}. {action}")
         else:
-            print(f"\n🎉 无需修复操作")
+            print("\n🎉 无需修复操作")
 
     # 返回适当的退出代码
     all_passed = all(result["success"] for result in results.values())
