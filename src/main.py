@@ -9,6 +9,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from .__version__ import __version__
 from .core import config, logger
 from .services import service_manager
 
@@ -16,7 +17,7 @@ from .services import service_manager
 app = FastAPI(
     title="AICultureKit",
     description="AI辅助文化产业工具包",
-    version="0.1.0",
+    version=__version__,
     docs_url="/docs",
     redoc_url="/redoc",
 )
@@ -65,7 +66,7 @@ async def root():
     """根路径"""
     return {
         "message": "Welcome to AICultureKit",
-        "version": "0.1.0",
+        "version": __version__,
         "status": "running",
         "docs": "/docs",
     }

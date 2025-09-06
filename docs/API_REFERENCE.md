@@ -6,6 +6,66 @@
 
 ## 📦 核心模块 (src.core)
 
+## 🌐 Web API 端点
+
+本应用提供以下HTTP API端点：
+
+### `GET /`
+
+- **描述**: 应用的根路径，返回欢迎信息和基本状态。
+- **成功响应 (200 OK)**:
+  ```json
+  {
+    "message": "Welcome to AICultureKit",
+    "version": "0.1.0",
+    "status": "running",
+    "docs": "/docs"
+  }
+  ```
+
+### `GET /health`
+
+- **描述**: 健康检查端点，用于监控服务是否正常运行。
+- **成功响应 (200 OK)**:
+  ```json
+  {
+    "status": "healthy",
+    "timestamp": "...",
+    "services": {
+      "ContentAnalysisService": "active",
+      "UserProfileService": "active",
+      "DataProcessingService": "active"
+    }
+  }
+  ```
+
+### `GET /api/status`
+
+- **描述**: 返回更详细的API和服务状态。
+- **成功响应 (200 OK)**:
+  ```json
+  {
+    "api_version": "v1",
+    "status": "operational",
+    "services": {
+        "ContentAnalysisService": { "name": "Content Analysis Service", "status": "active" },
+        "UserProfileService": { "name": "User Profile Service", "status": "active" },
+        "DataProcessingService": { "name": "Data Processing Service", "status": "active" }
+    },
+    "config": {
+      "debug": false,
+      "environment": "development"
+    }
+  }
+  ```
+- **失败响应 (500 Internal Server Error)**:
+  ```json
+  {
+    "error": "服务状态检查失败"
+  }
+  ```
+
+
 ### Config 类
 
 配置管理类，用于处理应用程序配置。
@@ -48,7 +108,7 @@ from src.core import AICultureKitError, ConfigError, DataError
 # 基础异常
 raise AICultureKitError("基础错误")
 
-# 配置相关异常  
+# 配置相关异常
 raise ConfigError("配置错误")
 
 # 数据处理异常
@@ -66,7 +126,7 @@ from src.models import User, UserRole
 
 user = User(
     id="user_123",
-    username="testuser", 
+    username="testuser",
     email="test@example.com",
     role=UserRole.CREATOR
 )
@@ -116,7 +176,7 @@ from src.models import AnalysisResult
 
 result = AnalysisResult(
     id="analysis_123",
-    content_id="content_123", 
+    content_id="content_123",
     analysis_type="sentiment",
     result_data={"sentiment": "positive", "confidence": 0.95},
     confidence_score=0.95
@@ -136,13 +196,13 @@ import asyncio
 async def analyze_content():
     # 获取服务实例
     analysis_service = service_manager.get_service("ContentAnalysisService")
-    
+
     # 初始化服务
     await analysis_service.initialize()
-    
+
     # 分析内容
     result = await analysis_service.analyze_content(content)
-    
+
     return result
 ```
 
@@ -158,10 +218,10 @@ async def analyze_content():
 async def generate_profile():
     profile_service = service_manager.get_service("UserProfileService")
     await profile_service.initialize()
-    
+
     # 生成用户画像
     profile = await profile_service.generate_profile(user)
-    
+
     return profile
 ```
 
@@ -201,7 +261,7 @@ from pathlib import Path
 FileUtils.ensure_dir("data/uploads")
 
 # 读写JSON文件
-data = FileUtils.read_json("config.json") 
+data = FileUtils.read_json("config.json")
 FileUtils.write_json(data, "output.json")
 
 # 获取文件信息
@@ -341,7 +401,7 @@ from src.utils import CryptoUtils
 async def main():
     # 初始化服务
     await service_manager.initialize_all()
-    
+
     # 创建用户
     user = User(
         id=CryptoUtils.generate_uuid(),
@@ -349,7 +409,7 @@ async def main():
         email="creator@aiculture.com",
         role=UserRole.CREATOR
     )
-    
+
     # 创建内容
     content = Content(
         id=CryptoUtils.generate_uuid(),
@@ -358,18 +418,18 @@ async def main():
         content_data="这是一篇关于AI在文化产业应用的分析文章...",
         author_id=user.id
     )
-    
+
     # 分析内容
     analysis_service = service_manager.get_service("ContentAnalysisService")
     result = await analysis_service.analyze_content(content)
-    
+
     # 生成用户画像
-    profile_service = service_manager.get_service("UserProfileService") 
+    profile_service = service_manager.get_service("UserProfileService")
     profile = await profile_service.generate_profile(user)
-    
+
     logger.info(f"分析结果: {result.result_data}")
     logger.info(f"用户画像: {profile.interests}")
-    
+
     # 清理
     await service_manager.shutdown_all()
 
@@ -379,4 +439,4 @@ if __name__ == "__main__":
 
 ---
 
-**📝 注意**: 这是基础版本的API文档。随着功能的扩展，将持续更新此文档。 
+**📝 注意**: 这是基础版本的API文档。随着功能的扩展，将持续更新此文档。

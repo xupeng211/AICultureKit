@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-06T22:09:43.773447",
+  "timestamp": "2025-09-06T23:49:29.372494",
   "project_root": "/home/user/projects/AICultureKit",
   "directory_structure": {
     "root_files": [
@@ -37,6 +37,7 @@
     "directories": {
       "src": {
         "files": [
+          "__version__.py",
           "__init__.py",
           "main.py",
           "utils/__init__.py",
@@ -63,6 +64,7 @@
           "services"
         ],
         "python_files": [
+          "__version__.py",
           "__init__.py",
           "main.py",
           "utils/__init__.py",
@@ -198,13 +200,14 @@
         "test_files": []
       }
     },
-    "total_files": 72,
+    "total_files": 73,
     "total_directories": 5
   },
   "git_info": {
     "repository_exists": true,
     "current_branch": "feature/ci-quality-test",
     "recent_commits": [
+      "d85c9b3 chore: 更新AI工作指南和相关配置文件",
       "00a5196 fix(ci): 修复Codecov上传失败导致的CI红灯问题",
       "0a0b4cf chore: 更新覆盖率报告和项目上下文日志",
       "6c4d436 fix(ci): 修复CI红灯问题",
@@ -213,14 +216,14 @@
       "6f8fb8c fix(ci): 修复测试任务缓存配置问题",
       "c43aa83 feat(quality): 正确提升代码覆盖率至99%",
       "881e1b6 fix(ci): 修复codecov覆盖率导致CI失败问题",
-      "ee0f216 fix(ci): 修复CI依赖冲突和命令差异",
-      "c10a999 fix(ci): 添加feature分支CI支持 - 修复CI不在feature分支运行的问题"
+      "ee0f216 fix(ci): 修复CI依赖冲突和命令差异"
     ],
-    "status": "M  .cursor/rules/ai.mdc\nM  AI_PROMPT.md\nA  AI_WORK_GUIDE.md\n M coverage.json\nM  coverage.xml\n M logs/project_context.json\n M logs/quality_check.json",
+    "status": "M README.md\nMM coverage.json\n M docs/API_REFERENCE.md\nMM logs/project_context.json\nMM logs/quality_check.json\n M src/main.py\nM  src/services/__init__.py\n M tests/test_basic.py\nM  tests/test_services.py\n?? src/__version__.py",
     "remote_url": "https://github.com/xupeng211/AICultureKit.git"
   },
   "existing_modules": {
     "python_modules": [
+      "__version__.py",
       "__init__.py",
       "main.py",
       "utils/__init__.py",
@@ -229,6 +232,11 @@
       "services/__init__.py"
     ],
     "module_structure": {
+      "__version__": {
+        "file_path": "__version__.py",
+        "size": 58,
+        "modified": "2025-09-06T23:29:15.239671"
+      },
       "__init__": {
         "file_path": "__init__.py",
         "size": 415,
@@ -236,8 +244,8 @@
       },
       "main": {
         "file_path": "main.py",
-        "size": 3740,
-        "modified": "2025-09-05T20:20:05.006228"
+        "size": 3785,
+        "modified": "2025-09-06T23:28:27.010427"
       },
       "utils.__init__": {
         "file_path": "utils/__init__.py",
@@ -247,7 +255,7 @@
       "models.__init__": {
         "file_path": "models/__init__.py",
         "size": 3612,
-        "modified": "2025-09-05T02:49:18.690077"
+        "modified": "2025-09-06T23:04:22.512228"
       },
       "core.__init__": {
         "file_path": "core/__init__.py",
@@ -256,8 +264,8 @@
       },
       "services.__init__": {
         "file_path": "services/__init__.py",
-        "size": 7514,
-        "modified": "2025-09-05T08:04:46.030677"
+        "size": 14257,
+        "modified": "2025-09-06T23:04:42.300509"
       }
     },
     "import_analysis": {}
@@ -281,8 +289,8 @@
         "modified": "2025-09-06T12:38:14.085217"
       },
       "test_basic.py": {
-        "size": 4382,
-        "modified": "2025-09-05T08:04:46.030677"
+        "size": 6041,
+        "modified": "2025-09-06T23:30:45.622482"
       },
       "test_core.py": {
         "size": 10203,
@@ -293,8 +301,8 @@
         "modified": "2025-09-05T08:42:20.516861"
       },
       "test_services.py": {
-        "size": 11664,
-        "modified": "2025-09-06T12:38:14.085217"
+        "size": 11765,
+        "modified": "2025-09-06T22:58:45.920755"
       }
     },
     "coverage_info": null
@@ -634,29 +642,30 @@
   },
   "recent_changes": {
     "modified_files": [
-      ".cursor/rules/ai.mdc",
-      "AI_PROMPT.md",
+      "EADME.md",
       "coverage.json",
-      "coverage.xml",
+      "docs/API_REFERENCE.md",
       "logs/project_context.json",
-      "logs/quality_check.json"
+      "logs/quality_check.json",
+      "src/main.py",
+      "src/services/__init__.py",
+      "tests/test_basic.py",
+      "tests/test_services.py"
     ],
-    "added_files": [
-      "AI_WORK_GUIDE.md"
-    ],
+    "added_files": [],
     "deleted_files": [],
     "last_commit_info": {
-      "hash": "00a5196650ec9aad3da264e26edd4a39f8fdd5df",
+      "hash": "d85c9b3387e6fe719609bfc670ea09a40382ff7a",
       "author": "xupeng",
-      "date": "Sat Sep 6 21:26:31 2025 +0800",
-      "message": "fix(ci): 修复Codecov上传失败导致的CI红灯问题"
+      "date": "Sat Sep 6 22:12:27 2025 +0800",
+      "message": "chore: 更新AI工作指南和相关配置文件"
     }
   },
   "project_stats": {
-    "total_python_files": 16541,
-    "total_test_files": 2899,
-    "total_lines_of_code": 5888683,
-    "project_size_mb": 2026.6,
-    "last_activity": "2025-09-06T22:09:20.635050"
+    "total_python_files": 17198,
+    "total_test_files": 3046,
+    "total_lines_of_code": 6093964,
+    "project_size_mb": 2033.45,
+    "last_activity": "2025-09-06T23:49:10.742447"
   }
 }

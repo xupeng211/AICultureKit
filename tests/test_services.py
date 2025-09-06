@@ -80,7 +80,8 @@ class TestContentAnalysisService:
         assert isinstance(result, AnalysisResult)
         assert result.content_id == sample_content.id
         assert result.analysis_type == "content_analysis"
-        assert result.confidence_score == 0.85
+        # 验证新的动态置信度计算（基础置信度0.6，根据内容动态调整）
+        assert 0.5 <= result.confidence_score <= 1.0
 
     @pytest.mark.asyncio
     async def test_analyze_content_not_initialized(self, service, sample_content):

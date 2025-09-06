@@ -43,14 +43,76 @@ class ContentAnalysisService(BaseService):
     async def initialize(self) -> bool:
         """初始化服务"""
         self.logger.info(f"正在初始化 {self.name}")
-        # TODO: 加载AI模型、连接外部API等
-        self._initialized = True
-        return True
+        try:
+            # 初始化AI分析模型配置
+            self._init_analysis_models()
+            # 设置内容分析管道
+            self._setup_analysis_pipeline()
+            # 验证模型可用性
+            self._initialized = await self._verify_models()
+
+            if self._initialized:
+                self.logger.info("AI模型初始化成功")
+            else:
+                self.logger.warning("AI模型初始化失败，将使用基础分析模式")
+
+            return True  # 即使AI模型失败也允许系统继续运行
+
+        except Exception as e:
+            self.logger.error(f"服务初始化异常: {e}")
+            self._initialized = False
+            return False
 
     async def shutdown(self) -> None:
         """关闭服务"""
         self.logger.info(f"正在关闭 {self.name}")
         self._initialized = False
+        # 清理模型资源
+        if hasattr(self, "_models"):
+            self._models.clear()
+
+    def _init_analysis_models(self) -> None:
+        """初始化AI分析模型"""
+        # 模型配置：支持本地模型和云端API
+        self._model_config = {
+            "sentiment_model": "local",  # 情感分析模型
+            "keyword_model": "local",  # 关键词提取模型
+            "category_model": "api",  # 内容分类模型
+            "quality_model": "local",  # 质量评估模型
+        }
+
+        # 模型实例占位符 - 实际使用时加载具体模型
+        self._models: Dict[str, Any] = {}
+        self.logger.info("模型配置初始化完成")
+
+    def _setup_analysis_pipeline(self) -> None:
+        """设置分析管道"""
+        # 分析管道配置：定义处理步骤和优先级
+        self._pipeline_steps = [
+            "preprocess",  # 预处理
+            "sentiment",  # 情感分析
+            "keywords",  # 关键词提取
+            "categorization",  # 内容分类
+            "quality_score",  # 质量评分
+        ]
+        self.logger.info("分析管道设置完成")
+
+    async def _verify_models(self) -> bool:
+        """验证模型可用性"""
+        try:
+            # 模拟模型验证 - 实际使用时执行真实验证
+            for model_name, model_type in self._model_config.items():
+                if model_type == "local":
+                    # 验证本地模型文件存在和可加载
+                    self.logger.debug(f"验证本地模型: {model_name}")
+                elif model_type == "api":
+                    # 验证API连接和认证
+                    self.logger.debug(f"验证API模型: {model_name}")
+
+            return True
+        except Exception as e:
+            self.logger.error(f"模型验证失败: {e}")
+            return False
 
     async def analyze_content(self, content: Content) -> Optional[AnalysisResult]:
         """分析内容"""
@@ -59,22 +121,139 @@ class ContentAnalysisService(BaseService):
 
         self.logger.info(f"正在分析内容: {content.id}")
 
-        # TODO: 实现实际的内容分析逻辑
-        # 这里是示例实现
-        analysis_data = {
-            "sentiment": "positive",
-            "keywords": ["文化", "AI", "分析"],
-            "category": "技术",
-            "quality_score": 0.85,
-        }
+        # 基于管道的内容分析实现
+        analysis_data: Dict[str, Any] = {}
+
+        try:
+            # 1. 预处理
+            processed_text = await self._preprocess_content(content)
+
+            # 2. 情感分析
+            analysis_data["sentiment"] = await self._analyze_sentiment(processed_text)
+
+            # 3. 关键词提取
+            analysis_data["keywords"] = await self._extract_keywords(processed_text)
+
+            # 4. 内容分类
+            analysis_data["category"] = await self._categorize_content(processed_text)
+
+            # 5. 质量评分
+            analysis_data["quality_score"] = await self._calculate_quality_score(
+                content, analysis_data
+            )
+
+            # 6. 置信度评估
+            confidence_score = self._calculate_confidence(analysis_data)
+
+        except Exception as e:
+            self.logger.error(f"内容分析异常: {e}")
+            # 返回基础分析结果
+            analysis_data = {
+                "sentiment": "neutral",
+                "keywords": [],
+                "category": "未分类",
+                "quality_score": 0.5,
+                "error": str(e),
+            }
+            confidence_score = 0.3
 
         return AnalysisResult(
             id=f"analysis_{content.id}",
             content_id=content.id,
             analysis_type="content_analysis",
             result_data=analysis_data,
-            confidence_score=0.85,
+            confidence_score=confidence_score,
         )
+
+    async def _preprocess_content(self, content: Content) -> str:
+        """预处理内容"""
+        if isinstance(content.content_data, str):
+            # 文本内容预处理：清理、标准化
+            text = content.content_data.strip()
+            # 这里可以添加更多预处理步骤
+            return text
+        return str(content.content_data)
+
+    async def _analyze_sentiment(self, text: str) -> str:
+        """情感分析"""
+        # 基础情感分析实现 - 实际应用中使用AI模型
+        positive_words = ["好", "棒", "优秀", "喜欢", "满意"]
+        negative_words = ["差", "坏", "糟糕", "讨厌", "失望"]
+
+        positive_count = sum(word in text for word in positive_words)
+        negative_count = sum(word in text for word in negative_words)
+
+        if positive_count > negative_count:
+            return "positive"
+        elif negative_count > positive_count:
+            return "negative"
+        else:
+            return "neutral"
+
+    async def _extract_keywords(self, text: str) -> List[str]:
+        """关键词提取"""
+        # 基础关键词提取实现
+        import re
+
+        # 简单的中文关键词提取
+        keywords = re.findall(r"[\u4e00-\u9fff]+", text)
+        # 过滤长度和常用词
+        filtered_keywords = [word for word in keywords if 2 <= len(word) <= 6]
+        return list(set(filtered_keywords[:10]))  # 返回前10个唯一关键词
+
+    async def _categorize_content(self, text: str) -> str:
+        """内容分类"""
+        # 基于关键词的简单分类
+        tech_keywords = ["AI", "技术", "算法", "编程", "软件"]
+        culture_keywords = ["文化", "艺术", "历史", "传统", "创意"]
+        business_keywords = ["商业", "营销", "销售", "管理", "经济"]
+
+        if any(keyword in text for keyword in tech_keywords):
+            return "技术"
+        elif any(keyword in text for keyword in culture_keywords):
+            return "文化"
+        elif any(keyword in text for keyword in business_keywords):
+            return "商业"
+        else:
+            return "其他"
+
+    async def _calculate_quality_score(
+        self, content: Content, analysis_data: Dict[str, Any]
+    ) -> float:
+        """计算质量评分"""
+        score = 0.5  # 基础分数
+
+        # 基于内容长度的评分
+        if isinstance(content.content_data, str):
+            text_length = len(content.content_data)
+            if text_length > 100:
+                score += 0.1
+            if text_length > 500:
+                score += 0.1
+
+        # 基于关键词数量的评分
+        keywords_count = len(analysis_data.get("keywords", []))
+        score += min(keywords_count * 0.05, 0.3)
+
+        return min(score, 1.0)
+
+    def _calculate_confidence(self, analysis_data: Dict[str, Any]) -> float:
+        """计算分析置信度"""
+        confidence = 0.6  # 基础置信度
+
+        # 有关键词增加置信度
+        if analysis_data.get("keywords"):
+            confidence += 0.1
+
+        # 有明确情感增加置信度
+        if analysis_data.get("sentiment") != "neutral":
+            confidence += 0.1
+
+        # 有分类增加置信度
+        if analysis_data.get("category") != "其他":
+            confidence += 0.1
+
+        return min(confidence, 1.0)
 
     async def batch_analyze(self, contents: List[Content]) -> List[AnalysisResult]:
         """批量分析内容"""

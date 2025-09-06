@@ -3,7 +3,7 @@
 import pytest
 
 from src.core import Config
-from src.models import Content, ContentType, User, UserRole
+from src.models import AnalysisResult, Content, ContentType, User, UserProfile, UserRole
 from src.utils import CryptoUtils, DataValidator, TimeUtils
 
 
@@ -56,6 +56,46 @@ class TestModels:
         )
         assert content.id == "content_1"
         assert content.content_type == ContentType.TEXT
+
+    def test_content_to_dict(self):
+        """测试内容模型转字典 - 验证数据序列化功能"""
+        content = Content(
+            id="content_1",
+            title="测试内容",
+            content_type=ContentType.TEXT,
+            content_data="这是测试内容",
+            author_id="user_1",
+        )
+        content_dict = content.to_dict()
+        assert content_dict["id"] == "content_1"
+        assert content_dict["title"] == "测试内容"
+        assert content_dict["content_type"] == "text"
+        assert "created_at" in content_dict
+
+    def test_analysis_result_to_dict(self):
+        """测试分析结果模型转字典 - 验证数据序列化功能"""
+        result = AnalysisResult(
+            id="analysis_1",
+            content_id="content_1",
+            analysis_type="sentiment",
+            result_data={"score": 0.9},
+            confidence_score=0.95,  # 添加缺失的必填字段
+        )
+        result_dict = result.to_dict()
+        assert result_dict["id"] == "analysis_1"
+        assert result_dict["analysis_type"] == "sentiment"
+        assert result_dict["result_data"]["score"] == 0.9
+        assert result_dict["confidence_score"] == 0.95
+
+    def test_user_profile_to_dict(self):
+        """测试用户画像模型转字典 - 验证数据序列化功能"""
+        profile = UserProfile(
+            user_id="user_1",  # 移除不支持的'id'字段
+            interests=["AI", "Culture"],
+        )
+        profile_dict = profile.to_dict()
+        assert profile_dict["user_id"] == "user_1"  # 修正断言
+        assert "AI" in profile_dict["interests"]
 
 
 class TestUtils:
