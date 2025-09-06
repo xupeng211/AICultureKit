@@ -60,6 +60,17 @@ help: ## 显示帮助信息
 	@echo "  ci-analyze  深度分析CI失败原因"
 	@echo "  sync        同步Issues到远程仓库"
 	@echo "  sync-config 配置Issue同步"
+	@echo ""
+	@echo "$(YELLOW)CI Guardian 防御系统:$(RESET)"
+	@echo "  ci-guardian         运行完整CI守护检查"
+	@echo "  validate-defenses   验证所有防御机制"
+	@echo "  run-validation-tests 运行增强验证测试"
+	@echo "  check-defense-coverage 检查防御覆盖率"
+	@echo "  analyze-ci-issues   分析CI问题"
+	@echo "  generate-defenses   生成防御机制"
+	@echo "  update-defenses     更新防御机制"
+	@echo "  integrate-defenses  集成防御机制到项目配置"
+	@echo "  validate-integration 验证防御机制集成"
 
 # -------------------------------
 # 🌐 环境管理
@@ -112,14 +123,13 @@ context: venv ## 加载项目上下文
 .PHONY: format
 format: venv ## 代码格式化
 	@echo "$(BLUE)>>> 代码格式化...$(RESET)"
-	$(ACTIVATE) && python -m black src/ tests/ scripts/ --line-length=88
-	$(ACTIVATE) && python -m isort src/ tests/ scripts/
+	$(ACTIVATE) && python -m ruff format src/ tests/ scripts/
 	@echo "$(GREEN)✅ 代码格式化完成$(RESET)"
 
 .PHONY: lint
 lint: venv ## 代码风格检查
 	@echo "$(BLUE)>>> 代码风格检查...$(RESET)"
-	$(ACTIVATE) && python -m flake8 src/ tests/ scripts/ --max-line-length=88 --extend-ignore=E203,W503
+	$(ACTIVATE) && python -m ruff check src/ tests/ scripts/
 	@echo "$(GREEN)✅ 代码风格检查通过$(RESET)"
 
 .PHONY: typecheck
@@ -465,6 +475,64 @@ clean-logs: ## 清理日志文件
 	rm -rf logs/*.log
 	rm -rf logs/*.json
 	@echo "$(GREEN)✅ 日志清理完成$(RESET)"
+
+# -------------------------------
+# 🛡️ CI Guardian 防御系统
+# -------------------------------
+.PHONY: validate-defenses
+validate-defenses: venv ## 验证所有防御机制
+	@echo "$(BLUE)>>> 验证防御机制...$(RESET)"
+	@if $(ACTIVATE) && python scripts/ci_guardian.py --validate; then \
+		echo "$(GREEN)✅ 防御机制验证通过$(RESET)"; \
+	else \
+		echo "$(RED)❌ 防御机制验证失败$(RESET)"; \
+		exit 1; \
+	fi
+
+.PHONY: run-validation-tests
+run-validation-tests: venv ## 运行增强验证测试
+	@echo "$(BLUE)>>> 运行验证测试...$(RESET)"
+	$(ACTIVATE) && pytest tests/test_*_validation.py -v --tb=short
+
+.PHONY: check-defense-coverage
+check-defense-coverage: venv ## 检查防御覆盖率
+	@echo "$(BLUE)>>> 检查防御覆盖率...$(RESET)"
+	@if $(ACTIVATE) && python scripts/ci_issue_analyzer.py -s; then \
+		echo "$(GREEN)✅ 防御覆盖率检查完成$(RESET)"; \
+	else \
+		echo "$(RED)❌ 防御覆盖率检查失败$(RESET)"; \
+		exit 1; \
+	fi
+
+.PHONY: update-defenses
+update-defenses: venv ## 更新防御机制
+	@echo "$(BLUE)>>> 更新防御机制...$(RESET)"
+	$(ACTIVATE) && python scripts/defense_generator.py -i logs/ci_issues.json -s
+
+.PHONY: ci-guardian
+ci-guardian: venv ## 运行完整CI守护检查
+	@echo "$(BLUE)>>> 运行CI守护检查...$(RESET)"
+	$(ACTIVATE) && python scripts/ci_guardian.py -c "make quality" -s
+
+.PHONY: analyze-ci-issues
+analyze-ci-issues: venv ## 分析CI问题
+	@echo "$(BLUE)>>> 分析CI问题...$(RESET)"
+	$(ACTIVATE) && python scripts/ci_issue_analyzer.py -l logs/quality_check.json -s -r
+
+.PHONY: generate-defenses
+generate-defenses: venv ## 生成防御机制
+	@echo "$(BLUE)>>> 生成防御机制...$(RESET)"
+	$(ACTIVATE) && python scripts/defense_generator.py -i logs/ci_issues.json
+
+.PHONY: integrate-defenses
+integrate-defenses: venv ## 集成防御机制到项目配置
+	@echo "$(BLUE)>>> 集成防御机制...$(RESET)"
+	$(ACTIVATE) && python scripts/auto_ci_updater.py -d logs/defenses_generated.json
+
+.PHONY: validate-integration
+validate-integration: venv ## 验证防御机制集成
+	@echo "$(BLUE)>>> 验证防御机制集成...$(RESET)"
+	$(ACTIVATE) && python scripts/defense_validator.py -d logs/defenses_generated.json -s
 
 # -------------------------------
 # 🎯 快捷方式

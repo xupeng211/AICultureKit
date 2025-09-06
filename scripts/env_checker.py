@@ -5,7 +5,6 @@
 自动执行任务启动前的细节规则检查，确保开发环境处于最佳状态。
 """
 
-
 import subprocess
 import sys
 from pathlib import Path
@@ -319,7 +318,11 @@ class EnvironmentChecker:
                     {**sync_status, "suggestion": "运行: git pull origin main"},
                 )
             elif len(uncommitted_changes) > 0:
-                return True, f"工作区有 {len(uncommitted_changes)} 个未提交更改", sync_status
+                return (
+                    True,
+                    f"工作区有 {len(uncommitted_changes)} 个未提交更改",
+                    sync_status,
+                )
             else:
                 return True, "Git工作区干净，与远程同步", sync_status
 

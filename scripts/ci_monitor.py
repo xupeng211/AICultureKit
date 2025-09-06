@@ -216,13 +216,21 @@ class GitHubCIMonitor:
                 "name": "test_failure",
                 "pattern": r"(?i)(test.*failed|assertion.*error|pytest.*failed)",
                 "severity": "medium",
-                "suggestions": ["本地运行测试: make test", "检查测试用例是否需要更新", "查看具体的测试失败日志"],
+                "suggestions": [
+                    "本地运行测试: make test",
+                    "检查测试用例是否需要更新",
+                    "查看具体的测试失败日志",
+                ],
             },
             {
                 "name": "type_error",
                 "pattern": r"(?i)(mypy.*error|type.*error)",
                 "severity": "medium",
-                "suggestions": ["运行类型检查: mypy src/", "添加缺失的类型注解", "修复类型不匹配问题"],
+                "suggestions": [
+                    "运行类型检查: mypy src/",
+                    "添加缺失的类型注解",
+                    "修复类型不匹配问题",
+                ],
             },
         ]
 
@@ -270,7 +278,7 @@ class GitHubCIMonitor:
             time_ago = self._format_time_ago(created_at)
 
             print(
-                f"\n{i+1}. {icon} #{workflow['run_number']} - {workflow['head_commit']['message'][:60]}..."
+                f"\n{i + 1}. {icon} #{workflow['run_number']} - {workflow['head_commit']['message'][:60]}..."
             )
             print(f"   📅 {time_ago} | 🌿 {workflow['head_branch']} | 📊 {conclusion}")
             print(f"   🔗 {workflow['html_url']}")

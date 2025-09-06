@@ -51,7 +51,7 @@ class QualityChecker:
         check_steps = [
             ("backup", "备份文件", self._backup_files),
             ("format", "代码格式化", self._run_black_format),
-            ("lint", "代码风格检查", self._run_flake8_lint),
+            ("lint", "代码风格检查", self._run_ruff_lint),
             ("type_check", "类型检查", self._run_mypy_check),
             ("test", "单元测试", self._run_pytest),
             ("coverage", "测试覆盖率", self._run_coverage),
@@ -253,6 +253,52 @@ class QualityChecker:
         except Exception as e:
             return False, f"风格检查失败: {e}", {"exception": str(e)}
 
+    def _run_ruff_lint(self) -> Tuple[bool, str, Dict]:
+        """运行ruff代码风格检查"""
+        try:
+            # 检查是否安装了ruff
+            check_result = subprocess.run(
+                ["python", "-m", "ruff", "--version"], capture_output=True, text=True
+            )
+
+            if check_result.returncode != 0:
+                return False, "ruff未安装", {"suggestion": "pip install ruff"}
+
+            # 运行ruff检查
+            result = subprocess.run(
+                [
+                    "python",
+                    "-m",
+                    "ruff",
+                    "check",
+                    "src/",
+                    "tests/",
+                    "scripts/",
+                ],
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+            )
+
+            if result.returncode == 0:
+                return True, "代码风格检查通过", {"issues": []}
+            else:
+                issues = (
+                    result.stdout.strip().split("\n") if result.stdout.strip() else []
+                )
+                return (
+                    False,
+                    f"发现 {len(issues)} 个风格问题",
+                    {
+                        "issues": issues,
+                        "stdout": result.stdout,
+                        "stderr": result.stderr,
+                    },
+                )
+
+        except Exception as e:
+            return False, f"风格检查失败: {e}", {"exception": str(e)}
+
     def _run_mypy_check(self) -> Tuple[bool, str, Dict]:
         """运行mypy类型检查"""
         try:
@@ -363,9 +409,9 @@ class QualityChecker:
                     {"stdout": result.stdout, "stderr": result.stderr},
                 )
 
-            # 获取覆盖率报告
+            # 获取覆盖率报告（JSON格式）
             report_result = subprocess.run(
-                ["python", "-m", "coverage", "report", "--format=json"],
+                ["python", "-m", "coverage", "json"],
                 cwd=self.project_root,
                 capture_output=True,
                 text=True,
@@ -373,10 +419,22 @@ class QualityChecker:
 
             if report_result.returncode == 0:
                 try:
-                    coverage_data = json.loads(report_result.stdout)
-                    total_coverage = coverage_data.get("totals", {}).get(
-                        "percent_covered", 0
+                    # 读取生成的coverage.json文件
+                    coverage_json_path = os.path.join(
+                        self.project_root, "coverage.json"
                     )
+                    if os.path.exists(coverage_json_path):
+                        with open(coverage_json_path, "r", encoding="utf-8") as f:
+                            coverage_data = json.load(f)
+                        total_coverage = coverage_data.get("totals", {}).get(
+                            "percent_covered", 0
+                        )
+                    else:
+                        return (
+                            False,
+                            "覆盖率JSON报告文件未生成",
+                            {"error": "coverage.json not found"},
+                        )
 
                     min_coverage = int(os.getenv("TEST_COVERAGE_MIN", "80"))
 
@@ -402,7 +460,11 @@ class QualityChecker:
                         )
 
                 except json.JSONDecodeError:
-                    return False, "无法解析覆盖率报告", {"raw_output": report_result.stdout}
+                    return (
+                        False,
+                        "无法解析覆盖率报告",
+                        {"raw_output": report_result.stdout},
+                    )
 
             return (
                 False,
@@ -475,7 +537,11 @@ class QualityChecker:
                 except json.JSONDecodeError:
                     return False, "无法解析复杂度报告", {"raw_output": result.stdout}
 
-            return False, "复杂度检查失败", {"stdout": result.stdout, "stderr": result.stderr}
+            return (
+                False,
+                "复杂度检查失败",
+                {"stdout": result.stdout, "stderr": result.stderr},
+            )
 
         except Exception as e:
             return False, f"复杂度检查失败: {e}", {"exception": str(e)}
