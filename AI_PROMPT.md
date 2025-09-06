@@ -84,43 +84,52 @@ python --version # 应该显示Python 3.11+
 
 ---
 
-## ⚡ **工作流程**
+## ⚡ **AI工作流程（工具优先模式）**
 
-### 标准开发流程
+### 🚀 **标准AI开发启动序列**
 ```bash
-# 🚨 第0步：激活虚拟环境（必须！）
-source venv/bin/activate    # Linux/Mac
-# 或 venv\Scripts\activate  # Windows
+# 🎯 AI工作必须严格按此顺序执行：
 
-# 1. 环境准备（首次使用）
-make init               # 初始化项目和依赖
-make env-check          # 检查开发环境状态
+# 第1步：环境检查
+make env-check          # 验证开发环境完整性
 
-# 2. 日常开发过程
-make format             # 代码格式化
-make lint               # 代码风格检查  
-make test               # 运行测试
-make coverage           # 检查测试覆盖率
+# 第2步：加载项目上下文（⭐ 关键步骤）
+make context            # AI必须运行此命令获取项目上下文
 
-# 3. 提交前完整检查
-make prepush            # 包含所有质量检查的推送流程
+# 第3步：根据任务选择适当工具
+make quality            # 代码质量全面检查
+make test              # 运行单元测试  
+make ci                # 本地CI完整模拟
+make prepush           # 提交前完整验证
+
+# ⚠️ 禁止直接运行python脚本，必须通过Makefile工具链
 ```
 
-### 虚拟环境验证命令
-```bash
-# 🔍 检查虚拟环境是否正确激活
-which python              # 应显示 /path/to/project/venv/bin/python
-python --version          # 应显示 Python 3.11+
-pip list | head -5        # 查看已安装的包列表
-make env-check            # 运行环境检查器验证完整性
+### 📋 **AI任务执行原则**
+1. **工具优先**：任何操作必须通过`make`命令执行
+2. **上下文优先**：每次开始工作前运行`make context`
+3. **质量优先**：代码变更必须通过`make ci`验证
+4. **完整流程**：提交前使用`make prepush`完整检查
 ```
 
-### 关键开发命令说明  
-- `make help` - 查看所有可用命令
-- `make env-check` - 检查开发环境和虚拟环境状态
-- `make quality` - 运行所有质量检查工具
-- `make ci` - 模拟CI环境的完整检查
-- `make clean` - 清理临时文件和缓存
+### 🔧 **常用Makefile命令速览**
+```bash
+make help              # 查看所有可用命令和说明  
+make env-check         # 环境健康检查
+make context           # 加载项目上下文（AI必须使用）
+make quality           # 完整代码质量检查
+make test              # 运行单元测试
+make coverage          # 测试覆盖率检查
+make ci                # 本地CI完整模拟
+make prepush           # 提交前完整验证流程
+make clean             # 清理临时文件和缓存
+```
+
+### ⚡ **AI专用工作模式**
+- **启动前**：必须运行`make context`获取项目上下文
+- **开发中**：使用`make quality`持续检查代码质量
+- **测试时**：使用`make test`验证功能正确性
+- **提交前**：使用`make prepush`进行完整验证
 
 ---
 

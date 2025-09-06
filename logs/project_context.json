@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-06T21:02:55.107570",
+  "timestamp": "2025-09-06T22:09:43.773447",
   "project_root": "/home/user/projects/AICultureKit",
   "directory_structure": {
     "root_files": [
@@ -22,6 +22,7 @@
       "AI_PROMPT.md",
       "requirements-dev.txt",
       "setup.cfg",
+      "AI_WORK_GUIDE.md",
       "env.secure",
       "docker-compose.dev.yml",
       "=75.8.2",
@@ -204,6 +205,8 @@
     "repository_exists": true,
     "current_branch": "feature/ci-quality-test",
     "recent_commits": [
+      "00a5196 fix(ci): 修复Codecov上传失败导致的CI红灯问题",
+      "0a0b4cf chore: 更新覆盖率报告和项目上下文日志",
       "6c4d436 fix(ci): 修复CI红灯问题",
       "58f3631 fix(quality): 修复代码风格问题并完善CI Guardian系统",
       "d54d1cf feat(ci): 实现CI Guardian质量保护系统和相关文档",
@@ -211,11 +214,9 @@
       "c43aa83 feat(quality): 正确提升代码覆盖率至99%",
       "881e1b6 fix(ci): 修复codecov覆盖率导致CI失败问题",
       "ee0f216 fix(ci): 修复CI依赖冲突和命令差异",
-      "c10a999 fix(ci): 添加feature分支CI支持 - 修复CI不在feature分支运行的问题",
-      "98732d3 trigger: 触发CI流程 - 更新CI配置和质量检查脚本",
-      "3962190 feat(tests): 提升测试覆盖率至92%"
+      "c10a999 fix(ci): 添加feature分支CI支持 - 修复CI不在feature分支运行的问题"
     ],
-    "status": "M coverage.json\n M coverage.xml\n M logs/project_context.json\n M logs/quality_check.json\n M requirements-dev.txt",
+    "status": "M  .cursor/rules/ai.mdc\nM  AI_PROMPT.md\nA  AI_WORK_GUIDE.md\n M coverage.json\nM  coverage.xml\n M logs/project_context.json\n M logs/quality_check.json",
     "remote_url": "https://github.com/xupeng211/AICultureKit.git"
   },
   "existing_modules": {
@@ -633,26 +634,29 @@
   },
   "recent_changes": {
     "modified_files": [
-      "overage.json",
+      ".cursor/rules/ai.mdc",
+      "AI_PROMPT.md",
+      "coverage.json",
       "coverage.xml",
       "logs/project_context.json",
-      "logs/quality_check.json",
-      "requirements-dev.txt"
+      "logs/quality_check.json"
     ],
-    "added_files": [],
+    "added_files": [
+      "AI_WORK_GUIDE.md"
+    ],
     "deleted_files": [],
     "last_commit_info": {
-      "hash": "6c4d4364fe71f016309af723c37416f79b644169",
+      "hash": "00a5196650ec9aad3da264e26edd4a39f8fdd5df",
       "author": "xupeng",
-      "date": "Sat Sep 6 13:53:28 2025 +0800",
-      "message": "fix(ci): 修复CI红灯问题"
+      "date": "Sat Sep 6 21:26:31 2025 +0800",
+      "message": "fix(ci): 修复Codecov上传失败导致的CI红灯问题"
     }
   },
   "project_stats": {
-    "total_python_files": 16479,
-    "total_test_files": 2885,
-    "total_lines_of_code": 5869425,
-    "project_size_mb": 2026.62,
-    "last_activity": "2025-09-06T20:58:38.692897"
+    "total_python_files": 16541,
+    "total_test_files": 2899,
+    "total_lines_of_code": 5888683,
+    "project_size_mb": 2026.6,
+    "last_activity": "2025-09-06T22:09:20.635050"
   }
 }
