@@ -91,7 +91,8 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         file: ./coverage.xml
-        fail_ci_if_error: true
+        fail_ci_if_error: false
+      continue-on-error: true
 
   # Docker镜像构建和推送
   build-and-push:
