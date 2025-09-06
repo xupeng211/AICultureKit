@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-05T20:32:52.155154",
+  "timestamp": "2025-09-06T21:02:55.107570",
   "project_root": "/home/user/projects/AICultureKit",
   "directory_structure": {
     "root_files": [
@@ -15,6 +15,7 @@
       "Dockerfile.dev",
       "README_DOCKER.md",
       "rules.md",
+      "CI_FIX_REPORT.md",
       "README.md",
       "Makefile",
       "ISSUES.md",
@@ -144,6 +145,7 @@
       },
       "scripts": {
         "files": [
+          "defense_generator.py.backup",
           "auto_ci_updater.py",
           "defense_validator.py",
           "fix_critical_issues.py",
@@ -195,13 +197,14 @@
         "test_files": []
       }
     },
-    "total_files": 71,
+    "total_files": 72,
     "total_directories": 5
   },
   "git_info": {
     "repository_exists": true,
     "current_branch": "feature/ci-quality-test",
     "recent_commits": [
+      "6c4d436 fix(ci): 修复CI红灯问题",
       "58f3631 fix(quality): 修复代码风格问题并完善CI Guardian系统",
       "d54d1cf feat(ci): 实现CI Guardian质量保护系统和相关文档",
       "6f8fb8c fix(ci): 修复测试任务缓存配置问题",
@@ -210,10 +213,9 @@
       "ee0f216 fix(ci): 修复CI依赖冲突和命令差异",
       "c10a999 fix(ci): 添加feature分支CI支持 - 修复CI不在feature分支运行的问题",
       "98732d3 trigger: 触发CI流程 - 更新CI配置和质量检查脚本",
-      "3962190 feat(tests): 提升测试覆盖率至92%",
-      "3617cc4 docs: 通过开发入口进行环境检查和上下文加载"
+      "3962190 feat(tests): 提升测试覆盖率至92%"
     ],
-    "status": "M coverage.xml\n M scripts/auto_ci_updater.py\n M scripts/ci_issue_analyzer.py\n M scripts/ci_monitor.py\n M scripts/context_loader.py\n M scripts/cursor_runner.py\n M scripts/defense_validator.py\n M scripts/demo_ci_guardian.py\n M scripts/fix_critical_issues.py\n M scripts/quality_checker.py\n M tests/test_core.py\n M tests/test_services.py\n M tests/test_utils.py\n?? run.py",
+    "status": "M coverage.json\n M coverage.xml\n M logs/project_context.json\n M logs/quality_check.json\n M requirements-dev.txt",
     "remote_url": "https://github.com/xupeng211/AICultureKit.git"
   },
   "existing_modules": {
@@ -275,7 +277,7 @@
       },
       "test_utils.py": {
         "size": 13213,
-        "modified": "2025-09-05T20:17:54.850624"
+        "modified": "2025-09-06T12:38:14.085217"
       },
       "test_basic.py": {
         "size": 4382,
@@ -283,7 +285,7 @@
       },
       "test_core.py": {
         "size": 10203,
-        "modified": "2025-09-05T20:17:54.850624"
+        "modified": "2025-09-06T12:38:14.085217"
       },
       "test_ci_monitor.py": {
         "size": 11652,
@@ -291,7 +293,7 @@
       },
       "test_services.py": {
         "size": 11664,
-        "modified": "2025-09-05T20:17:54.850624"
+        "modified": "2025-09-06T12:38:14.085217"
       }
     },
     "coverage_info": null
@@ -631,34 +633,26 @@
   },
   "recent_changes": {
     "modified_files": [
-      "overage.xml",
-      "scripts/auto_ci_updater.py",
-      "scripts/ci_issue_analyzer.py",
-      "scripts/ci_monitor.py",
-      "scripts/context_loader.py",
-      "scripts/cursor_runner.py",
-      "scripts/defense_validator.py",
-      "scripts/demo_ci_guardian.py",
-      "scripts/fix_critical_issues.py",
-      "scripts/quality_checker.py",
-      "tests/test_core.py",
-      "tests/test_services.py",
-      "tests/test_utils.py"
+      "overage.json",
+      "coverage.xml",
+      "logs/project_context.json",
+      "logs/quality_check.json",
+      "requirements-dev.txt"
     ],
     "added_files": [],
     "deleted_files": [],
     "last_commit_info": {
-      "hash": "58f3631e6acf3f2c87ff296c3878f8077540bcff",
+      "hash": "6c4d4364fe71f016309af723c37416f79b644169",
       "author": "xupeng",
-      "date": "Fri Sep 5 19:50:48 2025 +0800",
-      "message": "fix(quality): 修复代码风格问题并完善CI Guardian系统"
+      "date": "Sat Sep 6 13:53:28 2025 +0800",
+      "message": "fix(ci): 修复CI红灯问题"
     }
   },
   "project_stats": {
-    "total_python_files": 16082,
-    "total_test_files": 2815,
-    "total_lines_of_code": 5749174,
-    "project_size_mb": 2025.94,
-    "last_activity": "2025-09-05T20:20:05.006228"
+    "total_python_files": 16479,
+    "total_test_files": 2885,
+    "total_lines_of_code": 5869425,
+    "project_size_mb": 2026.62,
+    "last_activity": "2025-09-06T20:58:38.692897"
   }
 }
