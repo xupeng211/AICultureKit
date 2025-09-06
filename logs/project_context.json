@@ -1,11 +1,10 @@
 {
-  "timestamp": "2025-09-06T22:09:43.773447",
+  "timestamp": "2025-09-07T07:51:48.545801",
   "project_root": "/home/user/projects/AICultureKit",
   "directory_structure": {
     "root_files": [
       "env.example",
       "Makefile.docker",
-      "=0.30.0",
       "requirements.txt",
       "coverage.xml",
       "coverage.json",
@@ -25,14 +24,11 @@
       "AI_WORK_GUIDE.md",
       "env.secure",
       "docker-compose.dev.yml",
-      "=75.8.2",
-      "=4.4.0",
       "Dockerfile",
       "Cursor_ClosedLoop_Prompt.md",
       "run.py",
       "CRITICAL_ISSUES_REPORT.md",
-      "COMPLETION_REPORT.md",
-      "=2.12.0"
+      "COMPLETION_REPORT.md"
     ],
     "directories": {
       "src": {
@@ -162,7 +158,10 @@
           "context_loader.py",
           "env_checker.py",
           "__pycache__/ci_monitor.cpython-310.pyc",
-          "__pycache__/ci_monitor.cpython-311.pyc"
+          "__pycache__/env_checker.cpython-311.pyc",
+          "__pycache__/context_loader.cpython-311.pyc",
+          "__pycache__/ci_monitor.cpython-311.pyc",
+          "__pycache__/quality_checker.cpython-311.pyc"
         ],
         "subdirectories": [
           "__pycache__"
@@ -198,25 +197,25 @@
         "test_files": []
       }
     },
-    "total_files": 72,
+    "total_files": 75,
     "total_directories": 5
   },
   "git_info": {
     "repository_exists": true,
-    "current_branch": "feature/ci-quality-test",
+    "current_branch": "feature/analysis",
     "recent_commits": [
+      "0f33569 fix(ci): Correct radon detection logic in quality checker",
+      "2dc815e Merge pull request #28 from xupeng211/feature/ci-quality-test",
+      "d85c9b3 chore: 更新AI工作指南和相关配置文件",
       "00a5196 fix(ci): 修复Codecov上传失败导致的CI红灯问题",
       "0a0b4cf chore: 更新覆盖率报告和项目上下文日志",
       "6c4d436 fix(ci): 修复CI红灯问题",
       "58f3631 fix(quality): 修复代码风格问题并完善CI Guardian系统",
       "d54d1cf feat(ci): 实现CI Guardian质量保护系统和相关文档",
       "6f8fb8c fix(ci): 修复测试任务缓存配置问题",
-      "c43aa83 feat(quality): 正确提升代码覆盖率至99%",
-      "881e1b6 fix(ci): 修复codecov覆盖率导致CI失败问题",
-      "ee0f216 fix(ci): 修复CI依赖冲突和命令差异",
-      "c10a999 fix(ci): 添加feature分支CI支持 - 修复CI不在feature分支运行的问题"
+      "c43aa83 feat(quality): 正确提升代码覆盖率至99%"
     ],
-    "status": "M  .cursor/rules/ai.mdc\nM  AI_PROMPT.md\nA  AI_WORK_GUIDE.md\n M coverage.json\nM  coverage.xml\n M logs/project_context.json\n M logs/quality_check.json",
+    "status": "A  .pre-commit-config.yaml\nD  =0.30.0\nD  =2.12.0\nD  =4.4.0\nD  =75.8.2\nMM coverage.json\nMM logs/project_context.json\nMM logs/quality_check.json\nM  scripts/context_loader.py\nM  scripts/cursor_runner.py\nM  scripts/env_checker.py\nM  scripts/quality_checker.py\nM  scripts/setup_project.py",
     "remote_url": "https://github.com/xupeng211/AICultureKit.git"
   },
   "existing_modules": {
@@ -237,7 +236,7 @@
       "main": {
         "file_path": "main.py",
         "size": 3740,
-        "modified": "2025-09-05T20:20:05.006228"
+        "modified": "2025-09-07T00:06:29.086750"
       },
       "utils.__init__": {
         "file_path": "utils/__init__.py",
@@ -247,7 +246,7 @@
       "models.__init__": {
         "file_path": "models/__init__.py",
         "size": 3612,
-        "modified": "2025-09-05T02:49:18.690077"
+        "modified": "2025-09-06T23:04:22.512228"
       },
       "core.__init__": {
         "file_path": "core/__init__.py",
@@ -257,7 +256,7 @@
       "services.__init__": {
         "file_path": "services/__init__.py",
         "size": 7514,
-        "modified": "2025-09-05T08:04:46.030677"
+        "modified": "2025-09-07T00:06:29.086750"
       }
     },
     "import_analysis": {}
@@ -278,15 +277,15 @@
       },
       "test_utils.py": {
         "size": 13213,
-        "modified": "2025-09-06T12:38:14.085217"
+        "modified": "2025-09-06T23:52:46.313333"
       },
       "test_basic.py": {
         "size": 4382,
-        "modified": "2025-09-05T08:04:46.030677"
+        "modified": "2025-09-07T00:06:29.086750"
       },
       "test_core.py": {
         "size": 10203,
-        "modified": "2025-09-06T12:38:14.085217"
+        "modified": "2025-09-06T23:52:46.313333"
       },
       "test_ci_monitor.py": {
         "size": 11652,
@@ -294,7 +293,7 @@
       },
       "test_services.py": {
         "size": 11664,
-        "modified": "2025-09-06T12:38:14.085217"
+        "modified": "2025-09-07T00:06:29.086750"
       }
     },
     "coverage_info": null
@@ -634,29 +633,36 @@
   },
   "recent_changes": {
     "modified_files": [
-      ".cursor/rules/ai.mdc",
-      "AI_PROMPT.md",
       "coverage.json",
-      "coverage.xml",
       "logs/project_context.json",
-      "logs/quality_check.json"
+      "logs/quality_check.json",
+      "scripts/context_loader.py",
+      "scripts/cursor_runner.py",
+      "scripts/env_checker.py",
+      "scripts/quality_checker.py",
+      "scripts/setup_project.py"
     ],
     "added_files": [
-      "AI_WORK_GUIDE.md"
+      ".pre-commit-config.yaml"
     ],
-    "deleted_files": [],
+    "deleted_files": [
+      "=0.30.0",
+      "=2.12.0",
+      "=4.4.0",
+      "=75.8.2"
+    ],
     "last_commit_info": {
-      "hash": "00a5196650ec9aad3da264e26edd4a39f8fdd5df",
+      "hash": "0f335694dabf2de06bb7183113da2b31f4923410",
       "author": "xupeng",
-      "date": "Sat Sep 6 21:26:31 2025 +0800",
-      "message": "fix(ci): 修复Codecov上传失败导致的CI红灯问题"
+      "date": "Sun Sep 7 00:12:43 2025 +0800",
+      "message": "fix(ci): Correct radon detection logic in quality checker"
     }
   },
   "project_stats": {
-    "total_python_files": 16541,
-    "total_test_files": 2899,
-    "total_lines_of_code": 5888683,
-    "project_size_mb": 2026.6,
-    "last_activity": "2025-09-06T22:09:20.635050"
+    "total_python_files": 17330,
+    "total_test_files": 3095,
+    "total_lines_of_code": 6143472,
+    "project_size_mb": 2034.66,
+    "last_activity": "2025-09-07T07:51:26.472750"
   }
 }

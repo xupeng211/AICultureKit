@@ -13,6 +13,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
+# 添加项目路径以便导入核心模块
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from src.core import Logger  # noqa: E402
+
 
 class QualityChecker:
     """代码质量检查器"""
@@ -29,6 +34,8 @@ class QualityChecker:
         self.max_retries = max_retries
         self.results: Dict[str, Any] = {}
         self.iteration_log: List[Dict] = []
+        # 设置日志器
+        self.logger = Logger.setup_logger("quality_checker", "INFO")
 
     def run_all_checks(self) -> Dict[str, Any]:
         """
@@ -37,7 +44,7 @@ class QualityChecker:
         Returns:
             检查结果字典
         """
-        print("🔍 开始代码质量检查...")
+        self.logger.info("🔍 开始代码质量检查...")
 
         self.results = {
             "timestamp": datetime.now().isoformat(),
@@ -61,12 +68,12 @@ class QualityChecker:
         # 执行检查循环 - 多轮检查机制，自动修复问题并重试验证
         for retry in range(self.max_retries):
             self.results["retry_count"] = retry
-            print(f"\n🔄 第 {retry + 1} 轮检查...")
+            self.logger.info(f"\n🔄 第 {retry + 1} 轮检查...")
 
             all_passed = True
 
             for check_id, check_name, check_func in check_steps:
-                print(f"  ▶️ {check_name}...")
+                self.logger.info(f"  ▶️ {check_name}...")
 
                 try:
                     # 执行单项检查，获取结果状态和详细信息
@@ -82,22 +89,22 @@ class QualityChecker:
                     }
 
                     if success:
-                        print(f"    ✅ {check_name}成功: {message}")
+                        self.logger.info(f"    ✅ {check_name}成功: {message}")
                     else:
-                        print(f"    ❌ {check_name}失败: {message}")
+                        self.logger.warning(f"    ❌ {check_name}失败: {message}")
                         all_passed = False
 
                         # 尝试自动修复
                         if self._can_auto_fix(check_id):
-                            print("    🔧 尝试自动修复...")
+                            self.logger.info("    🔧 尝试自动修复...")
                             fix_success = self._auto_fix(check_id, details)
                             if fix_success:
-                                print("    ✨ 自动修复成功")
+                                self.logger.info("    ✨ 自动修复成功")
                             else:
-                                print("    ⚠️ 自动修复失败")
+                                self.logger.warning("    ⚠️ 自动修复失败")
 
                 except Exception as e:
-                    print(f"    💥 {check_name}异常: {e}")
+                    self.logger.error(f"    💥 {check_name}异常: {e}")
                     self.results["checks"][check_id] = {
                         "name": check_name,
                         "success": False,
@@ -112,14 +119,14 @@ class QualityChecker:
 
             if all_passed:
                 self.results["overall_status"] = "passed"
-                print("\n🎉 所有检查通过！")
+                self.logger.info("\n🎉 所有检查通过！")
                 break
             else:
-                print(f"\n⚠️ 第 {retry + 1} 轮检查未完全通过，准备重试...")
+                self.logger.warning(f"\n⚠️ 第 {retry + 1} 轮检查未完全通过，准备重试...")
 
         # 最终状态
         if self.results["overall_status"] != "passed":
-            print("\n❌ 检查失败，已达到最大重试次数")
+            self.logger.error("\n❌ 检查失败，已达到最大重试次数")
 
         return self.results
 
@@ -608,7 +615,7 @@ class QualityChecker:
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(full_results, f, ensure_ascii=False, indent=2)
 
-        print(f"💾 检查结果已保存到: {output_path}")
+        self.logger.info(f"💾 检查结果已保存到: {output_path}")
 
     def save_iteration_log(self, log_file: str = "logs/iteration.log") -> None:
         """保存迭代日志"""
@@ -626,13 +633,15 @@ class QualityChecker:
 
     def print_summary(self) -> None:
         """打印检查摘要"""
-        print("\n📊 质量检查摘要:")
-        print(f"   ⚡ 整体状态: {self.results['overall_status']}")
-        print(f"   🔄 重试次数: {self.results['retry_count']}")
+        self.logger.info("\n📊 质量检查摘要:")
+        self.logger.info(f"   ⚡ 整体状态: {self.results['overall_status']}")
+        self.logger.info(f"   🔄 重试次数: {self.results['retry_count']}")
 
         for check_id, check_result in self.results["checks"].items():
             status = "✅" if check_result["success"] else "❌"
-            print(f"   {status} {check_result['name']}: {check_result['message']}")
+            self.logger.info(
+                f"   {status} {check_result['name']}: {check_result['message']}"
+            )
 
 
 def main():

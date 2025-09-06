@@ -12,9 +12,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Tuple
 
-from context_loader import ProjectContextLoader
-from env_checker import EnvironmentChecker
-from quality_checker import QualityChecker
+# 添加项目路径以便导入核心模块
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from context_loader import ProjectContextLoader  # noqa: E402
+from env_checker import EnvironmentChecker  # noqa: E402
+from quality_checker import QualityChecker  # noqa: E402
+
+from src.core import Logger  # noqa: E402
 
 
 class CursorClosedLoopRunner:
@@ -31,6 +36,8 @@ class CursorClosedLoopRunner:
         self.project_root = Path(project_root).resolve()
         self.task_description = task_description
         self.execution_log: Dict[str, Any] = {}
+        # 设置日志器
+        self.logger = Logger.setup_logger("cursor_runner", "INFO")
 
     def run_complete_cycle(self) -> Dict[str, Any]:
         """
@@ -39,7 +46,7 @@ class CursorClosedLoopRunner:
         Returns:
             执行结果字典
         """
-        print("🚀 开始Cursor闭环开发流程...")
+        self.logger.info("🚀 开始Cursor闭环开发流程...")
 
         self.execution_log = {
             "timestamp": datetime.now().isoformat(),
@@ -62,7 +69,7 @@ class CursorClosedLoopRunner:
 
         # 执行各个阶段 - 顺序执行确保依赖关系，失败时提供详细诊断信息
         for phase_id, phase_name, phase_func in phases:
-            print(f"\n📋 阶段: {phase_name}")
+            self.logger.info(f"\n📋 阶段: {phase_name}")
 
             try:
                 # 每个阶段返回执行状态、消息和详细信息的标准化接口
@@ -78,15 +85,15 @@ class CursorClosedLoopRunner:
                 }
 
                 if success:
-                    print(f"✅ {phase_name}成功: {message}")
+                    self.logger.info(f"✅ {phase_name}成功: {message}")
                 else:
-                    print(f"❌ {phase_name}失败: {message}")
+                    self.logger.warning(f"❌ {phase_name}失败: {message}")
                     # 某些阶段失败不应该终止整个流程
                     if phase_id in ["quality_check"]:
-                        print("⚠️ 关键阶段失败，但继续执行...")
+                        self.logger.warning("⚠️ 关键阶段失败，但继续执行...")
 
             except Exception as e:
-                print(f"💥 {phase_name}异常: {e}")
+                self.logger.error(f"�� {phase_name}异常: {e}")
                 self.execution_log["phases"][phase_id] = {
                     "name": phase_name,
                     "success": False,
@@ -99,9 +106,9 @@ class CursorClosedLoopRunner:
         self.execution_log["overall_success"] = self._evaluate_overall_success()
 
         if self.execution_log["overall_success"]:
-            print("\n🎉 闭环开发流程成功完成！")
+            self.logger.info("\n🎉 闭环开发流程成功完成！")
         else:
-            print("\n⚠️ 闭环开发流程完成，但存在一些问题")
+            self.logger.warning("\n⚠️ 闭环开发流程完成，但存在一些问题")
 
         return self.execution_log
 
@@ -364,17 +371,21 @@ class CursorClosedLoopRunner:
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(self.execution_log, f, ensure_ascii=False, indent=2)
 
-        print(f"💾 执行日志已保存到: {output_path}")
+        self.logger.info(f"💾 执行日志已保存到: {output_path}")
 
     def print_summary(self) -> None:
         """打印执行摘要"""
-        print("\n📊 闭环执行摘要:")
-        print(f"   🎯 任务: {self.task_description or '未指定'}")
-        print(f"   ⚡ 整体状态: {'成功' if self.execution_log['overall_success'] else '部分失败'}")
+        self.logger.info("\n📊 闭环执行摘要:")
+        self.logger.info(f"   🎯 任务: {self.task_description or '未指定'}")
+        self.logger.info(
+            f"   ⚡ 整体状态: {'成功' if self.execution_log['overall_success'] else '部分失败'}"
+        )
 
         for phase_id, phase_data in self.execution_log["phases"].items():
             status = "✅" if phase_data["success"] else "❌"
-            print(f"   {status} {phase_data['name']}: {phase_data['message']}")
+            self.logger.info(
+                f"   {status} {phase_data['name']}: {phase_data['message']}"
+            )
 
 
 def main():

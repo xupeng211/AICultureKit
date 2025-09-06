@@ -10,6 +10,11 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
+# 添加项目路径以便导入核心模块
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from src.core import Logger  # noqa: E402
+
 
 class EnvironmentChecker:
     """开发环境检查器"""
@@ -23,6 +28,8 @@ class EnvironmentChecker:
         """
         self.project_root = Path(project_root).resolve()
         self.check_results: Dict[str, Any] = {}
+        # 设置日志器
+        self.logger = Logger.setup_logger("env_checker", "INFO")
 
     def run_all_checks(self) -> Dict[str, Any]:
         """
@@ -31,7 +38,7 @@ class EnvironmentChecker:
         Returns:
             检查结果字典
         """
-        print("🔍 开始开发环境检查...")
+        self.logger.info("🔍 开始开发环境检查...")
 
         # 定义检查项目
         checks = [
@@ -46,7 +53,7 @@ class EnvironmentChecker:
         all_passed = True
 
         for check_id, check_name, check_func in checks:
-            print(f"  📋 {check_name}...")
+            self.logger.info(f"  📋 {check_name}...")
 
             try:
                 success, message, details = check_func()
@@ -59,17 +66,17 @@ class EnvironmentChecker:
                 }
 
                 if success:
-                    print(f"    ✅ {message}")
+                    self.logger.info(f"    ✅ {message}")
                 else:
-                    print(f"    ❌ {message}")
+                    self.logger.warning(f"    ❌ {message}")
                     all_passed = False
 
                     # 提供修复建议
                     if "suggestion" in details:
-                        print(f"    💡 建议: {details['suggestion']}")
+                        self.logger.info(f"    💡 建议: {details['suggestion']}")
 
             except Exception as e:
-                print(f"    💥 检查异常: {e}")
+                self.logger.error(f"    💥 检查异常: {e}")
                 self.check_results[check_id] = {
                     "name": check_name,
                     "success": False,
@@ -80,9 +87,9 @@ class EnvironmentChecker:
 
         # 总结
         if all_passed:
-            print("\n🎉 开发环境检查全部通过！")
+            self.logger.info("\n🎉 开发环境检查全部通过！")
         else:
-            print("\n⚠️ 开发环境存在问题，请根据建议修复")
+            self.logger.warning("\n⚠️ 开发环境存在问题，请根据建议修复")
 
         return self.check_results
 
@@ -95,11 +102,15 @@ class EnvironmentChecker:
             )
 
             if in_venv:
-                venv_path = sys.prefix
+                venv_path_str = sys.prefix
                 return (
                     True,
-                    f"虚拟环境已激活: {venv_path}",
-                    {"active": True, "path": venv_path, "python_version": sys.version},
+                    f"虚拟环境已激活: {venv_path_str}",
+                    {
+                        "active": True,
+                        "path": venv_path_str,
+                        "python_version": sys.version,
+                    },
                 )
             else:
                 # 检查项目中是否有虚拟环境目录

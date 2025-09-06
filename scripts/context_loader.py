@@ -8,9 +8,15 @@
 import json
 import os
 import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict
+
+# 添加项目路径以便导入核心模块
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from src.core import Logger  # noqa: E402
 
 
 class ProjectContextLoader:
@@ -25,6 +31,8 @@ class ProjectContextLoader:
         """
         self.project_root = Path(project_root).resolve()
         self.context: Dict[str, Any] = {}
+        # 设置日志器
+        self.logger = Logger.setup_logger("context_loader", "INFO")
 
     def load_all_context(self) -> Dict[str, Any]:
         """
@@ -33,7 +41,7 @@ class ProjectContextLoader:
         Returns:
             包含完整项目上下文的字典
         """
-        print("🔍 开始加载项目上下文...")
+        self.logger.info("🔍 开始加载项目上下文...")
 
         self.context = {
             "timestamp": datetime.now().isoformat(),
@@ -47,12 +55,12 @@ class ProjectContextLoader:
             "project_stats": self._get_project_stats(),
         }
 
-        print("✅ 项目上下文加载完成")
+        self.logger.info("✅ 项目上下文加载完成")
         return self.context
 
     def _get_directory_structure(self) -> Dict[str, Any]:
         """获取目录结构"""
-        print("  📁 扫描目录结构...")
+        self.logger.info("  📁 扫描目录结构...")
 
         structure = {
             "root_files": [],
@@ -112,7 +120,7 @@ class ProjectContextLoader:
 
     def _get_git_info(self) -> Dict[str, Any]:
         """获取Git信息 - 收集版本控制状态，为开发上下文提供代码变更追踪能力"""
-        print("  🌿 获取Git信息...")
+        self.logger.info("  🌿 获取Git信息...")
 
         git_info = {
             "repository_exists": False,
@@ -182,7 +190,7 @@ class ProjectContextLoader:
 
     def _get_existing_modules(self) -> Dict[str, Any]:
         """获取已存在的模块"""
-        print("  📦 分析现有模块...")
+        self.logger.info("  📦 分析现有模块...")
 
         modules = {"python_modules": [], "module_structure": {}, "import_analysis": {}}
 
@@ -212,7 +220,7 @@ class ProjectContextLoader:
 
     def _get_existing_tests(self) -> Dict[str, Any]:
         """获取已存在的测试"""
-        print("  🧪 扫描测试文件...")
+        self.logger.info("  🧪 扫描测试文件...")
 
         tests = {"test_files": [], "test_structure": {}, "coverage_info": None}
 
@@ -237,7 +245,7 @@ class ProjectContextLoader:
 
     def _get_dependencies(self) -> Dict[str, Any]:
         """获取依赖信息"""
-        print("  📋 分析项目依赖...")
+        self.logger.info("  📋 分析项目依赖...")
 
         dependencies = {
             "requirements_txt": None,
@@ -277,7 +285,7 @@ class ProjectContextLoader:
 
     def _get_recent_changes(self) -> Dict[str, Any]:
         """获取最近的变更"""
-        print("  📝 分析最近变更...")
+        self.logger.info("  📝 分析最近变更...")
 
         changes = {
             "modified_files": [],
@@ -335,7 +343,7 @@ class ProjectContextLoader:
 
     def _get_project_stats(self) -> Dict[str, Any]:
         """获取项目统计信息"""
-        print("  📊 生成项目统计...")
+        self.logger.info("  📊 生成项目统计...")
 
         stats = {
             "total_python_files": 0,
@@ -394,23 +402,33 @@ class ProjectContextLoader:
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(self.context, f, ensure_ascii=False, indent=2)
 
-        print(f"💾 上下文已保存到: {output_path}")
+        self.logger.info(f"💾 上下文已保存到: {output_path}")
 
     def print_summary(self) -> None:
         """打印上下文摘要"""
-        print("\n📋 项目上下文摘要:")
-        print(f"   📁 项目根目录: {self.context['project_root']}")
+        self.logger.info("\n📋 项目上下文摘要:")
+        self.logger.info(f"   📁 项目根目录: {self.context['project_root']}")
 
         if self.context["git_info"]["repository_exists"]:
-            print(f"   🌿 Git分支: {self.context['git_info']['current_branch']}")
-            print(f"   📝 最近提交: {len(self.context['git_info']['recent_commits'])} 条")
+            self.logger.info(
+                f"   🌿 Git分支: {self.context['git_info']['current_branch']}"
+            )
+            self.logger.info(
+                f"   📝 最近提交: {len(self.context['git_info']['recent_commits'])} 条"
+            )
 
-        print(
+        self.logger.info(
             f"   📦 Python模块: {len(self.context['existing_modules']['python_modules'])} 个"
         )
-        print(f"   🧪 测试文件: {len(self.context['existing_tests']['test_files'])} 个")
-        print(f"   📊 代码行数: {self.context['project_stats']['total_lines_of_code']}")
-        print(f"   💾 项目大小: {self.context['project_stats']['project_size_mb']} MB")
+        self.logger.info(
+            f"   🧪 测试文件: {len(self.context['existing_tests']['test_files'])} 个"
+        )
+        self.logger.info(
+            f"   📊 代码行数: {self.context['project_stats']['total_lines_of_code']}"
+        )
+        self.logger.info(
+            f"   💾 项目大小: {self.context['project_stats']['project_size_mb']} MB"
+        )
 
 
 def main():
