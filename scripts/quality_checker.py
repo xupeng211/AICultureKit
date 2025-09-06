@@ -51,7 +51,7 @@ class QualityChecker:
         check_steps = [
             ("backup", "备份文件", self._backup_files),
             ("format", "代码格式化", self._run_black_format),
-            ("lint", "代码风格检查", self._run_flake8_lint),
+            ("lint", "代码风格检查", self._run_ruff_lint),
             ("type_check", "类型检查", self._run_mypy_check),
             ("test", "单元测试", self._run_pytest),
             ("coverage", "测试覆盖率", self._run_coverage),
@@ -228,6 +228,52 @@ class QualityChecker:
                     "scripts/",
                     "--max-line-length=88",
                     "--extend-ignore=E203,W503",
+                ],
+                cwd=self.project_root,
+                capture_output=True,
+                text=True,
+            )
+
+            if result.returncode == 0:
+                return True, "代码风格检查通过", {"issues": []}
+            else:
+                issues = (
+                    result.stdout.strip().split("\n") if result.stdout.strip() else []
+                )
+                return (
+                    False,
+                    f"发现 {len(issues)} 个风格问题",
+                    {
+                        "issues": issues,
+                        "stdout": result.stdout,
+                        "stderr": result.stderr,
+                    },
+                )
+
+        except Exception as e:
+            return False, f"风格检查失败: {e}", {"exception": str(e)}
+
+    def _run_ruff_lint(self) -> Tuple[bool, str, Dict]:
+        """运行ruff代码风格检查"""
+        try:
+            # 检查是否安装了ruff
+            check_result = subprocess.run(
+                ["python", "-m", "ruff", "--version"], capture_output=True, text=True
+            )
+
+            if check_result.returncode != 0:
+                return False, "ruff未安装", {"suggestion": "pip install ruff"}
+
+            # 运行ruff检查
+            result = subprocess.run(
+                [
+                    "python",
+                    "-m",
+                    "ruff",
+                    "check",
+                    "src/",
+                    "tests/",
+                    "scripts/",
                 ],
                 cwd=self.project_root,
                 capture_output=True,

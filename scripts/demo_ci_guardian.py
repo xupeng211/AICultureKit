@@ -98,8 +98,8 @@ import numpy
 def badly_formatted_function(   x,y   ):
     if True:
             return x+y
-    
-    
+
+
     # 多余的空行和糟糕的格式
 """,
             "demo_security_error.py": """
@@ -110,7 +110,7 @@ def vulnerable_function():
     import subprocess
     # 不安全的命令执行
     subprocess.call("echo 'hello'", shell=True)
-    
+
     # 不安全的eval使用
     user_input = "print('hello')"
     eval(user_input)

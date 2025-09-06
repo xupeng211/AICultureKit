@@ -90,38 +90,38 @@ class MakefileUpdater:
 
 .PHONY: validate-defenses
 validate-defenses: ## 验证所有防御机制
-	@echo "$(BLUE)>>> 验证防御机制...$(RESET)"
-	@if $(ACTIVATE) && python scripts/ci_guardian.py --validate; then \\
-		echo "$(GREEN)✅ 防御机制验证通过$(RESET)"; \\
-	else \\
-		echo "$(RED)❌ 防御机制验证失败$(RESET)"; \\
-		exit 1; \\
-	fi
+    @echo "$(BLUE)>>> 验证防御机制...$(RESET)"
+    @if $(ACTIVATE) && python scripts/ci_guardian.py --validate; then \\
+        echo "$(GREEN)✅ 防御机制验证通过$(RESET)"; \\
+    else \\
+        echo "$(RED)❌ 防御机制验证失败$(RESET)"; \\
+        exit 1; \\
+    fi
 
 .PHONY: run-validation-tests
 run-validation-tests: ## 运行增强验证测试
-	@echo "$(BLUE)>>> 运行验证测试...$(RESET)"
-	$(ACTIVATE) && pytest tests/test_*_validation.py -v
+    @echo "$(BLUE)>>> 运行验证测试...$(RESET)"
+    $(ACTIVATE) && pytest tests/test_*_validation.py -v
 
 .PHONY: check-defense-coverage
 check-defense-coverage: ## 检查防御覆盖率
-	@echo "$(BLUE)>>> 检查防御覆盖率...$(RESET)"
-	@if $(ACTIVATE) && python scripts/ci_issue_analyzer.py -s; then \\
-		echo "$(GREEN)✅ 防御覆盖率检查完成$(RESET)"; \\
-	else \\
-		echo "$(RED)❌ 防御覆盖率检查失败$(RESET)"; \\
-		exit 1; \\
-	fi
+    @echo "$(BLUE)>>> 检查防御覆盖率...$(RESET)"
+    @if $(ACTIVATE) && python scripts/ci_issue_analyzer.py -s; then \\
+        echo "$(GREEN)✅ 防御覆盖率检查完成$(RESET)"; \\
+    else \\
+        echo "$(RED)❌ 防御覆盖率检查失败$(RESET)"; \\
+        exit 1; \\
+    fi
 
 .PHONY: update-defenses
 update-defenses: ## 更新防御机制
-	@echo "$(BLUE)>>> 更新防御机制...$(RESET)"
-	$(ACTIVATE) && python scripts/defense_generator.py -i logs/ci_issues.json -s
+    @echo "$(BLUE)>>> 更新防御机制...$(RESET)"
+    $(ACTIVATE) && python scripts/defense_generator.py -i logs/ci_issues.json -s
 
 .PHONY: ci-guardian
 ci-guardian: ## 运行完整CI守护检查
-	@echo "$(BLUE)>>> 运行CI守护检查...$(RESET)"
-	$(ACTIVATE) && python scripts/ci_guardian.py -c "make quality" -s
+    @echo "$(BLUE)>>> 运行CI守护检查...$(RESET)"
+    $(ACTIVATE) && python scripts/ci_guardian.py -c "make quality" -s
 """
 
         # 如果有测试文件，添加特定的测试目标
@@ -129,15 +129,15 @@ ci-guardian: ## 运行完整CI守护检查
             targets += """
 .PHONY: test-imports
 test-imports: ## 运行导入验证测试
-	$(ACTIVATE) && pytest tests/test_import_validation.py -v
+    $(ACTIVATE) && pytest tests/test_import_validation.py -v
 
 .PHONY: test-types
 test-types: ## 运行类型验证测试
-	$(ACTIVATE) && pytest tests/test_type_validation.py -v
+    $(ACTIVATE) && pytest tests/test_type_validation.py -v
 
 .PHONY: test-security
 test-security: ## 运行安全验证测试
-	$(ACTIVATE) && pytest tests/test_security_validation.py -v
+    $(ACTIVATE) && pytest tests/test_security_validation.py -v
 """
 
         return targets
@@ -432,7 +432,7 @@ testpaths = tests
 python_files = test_*.py test_*_validation.py
 python_classes = Test*
 python_functions = test_*
-addopts = 
+addopts =
     --verbose
     --tb=short
     --strict-markers
@@ -451,7 +451,7 @@ markers =
 # Enhanced coverage configuration - auto-added
 [coverage:run]
 source = src
-omit = 
+omit =
     */tests/*
     */test_*
     */venv/*
@@ -632,7 +632,7 @@ class DocumentationUpdater:
 
         doc_content = f"""# CI防御机制说明
 
-> 此文档由CI Guardian系统自动生成  
+> 此文档由CI Guardian系统自动生成
 > 生成时间: {datetime.now().isoformat()}
 
 ## 概述
@@ -921,7 +921,7 @@ class AutoCIUpdater:
 
 ### 防御机制统计
 - 测试文件: {len(defenses.get("test_files", []))} 个
-- 配置文件: {len(defenses.get("lint_configs", []))} 个  
+- 配置文件: {len(defenses.get("lint_configs", []))} 个
 - Pre-commit钩子: {len(defenses.get("pre_commit_hooks", []))} 个
 - CI工作流: {len(defenses.get("ci_workflows", []))} 个
 
@@ -933,7 +933,7 @@ class AutoCIUpdater:
 ### 测试文件
 {chr(10).join(f"- {f}" for f in defenses.get("test_files", []))}
 
-### 配置文件  
+### 配置文件
 {chr(10).join(f"- {f}" for f in defenses.get("lint_configs", []))}
 
 ### 工作流文件

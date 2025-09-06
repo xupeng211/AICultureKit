@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-05T19:48:46.970771",
+  "timestamp": "2025-09-05T20:32:52.155154",
   "project_root": "/home/user/projects/AICultureKit",
   "directory_structure": {
     "root_files": [
@@ -27,6 +27,7 @@
       "=4.4.0",
       "Dockerfile",
       "Cursor_ClosedLoop_Prompt.md",
+      "run.py",
       "CRITICAL_ISSUES_REPORT.md",
       "COMPLETION_REPORT.md",
       "=2.12.0"
@@ -82,14 +83,19 @@
           "fixtures/__init__.py",
           "unit/__init__.py",
           "__pycache__/test_services.cpython-311-pytest-8.4.2.pyc",
+          "__pycache__/test_utils.cpython-310-pytest-8.4.1.pyc",
+          "__pycache__/test_ci_monitor.cpython-310-pytest-8.4.1.pyc",
           "__pycache__/test_failure_demo.cpython-311-pytest-7.4.4.pyc",
+          "__pycache__/test_services.cpython-310-pytest-8.4.1.pyc",
           "__pycache__/test_basic.cpython-311-pytest-7.4.4.pyc",
           "__pycache__/test_basic.cpython-311-pytest-8.4.2.pyc",
+          "__pycache__/test_core.cpython-310-pytest-8.4.1.pyc",
           "__pycache__/test_ci_monitor.cpython-311-pytest-8.4.2.pyc",
           "__pycache__/test_basic.cpython-311-pytest-8.4.1.pyc",
           "__pycache__/__init__.cpython-310.pyc",
           "__pycache__/__init__.cpython-311.pyc",
           "__pycache__/test_example.cpython-311-pytest-8.4.2.pyc",
+          "__pycache__/test_example.cpython-310-pytest-8.4.1.pyc",
           "__pycache__/test_utils.cpython-311-pytest-8.4.2.pyc",
           "__pycache__/test_basic.cpython-310-pytest-8.4.1.pyc",
           "__pycache__/test_core.cpython-311-pytest-8.4.2.pyc",
@@ -152,6 +158,7 @@
           "setup_project.py",
           "context_loader.py",
           "env_checker.py",
+          "__pycache__/ci_monitor.cpython-310.pyc",
           "__pycache__/ci_monitor.cpython-311.pyc"
         ],
         "subdirectories": [
@@ -188,13 +195,14 @@
         "test_files": []
       }
     },
-    "total_files": 65,
+    "total_files": 71,
     "total_directories": 5
   },
   "git_info": {
     "repository_exists": true,
     "current_branch": "feature/ci-quality-test",
     "recent_commits": [
+      "58f3631 fix(quality): 修复代码风格问题并完善CI Guardian系统",
       "d54d1cf feat(ci): 实现CI Guardian质量保护系统和相关文档",
       "6f8fb8c fix(ci): 修复测试任务缓存配置问题",
       "c43aa83 feat(quality): 正确提升代码覆盖率至99%",
@@ -203,10 +211,9 @@
       "c10a999 fix(ci): 添加feature分支CI支持 - 修复CI不在feature分支运行的问题",
       "98732d3 trigger: 触发CI流程 - 更新CI配置和质量检查脚本",
       "3962190 feat(tests): 提升测试覆盖率至92%",
-      "3617cc4 docs: 通过开发入口进行环境检查和上下文加载",
-      "f9ce1d5 docs: 在AI_PROMPT.md中添加虚拟环境启动说明和验证命令"
+      "3617cc4 docs: 通过开发入口进行环境检查和上下文加载"
     ],
-    "status": "M coverage.json\n M logs/project_context.json\n M logs/quality_check.json\n M scripts/auto_ci_updater.py\n M scripts/ci_guardian.py\n M scripts/ci_issue_analyzer.py\n M scripts/ci_monitor.py\n M scripts/context_loader.py\n M scripts/cursor_runner.py\n M scripts/defense_generator.py\n M scripts/defense_validator.py\n M scripts/demo_ci_guardian.py\n M scripts/fix_critical_issues.py\n M scripts/quality_checker.py",
+    "status": "M coverage.xml\n M scripts/auto_ci_updater.py\n M scripts/ci_issue_analyzer.py\n M scripts/ci_monitor.py\n M scripts/context_loader.py\n M scripts/cursor_runner.py\n M scripts/defense_validator.py\n M scripts/demo_ci_guardian.py\n M scripts/fix_critical_issues.py\n M scripts/quality_checker.py\n M tests/test_core.py\n M tests/test_services.py\n M tests/test_utils.py\n?? run.py",
     "remote_url": "https://github.com/xupeng211/AICultureKit.git"
   },
   "existing_modules": {
@@ -227,7 +234,7 @@
       "main": {
         "file_path": "main.py",
         "size": 3740,
-        "modified": "2025-09-05T09:48:49.627459"
+        "modified": "2025-09-05T20:20:05.006228"
       },
       "utils.__init__": {
         "file_path": "utils/__init__.py",
@@ -268,7 +275,7 @@
       },
       "test_utils.py": {
         "size": 13213,
-        "modified": "2025-09-05T19:48:36.028086"
+        "modified": "2025-09-05T20:17:54.850624"
       },
       "test_basic.py": {
         "size": 4382,
@@ -276,7 +283,7 @@
       },
       "test_core.py": {
         "size": 10203,
-        "modified": "2025-09-05T19:48:36.028086"
+        "modified": "2025-09-05T20:17:54.850624"
       },
       "test_ci_monitor.py": {
         "size": 11652,
@@ -284,7 +291,7 @@
       },
       "test_services.py": {
         "size": 11664,
-        "modified": "2025-09-05T19:48:36.028086"
+        "modified": "2025-09-05T20:17:54.850624"
       }
     },
     "coverage_info": null
@@ -624,35 +631,34 @@
   },
   "recent_changes": {
     "modified_files": [
-      "overage.json",
-      "logs/project_context.json",
-      "logs/quality_check.json",
+      "overage.xml",
       "scripts/auto_ci_updater.py",
-      "scripts/ci_guardian.py",
       "scripts/ci_issue_analyzer.py",
       "scripts/ci_monitor.py",
       "scripts/context_loader.py",
       "scripts/cursor_runner.py",
-      "scripts/defense_generator.py",
       "scripts/defense_validator.py",
       "scripts/demo_ci_guardian.py",
       "scripts/fix_critical_issues.py",
-      "scripts/quality_checker.py"
+      "scripts/quality_checker.py",
+      "tests/test_core.py",
+      "tests/test_services.py",
+      "tests/test_utils.py"
     ],
     "added_files": [],
     "deleted_files": [],
     "last_commit_info": {
-      "hash": "d54d1cfea8857cd32458bf5d71c9b32cbf892871",
+      "hash": "58f3631e6acf3f2c87ff296c3878f8077540bcff",
       "author": "xupeng",
-      "date": "Fri Sep 5 19:37:24 2025 +0800",
-      "message": "feat(ci): 实现CI Guardian质量保护系统和相关文档"
+      "date": "Fri Sep 5 19:50:48 2025 +0800",
+      "message": "fix(quality): 修复代码风格问题并完善CI Guardian系统"
     }
   },
   "project_stats": {
-    "total_python_files": 15901,
-    "total_test_files": 2773,
-    "total_lines_of_code": 5684885,
-    "project_size_mb": 2019.89,
-    "last_activity": "2025-09-05T19:48:36.028086"
+    "total_python_files": 16082,
+    "total_test_files": 2815,
+    "total_lines_of_code": 5749174,
+    "project_size_mb": 2025.94,
+    "last_activity": "2025-09-05T20:20:05.006228"
   }
 }
