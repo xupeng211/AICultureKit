@@ -479,8 +479,9 @@ class QualityChecker:
         """运行复杂度分析"""
         try:
             # 检查是否安装了radon
+            # 使用 `import` 语句检查radon是否安装，这比检查版本更可靠
             check_result = subprocess.run(
-                ["python", "-m", "radon", "cc", "--version"],
+                ["python", "-c", "import radon"],
                 capture_output=True,
                 text=True,
             )
