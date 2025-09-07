@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-07T07:51:48.545801",
+  "timestamp": "2025-09-07T10:22:03.951237",
   "project_root": "/home/user/projects/AICultureKit",
   "directory_structure": {
     "root_files": [
@@ -202,8 +202,9 @@
   },
   "git_info": {
     "repository_exists": true,
-    "current_branch": "feature/analysis",
+    "current_branch": "feature/project-maintenance",
     "recent_commits": [
+      "a65bc3c fix: 修复脚本文件导入顺序问题",
       "0f33569 fix(ci): Correct radon detection logic in quality checker",
       "2dc815e Merge pull request #28 from xupeng211/feature/ci-quality-test",
       "d85c9b3 chore: 更新AI工作指南和相关配置文件",
@@ -212,10 +213,9 @@
       "6c4d436 fix(ci): 修复CI红灯问题",
       "58f3631 fix(quality): 修复代码风格问题并完善CI Guardian系统",
       "d54d1cf feat(ci): 实现CI Guardian质量保护系统和相关文档",
-      "6f8fb8c fix(ci): 修复测试任务缓存配置问题",
-      "c43aa83 feat(quality): 正确提升代码覆盖率至99%"
+      "6f8fb8c fix(ci): 修复测试任务缓存配置问题"
     ],
-    "status": "A  .pre-commit-config.yaml\nD  =0.30.0\nD  =2.12.0\nD  =4.4.0\nD  =75.8.2\nMM coverage.json\nMM logs/project_context.json\nMM logs/quality_check.json\nM  scripts/context_loader.py\nM  scripts/cursor_runner.py\nM  scripts/env_checker.py\nM  scripts/quality_checker.py\nM  scripts/setup_project.py",
+    "status": "M coverage.json\n M logs/project_context.json\n M logs/quality_check.json",
     "remote_url": "https://github.com/xupeng211/AICultureKit.git"
   },
   "existing_modules": {
@@ -633,36 +633,24 @@
   },
   "recent_changes": {
     "modified_files": [
-      "coverage.json",
+      "overage.json",
       "logs/project_context.json",
-      "logs/quality_check.json",
-      "scripts/context_loader.py",
-      "scripts/cursor_runner.py",
-      "scripts/env_checker.py",
-      "scripts/quality_checker.py",
-      "scripts/setup_project.py"
+      "logs/quality_check.json"
     ],
-    "added_files": [
-      ".pre-commit-config.yaml"
-    ],
-    "deleted_files": [
-      "=0.30.0",
-      "=2.12.0",
-      "=4.4.0",
-      "=75.8.2"
-    ],
+    "added_files": [],
+    "deleted_files": [],
     "last_commit_info": {
-      "hash": "0f335694dabf2de06bb7183113da2b31f4923410",
+      "hash": "a65bc3c2698297549d07054655708e54ab364e29",
       "author": "xupeng",
-      "date": "Sun Sep 7 00:12:43 2025 +0800",
-      "message": "fix(ci): Correct radon detection logic in quality checker"
+      "date": "Sun Sep 7 07:55:17 2025 +0800",
+      "message": "fix: 修复脚本文件导入顺序问题"
     }
   },
   "project_stats": {
-    "total_python_files": 17330,
-    "total_test_files": 3095,
-    "total_lines_of_code": 6143472,
-    "project_size_mb": 2034.66,
-    "last_activity": "2025-09-07T07:51:26.472750"
+    "total_python_files": 17392,
+    "total_test_files": 3109,
+    "total_lines_of_code": 6162838,
+    "project_size_mb": 2035.38,
+    "last_activity": "2025-09-07T10:21:25.643491"
   }
 }
