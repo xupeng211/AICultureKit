@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-07T10:22:03.951237",
+  "timestamp": "2025-09-07T19:14:48.999598",
   "project_root": "/home/user/projects/AICultureKit",
   "directory_structure": {
     "root_files": [
@@ -132,11 +132,17 @@
           "COMPLETE_DEMO.md",
           "API_REFERENCE.md",
           "FAILURE_PROTECTION_DEMO.md",
+          "architecture.md",
           "CI_GUARDIAN_GUIDE.md",
           "QUICK_START.md",
-          "MAKEFILE_GUIDE.md"
+          "MAKEFILE_GUIDE.md",
+          "ai-integration/cursor-setup.md",
+          "development-guide/README.md"
         ],
-        "subdirectories": [],
+        "subdirectories": [
+          "ai-integration",
+          "development-guide"
+        ],
         "python_files": [],
         "test_files": []
       },
@@ -152,6 +158,7 @@
           "demo_ci_guardian.py",
           "cursor_runner.py",
           "ci_issue_analyzer.py",
+          "project_template_generator.py",
           "test_failure.py",
           "quality_checker.py",
           "setup_project.py",
@@ -176,6 +183,7 @@
           "demo_ci_guardian.py",
           "cursor_runner.py",
           "ci_issue_analyzer.py",
+          "project_template_generator.py",
           "test_failure.py",
           "quality_checker.py",
           "setup_project.py",
@@ -197,13 +205,15 @@
         "test_files": []
       }
     },
-    "total_files": 75,
+    "total_files": 79,
     "total_directories": 5
   },
   "git_info": {
     "repository_exists": true,
-    "current_branch": "feature/project-maintenance",
+    "current_branch": "main",
     "recent_commits": [
+      "6caeda9 feat: 添加项目模板化功能",
+      "bada4ce docs: 更新项目上下文和覆盖率报告",
       "a65bc3c fix: 修复脚本文件导入顺序问题",
       "0f33569 fix(ci): Correct radon detection logic in quality checker",
       "2dc815e Merge pull request #28 from xupeng211/feature/ci-quality-test",
@@ -211,11 +221,9 @@
       "00a5196 fix(ci): 修复Codecov上传失败导致的CI红灯问题",
       "0a0b4cf chore: 更新覆盖率报告和项目上下文日志",
       "6c4d436 fix(ci): 修复CI红灯问题",
-      "58f3631 fix(quality): 修复代码风格问题并完善CI Guardian系统",
-      "d54d1cf feat(ci): 实现CI Guardian质量保护系统和相关文档",
-      "6f8fb8c fix(ci): 修复测试任务缓存配置问题"
+      "58f3631 fix(quality): 修复代码风格问题并完善CI Guardian系统"
     ],
-    "status": "M coverage.json\n M logs/project_context.json\n M logs/quality_check.json",
+    "status": "M logs/project_context.json\n M rules.md\n D rules/README.md\n D rules/ci.md\n D rules/coding.md\n D rules/documentation.md\n D rules/git.md\n D rules/testing.md\n M scripts/project_template_generator.py\n M template_output/python-project-template/TestProject\n M template_output_final/python-project-template/.coveragerc\n M template_output_final/python-project-template/.cursor/rules/ai.mdc\n M template_output_final/python-project-template/.dockerignore\n M template_output_final/python-project-template/.github/workflows/ci.yml\n M template_output_final/python-project-template/.github/workflows/release.yml\n M template_output_final/python-project-template/.gitignore\n M template_output_final/python-project-template/.ruffignore\n M template_output_final/python-project-template/Dockerfile\n M template_output_final/python-project-template/Dockerfile.dev\n D template_output_final/python-project-template/FinalTestProject\n M template_output_final/python-project-template/Makefile\n M template_output_final/python-project-template/Makefile.docker\n M template_output_final/python-project-template/docker-compose.dev.yml\n M template_output_final/python-project-template/docker-compose.yml\n M template_output_final/python-project-template/docs/API_REFERENCE.md\n M template_output_final/python-project-template/docs/CI_GUARDIAN_GUIDE.md\n M template_output_final/python-project-template/docs/COMPLETE_DEMO.md\n M template_output_final/python-project-template/docs/FAILURE_PROTECTION_DEMO.md\n M template_output_final/python-project-template/docs/MAKEFILE_GUIDE.md\n M template_output_final/python-project-template/docs/QUICK_START.md\n M template_output_final/python-project-template/docs/USAGE_EXAMPLES.md\n M template_output_final/python-project-template/env.example\n M template_output_final/python-project-template/generate_project.py\n M template_output_final/python-project-template/scripts/project_template_generator.py\n M template_output_final/python-project-template/setup.cfg\n M template_output_final/python-project-template/setup.py\n M template_output_final/python-project-template/src/{{PROJECT_NAME_LOWER}}/core/__init__.py\n M template_output_final/python-project-template/src/{{PROJECT_NAME_LOWER}}/utils/__init__.py\n M template_output_final/python-project-template/template_config.json\n M template_output_final/python-project-template/tests/test_core.py\n M template_output_final/python-project-template/tests/test_services.py\n M template_output_final/python-project-template/tests/test_utils.py\n?? .cursor/index.mdc\n?? .cursor/rules/ci-pipeline.mdc\n?? .cursor/rules/coding-standards.mdc\n?? .cursor/rules/documentation.mdc\n?? .cursor/rules/git-workflow.mdc\n?? .cursor/rules/testing-workflow.mdc\n?? docs/ai-integration/\n?? docs/architecture.md\n?? docs/development-guide/\n?? template_output_final/python-project-template/.cursor/index.mdc\n?? template_output_final/python-project-template/.cursor/rules/ci-pipeline.mdc\n?? template_output_final/python-project-template/.cursor/rules/coding-standards.mdc\n?? template_output_final/python-project-template/.cursor/rules/documentation.mdc\n?? template_output_final/python-project-template/.cursor/rules/git-workflow.mdc\n?? template_output_final/python-project-template/.cursor/rules/testing-workflow.mdc\n?? template_output_final/python-project-template/AI_PROMPT.md\n?? template_output_final/python-project-template/AI_WORK_GUIDE.md\n?? template_output_final/python-project-template/Cursor_ClosedLoop_Prompt.md\n?? template_output_final/python-project-template/README_DOCKER.md\n?? template_output_final/python-project-template/docs/ai-integration/\n?? template_output_final/python-project-template/docs/architecture.md\n?? template_output_final/python-project-template/docs/development-guide/\n?? template_output_final/python-project-template/rules.md",
     "remote_url": "https://github.com/xupeng211/AICultureKit.git"
   },
   "existing_modules": {
@@ -633,24 +641,64 @@
   },
   "recent_changes": {
     "modified_files": [
-      "overage.json",
-      "logs/project_context.json",
-      "logs/quality_check.json"
+      "ogs/project_context.json",
+      "rules.md",
+      "scripts/project_template_generator.py",
+      "template_output/python-project-template/TestProject",
+      "template_output_final/python-project-template/.coveragerc",
+      "template_output_final/python-project-template/.cursor/rules/ai.mdc",
+      "template_output_final/python-project-template/.dockerignore",
+      "template_output_final/python-project-template/.github/workflows/ci.yml",
+      "template_output_final/python-project-template/.github/workflows/release.yml",
+      "template_output_final/python-project-template/.gitignore",
+      "template_output_final/python-project-template/.ruffignore",
+      "template_output_final/python-project-template/Dockerfile",
+      "template_output_final/python-project-template/Dockerfile.dev",
+      "template_output_final/python-project-template/Makefile",
+      "template_output_final/python-project-template/Makefile.docker",
+      "template_output_final/python-project-template/docker-compose.dev.yml",
+      "template_output_final/python-project-template/docker-compose.yml",
+      "template_output_final/python-project-template/docs/API_REFERENCE.md",
+      "template_output_final/python-project-template/docs/CI_GUARDIAN_GUIDE.md",
+      "template_output_final/python-project-template/docs/COMPLETE_DEMO.md",
+      "template_output_final/python-project-template/docs/FAILURE_PROTECTION_DEMO.md",
+      "template_output_final/python-project-template/docs/MAKEFILE_GUIDE.md",
+      "template_output_final/python-project-template/docs/QUICK_START.md",
+      "template_output_final/python-project-template/docs/USAGE_EXAMPLES.md",
+      "template_output_final/python-project-template/env.example",
+      "template_output_final/python-project-template/generate_project.py",
+      "template_output_final/python-project-template/scripts/project_template_generator.py",
+      "template_output_final/python-project-template/setup.cfg",
+      "template_output_final/python-project-template/setup.py",
+      "template_output_final/python-project-template/src/{{PROJECT_NAME_LOWER}}/core/__init__.py",
+      "template_output_final/python-project-template/src/{{PROJECT_NAME_LOWER}}/utils/__init__.py",
+      "template_output_final/python-project-template/template_config.json",
+      "template_output_final/python-project-template/tests/test_core.py",
+      "template_output_final/python-project-template/tests/test_services.py",
+      "template_output_final/python-project-template/tests/test_utils.py"
     ],
     "added_files": [],
-    "deleted_files": [],
+    "deleted_files": [
+      "rules/README.md",
+      "rules/ci.md",
+      "rules/coding.md",
+      "rules/documentation.md",
+      "rules/git.md",
+      "rules/testing.md",
+      "template_output_final/python-project-template/FinalTestProject"
+    ],
     "last_commit_info": {
-      "hash": "a65bc3c2698297549d07054655708e54ab364e29",
+      "hash": "6caeda9e7efc27e194dbdef8cfa1061d744c7f60",
       "author": "xupeng",
-      "date": "Sun Sep 7 07:55:17 2025 +0800",
-      "message": "fix: 修复脚本文件导入顺序问题"
+      "date": "Sun Sep 7 12:20:59 2025 +0800",
+      "message": "feat: 添加项目模板化功能"
     }
   },
   "project_stats": {
-    "total_python_files": 17392,
-    "total_test_files": 3109,
-    "total_lines_of_code": 6162838,
-    "project_size_mb": 2035.38,
-    "last_activity": "2025-09-07T10:21:25.643491"
+    "total_python_files": 22316,
+    "total_test_files": 3462,
+    "total_lines_of_code": 7887537,
+    "project_size_mb": 2173.34,
+    "last_activity": "2025-09-07T17:50:58.036954"
   }
 }

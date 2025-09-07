@@ -49,9 +49,30 @@ class ProjectTemplateGenerator:
                 "src",
             ],
             "ai_guide_files": [
+                # 核心AI指导文件
                 "AI_WORK_GUIDE.md",
                 "AI_PROMPT.md",
+                "Cursor_ClosedLoop_Prompt.md",
+                "rules.md",
+                # Docker部署指导
+                "README_DOCKER.md",
+                # Cursor规则系统
+                ".cursor/index.mdc",
+                ".cursor/rules/coding-standards.mdc",
+                ".cursor/rules/testing-workflow.mdc",
+                ".cursor/rules/git-workflow.mdc",
+                ".cursor/rules/documentation.mdc",
+                ".cursor/rules/ci-pipeline.mdc",
                 ".cursor/rules/ai.mdc",
+            ],
+            "project_context_files": [
+                # 项目特定上下文文件（不包含在模板中，但对当前项目的AI工具有价值）
+                "ISSUES.md",
+                "COMPLETION_REPORT.md",
+                "CI_FIX_REPORT.md",
+                "CI_GUARDIAN_IMPLEMENTATION_REPORT.md",
+                "SECURITY_FIX_SUCCESS_REPORT.md",
+                "CRITICAL_ISSUES_REPORT.md",
             ],
             "exclude_patterns": [
                 ".git",
@@ -144,6 +165,18 @@ class ProjectTemplateGenerator:
                 )
                 shutil.copytree(source_dir, target_dir, ignore=ignore_func)
                 print(f"  ✅ {dir_name}/")
+
+        # 复制AI指导文件 - 修复缺失的处理逻辑
+        print("🤖 复制AI指导文件...")
+        for file_name in self.template_config["ai_guide_files"]:
+            source_file = self.source_path / file_name
+            if source_file.exists():
+                target_file = output_dir / file_name
+                target_file.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source_file, target_file)
+                print(f"  ✅ {file_name}")
+            else:
+                print(f"  ⚠️ 警告: AI指导文件不存在: {file_name}")
 
     def _create_template_structure(self, output_dir: Path):
         """创建模板项目结构"""
