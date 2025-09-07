@@ -1,0 +1,32 @@
+{
+  "name": "Python Project Template",
+  "description": "基于AICultureKit的Python项目模板，包含完整的开发基础设施",
+  "version": "1.0.0",
+  "template_files": [
+    "Makefile",
+    "README.md",
+    ".cursor/rules/ai.mdc",
+    "AI_WORK_GUIDE.md",
+    "AI_PROMPT.md",
+    "setup.cfg",
+    "docker-compose.yml",
+    "docker-compose.dev.yml",
+    "Dockerfile",
+    "Dockerfile.dev",
+    "setup.py",
+    "src/{{PROJECT_NAME_LOWER}}/__init__.py",
+    "src/{{PROJECT_NAME_LOWER}}/core/__init__.py",
+    "src/{{PROJECT_NAME_LOWER}}/utils/__init__.py",
+    "tests/test_basic.py"
+  ],
+  "created_by": "AICultureKit Template Generator",
+  "features": [
+    "完整的CI/CD流程",
+    "代码质量检查工具",
+    "自动化测试和覆盖率",
+    "Docker容器化支持",
+    "AI辅助开发工作流",
+    "预配置的开发工具链",
+    "标准化的项目结构"
+  ]
+}
